@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KrisFlyer Miles — Skyfare Consulting</title>
+  <meta name="description"
+    content="Nominee redemptions and direct transfers for KrisFlyer miles. Fast, secure, and fully concierge-managed for Business and First Class travel." />
+  <link rel="icon" href="../logos/logo.webp" />
+
+  <!-- Injectable Header & Footer -->
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+
+  <!-- Tailwind -->
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+  
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+  <script src="../js/utils.js" defer></script>
+  <script src="../js/krisflyer.js" defer></script>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1">
+    <!-- HERO -->
+    <section class="container mx-auto px-4 pt-16 md:pt-24 pb-12 text-center">
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 text-brand-600 text-xs font-bold uppercase tracking-widest mb-6 border border-brand-500/20">
+        <i class="fa-solid fa-plane-up"></i> Premium Redemptions
+      </div>
+      <h1 class="text-4xl md:text-6xl font-extrabold text-brand-950 mb-6 tracking-tight">
+        KrisFlyer <span class="text-transparent bg-clip-text brand-gradient">Miles.</span>
+      </h1>
+      <p class="text-lg md:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+        Lock in your Business or First Class award seats now via Nominee Redemption slabs, or choose direct transfers
+        for maximum flexibility.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <div
+          class="px-4 py-2 rounded-full glass border-brand-200/20 text-xs font-medium transition-all hover:bg-white/50">
+          <i class="fa-solid fa-shield-halved text-brand-500 mr-2"></i> Private & Secure
+        </div>
+        <div
+          class="px-4 py-2 rounded-full glass border-brand-200/20 text-xs font-medium transition-all hover:bg-white/50">
+          <i class="fa-solid fa-tag text-brand-500 mr-2"></i> Expert Guidance
+        </div>
+        <div
+          class="px-4 py-2 rounded-full glass border-brand-200/20 text-xs font-medium transition-all hover:bg-white/50">
+          <i class="fa-solid fa-user-tie text-brand-500 mr-2"></i> Concierge Support
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="container mx-auto px-4 mb-24">
+      <div class="grid lg:grid-cols-3 gap-8 items-start">
+
+        <!-- Nominee Redemption (Dominant) -->
+        <div
+          class="lg:col-span-2 glass rounded-[3.5rem] p-8 md:p-12 border-brand-200/20 shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-brand-500/30">
+          <div
+            class="absolute top-0 right-0 w-96 h-96 bg-brand-500/10 rounded-full blur-[100px] -mr-48 -mt-48 transition-all group-hover:bg-brand-500/15">
+          </div>
+
+          <div
+            class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 border-b border-brand-100/10 pb-10">
+            <div>
+              <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-600 text-white text-[11px] font-extrabold uppercase tracking-widest mb-4 shadow-lg shadow-brand-600/20">
+                Recommended • Instant Booking
+              </div>
+              <h2 class="text-3xl md:text-4xl font-black text-brand-950 tracking-tight">Nominee
+                Redemption</h2>
+            </div>
+
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 lg:gap-16">
+            <div class="flex items-start gap-5">
+              <div
+                class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-2xl shrink-0 border border-brand-500/20">
+                <i class="fa-solid fa-check-double"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-bold text-brand-950 mb-1">Confirmed Tickets</h4>
+                <p class="text-sm text-neutral-600 leading-relaxed font-medium">We ticket
+                  confirmed seats instantly (no waitlists).</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-5">
+              <div
+                class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-2xl shrink-0 border border-brand-500/20">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-bold text-brand-950 mb-1">No Extra Fees</h4>
+                <p class="text-sm text-neutral-600 leading-relaxed font-medium">Zero nominee
+                  fees. Pay per-1k miles + airline taxes.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 flex flex-wrap gap-5">
+            <a href="book.html?service=krisflyer&option=nominee"
+              class="flex-1 min-w-[240px] py-5 rounded-2xl brand-gradient text-white font-black text-center transition-all shadow-xl shadow-brand-500/40 hover:-translate-y-1 hover:brightness-110 active:scale-95 uppercase tracking-wider text-sm">
+              Book Nominee Redemption
+            </a>
+            <a href="contact.html"
+              class="flex-1 min-w-[240px] py-5 rounded-2xl bg-white border-2 border-brand-100 text-brand-900 font-black text-center transition-all hover:bg-brand-50 uppercase tracking-wider text-sm">
+              Ask a Question
+            </a>
+          </div>
+        </div>
+
+        <!-- Direct Transfer Options -->
+        <div class="space-y-8">
+          <!-- 3-4 Weeks -->
+          <div
+            class="glass rounded-[3rem] p-10 hover:bg-brand-50/50 transition-all group border border-emerald-500/30">
+            <div class="flex items-center justify-between mb-8">
+              <div
+                class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 text-2xl group-hover:scale-110 transition-all border border-emerald-500/20 shadow-lg shadow-emerald-500/10">
+                <i class="fa-solid fa-bolt-lightning"></i>
+              </div>
+              <span
+                class="px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">3–4
+                Weeks</span>
+            </div>
+            <h3 class="text-2xl font-black text-brand-950 mb-2">Direct Transfer</h3>
+            <p class="text-sm text-neutral-500 mb-8 font-bold uppercase tracking-wide">Direct to
+              your KF account.</p>
+
+
+
+            <a href="book.html?service=krisflyer&option=direct-3to4w"
+              class="w-full block py-4 rounded-2xl bg-neutral-900 text-white font-black text-center text-sm shadow-xl shadow-black/10 hover:opacity-90 transition-all uppercase tracking-wider">
+              Enquire Now
+            </a>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUE PROPS -->
+    <section class="container mx-auto px-4 mb-24">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div
+          class="p-10 rounded-[3rem] glass border border-brand-200/100 hover:-translate-y-2 transition-all duration-500 bg-white/5 group">
+          <div
+            class="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-3xl mb-8 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all border border-brand-500/20">
+            <i class="fa-solid fa-bullseye"></i>
+          </div>
+          <h4 class="text-xl font-black text-brand-950 mb-4">Confirmed Seats Only</h4>
+          <p class="text-sm text-neutral-600 leading-relaxed font-medium">
+            We prioritize routes with verified live inventory across Singapore Airlines and partners, avoiding the
+            frustration of endless waitlists.
+          </p>
+        </div>
+        <div
+          class="p-10 rounded-[3rem] glass border border-brand-200/100 hover:-translate-y-2 transition-all duration-500 bg-white/5 group">
+          <div
+            class="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-3xl mb-8 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all border border-brand-500/20">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h4 class="text-xl font-black text-brand-950 mb-4">Secure Handling</h4>
+          <p class="text-sm text-neutral-600 leading-relaxed font-medium">
+            All transfers and redemptions are handled with strict privacy protocols. Your account details and personal
+            info are never compromised.
+          </p>
+        </div>
+        <div
+          class="p-10 rounded-[3rem] glass border border-brand-200/100 hover:-translate-y-2 transition-all duration-500 bg-white/5 group">
+          <div
+            class="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-3xl mb-8 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all border border-brand-500/20">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <h4 class="text-xl font-black text-brand-950 mb-4">End-to-End Care</h4>
+          <p class="text-sm text-neutral-600 leading-relaxed font-medium">
+            From the initial route search to the moment your ticket is issued, our concierge team manages the entire
+            technical process.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AWARD TABLE SECTION -->
+    <section class="container mx-auto px-4 mb-32">
+      <div class="mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-black text-brand-950 mb-6">Indicative Award Rates</h2>
+          <p class="text-neutral-500 max-w-2xl mx-auto">
+            Sample Business Class redemption rates from Singapore. Search and filter to find your next destination.
+          </p>
+        </div>
+
+        <div class="glass rounded-[3rem] overflow-hidden border-brand-200/20 shadow-2xl">
+          <!-- Filters -->
+          <div
+            class="p-8 border-b border-white/5 flex flex-col md:flex-row gap-6 items-center justify-between bg-white/5">
+            <div class="flex flex-wrap gap-4 items-center">
+              <select id="regionFilter"
+                class="bg-brand-50/50 border border-brand-100 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+                <option value="all">All Regions</option>
+                <option value="SE Asia">SE Asia</option>
+                <option value="South Asia">South Asia</option>
+                <option value="NE Asia">NE Asia</option>
+                <option value="Japan/Korea">Japan/Korea</option>
+                <option value="Oceania">Oceania</option>
+                <option value="Africa/Middle East">Africa/Middle East</option>
+                <option value="Europe">Europe</option>
+                <option value="N. America">N. America</option>
+              </select>
+              <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-brand-500"></i>
+                <input type="text" id="searchRoute" placeholder="Search destination..."
+                  class="bg-brand-50/50 border border-brand-100 rounded-xl pl-12 pr-4 py-3 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 transition-all w-64" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+              <thead>
+                <tr
+                  class="bg-neutral-50 text-[10px] uppercase tracking-[0.2em] font-black text-neutral-500 border-b border-neutral-200">
+                  <th class="px-8 py-6">Destination</th>
+                  <th class="px-8 py-6">Region</th>
+                  <th class="px-8 py-6">Saver (Miles)</th>
+                  <th class="px-8 py-6">Advantage (Miles)</th>
+                </tr>
+              </thead>
+              <tbody id="awardBody" class="divide-y divide-white/5">
+                <!-- JS Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+  </main>
+
+  <!-- SCRIPTS -->
+  
+</body>
+
+</html>

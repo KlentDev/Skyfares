@@ -32,151 +32,119 @@ document.addEventListener('DOMContentLoaded', () => {
     ::-webkit-scrollbar-thumb:hover {
       background: #1b70ef;
     }
+
   `;
+  /* Loader + mobile-menu CSS now live in css/style.css (loads synchronously). */
   document.head.appendChild(style);
 
 
   const headerHTML = `
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-brand-200/20 shadow-sm transition-all duration-300">
+    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/90 border-b border-brand-200/20 shadow-sm transition-all duration-300">
       <div class="container mx-auto flex items-center justify-between py-3 px-4 md:px-6">
-<a href="/" class="flex items-center space-x-3 group">
+        <!-- Logo -->
+        <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="flex items-center space-x-3 group">
           <div class="relative">
-            <img src="logos/logo.webp" alt="Skyfare Consulting Logo" class="h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-110">
+            <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-110">
             <div class="absolute inset-0 bg-brand-300/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
           <div class="flex flex-col">
-            <span class="text-lg md:text-xl uppercase  font-bold text-brand-900 leading-none tracking-[0.1em] logo_height">Skyfare</span>
+            <span class="text-lg md:text-xl uppercase font-bold text-brand-900 leading-none tracking-[0.1em] logo_height">Skyfare</span>
             <span class="text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-900 font-semibold leading-none">Consulting</span>
           </div>
         </a>
 
         <!-- Desktop nav -->
-        <nav class="hidden lg:flex items-center gap-1 text-[15px]" id="desktop-nav">
-          <a href="index.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
+        <nav class="hidden lg:flex items-center gap-1 text-[15px] absolute left-1/2 -translate-x-1/2" id="desktop-nav">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
             <i class="fa-solid fa-house text-[13px] opacity-60"></i> Home
           </a>
-          <!-- Core Services Dropdown -->
+
+          <!-- Services Dropdown -->
           <div class="relative group/dropdown">
-            <button class="flex items-center gap-2 px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center">
-              <i class="fa-solid fa-layer-group text-[13px] opacity-60"></i>
-              Services <i class="fa-solid fa-chevron-down text-[13px] transition-transform group-hover/dropdown:rotate-180"></i>
+            <button class="flex items-center gap-1.5 px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold">
+              <i class="fa-solid fa-layer-group text-[13px] opacity-60"></i> Services <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
             <div class="absolute top-full left-0 w-64 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300">
               <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-2">
-                <a href="services.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-layer-group"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Services Overview</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Services Overview</div>
                 </a>
-                <a href="krisflyer.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-plane-circle-check"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">KrisFlyer Miles</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">KrisFlyer Miles</div>
                 </a>
-                <a href="itinerary.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-map-location-dot"></i>
-                  </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Itinerary Design</div>
-                  </div>
-                </a>
-
-                <a href="assessment.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-phone-volume"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Assessment Call</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Assessment Call</div>
                 </a>
               </div>
             </div>
           </div>
 
-          <a href="how-it-works.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
             <i class="fa-solid fa-wand-magic-sparkles text-[13px] opacity-60"></i> How It Works
           </a>
-          <a href="past-flight-deals.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
-            <i class="fa-solid fa-ticket-simple text-[13px] opacity-60"></i> Past Flight Deals
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-ticket-simple text-[13px] opacity-60"></i> Flights We've Arranged
           </a>
-          
+
           <!-- Extra Services Dropdown -->
           <div class="relative group/dropdown">
-            <button class="flex items-center gap-2 px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center">
-              <i class="fa-solid fa-square-plus text-[13px] opacity-60"></i>
-              Extra Services <i class="fa-solid fa-chevron-down text-[13px] transition-transform group-hover/dropdown:rotate-180"></i>
+            <button class="flex items-center gap-1.5 px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold">
+              <i class="fa-solid fa-square-plus text-[13px] opacity-60"></i> Extra Services <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
             <div class="absolute top-full left-0 w-64 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300">
               <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-2">
-                <a href="chauffeur.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-car"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Chauffeur (Transfers)</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Chauffeur (Transfers)</div>
                 </a>
-
-                <a href="extra-services.html#fast-track" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#fast-track" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-bolt"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Fast Track Immigration</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Fast Track Immigration</div>
                 </a>
-                <a href="extra-services.html#visa" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#visa" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-passport"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Visa Assistance</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Visa Assistance</div>
                 </a>
-                <a href="extra-services.html#bookings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#bookings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-plane-up"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Flight Bookings (Cash)</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Flight Bookings (Cash)</div>
                 </a>
-                <a href="extra-services.html#hotels" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#hotels" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
                     <i class="fa-solid fa-hotel"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-semibold text-brand-950">Hotel Recommendations</div>
-                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Hotel Recommendations</div>
                 </a>
               </div>
             </div>
           </div>
-
-          <a href="faq.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
-            <i class="fa-solid fa-circle-question text-[13px] opacity-60"></i> FAQ
-          </a>
-          <a href="contact.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
-            <i class="fa-solid fa-envelope text-[13px] opacity-60"></i> Contact
-          </a>
-
-          <div class="flex items-center gap-3 ml-4">
-    
-
-            <a href="book.html"
-              class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 hover:bg-brand-700 hover:-translate-y-0.5 transition-all active:scale-95">
-              <i class="fa-solid fa-calendar-check text-lg"></i>
-              Book Now
-            </a>
-          </div>
         </nav>
+
+        <!-- Right side: Book Now button -->
+        <div class="hidden lg:flex items-center gap-3 ml-auto">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html"
+            class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 hover:bg-brand-700 hover:-translate-y-0.5 transition-all active:scale-95">
+            <i class="fa-solid fa-calendar-check text-lg"></i>
+            Book Now
+          </a>
+        </div>
 
         <!-- Mobile menu button -->
         <button id="mobileMenuBtn" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-brand-50 text-brand-600">
@@ -191,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div id="mobileMenuBackdrop" class="absolute inset-0 bg-deepblue-950/80 backdrop-blur-sm opacity-0 transition-opacity duration-500"></div>
       
       <!-- Content -->
-      <div id="mobileMenuContent" class="absolute top-0 right-0 w-[80%] h-full bg-white shadow-2xl translate-x-full transition-transform duration-500 pointer-events-auto">
+      <div id="mobileMenuContent" class="absolute top-0 right-0 w-[80%] h-full bg-white shadow-2xl pointer-events-auto">
         <div class="p-6 flex flex-col h-full">
           <div class="flex items-center justify-between mb-10">
             <span class="text-xl font-semibold text-brand-900">Menu</span>
@@ -201,49 +169,50 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           
           <nav class="flex flex-col gap-7 text-[1.3rem] font-semibold" id="mobile-nav">
-            <a href="index.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-house text-brand-500 w-7"></i> Home
             </a>
             <div class="flex flex-col gap-4">
               <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
                 <i class="fa-solid fa-star text-[10px]"></i> Our Services
               </span>
-              <a href="services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-layer-group text-brand-400 w-6 text-base"></i> Overview
               </a>
-              <a href="krisflyer.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-plane-circle-check text-brand-400 w-6 text-base"></i> KrisFlyer Miles
               </a>
-              <a href="itinerary.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
-                <i class="fa-solid fa-map-location-dot text-brand-400 w-6 text-base"></i> Itinerary Design
-              </a>
-
-              <a href="assessment.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-phone-volume text-brand-400 w-6 text-base"></i> Assessment Call
               </a>
             </div>
-            <a href="how-it-works.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-wand-magic-sparkles text-brand-500 w-7"></i> How It Works
             </a>
-            <a href="past-flight-deals.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Past Flight Deals
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Flights We've Arranged
             </a>
-            <a href="chauffeur.html" class="text-neutral-600 hover:text-brand-600 transition-colors text-lg border-l-2 border-brand-100 pl-2 flex items-center gap-3">
-              <i class="fa-solid fa-car text-brand-400 w-6 text-base"></i> Chauffeur (Transfers)
-            </a>
-            <a href="extra-services.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-concierge-bell text-brand-500 w-7"></i> Extra Services
-            </a>
-            <a href="faq.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-circle-question text-brand-500 w-7"></i> FAQ
-            </a>
-            <a href="contact.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-envelope text-brand-500 w-7"></i> Contact
-            </a>
+            <div class="flex flex-col gap-4">
+              <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
+                <i class="fa-solid fa-square-plus text-[10px]"></i> Extra Services
+              </span>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-car text-brand-400 w-6 text-base"></i> Chauffeur
+              </a>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#fast-track" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-bolt text-brand-400 w-6 text-base"></i> Fast Track
+              </a>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#visa" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-passport text-brand-400 w-6 text-base"></i> Visa Assistance
+              </a>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-concierge-bell text-brand-400 w-6 text-base"></i> All Extra Services
+              </a>
+            </div>
           </nav>
           
           <div class="mt-auto pt-10">
-            <a href="book.html" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
               <i class="fa-solid fa-calendar-check text-xl"></i>
               Book Now
             </a>
@@ -256,25 +225,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject into body at the start
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
+  // Offset body so fixed header doesn't overlap content
+  const headerEl = document.querySelector('header');
+  if (headerEl) {
+    document.body.style.paddingTop = headerEl.offsetHeight + 'px';
+  }
+
   // --- Global Intersection Observer for Animations ---
   const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('slide-up');
-        entry.target.style.opacity = '1';
-        entry.target.style.visibility = 'visible';
+        entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
 
-  // Target elements that explicitly want animation
-  // We look for .slide-up or .animate-on-scroll
-  document.querySelectorAll('.slide-up, .animate-on-scroll').forEach(el => {
-    // If it's already visible or has a delay, we still want to hide it initially
-    el.style.opacity = '0';
-    el.style.visibility = 'hidden';
+  document.querySelectorAll('.slide-up').forEach(el => {
     observer.observe(el);
   });
 
@@ -288,20 +256,42 @@ document.addEventListener('DOMContentLoaded', () => {
   function openMenu() {
     mobileMenu.classList.remove('pointer-events-none');
     mobileMenuBackdrop.classList.add('opacity-100');
-    mobileMenuContent.classList.remove('translate-x-full');
+    mobileMenuContent.style.transform = 'translateX(0)';
     document.body.style.overflow = 'hidden';
   }
 
   function closeMenu() {
     mobileMenu.classList.add('pointer-events-none');
     mobileMenuBackdrop.classList.remove('opacity-100');
-    mobileMenuContent.classList.add('translate-x-full');
+    mobileMenuContent.style.transform = 'translateX(100%)';
     document.body.style.overflow = '';
   }
 
   mobileMenuBtn.addEventListener('click', openMenu);
   closeMobileMenu.addEventListener('click', closeMenu);
   mobileMenuBackdrop.addEventListener('click', closeMenu);
+
+  // --- Page Loader ---
+  // The #page-loader div is static HTML (first child of <body> in every page).
+  // CSS is in style.css so it covers the screen before any content renders.
+  // This IIFE just handles the fade-out once the page is fully loaded.
+  (function () {
+    var loader = document.getElementById('page-loader');
+    if (!loader) return;
+
+    var shownAt = Date.now();
+    var MIN_MS  = 600; // minimum visible time — prevents flash on cached/fast pages
+
+    window.addEventListener('load', function () {
+      var wait = Math.max(0, MIN_MS - (Date.now() - shownAt));
+      setTimeout(function () {
+        loader.classList.add('loader-out');
+        setTimeout(function () {
+          if (loader.parentNode) loader.parentNode.removeChild(loader);
+        }, 520);
+      }, wait);
+    });
+  })();
 
   // --- Logic for Active Links ---
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
@@ -311,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
   desktopLinks.forEach(link => {
     const href = link.getAttribute('href');
     if (href) {
-      const linkPath = href.split('#')[0];
+      const linkPath = href.split('#')[0].split('/').pop();
       if (linkPath === currentPath) {
         link.classList.add('text-brand-900', 'font-semibold');
         link.classList.remove('text-neutral-600');
@@ -334,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
   mobileLinks.forEach(link => {
     const href = link.getAttribute('href');
     if (href) {
-      const linkPath = href.split('#')[0];
+      const linkPath = href.split('#')[0].split('/').pop();
       if (linkPath === currentPath) {
         link.classList.add('text-brand-600', 'font-semibold');
         link.classList.remove('text-neutral-600');

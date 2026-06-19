@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flights We've Arranged — Skyfare Consulting</title>
+    <meta name="description" content="A glimpse at real Business and First Class cabins arranged by Skyfare Consulting — real seats, real journeys, built around our clients." />
+    <link rel="icon" href="../logos/logo.webp" />
+
+    <!-- Injectable Header & Footer -->
+    <script src="../js/header.js" defer></script>
+    <script src="../js/footer.js" defer></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+
+    <!-- Tailwind -->
+    <script src="../lib/tailwind/tailwind.min.js"></script>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/tailwind-config.js" defer></script>
+    <script src="../js/utils.js" defer></script>
+  </head>
+
+  <body class="min-h-screen flex flex-col">
+
+    <div id="page-loader">
+      <img src="../logos/logo.webp" alt="Skyfare Consulting">
+      <div id="loader-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <main class="flex-1">
+
+      <!-- HERO -->
+      <section class="container mx-auto px-4 pt-16 md:pt-24 pb-12 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 text-brand-600 text-xs font-bold uppercase tracking-widest mb-6 border border-brand-500/20">
+          <i class="fa-solid fa-images"></i> Premium Cabin Gallery
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-brand-950 mb-6 tracking-tight">
+          Flights We've <span class="text-transparent bg-clip-text brand-gradient">Arranged.</span>
+        </h1>
+        <p class="text-lg md:text-xl text-neutral-600 max-w-3xl mx-auto leading-relaxed">
+          Real seats. Real cabins. Every arrangement, built around you.
+        </p>
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <span class="flex items-center gap-2 rounded-full px-5 py-2 glass text-sm font-medium text-brand-700 border-brand-200/30">
+            <i class="fa-solid fa-bolt-lightning text-brand-500"></i> No Waitlists
+          </span>
+          <span class="flex items-center gap-2 rounded-full px-5 py-2 glass text-sm font-medium text-brand-700 border-brand-200/30">
+            <i class="fa-solid fa-shield-check text-brand-500"></i> Guaranteed Seats
+          </span>
+          <span class="flex items-center gap-2 rounded-full px-5 py-2 glass text-sm font-medium text-brand-700 border-brand-200/30">
+            <i class="fa-solid fa-headset text-brand-500"></i> Full Concierge
+          </span>
+        </div>
+      </section>
+
+      <!-- PHOTO GRID -->
+      <section class="container mx-auto px-4 mb-24">
+
+        <!-- Section header -->
+        <div class="text-center mb-12">
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-500 mb-3">A Glimpse of the Journey</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-brand-950 mb-4">Premium cabins we've arranged</h2>
+          <p class="text-neutral-500 max-w-xl mx-auto leading-relaxed">
+            Each photo represents a real arrangement — a cabin, a meal, or a moment from a flight we helped make happen.
+          </p>
+        </div>
+
+        <!-- 2×3 grid -->
+        <!-- To replace a placeholder with a real photo: swap the inner gradient <div> with <img src="../images/your-photo.jpg" class="w-full h-full object-cover" alt="..."> -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Card 1 — replace placeholder with images/flights/flight-1.jpg -->
+          <a href="contact.html" class="group block relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-brand-100 cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-900 via-brand-700 to-brand-500 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+              <i class="fa-solid fa-camera text-white/20 text-5xl"></i>
+            </div>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">SIN → LHR</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/20">Saved ~52%</span>
+              </div>
+              <p class="text-white text-sm font-bold leading-snug">Singapore Airlines Suites</p>
+              <p class="text-white/60 text-xs mt-0.5">Arranged via direct transfer</p>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="flex items-center gap-2 bg-white text-brand-950 text-xs font-bold px-4 py-2 rounded-full shadow-xl">
+                <i class="fa-solid fa-plane"></i> Arrange yours
+              </span>
+            </div>
+          </a>
+
+          <!-- Card 2 — replace placeholder with images/flights/flight-2.jpg -->
+          <a href="contact.html" class="group block relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-brand-100 cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-800 via-brand-700 to-cyan-600 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+              <i class="fa-solid fa-camera text-white/20 text-5xl"></i>
+            </div>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">SIN → NRT</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/20">Saved ~61%</span>
+              </div>
+              <p class="text-white text-sm font-bold leading-snug">ANA Business Class</p>
+              <p class="text-white/60 text-xs mt-0.5">Nominee arrangement, confirmed instantly</p>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="flex items-center gap-2 bg-white text-brand-950 text-xs font-bold px-4 py-2 rounded-full shadow-xl">
+                <i class="fa-solid fa-plane"></i> Arrange yours
+              </span>
+            </div>
+          </a>
+
+          <!-- Card 3 — replace placeholder with images/flights/flight-3.jpg -->
+          <a href="contact.html" class="group block relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-brand-100 cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-950 via-indigo-800 to-brand-600 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+              <i class="fa-solid fa-camera text-white/20 text-5xl"></i>
+            </div>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">SIN → JFK</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/20">Saved ~68%</span>
+              </div>
+              <p class="text-white text-sm font-bold leading-snug">Emirates First Class</p>
+              <p class="text-white/60 text-xs mt-0.5">117k miles + S$186 — confirmed</p>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="flex items-center gap-2 bg-white text-brand-950 text-xs font-bold px-4 py-2 rounded-full shadow-xl">
+                <i class="fa-solid fa-plane"></i> Arrange yours
+              </span>
+            </div>
+          </a>
+
+          <!-- Card 4 — replace placeholder with images/flights/flight-4.jpg -->
+          <a href="contact.html" class="group block relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-brand-100 cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-800 via-sky-700 to-brand-400 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+              <i class="fa-solid fa-camera text-white/20 text-5xl"></i>
+            </div>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">SIN → DEL</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/20">Saved ~72%</span>
+              </div>
+              <p class="text-white text-sm font-bold leading-snug">Vistara Business Class</p>
+              <p class="text-white/60 text-xs mt-0.5">45k miles + S$82 via sweet-spot routing</p>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="flex items-center gap-2 bg-white text-brand-950 text-xs font-bold px-4 py-2 rounded-full shadow-xl">
+                <i class="fa-solid fa-plane"></i> Arrange yours
+              </span>
+            </div>
+          </a>
+
+          <!-- Card 5 — replace placeholder with images/flights/flight-5.jpg -->
+          <a href="contact.html" class="group block relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-brand-100 cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-brand-800 to-brand-500 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+              <i class="fa-solid fa-camera text-white/20 text-5xl"></i>
+            </div>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">HKG → LHR</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/20">Saved ~58%</span>
+              </div>
+              <p class="text-white text-sm font-bold leading-snug">Cathay Pacific Business Class</p>
+              <p class="text-white/60 text-xs mt-0.5">Book the Cook meal, aisle suite seat</p>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="flex items-center gap-2 bg-white text-brand-950 text-xs font-bold px-4 py-2 rounded-full shadow-xl">
+                <i class="fa-solid fa-plane"></i> Arrange yours
+              </span>
+            </div>
+          </a>
+
+          <!-- Card 6 — replace placeholder with images/flights/flight-6.jpg -->
+          <a href="contact.html" class="group block relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-brand-100 cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-700 via-brand-500 to-sky-400 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+              <i class="fa-solid fa-camera text-white/20 text-5xl"></i>
+            </div>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">DOH → JFK</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/20">Saved ~65%</span>
+              </div>
+              <p class="text-white text-sm font-bold leading-snug">Qatar Airways QSuite</p>
+              <p class="text-white/60 text-xs mt-0.5">Double bed configuration, fully flat</p>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="flex items-center gap-2 bg-white text-brand-950 text-xs font-bold px-4 py-2 rounded-full shadow-xl">
+                <i class="fa-solid fa-plane"></i> Arrange yours
+              </span>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- CTA below grid -->
+        <div class="text-center mt-16">
+          <p class="text-neutral-500 text-sm mb-6">Want to see your route here next?</p>
+          <a href="contact.html" class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-brand-600 text-white font-bold hover:bg-brand-700 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-brand-600/25">
+            <i class="fa-brands fa-whatsapp text-lg"></i> Start Your Arrangement
+          </a>
+        </div>
+      </section>
+
+      <!-- BENEFITS -->
+      <section class="container mx-auto px-4 mb-32">
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="p-8 rounded-[2.5rem] glass border-brand-200/20 hover:border-brand-500/30 transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 mb-6 text-xl">
+              <i class="fa-solid fa-compass"></i>
+            </div>
+            <h4 class="text-lg font-bold text-brand-950 mb-3">Strategic Search</h4>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              We look beyond the direct routes to find confirmed partner inventory others overlook.
+            </p>
+          </div>
+          <div class="p-8 rounded-[2.5rem] glass border-brand-200/20 hover:border-brand-500/30 transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 mb-6 text-xl">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h4 class="text-lg font-bold text-brand-950 mb-3">Certified Nominees</h4>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              Our arrangement paths are fully compliant with airline policies for safe, secure ticketing.
+            </p>
+          </div>
+          <div class="p-8 rounded-[2.5rem] glass border-brand-200/20 hover:border-brand-500/30 transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 mb-6 text-xl">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h4 class="text-lg font-bold text-brand-950 mb-3">Real-Time Data</h4>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              We track availability across major alliances to alert you the moment your seat opens up.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </body>
+</html>

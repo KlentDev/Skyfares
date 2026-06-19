@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap');
 
 /* Global Styles */
 html,
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #f1f5f9;
+  font-family: 'Manrope', sans-serif;
+  background: #f4f8ff;
   color: #111827;
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -12,6 +12,25 @@ body {
 
 .brand-gradient {
   background: linear-gradient(135deg, #0a4da2 0%, #1b70ef 50%, #1b70ef 100%);
+}
+
+/* Hero-specific: baby-blue sky fades smoothly to white from centre downward */
+.hero-brand-fade {
+  background:
+    linear-gradient(
+      to bottom,
+      transparent           0%,
+      transparent           45%,
+      rgba(255,255,255,.04) 50%,
+      rgba(255,255,255,.11) 55%,
+      rgba(255,255,255,.24) 62%,
+      rgba(255,255,255,.43) 70%,
+      rgba(255,255,255,.64) 78%,
+      rgba(255,255,255,.83) 86%,
+      rgba(255,255,255,.95) 93%,
+      #ffffff               100%
+    ),
+    linear-gradient(135deg, #7ec0e8 0%, #9dd4f5 60%, #a8dcf8 100%);
 }
 
 .deep-blue-gradient {
@@ -32,35 +51,28 @@ body {
 /* Animations */
 @media (prefers-reduced-motion: no-preference) {
   .fade-in {
-    animation: fade .6s ease-out both
+    animation: fade 0.6s ease-out both;
   }
 
   @keyframes fade {
-    from {
-      opacity: 0;
-      transform: translateY(10px)
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0)
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .slide-up {
-    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* Hidden state before the observer fires */
+  .slide-up:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  /* Animation triggers when .is-visible is added by the IntersectionObserver */
+  .slide-up.is-visible {
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -98,83 +110,507 @@ body {
   box-shadow: 0 25px 50px -12px rgba(27, 112, 239, 0.15);
 }
 
-/* --- Styles from faq.css --- */
-/* Accordion custom style */
+/* ===== ACCORDION ===== */
 details summary::-webkit-details-marker {
   display: none;
 }
 
-details[open] summary .fa-chevron-down {
-  transform: rotate(180deg);
+/* Smooth open/close via grid-rows transition */
+details .accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-
-@keyframes fade {
-  from {
-    opacity: 0;
-    transform: translateY(10px)
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0)
-  }
+details[open] .accordion-body {
+  grid-template-rows: 1fr;
 }
 
-.slide-up {
-  animation: slideUp .8s cubic-bezier(0.16, 1, 0.3, 1) both
+details .accordion-body > div {
+  overflow: hidden;
 }
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px)
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0)
-  }
-}
-
 
 
 /* Global scrollbar styles handled by header.js */
 
-/* --- Styles from privacy.css --- */
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.slide-up {
-  animation: slideUp 0.6s ease-out forwards;
-}
-
 /* Floating Animation */
 @keyframes bubbleFloat {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
 }
 
 .animate-float {
   animation: bubbleFloat 5s ease-in-out infinite;
 }
 
+/* WhatsApp FAB pulse ring */
+.whatsapp-fab {
+  position: relative;
+}
+
+.whatsapp-fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #10b981;
+  animation: waPulse 2.5s ease-out infinite;
+  z-index: -1;
+}
+
+@keyframes waPulse {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  70%  { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
 .icon-bold {
   -webkit-text-stroke: 1.5px currentColor;
+}
+
+/* ===== CSS VARIABLES ===== */
+:root {
+  --marquee-duration: 30s;
+}
+
+/* ===== HERO IMAGE PANEL ===== */
+.hero-image-panel {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(10, 11, 16, 0.06);
+  display: block;
+}
+
+.hero-image-panel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Hero Carousel */
+.hero-carousel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hero-carousel-item.active {
+  opacity: 1;
+}
+
+.hero-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  opacity: 0.5;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-carousel-dot.active {
+  opacity: 1;
+  width: 24px;
+  border-radius: 4px;
+  background: white;
+}
+
+/* ===== MARQUEE ===== */
+.marquee-outer {
+  overflow: hidden;
+  position: relative;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+}
+
+.marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  width: max-content;
+  padding: 0.5rem 0;
+  will-change: transform;
+}
+
+.marquee-track {
+  animation: marqueeScroll var(--marquee-duration, 30s) linear infinite;
+}
+
+.marquee-track.is-js-driven {
+  animation: none;
+}
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-item img {
+  height: 3.5rem;
+  width: auto;
+  max-width: 150px;
+  opacity: 0.8;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.marquee-item:hover img {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* ===== TESTIMONIAL CARDS ===== */
+.testimonial-card {
+  border-radius: 2.5rem;
+  overflow: hidden;
+  background: white;
+  border: 1px solid rgba(10, 77, 162, 0.1);
+  display: flex;
+  transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+  border-color: rgba(10, 77, 162, 0.25);
+}
+
+.group:hover .testimonial-card {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.testimonial-card img {
+  display: block;
+  border-bottom-left-radius: 2.5rem;
+  border-top-left-radius: 2.5rem;
+}
+
+/* Hero section — wing-spread gradient background */
+.hero-wing-gradient {
+  background:
+    radial-gradient(ellipse 140% 70% at 50% 18%, #38BDF8 0%, #7DD3FC 18%, #BAE6FD 38%, transparent 68%),
+    linear-gradient(180deg, #DBEAFE 0%, #FFFFFF 88%);
+}
+
+/* Hero icon background pattern */
+.hero-icon-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/hero-bg-icons.svg');
+  background-repeat: repeat;
+  background-size: 320px 224px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+  /* Fade icons out toward the bottom of the hero */
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+}
+
+/* Hide scrollbar on mobile image strip */
+.mobile-hero-strip::-webkit-scrollbar { display: none; }
+
+/* Gold pulsing — text only */
+@keyframes textGoldPulse {
+  0%, 100% {
+    color: #C9A227;
+    text-shadow: 0 0 0 rgba(201, 162, 39, 0);
+  }
+  50% {
+    color: #E8C547;
+    text-shadow: 0 0 10px rgba(201, 162, 39, 0.5);
+  }
+}
+
+.text-gold-pulse {
+  animation: textGoldPulse 2.4s ease-in-out infinite;
+}
+
+/* ── Page Loader ──────────────────────────────────────────────────────────── */
+/* Placed in style.css (not header.js) so it loads synchronously via <link>   */
+/* and covers the page before any body content is rendered.                   */
+#page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  pointer-events: all;
+}
+#page-loader.loader-out {
+  opacity: 0;
+  pointer-events: none;
+}
+#page-loader img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  animation: loaderPulse 2.4s ease-in-out infinite;
+}
+#loader-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+#loader-dots span {
+  width: 7px;
+  height: 7px;
+  background: #1A6FD4;
+  border-radius: 50%;
+  animation: loaderBounce 1.4s ease-in-out infinite;
+}
+#loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+#loader-dots span:nth-child(3) { animation-delay: 0.30s; }
+@keyframes loaderPulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.6; transform: scale(0.92); }
+}
+@keyframes loaderBounce {
+  0%, 100% { transform: translateY(0);    opacity: 0.3; }
+  50%       { transform: translateY(-8px); opacity: 1;   }
+}
+
+/* ── Mobile Drawer ─────────────────────────────────────────────────────────── */
+/* Placed here so the panel is off-screen from the very first render,          */
+/* without depending on Tailwind's async class processing.                     */
+#mobileMenuContent {
+  transform: translateX(100%);
+  transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== REDESIGN 2025 — DESIGN SYSTEM COMPONENTS ========================== */
+
+/* Named tile backgrounds matching design.md alternating rhythm */
+.tile-dark1 { background-color: #272729; }
+.tile-dark2 { background-color: #2a2a2c; }
+.tile-parch { background-color: #edf4ff; }   /* light blue-parchment — aviation sky tint */
+.tile-sky   { background-color: #f0f7ff; }   /* barely-there sky blue — premium canvas */
+
+/* Utility card — white surface, 1px hairline, 18px radius, no shadow */
+.card-utility {
+  background: #ffffff;
+  border: 1px solid rgba(0, 102, 204, 0.10);
+  border-radius: 18px;
+  transition: transform 0.3s ease-out, border-color 0.3s ease-out;
+}
+.card-utility:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 102, 204, 0.32);
+}
+
+/* Pill CTA system */
+.btn-pill {
+  border-radius: 9999px;
+  padding: 0.6875rem 1.375rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease-out;
+  cursor: pointer;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-pill:active { transform: scale(0.95); }
+
+.btn-pill-primary {
+  background: #0066cc;
+  color: #ffffff;
+  border: none;
+}
+.btn-pill-primary:hover { background: #0052a3; }
+
+.btn-pill-ghost {
+  background: transparent;
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.32);
+}
+.btn-pill-ghost:hover { background: rgba(255, 255, 255, 0.08); }
+
+.btn-pill-dark {
+  background: #272729;
+  color: #ffffff;
+  border: none;
+}
+.btn-pill-dark:hover { background: #1a1a1b; }
+
+/* Step number watermark — Lexend, Sky Blue at 12% opacity */
+.step-number {
+  font-family: 'Lexend', sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 1;
+  color: rgba(0, 102, 204, 0.12);
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -0.02em;
+}
+
+/* Savings badge — Sky Blue outline pill */
+.savings-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(0, 102, 204, 0.07);
+  border: 1px solid rgba(0, 102, 204, 0.20);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0066cc;
+}
+
+/* Savings callout badge — solid Sky Blue pill on featured testimonial */
+.savings-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #0066cc;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 0.25rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Featured testimonial card — white, hairline border, 18px radius */
+.testimonial-featured {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  transition: border-color 0.25s ease-out;
+}
+.testimonial-featured:hover { border-color: rgba(0, 102, 204, 0.20); }
+
+/* Authority cards — semi-transparent surface on dark tiles */
+.authority-card {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+  transition: background 0.3s ease-out, border-color 0.3s ease-out;
+}
+.authority-card:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(0, 102, 204, 0.35);
+}
+
+/* FAQ accordion indicator */
+.faq-indicator {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 102, 204, 0.12);
+  color: #0066cc;
+  transition: background 0.25s ease-out, color 0.25s ease-out;
+}
+.faq-indicator i {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 0.7rem;
+}
+
+details[open] > summary .faq-indicator {
+  background: #0066cc;
+  color: #ffffff;
+}
+details[open] > summary .faq-indicator i {
+  transform: rotate(180deg);
+}
+
+/* FAQ card on dark tile — transparent with white hairline */
+.faq-item {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: border-color 0.25s ease-out;
+}
+.faq-item:hover { border-color: rgba(0, 102, 204, 0.35); }
+.faq-item summary { list-style: none; cursor: pointer; }
+.faq-item summary::-webkit-details-marker { display: none; }
+
+/* Section lead copy — Manrope 500 for elevated readability */
+.section-lead {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  color: #4b5563;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.section-lead-dark {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* Instagram editorial brand card */
+.instagram-brand-card {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.3s ease-out;
+}
+.instagram-brand-card:hover { transform: translateY(-3px); }
+.instagram-brand-card .ig-hover-layer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(120,40,200,0.08), rgba(240,80,90,0.06), rgba(250,130,30,0.06));
+  opacity: 0;
+  transition: opacity 0.45s ease-out;
+}
+.instagram-brand-card:hover .ig-hover-layer { opacity: 1; }
+
+/* Social section column equal-height alignment */
+.social-col {
+  display: flex;
+  flex-direction: column;
+}
+.social-col .social-col-embed {
+  flex: 1;
+  min-height: 0;
 }

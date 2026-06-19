@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Itinerary Design — Skyfare Consulting</title>
+    <meta name="description" content="Custom flight routing and miles strategy. We find the most efficient way to fly using your miles or cash." />
+    <link rel="icon" href="../logos/logo.webp" />
+
+    <!-- Injectable Header & Footer -->
+    <script src="../js/header.js" defer></script>
+    <script src="../js/footer.js" defer></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+
+    <!-- Tailwind -->
+    <script src="../lib/tailwind/tailwind.min.js"></script>
+    
+    <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+</head>
+  <body class="min-h-screen flex flex-col">
+
+    <div id="page-loader">
+      <img src="../logos/logo.webp" alt="Skyfare Consulting">
+      <div id="loader-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <main class="flex-1">
+      <!-- HERO -->
+      <section class="container mx-auto px-4 pt-16 md:pt-24 pb-12 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 text-brand-600 text-xs font-bold uppercase tracking-widest mb-6 border border-brand-500/20">
+          <i class="fa-solid fa-map-location-dot"></i> Expert Routing
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-brand-950 mb-6 tracking-tight">
+          Itinerary <span class="text-transparent bg-clip-text brand-gradient">Design.</span>
+        </h1>
+        <p class="text-lg md:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          We find 2–3 optimized redemption options for your dates and preferences — and show you exactly how to book them.
+        </p>
+      </section>
+
+      <!-- MAIN CONTENT -->
+      <section class="container mx-auto px-4 mb-24 max-w-5xl">
+        <div class="grid md:grid-cols-2 gap-8 items-stretch">
+          <!-- Benefits -->
+          <div class="glass rounded-[3rem] p-8 md:p-12 border-brand-200/20">
+            <h3 class="text-2xl font-bold text-brand-950 mb-8">What's Included</h3>
+            <ul class="space-y-6">
+              <li class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-500 shrink-0 mt-1">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <p class="text-sm text-neutral-600 leading-relaxed font-medium">
+                  2–3 optimized options balancing time, comfort, and value.
+                </p>
+              </li>
+              <li class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-500 shrink-0 mt-1">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <p class="text-sm text-neutral-600 leading-relaxed font-medium">
+                  Cash vs miles comparisons (including airline fuel surcharges).
+                </p>
+              </li>
+              <li class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-500 shrink-0 mt-1">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <p class="text-sm text-neutral-600 leading-relaxed font-medium">
+                  Detailed step-by-step booking instructions for each route.
+                </p>
+              </li>
+              <li class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-500 shrink-0 mt-1">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <p class="text-sm text-neutral-600 leading-relaxed font-medium">
+                  One round of revisions included.
+                </p>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Pricing & Fee -->
+          <div class="glass rounded-[3rem] p-8 md:p-12 border-brand-600/40 bg-brand-600/5 shadow-2xl relative overflow-hidden flex flex-col">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+            <h3 class="text-2xl font-bold text-brand-950 mb-2">Service Fee</h3>
+            <div class="flex items-baseline gap-1 mb-6">
+              <span class="text-6xl font-black text-brand-600">5%</span>
+            </div>
+            <p class="text-sm text-neutral-500 mb-10 leading-relaxed">
+              of total ticket value for the confirmed booking. Minimum fees may apply per route.
+            </p>
+            
+            <div class="space-y-6 mt-auto">
+              <div class="p-4 rounded-2xl bg-white/50 border border-brand-100">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Popular Add-ons</h4>
+                <ul class="text-xs space-y-2 text-neutral-600">
+                  <li>• Extra traveller (on the same flights)</li>
+                  <li>• Award space monitoring (per route/week)</li>
+                </ul>
+              </div>
+              <a href="book.html?service=itinerary" class="w-full block py-4 rounded-2xl brand-gradient text-white font-bold text-center shadow-xl hover:scale-105 transition-all">
+                Start Itinerary Design
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </body>
+</html>
