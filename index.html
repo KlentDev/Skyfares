@@ -1,12 +1,15 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Skyfare Consulting — Fly Premium for Less</title>
   <meta name="description"
-    content="Buy KrisFlyer miles and book confirmed Business & First Class redemptions. Nominee redemption or direct transfer — handled end-to-end." />
+    content="Fly Business and First Class for up to 60% less. Skyfare arranges premium cabin award travel so you can enjoy the luxury without learning the system." />
   <link rel="icon" href="logos/logo.webp" />
+
+  <!-- Central link store (no defer — must run before header/footer) -->
+  <script src="js/links.js"></script>
 
   <!-- Meta Pixel Code -->
   <script src="js/meta-pixel.js" defer></script>
@@ -39,60 +42,61 @@
   <!-- HEADER -->
 
   <!-- HERO SECTION -->
-  <section class="hero-icon-bg hero-brand-fade pt-8 pb-0 overflow-hidden relative">
+  <section class="hero-brand-fade pt-8 pb-4 overflow-hidden relative" style="background-image:none; background-color:#1A2437;">
     <div class="container mx-auto px-4 md:px-6">
 
       <!-- Centered content block -->
-      <div class="text-center max-w-3xl mx-auto mb-5 slide-up">
+      <div class="text-center max-w-3xl mx-auto mb-5 slide-up relative z-10">
 
         <!-- Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold/50 text-gold text-xs font-bold uppercase tracking-widest mb-6">
-          <i class="fa-solid fa-crown text-[10px]"></i>
+        <div class="badge-shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-6"
+             style="box-shadow:0 4px 20px rgba(201,162,39,0.55), 0 1px 0 rgba(255,255,255,0.25) inset;
+                    border:1px solid rgba(255,220,100,0.45);">
+          <i class="fa-solid fa-crown text-[10px]" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></i>
           Luxury Travel Concierge
         </div>
 
         <!-- H1 -->
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.05] tracking-tight mb-5">
-          Premium Cabins,<br>
-          <span class="text-gold">Without Premium Prices</span>
+        <h1 class="font-display font-bold text-white leading-tight tracking-tight mb-5 whitespace-nowrap" style="font-size:clamp(1.35rem,5vw,3.75rem);">
+          Fly premium. <span class="text-gold">Think smarter.</span>
         </h1>
 
         <!-- Description -->
         <p class="text-base text-white/75 mb-6 lg:mb-8 leading-relaxed max-w-xl mx-auto font-medium">
           Fly Business &amp; First Class for up to <span
             class="text-white font-bold underline decoration-gold decoration-2 underline-offset-4">60%
-            less</span>. We handle the complexity of miles redemptions so you can enjoy the luxury.
+            less</span>. We arrange your award travel so you can focus on the journey.
         </p>
 
         <!-- Mobile-only stats (shown below description, before CTAs) -->
         <div class="lg:hidden flex justify-center items-start divide-x divide-white/20 mb-7">
           <div class="text-center pr-6">
             <div class="text-2xl font-black text-gold leading-none">60%</div>
-            <div class="text-[10px] text-white/60 uppercase font-bold tracking-widest mt-1.5">Avg. Savings</div>
+            <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Avg. Savings</div>
           </div>
           <div class="text-center px-6">
             <div class="text-2xl font-black text-gold leading-none">100+</div>
-            <div class="text-[10px] text-white/60 uppercase font-bold tracking-widest mt-1.5">Airlines</div>
+            <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Airlines</div>
           </div>
           <div class="text-center pl-6">
             <div class="text-2xl font-black text-gold leading-none">24/7</div>
-            <div class="text-[10px] text-white/60 uppercase font-bold tracking-widest mt-1.5">Concierge</div>
+            <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Concierge</div>
           </div>
         </div>
 
         <!-- CTAs -->
         <div class="flex flex-wrap justify-center items-center gap-4">
-          <a href="pages/how-it-works.html"
-            class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-gold text-white font-bold text-base hover:bg-gold/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-gold/25">
-            Explore More
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
           <a href="https://api.whatsapp.com/send?phone=6581575306" rel="noopener noreferrer"
-            class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-white/10 text-white font-bold text-base border border-white/25 hover:bg-white/20 transition-all hover:scale-105 active:scale-95">
-            <i class="fa-brands fa-whatsapp text-lg"></i>
-            WhatsApp Us
+            class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-gold text-white font-bold text-base hover:bg-gold/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-gold/25">
+            <i class="fa-brands fa-whatsapp text-white text-lg"></i>
+            Book a Flight
           </a>
-          <button type="button" class="group">
+          <a href="/altitude"
+            class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-white/10 text-white font-bold text-base border border-white/30 hover:bg-white/20 transition-all hover:scale-105 active:scale-95 backdrop-blur-sm">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            Get Altitude Access
+          </a>
+          <button type="button" id="hero-play-btn" class="group">
             <span class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center shadow-md group-hover:bg-red-700 group-hover:scale-110 group-hover:shadow-lg transition-all">
               <i class="fa-solid fa-play text-white text-sm ml-0.5"></i>
             </span>
@@ -100,7 +104,7 @@
         </div>
 
         <!-- Mobile-only glance section (shown after CTAs, centered) -->
-        <div class="lg:hidden mt-8 pt-8 border-t border-white/15 text-center">
+        <div class="lg:hidden mt-8 pt-8 border-t border-white/20 text-center">
           <p class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold mb-1">Skyfare at a Glance</p>
           <h3 class="text-xl font-extrabold text-white mb-5 leading-snug">
             Monthly 1–5 Million Miles Redeemed
@@ -108,107 +112,121 @@
           <div class="flex flex-col gap-3 items-center">
             <div>
               <p class="text-sm font-bold text-white leading-tight">Business &amp; First Class</p>
-              <p class="text-xs text-white/60 mt-0.5">Confirmed seat redemptions</p>
+              <p class="text-xs text-white/55 mt-0.5">Confirmed seat redemptions</p>
             </div>
             <div>
               <p class="text-sm font-bold text-white leading-tight">No Waitlists</p>
-              <p class="text-xs text-white/60 mt-0.5">Direct booking pathways</p>
+              <p class="text-xs text-white/55 mt-0.5">Direct booking pathways</p>
             </div>
             <div>
               <p class="text-sm font-bold text-white leading-tight">100% Safe &amp; Legal</p>
-              <p class="text-xs text-white/60 mt-0.5">Airline-compliant redemptions</p>
+              <p class="text-xs text-white/55 mt-0.5">Airline-compliant redemptions</p>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Full-width image panel with carousel + overlays -->
-      <div class="relative rounded-3xl overflow-hidden slide-up" style="height:50vh;min-height:300px;animation-delay:0.15s;">
+      <!-- Full-width image panel — glass peeks out from behind the image
+           glass extends: left=12px | right=12px | bottom=12px | top=24px (double) -->
+      <div class="relative slide-up" style="animation-delay:0.15s;">
 
-        <!-- Carousel images -->
-        <div class="absolute inset-0">
-          <div class="hero-carousel-item active">
-            <img src="images/hero/1.png" alt="Premium business class travel" class="hero-image-panel__img">
-          </div>
-          <div class="hero-carousel-item">
-            <img src="images/hero/2.png" alt="Luxury cabin experience" class="hero-image-panel__img">
-          </div>
-          <div class="hero-carousel-item">
-            <img src="images/hero/3.png" alt="Business class lounge" class="hero-image-panel__img">
-          </div>
-          <div class="hero-carousel-item">
-            <img src="images/hero/4.png" alt="First class suite" class="hero-image-panel__img">
-          </div>
+        <!-- Glass layer — absolute, behind the image, no pointer events -->
+        <div class="absolute rounded-[32px] pointer-events-none"
+             style="top:-13px; left:-13px; right:-13px; bottom:-13px; z-index:0;
+                    background:rgba(255,255,255,0.06);
+                    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+                    border:1px solid rgba(255,255,255,0.18);
+                    box-shadow:0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);">
         </div>
 
-        <!-- Dark gradient overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-10"></div>
+        <div class="relative rounded-3xl overflow-hidden" style="height:54vh;min-height:340px; z-index:1;">
 
-        <!-- Top bar -->
-        <div class="absolute top-5 left-5 right-5 flex justify-between items-center z-20">
-          <div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>
-            PREMIUM &nbsp;·&nbsp; Business Class
-            <i class="fa-solid fa-chevron-right text-[9px] opacity-60"></i>
-          </div>
-          <a href="pages/services.html"
-            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold hover:bg-white/20 transition-all">
-            Explore Savings <i class="fa-solid fa-arrow-right text-[9px]"></i>
-          </a>
-        </div>
-
-        <!-- Bottom overlay: headline + checkmarks (left) + stats (right) — desktop only -->
-        <div class="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-12 z-20 hidden lg:flex items-end justify-between gap-6">
-
-          <!-- Left: glance headline + features -->
-          <div class="flex-1 min-w-0">
-            <div class="inline-flex items-center px-3 py-1 rounded-full bg-gold/25 text-gold text-[10px] font-bold uppercase tracking-widest mb-3">
-              Skyfare at a Glance
+          <!-- Carousel images -->
+          <div class="absolute inset-0">
+            <div class="hero-carousel-item active">
+              <img src="images/hero/1.png" alt="Premium business class travel" class="hero-image-panel__img">
             </div>
-            <h3 class="text-white text-xl md:text-2xl font-extrabold mb-3 leading-tight">
-              Monthly 1–5 Million Miles Redeemed
-            </h3>
-            <div class="flex gap-5 md:gap-8">
-              <div class="min-w-0">
-                <p class="text-white text-xs font-bold leading-snug">Business &amp; First Class</p>
-                <p class="text-white/50 text-[10px] leading-snug mt-0.5">Confirmed seat redemptions</p>
-              </div>
-              <div class="min-w-0">
-                <p class="text-white text-xs font-bold leading-snug">No Waitlists</p>
-                <p class="text-white/50 text-[10px] leading-snug mt-0.5">Direct booking pathways</p>
-              </div>
-              <div class="min-w-0">
-                <p class="text-white text-xs font-bold leading-snug">100% Safe &amp; Legal</p>
-                <p class="text-white/50 text-[10px] leading-snug mt-0.5">Airline-compliant redemptions</p>
-              </div>
+            <div class="hero-carousel-item">
+              <img src="images/hero/2.png" alt="Luxury cabin experience" class="hero-image-panel__img">
+            </div>
+            <div class="hero-carousel-item">
+              <img src="images/hero/3.png" alt="Business class lounge" class="hero-image-panel__img">
+            </div>
+            <div class="hero-carousel-item">
+              <img src="images/hero/4.png" alt="First class suite" class="hero-image-panel__img">
             </div>
           </div>
 
-          <!-- Right: stats glass card -->
-          <div class="hidden md:flex flex-shrink-0 items-center divide-x divide-white/20 bg-black/35 backdrop-blur-md border border-white/15 rounded-2xl overflow-hidden">
-            <div class="text-center px-5 py-3">
-              <div class="text-2xl font-black text-gold leading-none">60%</div>
-              <div class="text-[9px] text-white/60 uppercase font-bold tracking-widest mt-1">Avg. Savings</div>
+          <!-- Dark gradient overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-10"></div>
+
+          <!-- Top bar -->
+          <div class="absolute top-5 left-5 right-5 flex justify-between items-center z-20">
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>
+              PREMIUM &nbsp;·&nbsp; Business Class
+              <i class="fa-solid fa-chevron-right text-[9px] opacity-60"></i>
             </div>
-            <div class="text-center px-5 py-3">
-              <div class="text-2xl font-black text-gold leading-none">100+</div>
-              <div class="text-[9px] text-white/60 uppercase font-bold tracking-widest mt-1">Airlines</div>
-            </div>
-            <div class="text-center px-5 py-3">
-              <div class="text-2xl font-black text-gold leading-none">24/7</div>
-              <div class="text-[9px] text-white/60 uppercase font-bold tracking-widest mt-1">Concierge</div>
-            </div>
+            <a href="pages/services.html"
+              class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold hover:bg-white/20 transition-all">
+              Explore Savings <i class="fa-solid fa-arrow-right text-[9px]"></i>
+            </a>
           </div>
 
-        </div>
+          <!-- Bottom overlay: headline + checkmarks (left) + stats (right) — desktop only -->
+          <div class="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-12 z-20 hidden lg:flex items-end justify-between gap-6">
 
-        <!-- Carousel dots -->
-        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-30">
-          <button class="hero-carousel-dot active" data-slide="0"></button>
-          <button class="hero-carousel-dot" data-slide="1"></button>
-          <button class="hero-carousel-dot" data-slide="2"></button>
-          <button class="hero-carousel-dot" data-slide="3"></button>
+            <!-- Left: glance headline + features -->
+            <div class="flex-1 min-w-0">
+              <div class="inline-flex items-center px-3 py-1 rounded-full bg-gold/25 text-gold text-[10px] font-bold uppercase tracking-widest mb-3">
+                Skyfare at a Glance
+              </div>
+              <h3 class="text-white text-xl md:text-2xl font-extrabold mb-3 leading-tight">
+                Monthly 1–5 Million Miles Redeemed
+              </h3>
+              <div class="flex gap-5 md:gap-8">
+                <div class="min-w-0">
+                  <p class="text-white text-xs font-bold leading-snug">Business &amp; First Class</p>
+                  <p class="text-white/50 text-[10px] leading-snug mt-0.5">Confirmed seat redemptions</p>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-white text-xs font-bold leading-snug">No Waitlists</p>
+                  <p class="text-white/50 text-[10px] leading-snug mt-0.5">Direct booking pathways</p>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-white text-xs font-bold leading-snug">100% Safe &amp; Legal</p>
+                  <p class="text-white/50 text-[10px] leading-snug mt-0.5">Airline-compliant redemptions</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: stats glass card -->
+            <div class="hidden md:flex flex-shrink-0 items-center divide-x divide-white/20 bg-black/35 backdrop-blur-md border border-white/15 rounded-2xl overflow-hidden">
+              <div class="text-center px-5 py-3">
+                <div class="text-2xl font-black text-gold leading-none">60%</div>
+                <div class="text-[9px] text-white/60 uppercase font-bold tracking-widest mt-1">Avg. Savings</div>
+              </div>
+              <div class="text-center px-5 py-3">
+                <div class="text-2xl font-black text-gold leading-none">100+</div>
+                <div class="text-[9px] text-white/60 uppercase font-bold tracking-widest mt-1">Airlines</div>
+              </div>
+              <div class="text-center px-5 py-3">
+                <div class="text-2xl font-black text-gold leading-none">24/7</div>
+                <div class="text-[9px] text-white/60 uppercase font-bold tracking-widest mt-1">Concierge</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Carousel dots -->
+          <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+            <button class="hero-carousel-dot active" data-slide="0"></button>
+            <button class="hero-carousel-dot" data-slide="1"></button>
+            <button class="hero-carousel-dot" data-slide="2"></button>
+            <button class="hero-carousel-dot" data-slide="3"></button>
+          </div>
+
         </div>
 
       </div>
@@ -217,6 +235,7 @@
   </section>
 
   <!-- PARTNERS MARQUEE SECTION -->
+
   <section class="py-16 tile-sky">
     <div class="container mx-auto px-4 md:px-6">
       <p class="text-center text-brand-600 font-bold uppercase tracking-[0.3em] text-xs mb-8">
@@ -311,21 +330,152 @@
           <!-- Social Links -->
           <div class="mt-8 md:mt-10 flex items-center justify-center md:justify-start gap-4">
             <p class="text-brand-950 md:text-white text-base font-semibold">Follow me on:</p>
-            <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
+            <a id="founder-instagram-link" href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
               class="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center text-white hover:scale-110 transition-all shadow-lg shadow-pink-500/30">
               <i class="fa-brands fa-instagram text-xl"></i>
             </a>
-            <a href="https://www.tiktok.com/@skyfareconsulting" target="_blank" rel="noopener noreferrer"
+            <a id="founder-tiktok-link" href="https://www.tiktok.com/@skyfareconsulting" target="_blank" rel="noopener noreferrer"
               class="w-12 h-12 rounded-full bg-black flex items-center justify-center text-white hover:scale-110 transition-all shadow-lg">
               <i class="fa-brands fa-tiktok text-xl"></i>
             </a>
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+            <a id="founder-whatsapp-link" href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
               class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white hover:scale-110 transition-all shadow-lg shadow-green-500/30">
               <i class="fa-brands fa-whatsapp text-xl"></i>
             </a>
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="py-20 tile-sky">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <!-- Header -->
+      <div class="text-center max-w-2xl mx-auto mb-14 slide-up">
+        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">The Process</p>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
+          From First Message to Boarding Pass
+        </h2>
+        <p class="text-neutral-600 text-base leading-relaxed font-medium">
+          We handle the complexity of award travel so you can focus on the journey.
+        </p>
+      </div>
+
+      <!-- 4-step grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+
+        <div class="card-dark p-7 relative overflow-hidden slide-up" style="animation-delay:0.1s;">
+          <div class="step-number absolute top-2 right-3">01</div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 01</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Request a Quote</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Connect via WhatsApp with your travel details: dates, route, and preferred cabin class.
+          </p>
+        </div>
+
+        <div class="card-dark p-7 relative overflow-hidden slide-up" style="animation-delay:0.2s;">
+          <div class="step-number absolute top-2 right-3">02</div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 02</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Expert Sourcing</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            We scan award availability across Star Alliance and partner networks to find the best value.
+          </p>
+        </div>
+
+        <div class="card-dark p-7 relative overflow-hidden slide-up" style="animation-delay:0.3s;">
+          <div class="step-number absolute top-2 right-3">03</div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 03</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Secure Your Ticket</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            We handle the booking. Your confirmed ticket is sent directly to you.
+          </p>
+        </div>
+
+        <div class="card-dark p-7 relative overflow-hidden slide-up" style="animation-delay:0.4s;">
+          <div class="step-number absolute top-2 right-3">04</div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 04</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Fly Premium</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Enjoy Business or First Class knowing you saved thousands versus a standard cash fare.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Savings comparison strip -->
+      <div class="border-t border-neutral-100 pt-14 slide-up" style="animation-delay:0.5s;">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+
+          <!-- Left: heading + description -->
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">Real Bookings</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
+              Real Savings, Real Results
+            </h2>
+            <p class="text-neutral-600 text-base leading-relaxed font-medium">
+              Every itinerary below is a real booking we arranged. Actual miles spent, taxes paid, and savings made.
+            </p>
+            <p class="mt-6 text-[10px] text-neutral-400 italic">
+              *Includes airline taxes and service fees. Subject to seasonal availability.
+              <a href="pages/how-it-works.html" class="ml-1 text-brand-500 not-italic font-semibold hover:underline underline-offset-2">More examples →</a>
+            </p>
+          </div>
+
+          <!-- Right: cards -->
+          <div class="grid grid-cols-2 gap-4">
+
+            <!-- SIN → JFK -->
+            <div class="card-dark p-6">
+              <div class="flex items-center gap-2 mb-5">
+                <i class="fa-solid fa-plane text-brand-400 text-sm"></i>
+                <span class="text-sm font-semibold text-white">SIN → JFK &nbsp;·&nbsp; Business Class</span>
+              </div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-white/45">Standard cash fare</span>
+                <span class="text-sm font-semibold text-white/30 line-through">S$6,800+</span>
+              </div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-xs text-white/70 font-medium">Skyfare strategy</span>
+                <div class="text-right">
+                  <span class="text-base font-bold text-white">S$2,244</span>
+                  <span class="block text-[10px] text-white/45 mt-0.5">117,000 miles</span>
+                </div>
+              </div>
+              <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                <span class="savings-badge"><i class="fa-solid fa-arrow-down text-[9px]"></i> You save</span>
+                <span class="text-base font-bold text-brand-400">S$4,556</span>
+              </div>
+            </div>
+
+            <!-- LHR → SIN -->
+            <div class="card-dark p-6">
+              <div class="flex items-center gap-2 mb-5">
+                <i class="fa-solid fa-plane text-brand-400 text-sm"></i>
+                <span class="text-sm font-semibold text-white">LHR → SIN &nbsp;·&nbsp; Business Class</span>
+              </div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-white/45">Standard cash fare</span>
+                <span class="text-sm font-semibold text-white/30 line-through">S$4,500+</span>
+              </div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-xs text-white/70 font-medium">Skyfare strategy</span>
+                <div class="text-right">
+                  <span class="text-base font-bold text-white">S$2,305</span>
+                  <span class="block text-[10px] text-white/45 mt-0.5">108,500 miles</span>
+                </div>
+              </div>
+              <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                <span class="savings-badge"><i class="fa-solid fa-arrow-down text-[9px]"></i> You save</span>
+                <span class="text-base font-bold text-brand-400">S$2,195</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -345,25 +495,25 @@
       <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto slide-up" style="animation-delay:0.1s;">
 
         <!-- LEFT: Skyfare Concierge -->
-        <div class="card-utility p-8 flex flex-col">
+        <div class="authority-card p-8 flex flex-col">
           <div class="mb-6">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-2">Skyfare Concierge</p>
-            <h3 class="text-xl font-display font-semibold text-neutral-900 mb-1">Done for you.</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2">Skyfare Concierge</p>
+            <h3 class="text-xl font-display font-semibold text-white mb-1">Done for you.</h3>
+            <p class="text-sm text-white/55 leading-relaxed">
               Best for: travelers who want confirmed Business or First Class seats without learning the system.
             </p>
           </div>
-          <ul class="space-y-3 mb-8 flex-1 text-sm text-neutral-700">
+          <ul class="space-y-3 mb-8 flex-1 text-sm text-white/75">
             <li class="flex items-start gap-3">
-              <i class="fa-solid fa-circle-check text-brand-500 mt-0.5 flex-shrink-0"></i>
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
               End-to-end booking — you show up at the gate
             </li>
             <li class="flex items-start gap-3">
-              <i class="fa-solid fa-circle-check text-brand-500 mt-0.5 flex-shrink-0"></i>
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
               Nominee or direct transfer, handled for you
             </li>
             <li class="flex items-start gap-3">
-              <i class="fa-solid fa-circle-check text-brand-500 mt-0.5 flex-shrink-0"></i>
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
               Dedicated consultant, custom quote
             </li>
           </ul>
@@ -376,28 +526,28 @@
         </div>
 
         <!-- RIGHT: Skyfare Altitude (highlighted with ring) -->
-        <div class="card-utility p-8 flex flex-col ring-2 ring-brand-500 ring-offset-2 ring-offset-[#272729]">
+        <div class="authority-card p-8 flex flex-col ring-2 ring-brand-500 ring-offset-2 ring-offset-[#1A2437]">
           <div class="mb-6">
             <div class="flex items-center gap-2 mb-2">
-              <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500">Skyfare Altitude</p>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400">Skyfare Altitude</p>
               <span class="text-[10px] font-bold text-white bg-brand-500 px-2 py-0.5 rounded-full leading-none tracking-wide">$4.99/mo</span>
             </div>
-            <h3 class="text-xl font-display font-semibold text-neutral-900 mb-1">The insider edge.</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">
+            <h3 class="text-xl font-display font-semibold text-white mb-1">The insider edge.</h3>
+            <p class="text-sm text-white/55 leading-relaxed">
               Best for: frequent travelers who want to learn the system and book premium cabins themselves.
             </p>
           </div>
-          <ul class="space-y-3 mb-8 flex-1 text-sm text-neutral-700">
+          <ul class="space-y-3 mb-8 flex-1 text-sm text-white/75">
             <li class="flex items-start gap-3">
-              <i class="fa-solid fa-circle-check text-brand-500 mt-0.5 flex-shrink-0"></i>
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
               Weekly award space alerts and deal breakdowns
             </li>
             <li class="flex items-start gap-3">
-              <i class="fa-solid fa-circle-check text-brand-500 mt-0.5 flex-shrink-0"></i>
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
               Routing strategies and miles guides
             </li>
             <li class="flex items-start gap-3">
-              <i class="fa-solid fa-circle-check text-brand-500 mt-0.5 flex-shrink-0"></i>
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
               Written by someone who books 100+ premium cabins a year
             </li>
           </ul>
@@ -420,213 +570,91 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="py-20 tile-sky">
-    <div class="container mx-auto px-4 md:px-6">
-
-      <!-- Header -->
-      <div class="text-center max-w-2xl mx-auto mb-14 slide-up">
-        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">The Process</p>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
-          From First Message to Boarding Pass
-        </h2>
-        <p class="text-neutral-600 text-base leading-relaxed font-medium">
-          We handle the complexity of miles redemptions so you can focus on the journey.
-        </p>
-      </div>
-
-      <!-- 4-step grid -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
-
-        <div class="card-utility p-7 relative overflow-hidden slide-up" style="animation-delay:0.1s;">
-          <div class="step-number mb-3">01</div>
-          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Step 01</p>
-          <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Request a Quote</h3>
-          <p class="text-sm text-neutral-500 leading-relaxed">
-            Connect via WhatsApp with your travel details: dates, route, and preferred cabin class.
-          </p>
-        </div>
-
-        <div class="card-utility p-7 relative overflow-hidden slide-up" style="animation-delay:0.2s;">
-          <div class="step-number mb-3">02</div>
-          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Step 02</p>
-          <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Expert Sourcing</h3>
-          <p class="text-sm text-neutral-500 leading-relaxed">
-            We scan award availability across Star Alliance and partner networks to find the best value.
-          </p>
-        </div>
-
-        <div class="card-utility p-7 relative overflow-hidden slide-up" style="animation-delay:0.3s;">
-          <div class="step-number mb-3">03</div>
-          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Step 03</p>
-          <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Secure Your Ticket</h3>
-          <p class="text-sm text-neutral-500 leading-relaxed">
-            We handle nominee redemption or direct transfer — your confirmed ticket is sent to you.
-          </p>
-        </div>
-
-        <div class="card-utility p-7 relative overflow-hidden slide-up" style="animation-delay:0.4s;">
-          <div class="step-number mb-3">04</div>
-          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Step 04</p>
-          <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Fly Premium</h3>
-          <p class="text-sm text-neutral-500 leading-relaxed">
-            Enjoy Business or First Class knowing you saved thousands versus a standard cash fare.
-          </p>
-        </div>
-
-      </div>
-
-      <!-- Savings comparison strip -->
-      <div class="border-t border-neutral-100 pt-14 slide-up" style="animation-delay:0.5s;">
-        <p class="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-400 mb-8">Real Savings, Real Bookings</p>
-        <div class="grid md:grid-cols-2 gap-5 max-w-3xl mx-auto">
-
-          <!-- SIN → JFK -->
-          <div class="card-utility p-6">
-            <div class="flex items-center gap-2 mb-5">
-              <i class="fa-solid fa-plane text-brand-500 text-sm"></i>
-              <span class="text-sm font-semibold text-neutral-900">SIN → JFK &nbsp;·&nbsp; Business Class</span>
-            </div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs text-neutral-400">Standard cash fare</span>
-              <span class="text-sm font-semibold text-neutral-300 line-through">S$6,800+</span>
-            </div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs text-neutral-600 font-medium">Skyfare strategy</span>
-              <div class="text-right">
-                <span class="text-base font-bold text-neutral-900">S$2,244</span>
-                <span class="block text-[10px] text-neutral-400 mt-0.5">117,000 miles</span>
-              </div>
-            </div>
-            <div class="pt-4 border-t border-neutral-100 flex items-center justify-between">
-              <span class="savings-badge"><i class="fa-solid fa-arrow-down text-[9px]"></i> You save</span>
-              <span class="text-base font-bold text-brand-500">S$4,556</span>
-            </div>
-          </div>
-
-          <!-- LHR → SIN -->
-          <div class="card-utility p-6">
-            <div class="flex items-center gap-2 mb-5">
-              <i class="fa-solid fa-plane text-brand-500 text-sm"></i>
-              <span class="text-sm font-semibold text-neutral-900">LHR → SIN &nbsp;·&nbsp; Business Class</span>
-            </div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs text-neutral-400">Standard cash fare</span>
-              <span class="text-sm font-semibold text-neutral-300 line-through">S$4,500+</span>
-            </div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs text-neutral-600 font-medium">Skyfare strategy</span>
-              <div class="text-right">
-                <span class="text-base font-bold text-neutral-900">S$2,305</span>
-                <span class="block text-[10px] text-neutral-400 mt-0.5">108,500 miles</span>
-              </div>
-            </div>
-            <div class="pt-4 border-t border-neutral-100 flex items-center justify-between">
-              <span class="savings-badge"><i class="fa-solid fa-arrow-down text-[9px]"></i> You save</span>
-              <span class="text-base font-bold text-brand-500">S$2,195</span>
-            </div>
-          </div>
-
-        </div>
-        <p class="text-center mt-6 text-[10px] text-neutral-400 italic">
-          *Includes airline taxes and service fees. Subject to seasonal availability.
-          <a href="pages/how-it-works.html" class="ml-1 text-brand-500 not-italic font-semibold hover:underline underline-offset-2">More examples →</a>
-        </p>
-      </div>
-
-    </div>
-  </section>
-
   <!-- SOCIAL PROOF -->
   <section class="py-20 tile-parch">
     <div class="container mx-auto px-4 md:px-6">
 
       <!-- Section header -->
-      <div class="text-center mb-12 slide-up">
+      <div class="text-center max-w-xl mx-auto mb-14 slide-up">
         <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">Client Results</p>
         <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-3 tracking-tight">
           What Our Clients Say
         </h2>
-        <p class="text-neutral-600 text-base font-medium">
-          Avg. client savings: <span class="font-semibold text-neutral-800">S$3,400 per booking</span>
+        <p class="text-neutral-500 text-sm font-medium">
+          Avg. client savings: <span class="font-bold text-neutral-800">S$3,400 per booking</span>
         </p>
       </div>
 
-      <!-- Featured testimonial: Ronit S. -->
-      <div class="testimonial-featured p-8 md:p-10 mb-5 slide-up" style="animation-delay:0.1s;">
-        <div class="md:flex md:items-start md:gap-8">
-          <img src="images/testimonials/ronit.JPG"
-               alt="Ronit S."
-               class="w-20 h-20 rounded-[18px] object-cover flex-shrink-0 mb-6 md:mb-0">
-          <div class="flex-1">
-            <div class="flex flex-wrap items-center gap-3 mb-4">
-              <div class="flex gap-1 text-gold">
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-              </div>
-              <span class="savings-callout">
-                <i class="fa-solid fa-arrow-down text-[9px]"></i> Saved S$4,000+
+      <!-- 3-column testimonial grid -->
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <!-- Ronit S. -->
+        <div class="card-utility overflow-hidden flex flex-col slide-up" style="animation-delay:0.1s;">
+          <div class="h-56 flex-shrink-0 relative">
+            <img src="images/testimonials/ronit.JPG" alt="Ronit S."
+                 class="w-full h-full object-cover object-center">
+            <div class="absolute bottom-3 left-3">
+              <span class="savings-callout text-[10px] py-1 px-3">
+                <i class="fa-solid fa-arrow-down text-[8px]"></i> Saved S$4,000+
               </span>
             </div>
-            <blockquote class="text-neutral-700 text-base md:text-lg leading-relaxed mb-5 italic">
+          </div>
+          <div class="flex-1 p-6 flex flex-col">
+            <div class="flex gap-0.5 text-gold mb-4">
+              <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i>
+            </div>
+            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
               "Skyfare saved me over S$4,000 on my Business Class flight to London. The nominee process was seamless and the support was exceptional."
             </blockquote>
-            <div>
+            <div class="pt-4 border-t border-neutral-100">
               <p class="font-semibold text-neutral-900 text-sm">Ronit S.</p>
-              <p class="text-xs text-brand-500 font-bold uppercase tracking-widest mt-0.5">Business Traveler</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2 supporting testimonials -->
-      <div class="grid md:grid-cols-2 gap-5">
-
-        <!-- Amrita -->
-        <div class="testimonial-featured p-7 slide-up" style="animation-delay:0.2s;">
-          <div class="flex items-start gap-5">
-            <img src="images/testimonials/amrita.JPG"
-                 alt="Amrita"
-                 class="w-14 h-14 rounded-[18px] object-cover flex-shrink-0">
-            <div class="flex-1 min-w-0">
-              <div class="flex gap-1 text-gold mb-3">
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-              </div>
-              <blockquote class="text-neutral-600 text-sm leading-relaxed italic mb-4">
-                "We booked Business Class for the whole family to Tokyo. Skyfare found confirmed space when everyone else said there was no hope."
-              </blockquote>
-              <p class="font-semibold text-neutral-900 text-sm">Amrita</p>
-              <p class="text-xs text-brand-500 font-bold uppercase tracking-widest mt-0.5">Frequent Traveler</p>
+              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Business Traveler</p>
             </div>
           </div>
         </div>
 
-        <!-- Adi A. -->
-        <div class="testimonial-featured p-7 slide-up" style="animation-delay:0.3s;">
-          <div class="flex items-start gap-5">
-            <img src="images/testimonials/leon.JPG"
-                 alt="Adi A."
-                 class="w-14 h-14 rounded-[18px] object-cover flex-shrink-0">
-            <div class="flex-1 min-w-0">
-              <div class="flex gap-1 text-gold mb-3">
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-              </div>
-              <blockquote class="text-neutral-600 text-sm leading-relaxed italic mb-4">
-                "They handled the entire redemption technicalities while I just sat back and waited for my e-ticket. Highly recommend."
-              </blockquote>
-              <p class="font-semibold text-neutral-900 text-sm">Adi A.</p>
-              <p class="text-xs text-brand-500 font-bold uppercase tracking-widest mt-0.5">Executive</p>
+        <!-- Amrita B. -->
+        <div class="card-utility overflow-hidden flex flex-col slide-up" style="animation-delay:0.2s;">
+          <div class="h-56 flex-shrink-0">
+            <img src="images/testimonials/amrita.JPG" alt="Amrita B."
+                 class="w-full h-full object-cover object-center">
+          </div>
+          <div class="flex-1 p-6 flex flex-col">
+            <div class="flex gap-0.5 text-gold mb-4">
+              <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i>
+            </div>
+            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
+              "We booked Business Class for the whole family to Tokyo. Skyfare found confirmed space when everyone else said there was no hope."
+            </blockquote>
+            <div class="pt-4 border-t border-neutral-100">
+              <p class="font-semibold text-neutral-900 text-sm">Amrita B.</p>
+              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Frequent Traveler</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leon L. -->
+        <div class="card-utility overflow-hidden flex flex-col slide-up" style="animation-delay:0.3s;">
+          <div class="h-56 flex-shrink-0">
+            <img src="images/testimonials/leon.JPG" alt="Leon L."
+                 class="w-full h-full object-cover object-center">
+          </div>
+          <div class="flex-1 p-6 flex flex-col">
+            <div class="flex gap-0.5 text-gold mb-4">
+              <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i>
+            </div>
+            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
+              "They handled the entire booking process while I just sat back and waited for my e-ticket. Highly recommend."
+            </blockquote>
+            <div class="pt-4 border-t border-neutral-100">
+              <p class="font-semibold text-neutral-900 text-sm">Leon L.</p>
+              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Executive</p>
             </div>
           </div>
         </div>
@@ -653,6 +681,25 @@
     </div>
   </div>
 
+  <!-- VIDEO MODAL -->
+  <div id="video-modal" class="fixed inset-0 z-[160] flex items-center justify-center p-4 sm:p-8" role="dialog" aria-modal="true" aria-hidden="true">
+    <div id="video-modal-backdrop" class="absolute inset-0 cursor-pointer"></div>
+    <div class="video-modal-inner relative z-10 w-full max-w-3xl mx-auto">
+      <button id="video-modal-close"
+        class="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white text-lg hover:bg-white/25 transition-all"
+        aria-label="Close video">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <video id="video-modal-player"
+        src="images/video.mp4"
+        controls
+        playsinline
+        class="w-full rounded-2xl shadow-2xl bg-black"
+        style="display:block;max-height:80vh;">
+      </video>
+    </div>
+  </div>
+
   <!-- INSIDER EXPERTISE -->
   <section class="py-20 tile-dark2">
     <div class="container mx-auto px-4 md:px-6">
@@ -664,12 +711,12 @@
           Expertise Earned, Not Assumed
         </h2>
         <p class="text-white/55 text-base max-w-xl mx-auto leading-relaxed font-medium">
-          Every recommendation comes from real cabin reviews, lounge visits, and hundreds of live redemptions.
+          Every recommendation comes from real cabin reviews, lounge visits, and hundreds of live flight arrangements.
         </p>
       </div>
 
       <!-- 4 authority cards -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14 slide-up" style="animation-delay:0.1s;">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 slide-up" style="animation-delay:0.1s;">
 
         <div class="authority-card p-6">
           <div class="w-10 h-10 rounded-xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4">
@@ -713,46 +760,36 @@
 
       </div>
 
-      <!-- Social side-by-side: TikTok (left) | Instagram (right) -->
-      <div class="grid lg:grid-cols-2 gap-6 items-start slide-up" style="animation-delay:0.2s;">
+    </div>
+  </section>
+
+  <!-- SOCIAL FEEDS (TikTok + Instagram — no background) -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <div class="grid lg:grid-cols-2 gap-6 items-start slide-up">
 
         <!-- LEFT: TikTok column -->
         <div class="social-col">
-          <!-- Column header -->
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2">
-              <i class="fa-brands fa-tiktok text-sm text-white/60"></i>
-              <span class="text-xs font-bold text-white/60 uppercase tracking-widest">@skyfarevlogs</span>
+              <i class="fa-brands fa-tiktok text-sm text-neutral-400"></i>
+              <span id="tiktok-handle" class="text-xs font-bold text-neutral-500 uppercase tracking-widest">@skyfarevlogs</span>
             </div>
-            <a href="https://www.tiktok.com/@skyfarevlogs" target="_blank" rel="noopener noreferrer"
-               class="btn-pill btn-pill-ghost" style="padding:0.4rem 1rem;font-size:0.75rem;">
+            <a id="tiktok-follow-link" href="https://www.tiktok.com/@skyfarevlogs" target="_blank" rel="noopener noreferrer"
+               class="btn-pill btn-pill-primary" style="padding:0.4rem 1rem;font-size:0.75rem;">
               Follow <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
             </a>
           </div>
-          <!-- Two iframes side-by-side within the column -->
           <div class="grid grid-cols-2 gap-3 social-col-embed">
-            <div class="tiktok-card relative overflow-hidden cursor-pointer bg-black"
-                 data-video-id="7652317260563975444">
-              <div style="height:540px;">
-                <iframe
-                  src="https://www.tiktok.com/embed/v2/7652317260563975444?autoplay=0"
-                  style="width:100%;height:100%;border:none;display:block;"
-                  allow="encrypted-media; fullscreen"
-                  loading="lazy"
-                  title="TikTok – Singapore Airlines Business Class Suite">
-                </iframe>
+            <div id="tiktok-card-1" class="tiktok-card relative overflow-hidden cursor-pointer bg-black rounded-xl" data-video-id="">
+              <div style="height:739px;">
+                <iframe id="tiktok-iframe-1" src="" style="width:100%;height:100%;border:none;display:block;" allow="encrypted-media; fullscreen" loading="lazy" title=""></iframe>
               </div>
             </div>
-            <div class="tiktok-card relative overflow-hidden cursor-pointer bg-black"
-                 data-video-id="7651136017285516551">
-              <div style="height:540px;">
-                <iframe
-                  src="https://www.tiktok.com/embed/v2/7651136017285516551?autoplay=0"
-                  style="width:100%;height:100%;border:none;display:block;"
-                  allow="encrypted-media; fullscreen"
-                  loading="lazy"
-                  title="TikTok – Emirates Business Class flat bed">
-                </iframe>
+            <div id="tiktok-card-2" class="tiktok-card relative overflow-hidden cursor-pointer bg-black rounded-xl" data-video-id="">
+              <div style="height:739px;">
+                <iframe id="tiktok-iframe-2" src="" style="width:100%;height:100%;border:none;display:block;" allow="encrypted-media; fullscreen" loading="lazy" title=""></iframe>
               </div>
             </div>
           </div>
@@ -760,50 +797,59 @@
 
         <!-- RIGHT: Instagram column -->
         <div class="social-col">
-          <!-- Column header -->
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2">
-              <i class="fa-brands fa-instagram text-sm text-pink-400"></i>
-              <span class="text-xs font-bold text-white/60 uppercase tracking-widest">@skyfareconsulting</span>
+              <i class="fa-brands fa-instagram text-sm text-pink-500"></i>
+              <span id="instagram-handle" class="text-xs font-bold text-neutral-500 uppercase tracking-widest">@skyfareconsulting</span>
             </div>
-            <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
-               class="btn-pill btn-pill-ghost" style="padding:0.4rem 1rem;font-size:0.75rem;">
+            <a id="instagram-follow-link" href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
+               class="btn-pill btn-pill-primary" style="padding:0.4rem 1rem;font-size:0.75rem;">
               Follow <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
             </a>
           </div>
-          <!-- Instagram editorial card — frameless, matches TikTok column height -->
-          <a href="https://www.instagram.com/skyfareconsulting/"
-             target="_blank" rel="noopener noreferrer"
-             class="social-col-embed relative overflow-hidden block group"
-             style="height:540px;background:#0d1019;text-decoration:none;">
-            <!-- Subtle pink glow, top-right -->
-            <div class="absolute -top-10 -right-10 w-56 h-56 rounded-full pointer-events-none" style="background:rgba(236,72,153,0.10);filter:blur(60px);"></div>
-            <!-- Hover tint -->
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style="background:rgba(236,72,153,0.04);"></div>
-            <!-- Centred content -->
-            <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-8">
-              <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-105 transition-transform duration-300"
-                   style="background:linear-gradient(135deg,#6d28d9 0%,#ec4899 50%,#f97316 100%);">
-                <i class="fa-brands fa-instagram text-white text-xl"></i>
-              </div>
-              <p class="text-white/30 text-[10px] font-bold uppercase tracking-[0.25em] mb-2">Follow on Instagram</p>
-              <h3 class="text-white text-lg font-display font-semibold mb-3 leading-tight">@skyfareconsulting</h3>
-              <p class="text-white/35 text-sm leading-relaxed mb-7 max-w-[210px]">
-                Premium cabin reviews, lounge visits, and award travel insights.
-              </p>
-              <div class="flex flex-wrap justify-center gap-2">
-                <span class="text-[10px] font-semibold text-white/30 border border-white/10 px-3 py-1 rounded-full">Cabin Reviews</span>
-                <span class="text-[10px] font-semibold text-white/30 border border-white/10 px-3 py-1 rounded-full">Lounges</span>
-                <span class="text-[10px] font-semibold text-white/30 border border-white/10 px-3 py-1 rounded-full">Travel Deals</span>
-              </div>
-            </div>
-          </a>
+          <div class="grid grid-cols-2 gap-3 social-col-embed">
+            <div id="instagram-embed-1" class="relative rounded-xl overflow-hidden" style="height:739px;"></div>
+            <div id="instagram-embed-2" class="relative rounded-xl overflow-hidden" style="height:739px;"></div>
+          </div>
         </div>
 
       </div>
 
     </div>
   </section>
+
+  <script>
+  /* ── Video Modal ── */
+  (function () {
+    var modal    = document.getElementById('video-modal');
+    var player   = document.getElementById('video-modal-player');
+    var closeBtn = document.getElementById('video-modal-close');
+    var backdrop = document.getElementById('video-modal-backdrop');
+    var playBtn  = document.getElementById('hero-play-btn');
+
+    function openVideoModal() {
+      modal.removeAttribute('aria-hidden');
+      modal.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+      player.play().catch(function () {});
+    }
+
+    function closeVideoModal() {
+      player.pause();
+      player.currentTime = 0;
+      modal.setAttribute('aria-hidden', 'true');
+      modal.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+
+    if (playBtn)  playBtn.addEventListener('click', openVideoModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeVideoModal);
+    if (backdrop) backdrop.addEventListener('click', closeVideoModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('modal-open')) closeVideoModal();
+    });
+  })();
+  </script>
 
   <script>
   (function () {
@@ -969,10 +1015,13 @@
     <!-- Background image -->
     <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image:url('images/cta/bg.jpg');"></div>
     <!-- Gradient: brand-950 solid at bottom, fades to transparent at centre — mirrors Founder section -->
-    <div class="absolute inset-0" style="background:linear-gradient(to top, #000d1a 0%, rgba(0,13,26,0.88) 35%, rgba(0,13,26,0.40) 60%, transparent 100%);"></div>
+    <div class="absolute inset-0" style="background:linear-gradient(to top, #000000 0%, rgba(0,0,0,0.90) 30%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.15) 75%, transparent 100%);"></div>
     <div class="container mx-auto px-4 md:px-6 relative z-10">
       <div class="py-6 text-center">
-        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 mb-5">Your Upgrade Awaits</p>
+        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 border border-white/25 text-white text-xs font-bold uppercase tracking-widest mb-5">
+          <i class="fa-solid fa-arrow-up text-[10px] text-gold"></i>
+          Your Upgrade Awaits
+        </div>
         <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
           Ready to Fly Premium?
         </h2>

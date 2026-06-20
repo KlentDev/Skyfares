@@ -2,6 +2,10 @@
  * Footer and WhatsApp Button Injector
  */
 document.addEventListener('DOMContentLoaded', () => {
+  const L  = window.SKYFARE_LINKS || {};
+  const WA = L.whatsapp || 'https://api.whatsapp.com/send?phone=6581575306';
+  const IG = (L.instagram || {}).url || 'https://www.instagram.com/skyfareconsulting/';
+
   const footerHTML = `
     <!-- FOOTER -->
     <footer class="bg-deepblue-950 pt-20 pb-10 border-t border-white/5 mt-auto">
@@ -23,10 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </p>
 
             <div class="flex gap-4 mt-8">
-              <a href="https://api.whatsapp.com/send?phone=6581575306" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-green-500 hover:bg-green-600 transition-all shadow-sm shadow-green-500/30">
+              <a href="${WA}" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-green-500 hover:bg-green-600 transition-all shadow-sm shadow-green-500/30">
                 <i class="fa-brands fa-whatsapp"></i>
               </a>
-              <a href="https://www.instagram.com/skyfareconsulting/" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 hover:opacity-90 transition-all shadow-sm shadow-pink-500/30">
+              <a href="${IG}" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 hover:opacity-90 transition-all shadow-sm shadow-pink-500/30">
                 <i class="fa-brands fa-instagram"></i>
               </a>
             </div>
@@ -73,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </footer>
 
     <!-- WhatsApp Floating Button -->
-    <a href="https://api.whatsapp.com/send?phone=6581575306"
+    <a href="${WA}"
        class="whatsapp-fab fixed bottom-8 right-8 z-[100] w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center text-white text-3xl shadow-2xl shadow-emerald-500/40 hover:scale-110 active:scale-95 transition-all"
        aria-label="Chat on WhatsApp">
       <i class="fa-brands fa-whatsapp"></i>

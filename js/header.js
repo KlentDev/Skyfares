@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const headerHTML = `
-    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/90 border-b border-brand-200/20 shadow-sm transition-all duration-300">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
       <div class="container mx-auto flex items-center justify-between py-3 px-4 md:px-6">
         <!-- Logo -->
         <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="flex items-center space-x-3 group">
@@ -55,35 +55,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- Desktop nav -->
         <nav class="hidden lg:flex items-center gap-1 text-[15px] absolute left-1/2 -translate-x-1/2" id="desktop-nav">
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
-            <i class="fa-solid fa-house text-[13px] opacity-60"></i> Home
-          </a>
-
-          <!-- Services Dropdown -->
+          <!-- Services Dropdown (merged) -->
           <div class="relative group/dropdown">
             <button class="flex items-center gap-1.5 px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold">
               <i class="fa-solid fa-layer-group text-[13px] opacity-60"></i> Services <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
-            <div class="absolute top-full left-0 w-64 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300">
-              <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-2">
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-layer-group"></i>
+            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:460px;">
+              <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
+                <div class="grid grid-cols-2 gap-x-2">
+                  <!-- Left: Our Services -->
+                  <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2 px-3">Our Services</p>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-layer-group text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">Overview</div>
+                    </a>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-plane-circle-check text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">KrisFlyer Miles</div>
+                    </a>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-phone-volume text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">Assessment Call</div>
+                    </a>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">Services Overview</div>
-                </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-plane-circle-check"></i>
+                  <!-- Right: Extra Services -->
+                  <div class="border-l border-brand-100 pl-2">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2 px-3">Extra Services</p>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-car text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">Chauffeur</div>
+                    </a>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#fast-track" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-bolt text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">Fast Track</div>
+                    </a>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#visa" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-passport text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">Visa Assistance</div>
+                    </a>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#bookings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-plane-up text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">Flight Bookings</div>
+                    </a>
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#hotels" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                        <i class="fa-solid fa-hotel text-sm"></i>
+                      </div>
+                      <div class="text-sm font-semibold text-brand-950">Hotel Recommendations</div>
+                    </a>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">KrisFlyer Miles</div>
-                </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-phone-volume"></i>
-                  </div>
-                  <div class="text-sm font-semibold text-brand-950">Assessment Call</div>
-                </a>
+                </div>
               </div>
             </div>
           </div>
@@ -94,53 +130,21 @@ document.addEventListener('DOMContentLoaded', () => {
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
             <i class="fa-solid fa-ticket-simple text-[13px] opacity-60"></i> Flights We've Arranged
           </a>
-
-          <!-- Extra Services Dropdown -->
-          <div class="relative group/dropdown">
-            <button class="flex items-center gap-1.5 px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold">
-              <i class="fa-solid fa-square-plus text-[13px] opacity-60"></i> Extra Services <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
-            </button>
-            <div class="absolute top-full left-0 w-64 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300">
-              <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-2">
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-car"></i>
-                  </div>
-                  <div class="text-sm font-semibold text-brand-950">Chauffeur (Transfers)</div>
-                </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#fast-track" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-bolt"></i>
-                  </div>
-                  <div class="text-sm font-semibold text-brand-950">Fast Track Immigration</div>
-                </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#visa" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-passport"></i>
-                  </div>
-                  <div class="text-sm font-semibold text-brand-950">Visa Assistance</div>
-                </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#bookings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-plane-up"></i>
-                  </div>
-                  <div class="text-sm font-semibold text-brand-950">Flight Bookings (Cash)</div>
-                </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#hotels" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform">
-                    <i class="fa-solid fa-hotel"></i>
-                  </div>
-                  <div class="text-sm font-semibold text-brand-950">Hotel Recommendations</div>
-                </a>
-              </div>
-            </div>
-          </div>
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-envelope-open-text text-[13px] opacity-60"></i> Newsletter
+          </a>
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-circle-question text-[13px] opacity-60"></i> FAQ
+          </a>
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-envelope text-[13px] opacity-60"></i> Contact
+          </a>
         </nav>
 
         <!-- Right side: Book Now button -->
         <div class="hidden lg:flex items-center gap-3 ml-auto">
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html"
-            class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 hover:bg-brand-700 hover:-translate-y-0.5 transition-all active:scale-95">
+            class="book-now-btn inline-flex items-center gap-2 rounded-xl border border-white/70 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:-translate-y-0.5 transition-all active:scale-95">
             <i class="fa-solid fa-calendar-check text-lg"></i>
             Book Now
           </a>
@@ -169,12 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           
           <nav class="flex flex-col gap-7 text-[1.3rem] font-semibold" id="mobile-nav">
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-house text-brand-500 w-7"></i> Home
-            </a>
             <div class="flex flex-col gap-4">
               <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
-                <i class="fa-solid fa-star text-[10px]"></i> Our Services
+                <i class="fa-solid fa-layer-group text-[10px]"></i> Our Services
               </span>
               <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-layer-group text-brand-400 w-6 text-base"></i> Overview
@@ -186,12 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i class="fa-solid fa-phone-volume text-brand-400 w-6 text-base"></i> Assessment Call
               </a>
             </div>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-wand-magic-sparkles text-brand-500 w-7"></i> How It Works
-            </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Flights We've Arranged
-            </a>
             <div class="flex flex-col gap-4">
               <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
                 <i class="fa-solid fa-square-plus text-[10px]"></i> Extra Services
@@ -205,10 +200,28 @@ document.addEventListener('DOMContentLoaded', () => {
               <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#visa" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-passport text-brand-400 w-6 text-base"></i> Visa Assistance
               </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
-                <i class="fa-solid fa-concierge-bell text-brand-400 w-6 text-base"></i> All Extra Services
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#bookings" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-plane-up text-brand-400 w-6 text-base"></i> Flight Bookings
+              </a>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#hotels" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-hotel text-brand-400 w-6 text-base"></i> Hotel Recommendations
               </a>
             </div>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-wand-magic-sparkles text-brand-500 w-7"></i> How It Works
+            </a>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Flights We've Arranged
+            </a>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-envelope-open-text text-brand-500 w-7"></i> Newsletter
+            </a>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-circle-question text-brand-500 w-7"></i> FAQ
+            </a>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-envelope text-brand-500 w-7"></i> Contact
+            </a>
           </nav>
           
           <div class="mt-auto pt-10">
@@ -225,10 +238,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject into body at the start
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Offset body so fixed header doesn't overlap content
-  const headerEl = document.querySelector('header');
-  if (headerEl) {
+  // Transparent-on-hero / solid-on-scroll header logic
+  const headerEl = document.getElementById('main-header');
+  const heroSection = document.querySelector('.hero-brand-fade');
+
+  if (heroSection && headerEl) {
+    // Hero page: float header transparently over the hero
+    document.body.style.paddingTop = '0';
+    heroSection.style.paddingTop = (headerEl.offsetHeight + 32) + 'px';
+    headerEl.classList.add('header-transparent');
+
+    function updateHeaderState() {
+      const heroBottom = heroSection.getBoundingClientRect().bottom;
+      if (heroBottom <= headerEl.offsetHeight) {
+        headerEl.classList.remove('header-transparent');
+        headerEl.classList.add('header-scrolled');
+      } else {
+        headerEl.classList.add('header-transparent');
+        headerEl.classList.remove('header-scrolled');
+      }
+    }
+
+    window.addEventListener('scroll', updateHeaderState, { passive: true });
+  } else if (headerEl) {
+    // Non-hero page: solid header from the start
     document.body.style.paddingTop = headerEl.offsetHeight + 'px';
+    headerEl.classList.add('header-scrolled');
   }
 
   // --- Global Intersection Observer for Animations ---

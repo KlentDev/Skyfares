@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skyfare Altitude — The Weekly Insider Newsletter</title>
+  <meta name="description"
+    content="Join Skyfare Altitude for weekly award space alerts, routing strategies, and miles guides — written by someone who books 100+ premium cabins a year." />
+  <link rel="icon" href="../logos/logo.webp" />
+
+  <script src="../js/links.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+
+  <!-- Tailwind -->
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+
+  <!-- Injectable Header & Footer -->
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+  <style>
+    .newsletter-hero-bg {
+      background: linear-gradient(135deg, #B0D5FF 0%, #C3DFFF 55%, #f0f7ff 100%);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1">
+
+    <!-- HERO — no hero-brand-fade class so header stays solid and body padding is set normally -->
+    <section class="newsletter-hero-bg relative pt-16 pb-20 overflow-hidden">
+
+      <!-- Subtle icon pattern overlay -->
+      <div class="absolute inset-0 pointer-events-none opacity-20"
+        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
+               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
+               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
+      </div>
+
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="text-center max-w-3xl mx-auto slide-up">
+
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold/50 text-gold text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-envelope-open-text text-[10px]"></i>
+            Skyfare Altitude &middot; $4.99/month
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-[#0F172A] leading-[1.05] tracking-tight mb-5">
+            The Insider Edge,<br>
+            <span class="text-gold">Once a Week.</span>
+          </h1>
+
+          <p class="text-base md:text-lg text-[#334155] mb-8 leading-relaxed max-w-xl mx-auto font-medium">
+            Award space alerts, routing strategies, and miles guides — written by someone who books
+            <span class="text-[#0F172A] font-bold">100+ premium cabins a year</span>. Cancel anytime.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4">
+            <input
+              type="email"
+              placeholder="Your email address"
+              class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm"
+            >
+            <button class="btn-pill btn-pill-primary whitespace-nowrap">
+              Subscribe — $4.99/mo
+            </button>
+          </div>
+          <p class="text-xs text-[#64748B]">Newsletter integration coming soon &middot; No spam, ever.</p>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT YOU GET -->
+    <section class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-6">
+
+        <div class="text-center mb-12 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">What's Inside</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
+            What Subscribers Get
+          </h2>
+          <p class="text-neutral-600 text-base leading-relaxed font-medium max-w-xl mx-auto">
+            One focused issue per week — no filler, no affiliate spam. Just the intelligence to fly premium for less.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto slide-up" style="animation-delay:0.1s;">
+
+          <div class="card-utility p-7">
+            <div class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 text-lg mb-4">
+              <i class="fa-solid fa-satellite-dish"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Weekly Award Alerts</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">
+              Live award space windows across Star Alliance and partner programs — delivered before they close.
+            </p>
+          </div>
+
+          <div class="card-utility p-7">
+            <div class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 text-lg mb-4">
+              <i class="fa-solid fa-route"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Routing Strategies</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">
+              Itinerary design that maximises stopovers, cabin quality, and miles value on every journey.
+            </p>
+          </div>
+
+          <div class="card-utility p-7">
+            <div class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 text-lg mb-4">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Miles Guides</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">
+              Deep dives into KrisFlyer, award chart changes, transfer partners, and how to stack miles fast.
+            </p>
+          </div>
+
+          <div class="card-utility p-7">
+            <div class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 text-lg mb-4">
+              <i class="fa-solid fa-couch"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Cabin Reviews</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">
+              First-hand Business and First Class reviews from someone who actually books and flies these products.
+            </p>
+          </div>
+
+          <div class="card-utility p-7">
+            <div class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 text-lg mb-4">
+              <i class="fa-solid fa-tag"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Deal Breakdowns</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">
+              Real booking examples — miles spent, taxes paid, and cash-equivalent value. No fluff.
+            </p>
+          </div>
+
+          <div class="card-utility p-7">
+            <div class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500 text-lg mb-4">
+              <i class="fa-solid fa-lock-open"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-neutral-900 mb-2">Insider Access</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">
+              Subscriber-only tips and early access to deals before they go public.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER TEMPLATE PREVIEWS -->
+    <section class="py-24 tile-dark1">
+      <div class="container mx-auto px-4 md:px-6">
+
+        <div class="text-center mb-14 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Issue Previews</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-4 tracking-tight">
+            What Each Edition Looks Like
+          </h2>
+          <p class="text-white/55 text-base max-w-xl mx-auto leading-relaxed font-medium">
+            Every week, one focused issue lands in your inbox. Here's what the different content types look like.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+
+          <!-- Template 1: Award Alert -->
+          <div class="rounded-2xl overflow-hidden bg-white shadow-2xl slide-up" style="animation-delay:0.1s;">
+            <!-- Browser chrome -->
+            <div class="flex items-center gap-1.5 px-4 py-3 bg-neutral-100 border-b border-neutral-200">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400 flex-shrink-0"></span>
+              <div class="flex-1 bg-white rounded-md px-3 py-1 ml-2 text-center">
+                <span class="text-[11px] text-neutral-400">Skyfare Altitude — Issue #14</span>
+              </div>
+            </div>
+            <!-- Email brand header -->
+            <div class="bg-[#000d1a] px-6 py-4 text-center">
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-300">Skyfare Altitude</p>
+              <p class="text-[9px] text-white/30 mt-0.5">Your weekly premium travel insider</p>
+            </div>
+            <!-- Email body -->
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-brand-500 bg-brand-50 px-2.5 py-1 rounded-full">Award Alert</span>
+                <span class="text-[10px] text-neutral-400">Issue #14 &middot; 4 min read</span>
+              </div>
+              <h3 class="text-sm font-display font-bold text-neutral-900 mb-2 leading-snug">
+                SQ Business Class to JFK: Space Open This March
+              </h3>
+              <p class="text-xs text-neutral-500 leading-relaxed mb-4">
+                We spotted confirmed J-class award space on Singapore Airlines to New York for the last two weeks of March. Here's exactly how to book it with 117,000 KrisFlyer miles and S$486 in taxes...
+              </p>
+              <div class="space-y-1.5 mb-4">
+                <div class="h-2 bg-neutral-100 rounded-full w-full"></div>
+                <div class="h-2 bg-neutral-100 rounded-full w-5/6"></div>
+                <div class="h-2 bg-neutral-100 rounded-full w-4/5"></div>
+              </div>
+              <div class="flex items-center justify-between pt-4 border-t border-neutral-100">
+                <div class="flex gap-1.5">
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">SQ Business</span>
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">JFK</span>
+                </div>
+                <span class="text-xs font-semibold text-brand-500">Read Issue →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Template 2: Deal Breakdown -->
+          <div class="rounded-2xl overflow-hidden bg-white shadow-2xl slide-up" style="animation-delay:0.15s;">
+            <div class="flex items-center gap-1.5 px-4 py-3 bg-neutral-100 border-b border-neutral-200">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400 flex-shrink-0"></span>
+              <div class="flex-1 bg-white rounded-md px-3 py-1 ml-2 text-center">
+                <span class="text-[11px] text-neutral-400">Skyfare Altitude — Issue #11</span>
+              </div>
+            </div>
+            <div class="bg-[#000d1a] px-6 py-4 text-center">
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-300">Skyfare Altitude</p>
+              <p class="text-[9px] text-white/30 mt-0.5">Your weekly premium travel insider</p>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-gold bg-gold/10 px-2.5 py-1 rounded-full">Deal Breakdown</span>
+                <span class="text-[10px] text-neutral-400">Issue #11 &middot; 5 min read</span>
+              </div>
+              <h3 class="text-sm font-display font-bold text-neutral-900 mb-2 leading-snug">
+                LHR → SIN First Class for S$2,305 — How We Did It
+              </h3>
+              <p class="text-xs text-neutral-500 leading-relaxed mb-4">
+                Full cost breakdown of a real London to Singapore First Class booking: 108,500 miles, S$2,305 in taxes, versus the S$4,500+ cash fare. Every step, every transfer, explained clearly...
+              </p>
+              <!-- Mini savings card -->
+              <div class="bg-neutral-50 rounded-xl p-3 mb-4 flex items-center justify-between">
+                <div>
+                  <p class="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">Cash fare</p>
+                  <p class="text-sm font-bold text-neutral-300 line-through">S$4,500+</p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-neutral-300 text-xs"></i>
+                <div class="text-right">
+                  <p class="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">Skyfare strategy</p>
+                  <p class="text-sm font-bold text-neutral-900">S$2,305</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-[10px] text-brand-500 uppercase tracking-wider font-bold">You save</p>
+                  <p class="text-sm font-bold text-brand-500">S$2,195</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between pt-4 border-t border-neutral-100">
+                <div class="flex gap-1.5">
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">First Class</span>
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">LHR → SIN</span>
+                </div>
+                <span class="text-xs font-semibold text-brand-500">Read Issue →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Template 3: Routing Strategy -->
+          <div class="rounded-2xl overflow-hidden bg-white shadow-2xl slide-up" style="animation-delay:0.2s;">
+            <div class="flex items-center gap-1.5 px-4 py-3 bg-neutral-100 border-b border-neutral-200">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400 flex-shrink-0"></span>
+              <div class="flex-1 bg-white rounded-md px-3 py-1 ml-2 text-center">
+                <span class="text-[11px] text-neutral-400">Skyfare Altitude — Issue #09</span>
+              </div>
+            </div>
+            <div class="bg-[#000d1a] px-6 py-4 text-center">
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-300">Skyfare Altitude</p>
+              <p class="text-[9px] text-white/30 mt-0.5">Your weekly premium travel insider</p>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Routing Strategy</span>
+                <span class="text-[10px] text-neutral-400">Issue #09 &middot; 6 min read</span>
+              </div>
+              <h3 class="text-sm font-display font-bold text-neutral-900 mb-2 leading-snug">
+                The Stopover Play: How to Add Tokyo for Free on Your Next Redemption
+              </h3>
+              <p class="text-xs text-neutral-500 leading-relaxed mb-4">
+                Star Alliance redemptions allow one free stopover. Most travellers skip it. This week: how to add Tokyo, Hong Kong, or Frankfurt to any SIN-Europe redemption without spending an extra mile...
+              </p>
+              <div class="space-y-1.5 mb-4">
+                <div class="h-2 bg-neutral-100 rounded-full w-full"></div>
+                <div class="h-2 bg-neutral-100 rounded-full w-3/4"></div>
+              </div>
+              <div class="flex items-center justify-between pt-4 border-t border-neutral-100">
+                <div class="flex gap-1.5">
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">Star Alliance</span>
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">Stopover</span>
+                </div>
+                <span class="text-xs font-semibold text-brand-500">Read Issue →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Template 4: Cabin Review -->
+          <div class="rounded-2xl overflow-hidden bg-white shadow-2xl slide-up" style="animation-delay:0.25s;">
+            <div class="flex items-center gap-1.5 px-4 py-3 bg-neutral-100 border-b border-neutral-200">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 flex-shrink-0"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400 flex-shrink-0"></span>
+              <div class="flex-1 bg-white rounded-md px-3 py-1 ml-2 text-center">
+                <span class="text-[11px] text-neutral-400">Skyfare Altitude — Issue #06</span>
+              </div>
+            </div>
+            <div class="bg-[#000d1a] px-6 py-4 text-center">
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-300">Skyfare Altitude</p>
+              <p class="text-[9px] text-white/30 mt-0.5">Your weekly premium travel insider</p>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full">Cabin Review</span>
+                <span class="text-[10px] text-neutral-400">Issue #06 &middot; 7 min read</span>
+              </div>
+              <h3 class="text-sm font-display font-bold text-neutral-900 mb-2 leading-snug">
+                Qatar QSuite vs Singapore Suites: The Honest Verdict
+              </h3>
+              <p class="text-xs text-neutral-500 leading-relaxed mb-4">
+                I flew both in the same month. QSuite wins on space and flexibility. Singapore Suites wins on service and the bed. Here's the detailed breakdown by category so you can decide which is worth your miles...
+              </p>
+              <!-- Rating bars UI -->
+              <div class="space-y-2 mb-4">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] text-neutral-500 w-14 flex-shrink-0">Seat</span>
+                  <div class="flex-1 bg-neutral-100 rounded-full h-1.5">
+                    <div class="bg-brand-500 h-1.5 rounded-full" style="width:90%"></div>
+                  </div>
+                  <span class="text-[10px] text-neutral-400 w-6 text-right">9/10</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] text-neutral-500 w-14 flex-shrink-0">Service</span>
+                  <div class="flex-1 bg-neutral-100 rounded-full h-1.5">
+                    <div class="bg-brand-500 h-1.5 rounded-full" style="width:95%"></div>
+                  </div>
+                  <span class="text-[10px] text-neutral-400 w-6 text-right">9.5/10</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] text-neutral-500 w-14 flex-shrink-0">Value</span>
+                  <div class="flex-1 bg-neutral-100 rounded-full h-1.5">
+                    <div class="bg-gold h-1.5 rounded-full" style="width:80%"></div>
+                  </div>
+                  <span class="text-[10px] text-neutral-400 w-6 text-right">8/10</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between pt-4 border-t border-neutral-100">
+                <div class="flex gap-1.5">
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">QSuite</span>
+                  <span class="text-[10px] bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">Suites</span>
+                </div>
+                <span class="text-xs font-semibold text-brand-500">Read Issue →</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING + CTA -->
+    <section class="py-24 tile-sky">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="max-w-xl mx-auto text-center">
+
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/15 border border-gold/30 text-gold text-xs font-bold uppercase tracking-widest mb-6 slide-up">
+            <i class="fa-solid fa-crown text-[10px]"></i> Simple Pricing
+          </div>
+
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight slide-up" style="animation-delay:0.05s;">
+            $4.99 / month
+          </h2>
+          <p class="text-neutral-600 text-base leading-relaxed mb-10 font-medium slide-up" style="animation-delay:0.1s;">
+            Less than a coffee. Cancel any time. No lock-in, no hidden fees — just the insider intelligence to fly premium for less.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3 mb-5 slide-up" style="animation-delay:0.15s;">
+            <input
+              type="email"
+              placeholder="Your email address"
+              class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+            >
+            <button class="btn-pill btn-pill-primary whitespace-nowrap">
+              Get Altitude Access
+            </button>
+          </div>
+          <p class="text-xs text-neutral-400 slide-up" style="animation-delay:0.2s;">Newsletter integration coming soon &middot; No spam, ever.</p>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
