@@ -886,3 +886,98 @@ button[class*="bg-emerald-"]:active {
     animation: none !important;
   }
 }
+
+/* ── Cookie Consent Banner ───────────────────────────────────────────────────── */
+
+.cc-banner {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 300;
+  width: calc(100vw - 2.5rem);
+  max-width: 360px;
+  background: #1A2437;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 1.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.30);
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  pointer-events: none;
+}
+
+.cc-banner--in {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* Full-width on very small screens */
+@media (max-width: 420px) {
+  .cc-banner {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+/* ── Toggle Switch ───────────────────────────────────────────────────────────── */
+
+.cc-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 44px;
+  min-width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: #e2e8f0;
+  border: 1.5px solid #cbd5e1;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: background 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.cc-toggle::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  top: 2px;
+  left: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease-out;
+}
+
+.cc-toggle:checked {
+  background: #0066cc;
+  border-color: #0066cc;
+}
+
+.cc-toggle:checked::before {
+  transform: translateX(20px);
+}
+
+.cc-toggle:disabled {
+  background: #0066cc;
+  border-color: #0066cc;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cc-toggle:disabled::before {
+  transform: translateX(20px);
+}
+
+.cc-toggle:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}

@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="utf-8" />
@@ -11,10 +11,6 @@
   <!-- Central link store (no defer — must run before header/footer) -->
   <script src="js/links.js"></script>
 
-  <!-- Meta Pixel Code -->
-  <script src="js/meta-pixel.js" defer></script>
-  <!-- End Meta Pixel Code -->
-
   <!-- Font Awesome -->
   <link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
 
@@ -24,6 +20,7 @@
   <!-- Injectable Header & Footer -->
   <script src="js/header.js" defer></script>
   <script src="js/footer.js" defer></script>
+  <script src="js/cookie-consent.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
@@ -42,14 +39,14 @@
   <!-- HEADER -->
 
   <!-- HERO SECTION -->
-  <section class="hero-brand-fade pt-8 pb-4 overflow-hidden relative" style="background-image:none; background-color:#1A2437;">
+  <section class="hero-brand-fade pt-12 pb-10 overflow-hidden relative" style="background-image:none; background-color:#1A2437;">
     <div class="container mx-auto px-4 md:px-6">
 
       <!-- Centered content block -->
       <div class="text-center max-w-3xl mx-auto mb-5 slide-up relative z-10">
 
         <!-- Badge -->
-        <div class="badge-shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-6"
+        <div class="badge-shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-3"
              style="box-shadow:0 4px 20px rgba(201,162,39,0.55), 0 1px 0 rgba(255,255,255,0.25) inset;
                     border:1px solid rgba(255,220,100,0.45);">
           <i class="fa-solid fa-crown text-[10px]" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></i>
@@ -57,19 +54,19 @@
         </div>
 
         <!-- H1 -->
-        <h1 class="font-display font-bold text-white leading-tight tracking-tight mb-5 whitespace-nowrap" style="font-size:clamp(1.35rem,5vw,3.75rem);">
+        <h1 class="font-display font-bold text-white leading-tight tracking-tight mb-3 whitespace-nowrap" style="font-size:clamp(1.35rem,5vw,3.75rem);">
           Fly premium. <span class="text-gold">Think smarter.</span>
         </h1>
 
         <!-- Description -->
-        <p class="text-base text-white/75 mb-6 lg:mb-8 leading-relaxed max-w-xl mx-auto font-medium">
+        <p class="text-base text-white/75 mb-4 lg:mb-5 leading-relaxed max-w-xl mx-auto font-medium">
           Fly Business &amp; First Class for up to <span
             class="text-white font-bold underline decoration-gold decoration-2 underline-offset-4">60%
             less</span>. We arrange your award travel so you can focus on the journey.
         </p>
 
         <!-- Mobile-only stats (shown below description, before CTAs) -->
-        <div class="lg:hidden flex justify-center items-start divide-x divide-white/20 mb-7">
+        <div class="lg:hidden flex justify-center items-start divide-x divide-white/20 mb-4">
           <div class="text-center pr-6">
             <div class="text-2xl font-black text-gold leading-none">60%</div>
             <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Avg. Savings</div>
@@ -85,13 +82,13 @@
         </div>
 
         <!-- CTAs -->
-        <div class="flex flex-wrap justify-center items-center gap-4">
+        <div class="flex flex-wrap justify-center items-center gap-4 mb-8">
           <a href="https://api.whatsapp.com/send?phone=6581575306" rel="noopener noreferrer"
             class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-gold text-white font-bold text-base hover:bg-gold/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-gold/25">
             <i class="fa-brands fa-whatsapp text-white text-lg"></i>
             Book a Flight
           </a>
-          <a href="/altitude"
+          <a href="pages/newsletter.html"
             class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-white/10 text-white font-bold text-base border border-white/30 hover:bg-white/20 transition-all hover:scale-105 active:scale-95 backdrop-blur-sm">
             <i class="fa-solid fa-envelope-open-text"></i>
             Get Altitude Access
@@ -551,7 +548,7 @@
               Written by someone who books 100+ premium cabins a year
             </li>
           </ul>
-          <a href="/altitude"
+          <a href="pages/newsletter.html"
              class="btn-pill btn-pill-primary self-start">
             <i class="fa-solid fa-envelope-open-text"></i>
             Get Altitude Access
@@ -977,7 +974,7 @@
     <div class="container mx-auto px-4 md:px-6">
       <div class="max-w-xl mx-auto text-center slide-up">
 
-        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-4">Skyfare Altitude &middot; $4.99/month</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-4">Skyfare Altitude &middot; Free Newsletter</p>
 
         <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
           The insider edge,<br>once a week.
@@ -987,22 +984,42 @@
           Award space alerts, routing strategies, and miles guides — written by someone who books 100+ premium cabins a year. Cancel anytime.
         </p>
 
-        <!-- Beehiiv placeholder: replace this block with your embed code when ready -->
-        <div class="flex flex-col sm:flex-row gap-3 mb-5 slide-up" style="animation-delay:0.1s;">
+        <div data-newsletter-form class="mb-5 slide-up" style="animation-delay:0.1s;">
           <input
-            type="email"
-            placeholder="Your email address"
-            class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+            data-newsletter-name
+            type="text"
+            autocomplete="given-name"
+            placeholder="First name (optional)"
+            class="w-full mb-3 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
           >
-          <button class="btn-pill btn-pill-primary whitespace-nowrap">
-            Subscribe
-          </button>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              data-newsletter-email
+              type="email"
+              autocomplete="email"
+              placeholder="Your email address"
+              class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+            >
+            <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">
+              Subscribe — Free
+            </button>
+          </div>
+          <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
         </div>
-        <!-- End Beehiiv placeholder -->
 
-        <a href="/altitude"
+        <div data-newsletter-success class="hidden text-center py-2 mb-5">
+          <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-3">
+            <i class="fa-solid fa-check text-xl text-emerald-500"></i>
+          </div>
+          <p class="text-base font-bold text-neutral-900 mb-1">You're on the list.</p>
+          <p class="text-sm text-neutral-500">Welcome to Skyfare Altitude. Your welcome email is on its way — see you next Monday.</p>
+        </div>
+
+        <p class="text-xs text-[#64748B]">Free to join &middot; No spam, ever.</p>
+
+        <a href="pages/newsletter.html"
            class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-500 hover:underline underline-offset-2">
-          Learn more about Altitude
+          View All Issues
           <i class="fa-solid fa-arrow-right text-xs"></i>
         </a>
 
@@ -1034,7 +1051,7 @@
              style="padding:0.875rem 2rem;">
             <i class="fa-brands fa-whatsapp"></i> Book a Flight
           </a>
-          <a href="/altitude"
+          <a href="pages/newsletter.html"
              class="inline-flex items-center gap-2 text-base font-semibold text-white rounded-full border border-white/25 hover:bg-white/10 transition-all active:scale-95"
              style="padding:0.875rem 2rem;">
             <i class="fa-solid fa-envelope-open text-brand-300"></i> Get Altitude Access
@@ -1047,8 +1064,7 @@
   <!-- FOOTER -->
 
   <!-- ALTITUDE NEWSLETTER POPUP -->
-  <!-- When Beehiiv is ready: replace the disabled input + button with the Beehiiv embed code -->
-  <div id="altitude-popup" class="fixed inset-0 z-[200] hidden items-center justify-center p-4" aria-modal="true" role="dialog">
+  <div id="altitude-popup" data-popup-enabled class="fixed inset-0 z-[200] hidden items-center justify-center p-4" aria-modal="true" role="dialog">
     <div id="altitude-popup-backdrop" class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm"></div>
     <div class="relative z-10 w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-10 overflow-hidden">
       <div class="absolute -top-20 -right-20 w-60 h-60 bg-brand-400/10 rounded-full blur-[80px] pointer-events-none"></div>
@@ -1061,18 +1077,26 @@
         </div>
         <h3 class="text-2xl font-black text-brand-950 mb-3 leading-snug">Fly smarter,<br>every week.</h3>
         <p class="text-neutral-500 text-sm leading-relaxed mb-6">
-          Weekly deal alerts, award space tips, and miles strategies from our insider newsletter — $4.99/month.
+          Weekly award space alerts, routing strategies, and miles guides — free to join, no credit card required.
         </p>
-        <!-- Beehiiv embed goes here — fields disabled until integration is live -->
-        <div class="space-y-3 mb-4">
-          <input type="email" placeholder="Your email address" disabled
-                 class="w-full px-5 py-3.5 rounded-2xl bg-brand-50/50 border border-brand-100 text-sm text-brand-900/50 cursor-not-allowed placeholder:text-brand-900/30 outline-none">
-          <button disabled
-                  class="w-full py-3.5 rounded-2xl bg-brand-600/50 text-white font-bold text-sm cursor-not-allowed">
-            Subscribe — $4.99/month
+        <div data-newsletter-form class="space-y-3 mb-4">
+          <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
+                 class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+          <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
+                 class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+          <button data-newsletter-btn
+                  class="w-full py-3.5 rounded-2xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
+            Subscribe — Free
           </button>
+          <p data-newsletter-status class="hidden text-xs text-center font-medium" aria-live="polite"></p>
         </div>
-        <p class="text-center text-[10px] text-neutral-400 mb-3">Newsletter integration coming soon</p>
+        <div data-newsletter-success class="hidden text-center py-2">
+          <div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
+          </div>
+          <h3 class="text-xl font-black text-brand-950 mb-2 leading-snug">You're in!</h3>
+          <p class="text-sm text-neutral-500 leading-relaxed">Welcome to Skyfare Altitude — your weekly insider edge. Check your inbox for your welcome email and see you next Monday.</p>
+        </div>
         <button id="altitude-popup-dismiss" class="w-full text-center text-xs text-neutral-400 hover:text-neutral-600 transition-colors py-1">
           Not now
         </button>
@@ -1115,6 +1139,7 @@
 
   <script src="js/marquee.js" defer></script>
   <script src="js/hero-carousel.js" defer></script>
+  <script src="js/newsletter.js" defer></script>
 </body>
 
 </html>

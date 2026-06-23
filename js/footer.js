@@ -12,15 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="container mx-auto px-4 md:px-6">
         <div class="grid md:grid-cols-4 gap-12 mb-16">
           <div class="">
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="flex items-center space-x-3 group mb-6">
-              <div class="relative">
-                <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-110 brightness-0 invert">
-                <div class="absolute inset-0 bg-brand-300/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              </div>
-              <div class="flex flex-col">
-                <span class="text-lg md:text-xl uppercase  font-bold text-white leading-none logo_height tracking-[0.1em]">Skyfare</span>
-                <span class="text-[10px] md:text-xs uppercase tracking-[0.2em] text-white font-semibold leading-none">Consulting</span>
-              </div>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="inline-block group mb-6">
+              <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-110 brightness-0 invert">
             </a>
             <p class="text-brand-100/50 text-sm max-w-sm leading-relaxed">
               Your private flight strategist for Business and First Class travel. We specialize in high-value miles redemptions and luxury concierge services.
@@ -50,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <li><a href="/index.html" class="text-brand-100/50 hover:text-white transition-colors">Home</a></li>
               <li><a href="pages/how-it-works.html" class="text-brand-100/50 hover:text-white transition-colors">How It Works</a></li>
               <li><a href="pages/past-flight-deals.html" class="text-brand-100/50 hover:text-white transition-colors">Flights We've Arranged</a></li>
+              <li><a href="pages/newsletter.html" class="text-brand-100/50 hover:text-white transition-colors">Newsletter</a></li>
               <li><a href="pages/book.html" class="text-brand-100/50 hover:text-white transition-colors">Book a Strategy Call</a></li>
               <li><a href="pages/assessment.html" class="text-brand-100/50 hover:text-white transition-colors">Free Assessment</a></li>
             </ul>
@@ -62,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <li><a href="pages/contact.html" class="text-brand-100/50 hover:text-white transition-colors">Contact</a></li>
               <li><a href="pages/terms.html" class="text-brand-100/50 hover:text-white transition-colors">Terms & Conditions</a></li>
               <li><a href="pages/privacy.html" class="text-brand-100/50 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="#" onclick="window.SkyConsent&&window.SkyConsent.openPreferences();return false;" class="text-brand-100/50 hover:text-white transition-colors">Cookie Preferences</a></li>
             </ul>
           </div>
 
@@ -91,5 +86,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update year
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // ── WhatsApp pre-fill (site-wide) ───────────────────────────────────
+  // Open every WhatsApp CTA with a context message so the consultant gets
+  // the visitor's intent immediately. Runs after the footer/FAB is injected
+  // so it also covers the floating button. footer.js loads on every page,
+  // making this the single source of truth. Override an individual link by
+  // adding  data-wa-message="…"  to its anchor (see book.html).
+  const WA_DEFAULT = "Hi Skyfare, I'd like to speak to a travel consultant.";
+  document.querySelectorAll('a[href*="api.whatsapp.com/send"], a[href*="wa.me/"]').forEach((a) => {
+    const href = a.getAttribute('href') || '';
+    if (/[?&]text=/.test(href)) return; // already carries a message
+    const msg = a.getAttribute('data-wa-message') || WA_DEFAULT;
+    a.setAttribute('href', href + (href.indexOf('?') === -1 ? '?' : '&') + 'text=' + encodeURIComponent(msg));
+  });
 
 });

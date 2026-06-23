@@ -3,7 +3,12 @@
  * Loaded without `defer` so SKYFARE_LINKS is available to all deferred scripts.
  */
 window.SKYFARE_LINKS = {
-  whatsapp: 'https://api.whatsapp.com/send?phone=6581575306',
+  // Pre-filled so the chat opens with intent. footer.js applies the same
+  // default to any WhatsApp link that lacks a ?text= (and supports per-link
+  // data-wa-message overrides); baking it here keeps links read from
+  // SKYFARE_LINKS (e.g. the founder link) consistent regardless of timing.
+  whatsapp: 'https://api.whatsapp.com/send?phone=6581575306&text=' +
+    encodeURIComponent("Hi Skyfare, I'd like to speak to a travel consultant."),
 
   instagram: {
     handle: '@skyfareconsulting',

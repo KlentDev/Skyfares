@@ -32,6 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ::-webkit-scrollbar-thumb:hover {
       background: #1b70ef;
     }
+    #main-header.header-transparent .header-logo { filter: brightness(0) invert(1); }
+    #main-header.header-scrolled .header-logo    { filter: none; }
+    #main-header.header-transparent .header-wordmark .skyfare-text  { color: #ffffff; }
+    #main-header.header-transparent .header-wordmark .altitude-text { color: rgba(255,255,255,0.65); }
+    #main-header.header-scrolled   .header-wordmark .skyfare-text  { color: #0C4A6E; }
+    #main-header.header-scrolled   .header-wordmark .altitude-text { color: #94a3b8; }
 
   `;
   /* Loader + mobile-menu CSS now live in css/style.css (loads synchronously). */
@@ -42,14 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
     <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
       <div class="container mx-auto flex items-center justify-between py-3 px-4 md:px-6">
         <!-- Logo -->
-        <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="flex items-center space-x-3 group">
-          <div class="relative">
-            <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-110">
-            <div class="absolute inset-0 bg-brand-300/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-lg md:text-xl uppercase font-bold text-brand-900 leading-none tracking-[0.1em] logo_height">Skyfare</span>
-            <span class="text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-900 font-semibold leading-none">Consulting</span>
+        <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="inline-flex items-center gap-2.5 group">
+          <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="header-logo h-9 w-auto object-contain transition-all duration-500 group-hover:scale-105 flex-shrink-0">
+          <div class="header-wordmark flex flex-col leading-none select-none">
+            <span class="skyfare-text text-[13px] font-black uppercase tracking-[0.14em] text-brand-900 transition-colors duration-300">SKYFARE</span>
+            <span class="altitude-text text-[9px] font-bold uppercase tracking-[0.22em] text-neutral-400 transition-colors duration-300 mt-0.5">CONSULATING</span>
           </div>
         </a>
 
@@ -366,4 +369,5 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
 });
