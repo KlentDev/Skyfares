@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     #main-header.header-transparent .header-wordmark .altitude-text { color: rgba(255,255,255,0.65); }
     #main-header.header-scrolled   .header-wordmark .skyfare-text  { color: #0C4A6E; }
     #main-header.header-scrolled   .header-wordmark .altitude-text { color: #94a3b8; }
-
   `;
   /* Loader + mobile-menu CSS now live in css/style.css (loads synchronously). */
   document.head.appendChild(style);
@@ -131,7 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="fa-solid fa-wand-magic-sparkles text-[13px] opacity-60"></i> How It Works
           </a>
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
-            <i class="fa-solid fa-ticket-simple text-[13px] opacity-60"></i> Flights We've Arranged
+            <i class="fa-solid fa-ticket-simple text-[13px] opacity-60"></i> Our Flights
+          </a>
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-paper-plane text-[13px] opacity-60"></i> Skyfare Flight
           </a>
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter.html" class="nav-link px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-2">
             <i class="fa-solid fa-envelope-open-text text-[13px] opacity-60"></i> Newsletter
@@ -214,7 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
               <i class="fa-solid fa-wand-magic-sparkles text-brand-500 w-7"></i> How It Works
             </a>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Flights We've Arranged
+              <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Our Flights
+            </a>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-paper-plane text-brand-500 w-7"></i> Skyfare Flight
             </a>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-envelope-open-text text-brand-500 w-7"></i> Newsletter
@@ -308,6 +313,15 @@ document.addEventListener('DOMContentLoaded', () => {
   mobileMenuBtn.addEventListener('click', openMenu);
   closeMobileMenu.addEventListener('click', closeMenu);
   mobileMenuBackdrop.addEventListener('click', closeMenu);
+
+
+  // --- Newsletter Announcement Banner ---
+  (function () {
+    var s = document.createElement('script');
+    s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/newsletter-banner.js';
+    s.defer = true;
+    document.head.appendChild(s);
+  })();
 
   // --- Page Loader ---
   // The #page-loader div is static HTML (first child of <body> in every page).

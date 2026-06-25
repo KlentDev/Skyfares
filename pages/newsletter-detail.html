@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="nsl-page-title">Skyfare Altitude — Newsletter</title>
+  <meta id="nsl-page-desc" name="description" content="Premium travel intelligence from Skyfare Altitude." />
+  <link rel="icon" href="../logos/logo.webp" />
+
+  <script src="../js/links.js"></script>
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+  <script src="../js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1">
+
+    <!-- ── Loading skeleton ─────────────────────────────────────────────── -->
+    <div id="nsl-loading" class="container mx-auto px-4 md:px-6 max-w-3xl py-24">
+      <div class="animate-pulse space-y-4">
+        <div class="h-3 bg-neutral-100 rounded-full w-24"></div>
+        <div class="h-64 bg-neutral-100 rounded-2xl w-full"></div>
+        <div class="h-4 bg-neutral-100 rounded-full w-1/3"></div>
+        <div class="h-8 bg-neutral-100 rounded-full w-4/5"></div>
+        <div class="h-4 bg-neutral-100 rounded-full w-2/3"></div>
+        <div class="space-y-2 pt-4">
+          <div class="h-3 bg-neutral-100 rounded-full w-full"></div>
+          <div class="h-3 bg-neutral-100 rounded-full w-full"></div>
+          <div class="h-3 bg-neutral-100 rounded-full w-5/6"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Error state ───────────────────────────────────────────────────── -->
+    <div id="nsl-error" class="hidden container mx-auto px-4 md:px-6 max-w-3xl py-32 text-center">
+      <div class="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-6">
+        <i class="fa-solid fa-newspaper text-neutral-300 text-2xl"></i>
+      </div>
+      <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3">Issue not found</h1>
+      <p class="text-neutral-500 mb-8 text-sm">This issue may have moved or been unpublished.</p>
+      <a href="newsletter.html" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
+        <i class="fa-solid fa-arrow-left text-xs"></i> Back to Newsletter
+      </a>
+    </div>
+
+    <!-- ── Article content ──────────────────────────────────────────────── -->
+    <div id="nsl-content" class="hidden">
+
+      <!-- Back navigation -->
+      <div class="container mx-auto px-4 md:px-6 max-w-3xl pt-8 pb-4">
+        <a href="newsletter.html" class="inline-flex items-center gap-2 text-xs font-semibold text-neutral-400 hover:text-brand-600 transition-colors">
+          <i class="fa-solid fa-arrow-left text-[10px]"></i> Back to Newsletter
+        </a>
+      </div>
+
+      <!-- Hero thumbnail -->
+      <div id="nsl-hero-wrap" class="container mx-auto px-4 md:px-6 max-w-3xl mb-8">
+        <div id="nsl-hero-img" class="hidden relative w-full h-56 md:h-72 rounded-2xl overflow-hidden bg-brand-950 shadow-sm">
+          <img id="nsl-thumb" src="" alt="" class="w-full h-full object-cover">
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.35) 0%,transparent 50%);"></div>
+          <!-- Issue badge -->
+          <div class="absolute top-4 left-4">
+            <span id="nsl-issue-badge" class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/90 backdrop-blur-sm px-3 py-1.5 rounded-full"></span>
+          </div>
+          <!-- Free / Premium badge -->
+          <div class="absolute bottom-4 left-4" id="nsl-access-badge"></div>
+        </div>
+      </div>
+
+      <!-- Meta + title -->
+      <div class="container mx-auto px-4 md:px-6 max-w-3xl mb-8">
+        <!-- Content tags -->
+        <div id="nsl-tags" class="flex flex-wrap gap-1.5 mb-4"></div>
+
+        <!-- Title -->
+        <h1 id="nsl-title" class="text-3xl md:text-4xl font-display font-bold text-neutral-900 leading-tight tracking-tight mb-3"></h1>
+
+        <!-- Subtitle / deck -->
+        <p id="nsl-subtitle" class="text-base text-neutral-500 leading-relaxed mb-5 font-medium"></p>
+
+        <!-- Date · read time -->
+        <div class="flex items-center gap-3 text-xs text-neutral-400">
+          <span id="nsl-date" class="inline-flex items-center gap-1.5">
+            <i class="fa-regular fa-calendar text-[10px]"></i>
+          </span>
+          <span class="w-1 h-1 rounded-full bg-neutral-200"></span>
+          <span id="nsl-readtime" class="inline-flex items-center gap-1.5">
+            <i class="fa-regular fa-clock text-[10px]"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="container mx-auto px-4 md:px-6 max-w-3xl mb-8">
+        <div class="h-px bg-neutral-100 w-full"></div>
+      </div>
+
+      <!-- Free article body -->
+      <div id="nsl-article-wrap" class="hidden container mx-auto px-4 md:px-6 max-w-3xl mb-12">
+        <article id="nsl-article" class="nsl-article"></article>
+      </div>
+
+      <!-- Premium gate -->
+      <div id="nsl-gate" class="hidden container mx-auto px-4 md:px-6 max-w-3xl mb-12">
+        <!-- Preview content with fade -->
+        <div class="relative mb-0">
+          <article id="nsl-preview" class="nsl-article nsl-preview-article"></article>
+          <!-- Fade overlay -->
+          <div class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none" style="background:linear-gradient(to top,#ffffff 0%,transparent 100%);"></div>
+        </div>
+        <!-- Upgrade block -->
+        <div class="mt-2 rounded-2xl border border-amber-200/60 bg-amber-50/40 p-8 md:p-10 text-center">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-5">
+            <i class="fa-solid fa-crown text-[9px]"></i> Altitude Exclusive
+          </div>
+          <h2 class="text-xl font-display font-bold text-neutral-900 mb-3">This edition is for Altitude members.</h2>
+          <p class="text-sm text-neutral-500 leading-relaxed mb-7 max-w-sm mx-auto">Members receive the complete edition by email each week — award alerts, routing strategies, and full cabin breakdowns.</p>
+          <a id="nsl-gate-cta"
+             href="https://api.whatsapp.com/send?phone=6581575306&text=Hi%20Skyfare%2C%20I%27d%20like%20to%20upgrade%20to%20Altitude%20Premium."
+             target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-600 text-white font-bold text-sm hover:bg-amber-700 transition-colors mb-4">
+            <i class="fa-brands fa-whatsapp"></i> Get Altitude Access
+          </a>
+          <p class="text-xs text-neutral-400 italic">Already a member? The full edition is in your inbox.</p>
+        </div>
+      </div>
+
+      <!-- Share row (free articles only) -->
+      <div id="nsl-share" class="hidden container mx-auto px-4 md:px-6 max-w-3xl mb-10">
+        <div class="h-px bg-neutral-100 w-full mb-6"></div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Share</span>
+          <button id="nsl-copy-link" class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-brand-400 hover:text-brand-600 px-3 py-1.5 rounded-lg transition-colors">
+            <i class="fa-solid fa-link text-[10px]"></i> Copy link
+          </button>
+          <a id="nsl-share-wa" href="#" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-green-400 hover:text-green-600 px-3 py-1.5 rounded-lg transition-colors">
+            <i class="fa-brands fa-whatsapp text-[10px]"></i> WhatsApp
+          </a>
+          <a id="nsl-share-x" href="#" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-neutral-500 hover:text-neutral-700 px-3 py-1.5 rounded-lg transition-colors">
+            <i class="fa-brands fa-x-twitter text-[10px]"></i> Post
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /nsl-content -->
+
+    <!-- ── Related issues ────────────────────────────────────────────────── -->
+    <section id="nsl-related" class="hidden py-16 bg-neutral-50">
+      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+        <div class="flex items-center gap-4 mb-8">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-500 flex-shrink-0">More Issues</p>
+          <div class="flex-1 h-px bg-neutral-200"></div>
+        </div>
+        <div id="nsl-related-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- ── Subscribe CTA ─────────────────────────────────────────────────── -->
+    <section class="py-20 tile-dark1">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="max-w-md mx-auto text-center">
+          <h2 class="text-3xl font-display font-bold text-white mb-2 tracking-tight">Get it in your inbox.</h2>
+          <p class="text-white/40 text-sm mb-8">Weekly. Free. No spam.</p>
+          <div data-newsletter-form>
+            <label for="nd-name" class="sr-only">First name (optional)</label>
+            <input id="nd-name" data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
+              class="w-full mb-3 px-5 py-3.5 rounded-full border border-white/10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <label for="nd-email" class="sr-only">Email address</label>
+              <input id="nd-email" data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
+                class="flex-1 px-5 py-3.5 rounded-full border border-white/10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm">
+              <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">Subscribe</button>
+            </div>
+            <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="../js/newsletter-detail.js" defer></script>
+  <script src="../js/newsletter.js" defer></script>
+
+  <script>
+  (function () {
+    window.addEventListener('load', function () {
+      var header = document.getElementById('main-header');
+      var firstSection = document.querySelector('main > div');
+      if (header && firstSection) {
+        firstSection.style.paddingTop = (header.offsetHeight + 16) + 'px';
+      }
+    });
+  })();
+  </script>
+
+</body>
+</html>

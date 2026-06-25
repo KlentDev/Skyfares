@@ -1,181 +1,327 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contact Us — Skyfare Consulting</title>
-  <meta name="description"
-    content="Get in touch with Skyfare Consulting for expert assistance with your Business and First Class flight bookings." />
+  <title>Contact — Skyfare Consulting</title>
+  <meta name="description" content="Get in touch with Skyfare Consulting for expert assistance with your Business and First Class flight bookings." />
   <link rel="icon" href="../logos/logo.webp" />
 
-  <!-- Injectable Header & Footer -->
+  <script src="../js/links.js"></script>
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+  <script src="../lib/tailwind/tailwind.min.js"></script>
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
   <script src="../js/cookie-consent.js" defer></script>
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
-
-  <!-- Tailwind -->
-  <script src="../lib/tailwind/tailwind.min.js"></script>
-
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
   <script src="../js/contact.js" defer></script>
+  <style>
+    .contact-hero-bg {
+      background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
+    }
+    .contact-channel-card {
+      background: #ffffff;
+      border: 1px solid rgba(0, 102, 204, 0.10);
+      border-radius: 18px;
+      padding: 1.75rem;
+      transition: transform 0.3s ease-out, border-color 0.3s ease-out, box-shadow 0.3s ease-out;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .contact-channel-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 102, 204, 0.28);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(0, 102, 204, 0.18);
+      background: #ffffff;
+      font-size: 0.875rem;
+      color: #1d1d1f;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'Manrope', sans-serif;
+    }
+    .form-input:focus {
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+    }
+    .form-textarea {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 102, 204, 0.18);
+      background: #ffffff;
+      font-size: 0.875rem;
+      color: #1d1d1f;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'Manrope', sans-serif;
+      line-height: 1.65;
+      resize: none;
+    }
+    .form-textarea:focus {
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+    }
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #4b5563;
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col bg-white">
 
   <div id="page-loader">
     <img src="../logos/logo.webp" alt="Skyfare Consulting">
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
-
-
   <main class="flex-1">
 
-    <!-- HERO -->
-    <section class="container mx-auto px-4 pt-16 md:pt-24 pb-12 text-center">
-      <h1 class="text-4xl md:text-6xl font-extrabold text-brand-950 mb-6 tracking-tight">
-        Let's Start Your <span class="text-transparent bg-clip-text brand-gradient">Next Journey.</span>
-      </h1>
-      <p class="text-lg md:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-        Have a question or a complex itinerary in mind? Our strategists are just a message away.
-      </p>
-    </section>
-    <!-- FOUNDER SECTION -->
-    <section class="max-w-6xl mx-auto pt-16 md:pt-24 px-4 mb-12">
-      <div class="rounded-[3rem] relative overflow-hidden shadow-2xl">
-        <div class="absolute -top-24 -right-24 w-80 h-80 bg-brand-400/10 rounded-full blur-[100px]"></div>
+    <!-- =============================================
+         1. HERO
+         ============================================= -->
+    <section class="contact-hero-bg relative pb-20 overflow-hidden">
 
-        <div class="grid md:grid-cols-12 items-stretch relative z-10">
-          <div class="md:col-span-5 relative">
-            <div class="w-full h-full min-h-[400px] md:min-h-[500px]">
-              <img src="../logos/about.webp" alt="Sahej Singh" class="w-full h-full object-cover rounded-l-[3rem] md:rounded-l-[3rem] md:rounded-r-none">
-            </div>
+      <div class="absolute inset-0 pointer-events-none opacity-10"
+        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
+               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
+               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
+      </div>
+
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-2xl mx-auto text-center slide-up">
+
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-paper-plane-top text-[10px]"></i>
+            Get in Touch
           </div>
 
-          <div class="md:col-span-7 p-8 md:p-16 bg-white rounded-r-[3rem]">
-            <h4 class="text-brand-600 font-bold uppercase tracking-[0.2em] text-sm mb-4">Meet the
-              Strategist</h4>
-            <h2 class="text-3xl md:text-5xl font-bold text-brand-950 mb-6">Hi, I'm Sahej.</h2>
-            <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
-              I started Skyfare Consulting to bridge the gap between complex airline systems and the premium traveler.
-              My mission is to ensure every mile you earn works harder, providing you with high-value Business and First
-              Class experiences without the premium cash price tags.
-            </p>
-            <div class="flex flex-wrap gap-4">
-              <a href="https://api.whatsapp.com/send?phone=6581575306"
-                class="px-8 py-4 rounded-2xl bg-brand-600 text-white font-bold hover:bg-brand-700 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-brand-600/30">
-                <i class="fa-brands fa-whatsapp mr-2 text-lg"></i> Let's Chat
-              </a>
-              <a href="services.html"
-                class="px-8 py-4 rounded-2xl bg-white text-brand-950 font-bold border border-brand-100 hover:bg-brand-50 transition-all">
-                See Our Services
-              </a>
-            </div>
-          </div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
+            Let's Start Your<br class="hidden sm:block"> Next Journey.
+          </h1>
+
+          <p class="text-base md:text-lg leading-relaxed max-w-xl mx-auto font-medium text-white/65">
+            Have a question or a complex itinerary in mind? Our strategists are just a message away.
+          </p>
+
         </div>
       </div>
     </section>
 
-    <!-- CONTACT SECTION -->
-    <section class="container mx-auto px-4 mb-24">
-      <div class="max-w-6xl mx-auto">
-        <div
-          class="grid md:grid-cols-5 gap-8 bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-brand-100">
-          <!-- Info Side -->
-          <div class="md:col-span-2 brand-gradient p-10 text-white relative overflow-hidden group">
-            <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="relative z-10 h-full flex flex-col">
-              <h2 class="text-3xl font-bold mb-8">Contact Info</h2>
 
-              <div class="space-y-8">
-                <div class="flex items-start gap-4">
-                  <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl shrink-0">
-                    <i class="fa-brands fa-whatsapp text-white"></i>
-                  </div>
-                  <div>
-                    <h3 class="font-bold text-brand-100 mb-1">WhatsApp</h3>
-                    <a href="https://api.whatsapp.com/send?phone=6581575306" class="text-sm">+65 8157 5306</a>
-                    <p class="text-[10px] uppercase tracking-wider text-brand-200 mt-1 opacity-70">Instant Reply</p>
-                  </div>
-                </div>
+    <!-- =============================================
+         2. CONTACT CHANNELS — three cards
+         ============================================= -->
+    <section class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-6 max-w-4xl">
 
-                <div class="flex items-start gap-4">
-                  <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl shrink-0">
-                    <i class="fa-solid fa-envelope text-white"></i>
-                  </div>
-                  <div>
-                    <h3 class="font-bold text-brand-100 mb-1">Email</h3>
-                    <a href="mailto:info@skyfareconsulting.com">info@skyfareconsulting.com</a>
-                    <p class="text-[10px] uppercase tracking-wider text-brand-200 mt-1 opacity-70">24HR Response</p>
-                  </div>
-                </div>
+        <div class="flex items-center gap-4 mb-12 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Reach Us</p>
+          <div class="flex-1 h-px bg-neutral-100"></div>
+        </div>
 
-                <div class="flex items-start gap-4">
-                  <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center text-xl shrink-0">
-                    <i class="fa-brands fa-instagram text-white"></i>
-                  </div>
-                  <div>
-                    <h3 class="font-bold text-brand-100 mb-1">Instagram</h3>
-                    <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer" class="text-sm">@skyfareconsulting</a>
-                    <p class="text-[10px] uppercase tracking-wider text-brand-200 mt-1 opacity-70">Behind the Scenes</p>
-                  </div>
-                </div>
-              </div>
+        <div class="grid md:grid-cols-3 gap-4">
 
-              <div class="mt-auto pt-12">
-                <p class="text-xs text-brand-100/80 leading-relaxed italic">
-                  "Our goal is to make premium travel accessible through smarter loyalty strategies."
-                </p>
-              </div>
+          <!-- WhatsApp -->
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+            class="contact-channel-card group slide-up">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 text-xl flex-shrink-0">
+              <i class="fa-brands fa-whatsapp"></i>
             </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-1">WhatsApp</p>
+              <p class="text-base font-semibold text-neutral-900 mb-0.5">+65 8157 5306</p>
+              <p class="text-xs text-neutral-400">Instant reply · Mon–Sat</p>
+            </div>
+            <div class="mt-auto pt-2">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">
+                Message us <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </span>
+            </div>
+          </a>
+
+          <!-- Email -->
+          <a href="mailto:info@skyfareconsulting.com"
+            class="contact-channel-card group slide-up" style="animation-delay:0.07s;">
+            <div class="w-11 h-11 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-500 text-xl flex-shrink-0">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-1">Email</p>
+              <p class="text-base font-semibold text-neutral-900 mb-0.5">info@skyfareconsulting.com</p>
+              <p class="text-xs text-neutral-400">Response within 24 hours</p>
+            </div>
+            <div class="mt-auto pt-2">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">
+                Send email <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </span>
+            </div>
+          </a>
+
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
+            class="contact-channel-card group slide-up" style="animation-delay:0.14s;">
+            <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-white text-xl flex-shrink-0"
+              style="background:linear-gradient(135deg,#833ab4 0%,#fd1d1d 55%,#fcb045 100%);">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-1">Instagram</p>
+              <p class="text-base font-semibold text-neutral-900 mb-0.5">@skyfareconsulting</p>
+              <p class="text-xs text-neutral-400">Behind the scenes &amp; updates</p>
+            </div>
+            <div class="mt-auto pt-2">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">
+                Follow us <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </span>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         3. FOUNDER + CONTACT FORM — parchment tile
+         ============================================= -->
+    <section class="py-24 bg-neutral-50">
+      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+
+        <div class="grid md:grid-cols-2 gap-8 lg:gap-16 items-start">
+
+          <!-- Founder panel -->
+          <div class="slide-up">
+
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-4">Meet the Strategist</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
+              Hi, I'm Sahej.
+            </h2>
+            <p class="text-base text-neutral-500 leading-relaxed mb-8">
+              I started Skyfare Consulting to bridge the gap between complex airline systems and the premium traveler. My mission is to ensure every mile you earn works harder — delivering Business and First Class experiences without the premium cash price tags.
+            </p>
+
+            <div class="rounded-[18px] overflow-hidden mb-8" style="aspect-ratio:4/3;">
+              <img src="../logos/about.webp" alt="Sahej Singh — Founder, Skyfare Consulting"
+                class="w-full h-full object-cover">
+            </div>
+
+            <blockquote class="border-l-2 border-brand-500/30 pl-5">
+              <p class="text-sm text-neutral-400 leading-relaxed italic">
+                "Our goal is to make premium travel accessible through smarter loyalty strategies."
+              </p>
+            </blockquote>
+
           </div>
 
-          <!-- Form Side -->
-          <div class="md:col-span-3 p-10">
-            <form id="contact-form" action="https://formspree.io/f/mqayqlvj" method="POST" class="space-y-6">
-              <div class="grid md:grid-cols-2 gap-6">
-                <div class="space-y-2">
-                  <label
-                    class="text-xs font-bold uppercase tracking-widest text-brand-900/80">Full Name</label>
-                  <input type="text" name="name" required placeholder="John Doe"
-                    class="w-full px-5 py-4 rounded-2xl bg-brand-50/50 border border-brand-100 focus:border-brand-500 outline-none transition-all placeholder:text-brand-900/20">
+          <!-- Contact form -->
+          <div class="slide-up" style="animation-delay:0.07s;">
+
+            <div class="flex items-center gap-4 mb-8">
+              <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Send an Inquiry</p>
+              <div class="flex-1 h-px bg-neutral-200"></div>
+            </div>
+
+            <form id="contact-form" action="https://formspree.io/f/mqayqlvj" method="POST" class="space-y-5">
+
+              <div class="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="form-label">Full Name</label>
+                  <input type="text" name="name" required placeholder="John Doe" class="form-input">
                 </div>
-                <div class="space-y-2">
-                  <label class="text-xs font-bold uppercase tracking-widest text-brand-900/80">Email
-                    Address</label>
-                  <input type="email" name="email" required placeholder="john@example.com"
-                    class="w-full px-5 py-4 rounded-2xl bg-brand-50/50 border border-brand-100 focus:border-brand-500 outline-none transition-all placeholder:text-brand-900/20">
+                <div>
+                  <label class="form-label">Email Address</label>
+                  <input type="email" name="email" required placeholder="john@example.com" class="form-input">
                 </div>
               </div>
 
-              <div class="space-y-2">
-                <label class="text-xs font-bold uppercase tracking-widest text-brand-900/80">Message
-                  Details</label>
-                <textarea name="message" rows="4" required placeholder="Tell us about your trip or general inquiry..."
-                  class="w-full px-5 py-4 rounded-2xl bg-brand-50/50 border border-brand-100 focus:border-brand-500 outline-none transition-all placeholder:text-brand-900/20"></textarea>
+              <div>
+                <label class="form-label">Subject</label>
+                <input type="text" name="subject" placeholder="e.g. Business Class SIN → LHR" class="form-input">
               </div>
 
-              <button type="submit"
-                class="w-full py-5 rounded-2xl bg-brand-600 text-white font-bold shadow-lg shadow-brand-500/20 hover:bg-brand-700 hover:-translate-y-0.5 active:scale-95 transition-all">
+              <div>
+                <label class="form-label">Message</label>
+                <textarea name="message" rows="5" required
+                  placeholder="Tell us about your trip, preferred dates, cabin class, or any general questions..."
+                  class="form-textarea"></textarea>
+              </div>
+
+              <button type="submit" class="btn-pill btn-pill-primary w-full justify-center text-sm">
                 Send Inquiry
               </button>
 
               <p id="form-status" class="text-center text-sm font-medium hidden"></p>
+
             </form>
+
           </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         4. CLOSING CTA — dark tile
+         ============================================= -->
+    <section class="py-24 tile-dark1">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="max-w-lg mx-auto text-center">
+
+          <div class="slide-up">
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Ready?</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight mb-4">
+              Start your journey today.
+            </h2>
+            <p class="section-lead-dark mb-8">
+              The fastest way to reach us is WhatsApp. We typically respond within minutes.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up" style="animation-delay:0.1s;">
+            <a href="https://api.whatsapp.com/send?phone=6581575306" class="btn-pill btn-pill-primary">
+              <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+            </a>
+            <a href="services.html" class="btn-pill btn-pill-ghost">
+              See Our Services
+            </a>
+          </div>
+
         </div>
       </div>
     </section>
+
   </main>
 
-  <!-- SCRIPTS -->
-  
+  <script>
+  (function () {
+    window.addEventListener('load', function () {
+      var header = document.getElementById('main-header');
+      var hero   = document.querySelector('.contact-hero-bg');
+      if (!header || !hero) return;
+      document.body.style.paddingTop = '0';
+      hero.style.paddingTop = (header.offsetHeight + 32) + 'px';
+    });
+  })();
+  </script>
 </body>
-
 </html>

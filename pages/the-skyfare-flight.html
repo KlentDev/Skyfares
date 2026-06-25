@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Skyfare Flight — Skyfare Consulting</title>
+  <meta name="description"
+    content="Once every three months, Skyfare arranges a flight for one person. No catch, no competition — just a story that moved us. Apply today." />
+  <link rel="icon" href="../logos/logo.webp" />
+
+  <script src="../js/links.js"></script>
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+  <script src="../js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+  <style>
+    .flight-hero-bg {
+      background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1">
+
+    <!-- =============================================
+         1. HERO
+         NO pt-16 here — same pattern as newsletter.html.
+         window.load script at the bottom sets the
+         hero's paddingTop to match the rendered header.
+         ============================================= -->
+    <section class="flight-hero-bg relative pb-24 overflow-hidden">
+
+      <div class="absolute inset-0 pointer-events-none opacity-10"
+        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
+               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
+               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
+      </div>
+
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="text-center max-w-2xl mx-auto slide-up">
+
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-paper-plane text-[10px]"></i>
+            One person &middot; One flight &middot; Every quarter
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
+            The Skyfare Flight
+          </h1>
+
+          <p class="text-base md:text-lg mb-10 leading-relaxed max-w-xl mx-auto font-medium text-white/70">
+            Every quarter, we arrange a flight for someone who deserves one.
+          </p>
+
+          <a href="#apply" class="btn-pill btn-pill-primary">
+            Apply for The Skyfare Flight
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         2. WHAT IT IS
+         ============================================= -->
+    <section class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="max-w-xl mx-auto text-center slide-up">
+
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">What It Is</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-6 tracking-tight">
+            One flight. Once a quarter.<br class="hidden sm:block"> For someone who deserves it.
+          </h2>
+          <p class="text-base md:text-[17px] text-neutral-600 leading-relaxed">
+            Once every three months, Skyfare arranges a flight for one person. No catch, no competition — just a story that moved us. We handle everything. All you have to do is apply.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         3. HOW IT WORKS
+         ============================================= -->
+    <section class="py-24 tile-dark1">
+      <div class="container mx-auto px-4 md:px-6">
+
+        <div class="text-center mb-14 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">How It Works</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
+            Simple as it sounds.
+          </h2>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-stretch gap-4 max-w-3xl mx-auto">
+
+          <div class="card-dark p-8 flex-1 text-center slide-up">
+            <div class="step-number mb-1">01</div>
+            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+              <i class="fa-solid fa-pen-nib"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-white mb-2">Apply</h3>
+            <p class="text-sm text-white/55 leading-relaxed">Fill in a short form. Tell us where you've always wanted to go — and a little about yourself.</p>
+          </div>
+
+          <div class="hidden md:flex items-center justify-center text-brand-500/25 flex-shrink-0 px-1">
+            <i class="fa-solid fa-chevron-right text-xl"></i>
+          </div>
+
+          <div class="card-dark p-8 flex-1 text-center slide-up" style="animation-delay:0.1s;">
+            <div class="step-number mb-1">02</div>
+            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-white mb-2">We Choose</h3>
+            <p class="text-sm text-white/55 leading-relaxed">Each quarter, we read every application. The one that moves us most gets the flight.</p>
+          </div>
+
+          <div class="hidden md:flex items-center justify-center text-brand-500/25 flex-shrink-0 px-1">
+            <i class="fa-solid fa-chevron-right text-xl"></i>
+          </div>
+
+          <div class="card-dark p-8 flex-1 text-center slide-up" style="animation-delay:0.2s;">
+            <div class="step-number mb-1">03</div>
+            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+              <i class="fa-solid fa-plane-departure"></i>
+            </div>
+            <h3 class="text-base font-display font-semibold text-white mb-2">You Fly</h3>
+            <p class="text-sm text-white/55 leading-relaxed">We take care of everything. You just show up and go.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         4. APPLICATION FORM
+         Netlify form — AJAX submission with inline
+         success state. Form name: skyfare-flight.
+         ============================================= -->
+    <section id="apply" class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-6">
+
+        <div class="max-w-xl mx-auto">
+
+          <div class="text-center mb-10 slide-up">
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">Apply</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
+              Tell us your story.
+            </h2>
+            <p class="text-base text-neutral-500 leading-relaxed">
+              Applications are open year-round. We read every one.
+            </p>
+          </div>
+
+          <form
+            id="flight-form"
+            name="skyfare-flight"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            class="space-y-5 slide-up"
+            style="animation-delay:0.1s;"
+          >
+            <input type="hidden" name="form-name" value="skyfare-flight">
+            <div class="hidden" aria-hidden="true">
+              <input name="bot-field" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div>
+              <label for="full-name" class="block text-sm font-semibold text-neutral-700 mb-1.5">Full name</label>
+              <input
+                id="full-name"
+                name="full-name"
+                type="text"
+                required
+                autocomplete="name"
+                placeholder="Your full name"
+                class="w-full px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+              >
+            </div>
+
+            <div>
+              <label for="from" class="block text-sm font-semibold text-neutral-700 mb-1.5">Where are you from?</label>
+              <input
+                id="from"
+                name="from"
+                type="text"
+                required
+                placeholder="City, country"
+                class="w-full px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+              >
+            </div>
+
+            <div>
+              <label for="destination" class="block text-sm font-semibold text-neutral-700 mb-1.5">Where have you always wanted to go — and why?</label>
+              <textarea
+                id="destination"
+                name="destination"
+                rows="3"
+                required
+                placeholder="The place, and what draws you to it."
+                class="w-full px-5 py-3.5 rounded-2xl border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white resize-none leading-relaxed"
+              ></textarea>
+            </div>
+
+            <div>
+              <label for="about" class="block text-sm font-semibold text-neutral-700 mb-1.5">Tell us a little about yourself</label>
+              <textarea
+                id="about"
+                name="about"
+                rows="4"
+                required
+                maxlength="300"
+                placeholder="A few sentences is plenty."
+                class="w-full px-5 py-3.5 rounded-2xl border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white resize-none leading-relaxed"
+                oninput="document.getElementById('char-count').textContent = this.value.length"
+              ></textarea>
+              <p class="text-xs text-neutral-400 mt-1.5 text-right"><span id="char-count">0</span>&thinsp;/&thinsp;300</p>
+            </div>
+
+            <div class="pt-1">
+              <button type="submit" class="btn-pill btn-pill-primary w-full justify-center">
+                Apply for The Skyfare Flight
+              </button>
+            </div>
+
+          </form>
+
+          <div id="flight-form-success" class="hidden text-center py-10 slide-up">
+            <div class="w-14 h-14 rounded-full bg-brand-50 flex items-center justify-center mx-auto mb-4">
+              <i class="fa-solid fa-paper-plane text-brand-500 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-display font-bold text-neutral-900 mb-2">Application received.</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed max-w-xs mx-auto">
+              Thank you. We read every application before each quarter closes.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         5. PAST RECIPIENTS
+         Empty for now — populate each quarter with
+         route + one-line story. No personal details
+         unless consented.
+         ============================================= -->
+    <section class="py-24 tile-dark1">
+      <div class="container mx-auto px-4 md:px-6">
+
+        <div class="text-center mb-10 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Past Recipients</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight mb-4">
+            Flights We've Given
+          </h2>
+          <p class="text-white/40 text-base max-w-xs mx-auto leading-relaxed">
+            This section fills each quarter. The first flight is coming.
+          </p>
+        </div>
+
+        <div class="max-w-sm mx-auto slide-up" style="animation-delay:0.1s;">
+          <div class="authority-card p-10 flex flex-col items-center text-center">
+            <div class="w-12 h-12 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-xl mb-4">
+              <i class="fa-regular fa-clock"></i>
+            </div>
+            <p class="text-sm text-white/40 leading-relaxed">
+              No flights arranged yet — the first recipient will be chosen this quarter.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+  // Netlify AJAX form submission
+  (function () {
+    var form = document.getElementById('flight-form');
+    var success = document.getElementById('flight-form-success');
+    if (!form || !success) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+      }).then(function () {
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }).catch(function () {
+        btn.disabled = false;
+        btn.textContent = 'Apply for The Skyfare Flight';
+        alert('Something went wrong. Please try again.');
+      });
+    });
+  })();
+
+  // Hero padding-top fix — same pattern as newsletter.html.
+  // header.js measures header height before fonts load (DOMContentLoaded),
+  // so we override it here on window.load when fonts are stable.
+  (function () {
+    window.addEventListener('load', function () {
+      var header = document.getElementById('main-header');
+      var hero   = document.querySelector('.flight-hero-bg');
+      if (!header || !hero) return;
+      document.body.style.paddingTop = '0';
+      hero.style.paddingTop = (header.offsetHeight + 32) + 'px';
+    });
+  })();
+  </script>
+
+</body>
+</html>
