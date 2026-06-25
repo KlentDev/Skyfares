@@ -302,17 +302,16 @@ async function handleActivate(request, env, corsHeaders) {
     return respond({ error: 'Provide session_id or email.' }, 400, corsHeaders);
   }
 
-  // Rate limit the email path to slow membership/email enumeration.
-  // Session-id path is already gated by Stripe verification, so skip it there.
-  if (!sessionId) {
-    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-    const rlKey = `rl:${ip}`;
+  // Rate limit on the email path only (session_id path is Stripe-verified).
+  // Only FAILED lookups increment the counter — successful logins never block.
+  const rlKey = !sessionId
+    ? `rl:${request.headers.get('CF-Connecting-IP') || 'unknown'}`
+    : null;
+  if (rlKey) {
     const count = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
-    if (count >= 8) {
+    if (count >= 20) {
       return respond({ error: 'Too many attempts. Please try again in a few minutes.' }, 429, corsHeaders);
     }
-    // 10-minute sliding window (best-effort; resets the TTL on each attempt)
-    await env.ALTITUDE_KV.put(rlKey, String(count + 1), { expirationTtl: 600 });
   }
 
   let memberEmail = email;
@@ -398,6 +397,11 @@ async function handleActivate(request, env, corsHeaders) {
   }
 
   if (!authorized) {
+    // Only count failed lookups against the rate limit (successes are never penalised)
+    if (rlKey) {
+      const c = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+      await env.ALTITUDE_KV.put(rlKey, String(c + 1), { expirationTtl: 600 });
+    }
     return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);
   }
 
