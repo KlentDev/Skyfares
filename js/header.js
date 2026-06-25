@@ -257,8 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     headerEl.classList.add('header-transparent');
 
     function updateHeaderState() {
-      const heroBottom = heroSection.getBoundingClientRect().bottom;
-      if (heroBottom <= headerEl.offsetHeight) {
+      if (window.scrollY > 10) {
         headerEl.classList.remove('header-transparent');
         headerEl.classList.add('header-scrolled');
       } else {

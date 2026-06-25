@@ -17,7 +17,7 @@
     if (token) {
       verifyAndRender(token);
     } else {
-      renderPublicView();
+      wirePublicView();
     }
   }
 
@@ -36,20 +36,65 @@
   }
 
   function verifyAndRender(token) {
-    showSkeleton();
+    // Hide public, reveal member shell immediately (avoids flash of public content)
+    showMemberShell();
     fetch(WORKER + '/altitude/verify', {
       headers: { 'Authorization': 'Bearer ' + token },
     })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
       .then(function (res) {
         if (res.ok && res.data.valid) {
-          renderMemberView(res.data.email, res.data.member);
+          populateMemberView(res.data.email, res.data.member);
+          loadPremiumPosts(token);
         } else {
           clearToken();
-          renderPublicView(res.data.status === 'cancelled' ? 'cancelled' : null);
+          hideMemberShell();
+          wirePublicView(res.data.status === 'cancelled' ? 'cancelled' : null);
         }
       })
-      .catch(function () { renderPublicView(); });
+      .catch(function () {
+        clearToken();
+        hideMemberShell();
+        wirePublicView();
+      });
+  }
+
+  function showMemberShell() {
+    var pub = document.getElementById('alt-public');
+    var mem = document.getElementById('alt-member');
+    if (pub) pub.classList.add('hidden');
+    if (mem) mem.classList.remove('hidden');
+  }
+
+  function hideMemberShell() {
+    var pub = document.getElementById('alt-public');
+    var mem = document.getElementById('alt-member');
+    if (pub) pub.classList.remove('hidden');
+    if (mem) mem.classList.add('hidden');
+  }
+
+  function wirePublicView(hint) {
+    var checkoutForm = document.getElementById('alt-checkout-form');
+    if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckout);
+    var loginForm = document.getElementById('alt-login-form');
+    if (loginForm) loginForm.addEventListener('submit', handleMemberLogin);
+    if (hint === 'cancelled') {
+      var note = document.getElementById('alt-cancelled-note');
+      if (note) note.classList.remove('hidden');
+    }
+    // Activate slide-up animations
+    document.querySelectorAll('#alt-public .slide-up').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  function populateMemberView(email, member) {
+    var emailEl = document.getElementById('alt-member-email');
+    if (emailEl) emailEl.textContent = email;
+    var renewEl = document.getElementById('alt-renews');
+    if (renewEl && member && member.current_period_end) {
+      renewEl.textContent = 'Renews ' + formatDate(member.current_period_end);
+    }
+    window.__altSignOut = function () { clearToken(); window.location.reload(); };
+    document.querySelectorAll('#alt-member .slide-up').forEach(function (el) { el.classList.add('is-visible'); });
   }
 
   // ─── Checkout ─────────────────────────────────────────────────────────────
@@ -88,7 +133,9 @@
       .then(function (res) {
         if (res.ok && res.data.token) {
           setToken(res.data.token);
-          verifyAndRender(res.data.token);
+          showMemberShell();
+          populateMemberView(res.data.email, null);
+          loadPremiumPosts(res.data.token);
         } else {
           var msg = res.data.error || 'No active membership found for this email.';
           if (res.data.status === 'cancelled') {
@@ -104,18 +151,7 @@
       });
   }
 
-  // ─── Render: skeleton ─────────────────────────────────────────────────────
-
-  function showSkeleton() {
-    var main = document.getElementById('alt-main');
-    if (!main) return;
-    main.innerHTML =
-      '<div class="max-w-5xl mx-auto px-4 py-20 text-center">' +
-        '<div class="w-12 h-12 rounded-full bg-neutral-100 animate-pulse mx-auto mb-6"></div>' +
-        '<div class="h-4 bg-neutral-100 rounded-full w-48 mx-auto animate-pulse mb-3"></div>' +
-        '<div class="h-3 bg-neutral-100 rounded-full w-32 mx-auto animate-pulse"></div>' +
-      '</div>';
-  }
+  // ─── (skeleton is now the static HTML in altitude.html) ──────────────────
 
   // ─── Render: Public (non-member) view ─────────────────────────────────────
 
