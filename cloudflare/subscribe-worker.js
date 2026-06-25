@@ -302,6 +302,19 @@ async function handleActivate(request, env, corsHeaders) {
     return respond({ error: 'Provide session_id or email.' }, 400, corsHeaders);
   }
 
+  // Rate limit the email path to slow membership/email enumeration.
+  // Session-id path is already gated by Stripe verification, so skip it there.
+  if (!sessionId) {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const rlKey = `rl:${ip}`;
+    const count = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+    if (count >= 8) {
+      return respond({ error: 'Too many attempts. Please try again in a few minutes.' }, 429, corsHeaders);
+    }
+    // 10-minute sliding window (best-effort; resets the TTL on each attempt)
+    await env.ALTITUDE_KV.put(rlKey, String(count + 1), { expirationTtl: 600 });
+  }
+
   let memberEmail = email;
 
   // Session ID path — verify payment with Stripe and write member record if needed
@@ -347,13 +360,45 @@ async function handleActivate(request, env, corsHeaders) {
     }
   }
 
-  // Verify member status from KV
-  const raw = await env.ALTITUDE_KV.get(`member:${memberEmail}`);
-  if (!raw) return respond({ error: 'No membership found for this email.' }, 404, corsHeaders);
+  // ── Authorize ──────────────────────────────────────────────────────────────
+  // Source of truth for premium access is the Beehiiv "altitude premium" tag.
+  // KV is a fast cache + a fallback for the brief window right after payment
+  // before the tag has propagated in Beehiiv.
+  let authorized = false;
 
-  const member = JSON.parse(raw);
-  if (member.status !== 'active') {
-    return respond({ error: 'Membership is not active.', status: member.status }, 403, corsHeaders);
+  // 1) Beehiiv tag check (authoritative)
+  const beehiivPremium = await checkBeehiivPremium(memberEmail, env).catch(() => null);
+  if (beehiivPremium === true) {
+    authorized = true;
+    // Refresh KV cache so /verify stays fast on subsequent page loads
+    const existing = await env.ALTITUDE_KV.get(`member:${memberEmail}`);
+    if (!existing) {
+      await env.ALTITUDE_KV.put(`member:${memberEmail}`, JSON.stringify({
+        email: memberEmail,
+        status: 'active',
+        plan: 'monthly',
+        amount_cents: 499,
+        currency: 'usd',
+        source: 'beehiiv_tag',
+        joined_at: new Date().toISOString(),
+      }));
+    } else {
+      const rec = JSON.parse(existing);
+      if (rec.status !== 'active') { rec.status = 'active'; await env.ALTITUDE_KV.put(`member:${memberEmail}`, JSON.stringify(rec)); }
+    }
+  }
+
+  // 2) Fallback to KV (covers tag-propagation lag right after a fresh payment)
+  if (!authorized) {
+    const raw = await env.ALTITUDE_KV.get(`member:${memberEmail}`);
+    if (raw) {
+      const member = JSON.parse(raw);
+      if (member.status === 'active') authorized = true;
+    }
+  }
+
+  if (!authorized) {
+    return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);
   }
 
   const now = Math.floor(Date.now() / 1000);
@@ -363,6 +408,29 @@ async function handleActivate(request, env, corsHeaders) {
   );
 
   return respond({ token, email: memberEmail }, 200, corsHeaders);
+}
+
+// ── Beehiiv premium check (source of truth) ───────────────────────────────────
+
+async function checkBeehiivPremium(email, env) {
+  if (!email) return false;
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
+      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  );
+  if (!res.ok) throw new Error('beehiiv lookup failed');
+
+  const data = await res.json();
+  const sub  = (data.data || data.subscriptions || [])[0];
+  if (!sub) return false;
+  if (sub.status && sub.status !== 'active' && sub.status !== 'validating') return false;
+
+  // Tags may come back as strings or objects depending on expand shape
+  const tags = (sub.tags || []).map(t =>
+    (typeof t === 'string' ? t : (t.name || t.id || '')).toString().toLowerCase()
+  );
+  return tags.includes('altitude premium') || tags.includes(BEEHIIV_TAG_ID.toLowerCase());
 }
 
 // ── Altitude: Verify JWT ──────────────────────────────────────────────────────

@@ -1205,3 +1205,174 @@ button[class*="bg-emerald-"]:active {
 .nsl-article [style*="background"] p:last-child {
   margin-bottom: 0;
 }
+
+/* ── Skyfare UI Components (toast / modal) ────────────────────────────────────
+   Shared global components exposed via window.SkyUI (js/ui.js).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Toasts — top-right stack */
+.sky-toast-wrap {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  pointer-events: none;
+  max-width: calc(100vw - 2.5rem);
+}
+
+.sky-toast {
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 280px;
+  max-width: 380px;
+  padding: 0.875rem 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #0066cc;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.875rem;
+  color: #1d1d1f;
+  opacity: 0;
+  transform: translateX(120%);
+  transition: opacity 0.26s ease-out, transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sky-toast--in  { opacity: 1; transform: translateX(0); }
+.sky-toast--out { opacity: 0; transform: translateX(120%); }
+
+.sky-toast__icon { font-size: 1rem; flex-shrink: 0; }
+.sky-toast__msg  { flex: 1; line-height: 1.4; }
+
+.sky-toast__close {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  transition: background 0.15s, color 0.15s;
+}
+.sky-toast__close:hover { background: #f3f4f6; color: #4b5563; }
+
+.sky-toast--success { border-left-color: #16a34a; }
+.sky-toast--success .sky-toast__icon { color: #16a34a; }
+.sky-toast--error   { border-left-color: #dc2626; }
+.sky-toast--error   .sky-toast__icon { color: #dc2626; }
+.sky-toast--info    { border-left-color: #0066cc; }
+.sky-toast--info    .sky-toast__icon { color: #0066cc; }
+
+/* Modal */
+.sky-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 420;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+.sky-modal--in { opacity: 1; }
+
+.sky-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 24, 41, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.sky-modal__card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  transform: scale(0.96);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Manrope', sans-serif;
+}
+.sky-modal--in .sky-modal__card { transform: scale(1); }
+
+.sky-modal__x {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f3f4f6;
+  color: #9ca3af;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.sky-modal__x:hover { background: #e5e7eb; color: #4b5563; }
+
+.sky-modal__title {
+  font-family: 'Lexend', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.625rem;
+  letter-spacing: -0.01em;
+  padding-right: 2rem;
+}
+
+.sky-modal__body {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+.sky-modal__actions {
+  display: flex;
+  gap: 0.625rem;
+  justify-content: flex-end;
+  margin-top: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.sky-modal__btn {
+  border-radius: 9999px;
+  padding: 0.6875rem 1.375rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+.sky-modal__btn:hover  { border-color: #cbd5e1; background: #f9fafb; }
+.sky-modal__btn:active { transform: scale(0.95); }
+
+.sky-modal__btn--danger {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+.sky-modal__btn--danger:hover { background: #b91c1c; border-color: #b91c1c; }
+
+@media (max-width: 480px) {
+  .sky-toast-wrap { left: 1rem; right: 1rem; }
+  .sky-toast { min-width: 0; max-width: 100%; }
+  .sky-modal__card { padding: 1.5rem; }
+  .sky-modal__actions { flex-direction: column-reverse; }
+  .sky-modal__actions > * { width: 100%; justify-content: center; }
+}

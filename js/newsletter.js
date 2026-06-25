@@ -110,6 +110,7 @@
       if (res.ok && data.success) {
         fireConfetti(wrapperEl);
         showSuccessState(wrapperEl);
+        if (window.SkyUI) SkyUI.toast("You're subscribed — welcome aboard!", { type: 'success' });
         if (wrapperEl && wrapperEl.closest('#altitude-popup')) {
           setTimeout(closeSkyPopup, 3500);
         }
@@ -117,14 +118,20 @@
       }
 
       if (res.status === 409 || data.error === 'already_subscribed') {
-        setStatus(statusEl, "You're already on the list! Check your inbox for our latest issue.", 'error');
+        var dupMsg = "You're already on the list! Check your inbox for our latest issue.";
+        setStatus(statusEl, dupMsg, 'error');
+        if (window.SkyUI) SkyUI.toast(dupMsg, { type: 'info', duration: 5000 });
       } else {
-        setStatus(statusEl, data.error || 'Something went wrong. Please try again.', 'error');
+        var errMsg = data.error || 'Something went wrong. Please try again.';
+        setStatus(statusEl, errMsg, 'error');
+        if (window.SkyUI) SkyUI.toast(errMsg, { type: 'error' });
       }
       if (btnEl) { btnEl.disabled = false; btnEl.textContent = originalText; }
 
     } catch (_) {
-      setStatus(statusEl, 'Network error. Please check your connection and try again.', 'error');
+      var netMsg = 'Network error. Please check your connection and try again.';
+      setStatus(statusEl, netMsg, 'error');
+      if (window.SkyUI) SkyUI.toast(netMsg, { type: 'error' });
       if (btnEl) { btnEl.disabled = false; btnEl.textContent = originalText; }
     }
   }

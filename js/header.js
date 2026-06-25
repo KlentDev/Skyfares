@@ -314,6 +314,14 @@ document.addEventListener('DOMContentLoaded', () => {
   mobileMenuBackdrop.addEventListener('click', closeMenu);
 
 
+  // --- Global UI components (SkyUI: toast / modal / alert) ---
+  (function () {
+    var s = document.createElement('script');
+    s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/ui.js';
+    s.defer = true;
+    document.head.appendChild(s);
+  })();
+
   // --- Newsletter Announcement Banner ---
   (function () {
     var s = document.createElement('script');
