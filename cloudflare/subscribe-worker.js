@@ -504,18 +504,24 @@ async function handleGetPost(slug, request, env, corsHeaders) {
 // ── Beehiiv helpers ───────────────────────────────────────────────────────────
 
 async function setupBeehiivMember(email, env) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${env.BEEHIIV_API_KEY}`,
+  };
+
   // 1. Subscribe (or reactivate) in Beehiiv
   const subRes = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+      headers,
       body: JSON.stringify({
         email,
         reactivate_existing: true,
         send_welcome_email: false,
         double_opt_override: 'disabled',
         utm_source: 'altitude_payment',
+        utm_medium: 'stripe',
       }),
     }
   );
@@ -525,15 +531,42 @@ async function setupBeehiivMember(email, env) {
   const subId   = subData.data?.id;
   if (!subId) return;
 
-  // 2. Apply altitude-premium tag via subscriber tags endpoint
-  await fetch(
+  // 2. Apply altitude-premium tag — try multiple endpoint patterns
+  // Pattern A: POST /subscriptions/{id}/tags with tag name
+  const tagA = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+      headers,
       body: JSON.stringify({ tags: [{ name: 'altitude premium' }] }),
     }
-  );
+  ).catch(() => null);
+
+  if (tagA && tagA.ok) return; // success
+
+  // Pattern B: POST with tag id
+  const tagB = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ tags: [{ id: BEEHIIV_TAG_ID }] }),
+    }
+  ).catch(() => null);
+
+  if (tagB && tagB.ok) return; // success
+
+  // Pattern C: PATCH the subscription with subscriber_tags array
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
+    {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({
+        publication_subscriber_tags: [{ id: BEEHIIV_TAG_ID }],
+      }),
+    }
+  ).catch(() => {});
 }
 
 async function removeBeehiivTag(email, env) {
