@@ -82,9 +82,29 @@
       var note = document.getElementById('alt-cancelled-note');
       if (note) note.classList.remove('hidden');
     }
-    // Activate slide-up animations
     document.querySelectorAll('#alt-public .slide-up').forEach(function (el) { el.classList.add('is-visible'); });
   }
+
+  // ─── Login modal open / close ─────────────────────────────────────────────
+
+  window.openLoginModal = function () {
+    var modal = document.getElementById('alt-login-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      var inp = document.getElementById('alt-login-email');
+      if (inp) setTimeout(function () { inp.focus(); }, 80);
+    }
+  };
+
+  window.closeLoginModal = function () {
+    var modal = document.getElementById('alt-login-modal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  // Close on Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') window.closeLoginModal && window.closeLoginModal();
+  });
 
   function populateMemberView(email, member) {
     var emailEl = document.getElementById('alt-member-email');
@@ -152,6 +172,7 @@
       .then(function (res) {
         if (res.ok && res.data.token) {
           setToken(res.data.token);
+          window.closeLoginModal && window.closeLoginModal();
           if (window.SkyUI) SkyUI.toast('Welcome back. Access granted.', { type: 'success' });
           showMemberShell();
           populateMemberView(res.data.email, null);
