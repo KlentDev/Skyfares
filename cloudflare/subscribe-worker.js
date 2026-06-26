@@ -17,6 +17,10 @@
  * KV binding: ALTITUDE_KV
  */
 
+// Beehiiv automation that applies the altitude-premium tag via Beehiiv's
+// internal update_subscription mechanism (REST PATCH is unreliable for tags).
+const ALTITUDE_TAG_AUTOMATION_ID = 'aut_94f6dbad-98e3-4025-aa82-c2eee487ea86';
+
 const ALLOWED_ORIGINS = [
   'https://skyfareconsulting.com',
   'https://www.skyfareconsulting.com',
@@ -608,8 +612,7 @@ async function setupBeehiivMember(email, env) {
     'Authorization': `Bearer ${env.BEEHIIV_API_KEY}`,
   };
 
-  // Step 1 — Subscribe (or reactivate) and attempt to include the tag inline.
-  //   Some Beehiiv plan levels accept tags[] in the creation body; if so, one call does both.
+  // ── Step 1: Subscribe (or reactivate) ──────────────────────────────────────
   const subRes = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
     {
@@ -622,7 +625,6 @@ async function setupBeehiivMember(email, env) {
         double_opt_override: 'disabled',
         utm_source: 'altitude_payment',
         utm_medium: 'stripe',
-        tags: [{ name: 'altitude premium' }],   // inline tag attempt
       }),
     }
   );
@@ -632,66 +634,67 @@ async function setupBeehiivMember(email, env) {
   const subId   = subData.data?.id;
   if (!subId) return false;
 
-  // Verify the tag landed from the inline attempt before trying separate calls
-  const verifyRes = await fetch(
+  // ── Step 2: Check if already tagged (existing subscriber) ─────────────────
+  if (await verifyBeehiivTag(email, env)) return true;
+
+  // ── Step 3: Trigger the "Apply Altitude Premium Tag" automation ───────────
+  // This automation uses Beehiiv's internal update_subscription mechanism
+  // (same as the editor uses) — more reliable than direct REST PATCH.
+  const enrollRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${ALTITUDE_TAG_AUTOMATION_ID}/subscribers`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ email }),
+    }
+  ).catch(() => null);
+
+  if (enrollRes && enrollRes.ok) {
+    // Automation runs asynchronously — give it a moment then verify
+    await new Promise(r => setTimeout(r, 1500));
+    if (await verifyBeehiivTag(email, env)) return true;
+  }
+
+  // ── Step 4: REST PATCH fallbacks (kept as belt-and-suspenders) ────────────
+  const patchBodies = [
+    { tags: ['altitude premium'] },
+    { tags: [{ name: 'altitude premium' }] },
+    { publication_subscriber_tags: [{ id: BEEHIIV_TAG_ID }] },
+  ];
+
+  for (const body of patchBodies) {
+    const res = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
+      { method: 'PATCH', headers, body: JSON.stringify(body) }
+    ).catch(() => null);
+    if (res && res.ok && await verifyBeehiivTag(email, env)) return true;
+  }
+
+  // POST to /tags endpoint
+  const tagRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
+    { method: 'POST', headers, body: JSON.stringify({ tags: [{ name: 'altitude premium' }] }) }
+  ).catch(() => null);
+  if (tagRes && tagRes.ok && await verifyBeehiivTag(email, env)) return true;
+
+  return false;
+}
+
+// Re-query the subscription and confirm the tag is actually present.
+// Every tag application attempt now calls this — no more silent false-positives.
+async function verifyBeehiivTag(email, env) {
+  const res = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
       `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
     { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
   ).catch(() => null);
-
-  if (verifyRes && verifyRes.ok) {
-    const vd  = await verifyRes.json();
-    const sub = (vd.data || vd.subscriptions || [])[0];
-    const existingTags = (sub?.tags || []).map(t =>
-      (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
-    );
-    if (existingTags.includes('altitude premium')) return true; // inline worked
-  }
-
-  // Step 2 — Inline didn't apply the tag; try explicit separate calls.
-
-  // Pattern A: PATCH with string-array tags (matches how Beehiiv returns them)
-  const tagA = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
-    { method: 'PATCH', headers, body: JSON.stringify({ tags: ['altitude premium'] }) }
-  ).catch(() => null);
-  if (tagA && tagA.ok) {
-    // Quick check to confirm it applied
-    const chkA = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
-        `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
-      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-    ).catch(() => null);
-    if (chkA && chkA.ok) {
-      const cd  = await chkA.json();
-      const cs  = (cd.data || cd.subscriptions || [])[0];
-      const ct  = (cs?.tags || []).map(t => (typeof t === 'string' ? t : (t.name || '')).toLowerCase());
-      if (ct.includes('altitude premium')) return true;
-    }
-  }
-
-  // Pattern B: PATCH with object-array tags
-  const tagB = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
-    { method: 'PATCH', headers, body: JSON.stringify({ tags: [{ name: 'altitude premium' }] }) }
-  ).catch(() => null);
-  if (tagB && tagB.ok) return true;
-
-  // Pattern C: PATCH with publication_subscriber_tags (older field name)
-  const tagC = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
-    { method: 'PATCH', headers, body: JSON.stringify({ publication_subscriber_tags: [{ id: BEEHIIV_TAG_ID }] }) }
-  ).catch(() => null);
-  if (tagC && tagC.ok) return true;
-
-  // Pattern D: POST to subscriber-specific tags endpoint
-  const tagD = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
-    { method: 'POST', headers, body: JSON.stringify({ tags: [{ name: 'altitude premium' }] }) }
-  ).catch(() => null);
-  if (tagD && tagD.ok) return true;
-
-  return false; // all patterns failed — caller stores this so we can retry on next login
+  if (!res || !res.ok) return false;
+  const data = await res.json();
+  const sub  = (data.data || data.subscriptions || [])[0];
+  const tags = (sub?.tags || []).map(t =>
+    (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
+  );
+  return tags.includes('altitude premium') || tags.includes(BEEHIIV_TAG_ID.toLowerCase());
 }
 
 async function removeBeehiivTag(email, env) {
