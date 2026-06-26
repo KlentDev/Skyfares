@@ -248,8 +248,23 @@ async function handleCheckoutComplete(session, env) {
   await env.ALTITUDE_KV.put(`member:${email}`, JSON.stringify(record));
   if (custId) await env.ALTITUDE_KV.put(`customer:${custId}`, email);
 
-  // Setup in Beehiiv (best-effort, doesn't block)
-  await setupBeehiivMember(email, env).catch(() => {});
+  // Setup in Beehiiv; record whether the tag was applied so we can retry later.
+  const tagged = await setupBeehiivMember(email, env).catch(() => false);
+  if (!tagged) {
+    const raw2 = await env.ALTITUDE_KV.get(`member:${email}`);
+    if (raw2) {
+      const rec2 = JSON.parse(raw2);
+      rec2.beehiiv_tagged = false;
+      await env.ALTITUDE_KV.put(`member:${email}`, JSON.stringify(rec2));
+    }
+  } else {
+    const raw2 = await env.ALTITUDE_KV.get(`member:${email}`);
+    if (raw2) {
+      const rec2 = JSON.parse(raw2);
+      rec2.beehiiv_tagged = true;
+      await env.ALTITUDE_KV.put(`member:${email}`, JSON.stringify(rec2));
+    }
+  }
 }
 
 async function handleSubscriptionDeleted(sub, env) {
@@ -405,9 +420,21 @@ async function handleActivate(request, env, corsHeaders) {
     return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);
   }
 
+  // Background: if previous Beehiiv tagging failed, retry now (non-blocking)
+  const kvRaw = await env.ALTITUDE_KV.get(`member:${memberEmail}`);
+  if (kvRaw) {
+    const kvRec = JSON.parse(kvRaw);
+    if (kvRec.beehiiv_tagged === false) {
+      setupBeehiivMember(memberEmail, env).then(async tagged => {
+        kvRec.beehiiv_tagged = tagged;
+        await env.ALTITUDE_KV.put(`member:${memberEmail}`, JSON.stringify(kvRec));
+      }).catch(() => {});
+    }
+  }
+
   const now = Math.floor(Date.now() / 1000);
   const token = await signJwt(
-    { sub: memberEmail, typ: 'altitude', iat: now, exp: now + 2592000 }, // 30 days
+    { sub: memberEmail, typ: 'altitude', iat: now, exp: now + 86400 }, // 24 hours
     env.JWT_SECRET
   );
 
@@ -598,47 +625,36 @@ async function setupBeehiivMember(email, env) {
     }
   );
 
-  if (!subRes.ok) return;
+  if (!subRes.ok) return false;
   const subData = await subRes.json();
   const subId   = subData.data?.id;
-  if (!subId) return;
+  if (!subId) return false;
 
-  // 2. Apply altitude-premium tag — try multiple endpoint patterns
+  // 2. Apply altitude-premium tag — try multiple endpoint patterns.
+  //    Returns true if any pattern succeeds so the caller can record the outcome.
+
   // Pattern A: POST /subscriptions/{id}/tags with tag name
   const tagA = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
-    {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ tags: [{ name: 'altitude premium' }] }),
-    }
+    { method: 'POST', headers, body: JSON.stringify({ tags: [{ name: 'altitude premium' }] }) }
   ).catch(() => null);
-
-  if (tagA && tagA.ok) return; // success
+  if (tagA && tagA.ok) return true;
 
   // Pattern B: POST with tag id
   const tagB = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
-    {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ tags: [{ id: BEEHIIV_TAG_ID }] }),
-    }
+    { method: 'POST', headers, body: JSON.stringify({ tags: [{ id: BEEHIIV_TAG_ID }] }) }
   ).catch(() => null);
+  if (tagB && tagB.ok) return true;
 
-  if (tagB && tagB.ok) return; // success
-
-  // Pattern C: PATCH the subscription with subscriber_tags array
-  await fetch(
+  // Pattern C: PATCH the subscription
+  const tagC = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
-    {
-      method: 'PATCH',
-      headers,
-      body: JSON.stringify({
-        publication_subscriber_tags: [{ id: BEEHIIV_TAG_ID }],
-      }),
-    }
-  ).catch(() => {});
+    { method: 'PATCH', headers, body: JSON.stringify({ publication_subscriber_tags: [{ id: BEEHIIV_TAG_ID }] }) }
+  ).catch(() => null);
+  if (tagC && tagC.ok) return true;
+
+  return false; // all patterns failed — caller stores this so we can retry
 }
 
 async function removeBeehiivTag(email, env) {

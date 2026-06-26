@@ -127,7 +127,9 @@
     var loadingEl = document.getElementById('nsl-loading');
     if (loadingEl) loadingEl.classList.add('hidden');
 
-    if (post.is_premium) {
+    // Show gate only when the Worker withheld content (non-member).
+    // Members get content_html from the Worker; check that, not just is_premium.
+    if (post.is_premium && !post.content_html) {
       renderPremiumGate(post);
     } else {
       renderFreeArticle(post);

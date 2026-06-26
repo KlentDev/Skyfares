@@ -104,8 +104,10 @@
     var btn = document.getElementById('alt-checkout-btn');
     if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-[11px]"></i> Redirecting…'; }
     if (window.SkyUI) SkyUI.toast('Taking you to secure checkout…', { type: 'info', duration: 2500 });
-    // Redirect directly to the pre-built Stripe payment link
-    window.location.href = PAYMENT_LINK;
+    // Pre-fill email in Stripe so it matches what was entered here
+    var emailVal = (document.getElementById('alt-checkout-email') || {}).value || '';
+    var stripeUrl = PAYMENT_LINK + (emailVal.trim() ? '?prefilled_email=' + encodeURIComponent(emailVal.trim()) : '');
+    window.location.href = stripeUrl;
   }
 
   // ─── Member login ──────────────────────────────────────────────────────────
