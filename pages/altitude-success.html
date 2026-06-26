@@ -107,7 +107,9 @@
         .then(function (res) {
           if (res.ok && res.data.token) {
             try { localStorage.setItem('altitude_jwt', res.data.token); } catch (_) {}
-            show('state-success');
+            // Flag altitude.html to show the welcome message, then redirect there
+            try { sessionStorage.setItem('altitude_welcome', '1'); } catch (_) {}
+            window.location.replace('altitude.html');
           } else {
             document.getElementById('error-msg').textContent =
               res.data.error || 'Could not activate your access. Please contact support.';

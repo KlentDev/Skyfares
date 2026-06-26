@@ -95,6 +95,21 @@
     }
     window.__altSignOut = function () { clearToken(); window.location.reload(); };
     document.querySelectorAll('#alt-member .slide-up').forEach(function (el) { el.classList.add('is-visible'); });
+
+    // Show welcome message after a successful payment redirect
+    try {
+      if (sessionStorage.getItem('altitude_welcome')) {
+        sessionStorage.removeItem('altitude_welcome');
+        setTimeout(function () {
+          if (window.SkyUI) {
+            SkyUI.toast(
+              'Welcome to Altitude! Your access is now active. Check your email for a welcome message with everything you need to know.',
+              { type: 'success', duration: 9000 }
+            );
+          }
+        }, 600); // slight delay so the member view renders first
+      }
+    } catch (_) {}
   }
 
   // ─── Checkout ─────────────────────────────────────────────────────────────
