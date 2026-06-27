@@ -3,6 +3,18 @@
   var PREMIUM_WA_URL = 'https://api.whatsapp.com/send?phone=6581575306&text=' +
     encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.");
 
+  function goBack() {
+    try {
+      var ref = document.referrer;
+      if (ref && new URL(ref).hostname === window.location.hostname) {
+        history.back();
+        return;
+      }
+    } catch (_) {}
+    window.location.href = 'newsletter.html';
+  }
+  window.goBack = goBack;
+
   // ─── Entry point ───────────────────────────────────────────────────────────
 
   if (document.readyState === 'loading') {

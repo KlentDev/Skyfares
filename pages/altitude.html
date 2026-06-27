@@ -22,6 +22,15 @@
     .altitude-hero-bg {
       background: linear-gradient(135deg, #1A2437 0%, #1e2b40 100%);
     }
+    .alt-filter-btn {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; padding: 5px 16px; border-radius: 9999px;
+      border: 1px solid #e5e7eb; background: white; color: #9ca3af;
+      cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .alt-filter-btn:hover { background: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
+    .alt-filter-btn.active { background: #0c4a6e; color: white; border-color: #0c4a6e; }
   </style>
 </head>
 
@@ -117,12 +126,17 @@
       </div>
 
       <!-- ── Archive ───────────────────────────────────────────────────────── -->
-      <section class="py-16 bg-neutral-50 min-h-screen">
+      <section class="pt-6 pb-16 bg-neutral-50">
         <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div class="flex items-center gap-4 mb-10 slide-up">
+          <div class="flex items-center gap-4 mb-6 slide-up">
             <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Member Archive</p>
             <div class="flex-1 h-px bg-neutral-200"></div>
             <span id="alt-post-count" class="text-[10px] text-neutral-400 font-medium flex-shrink-0"></span>
+          </div>
+          <div class="flex items-center gap-2 mb-7 slide-up" id="alt-filters">
+            <button data-filter="all"     class="alt-filter-btn active">All</button>
+            <button data-filter="free"    class="alt-filter-btn">Free</button>
+            <button data-filter="premium" class="alt-filter-btn">Premium</button>
           </div>
           <div id="alt-archive-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <div class="col-span-full text-center py-16">

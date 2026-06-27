@@ -903,9 +903,6 @@ async function handleMagicVerify(request, env, corsHeaders) {
   let record;
   try { record = JSON.parse(raw); } catch { return respond({ error: 'Invalid token.' }, 400, corsHeaders); }
 
-  // Delete immediately — one-time use
-  await env.ALTITUDE_KV.delete(`magic:${token}`);
-
   if (Date.now() > record.exp) {
     return respond({ error: 'This link has expired. Please request a new one.' }, 410, corsHeaders);
   }

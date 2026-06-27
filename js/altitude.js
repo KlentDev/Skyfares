@@ -13,14 +13,14 @@
   }
 
   function init() {
-    var magic = new URLSearchParams(location.search).get('magic');
-    if (magic) {
-      handleMagicCallback(magic);
-      return;
-    }
     var token = getToken();
+    var magic = new URLSearchParams(location.search).get('magic');
     if (token) {
-      verifyAndRender(token);
+      // JWT first — skip magic verification if already logged in.
+      // Pass magic as fallback so if the JWT is expired we still try the link.
+      verifyAndRender(token, magic);
+    } else if (magic) {
+      handleMagicCallback(magic);
     } else {
       wirePublicView();
     }
@@ -40,8 +40,7 @@
     try { localStorage.removeItem(JWT_KEY); } catch (_) {}
   }
 
-  function verifyAndRender(token) {
-    // Hide public, reveal member shell immediately (avoids flash of public content)
+  function verifyAndRender(token, fallbackMagic) {
     showMemberShell();
     fetch(WORKER + '/altitude/verify', {
       headers: { 'Authorization': 'Bearer ' + token },
@@ -49,18 +48,27 @@
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
       .then(function (res) {
         if (res.ok && res.data.valid) {
+          if (fallbackMagic) history.replaceState(null, '', location.pathname);
           populateMemberView(res.data.email, res.data.member);
           loadPremiumPosts(token);
         } else {
           clearToken();
           hideMemberShell();
-          wirePublicView(res.data.status === 'cancelled' ? 'cancelled' : null);
+          if (fallbackMagic) {
+            handleMagicCallback(fallbackMagic);
+          } else {
+            wirePublicView(res.data.status === 'cancelled' ? 'cancelled' : null);
+          }
         }
       })
       .catch(function () {
         clearToken();
         hideMemberShell();
-        wirePublicView();
+        if (fallbackMagic) {
+          handleMagicCallback(fallbackMagic);
+        } else {
+          wirePublicView();
+        }
       });
   }
 
@@ -158,6 +166,7 @@
     if (emailEl) emailEl.textContent = email;
     window.__altSignOut = function () { clearToken(); window.location.reload(); };
     document.querySelectorAll('#alt-member .slide-up').forEach(function (el) { el.classList.add('is-visible'); });
+    _wireFilters();
 
     // Show welcome message after a successful payment redirect
     try {
@@ -249,51 +258,83 @@
       .catch(function () {});
   }
 
+  // ─── Archive filters ─────────────────────────────────────────────────────────
+
+  var _altAllPosts = [];
+
   function renderArchiveGrid(posts) {
-    var grid  = document.getElementById('alt-archive-grid');
-    var count = document.getElementById('alt-post-count');
-    if (!grid) return;
+    _altAllPosts = posts;
+    _applyFilter('all');
+  }
 
-    if (count) count.textContent = posts.length + (posts.length === 1 ? ' issue' : ' issues');
+  function _renderCard(post, i) {
+    var prem     = (post.content_tags || []).indexOf('altitude-premium') !== -1;
+    var issueNum = getIssueNum(post);
+    var date     = formatDate(post.published_at);
+    var type     = (post.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
+    var delay    = (i * 0.05) + 's';
+    var href     = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
 
-    if (!posts.length) {
-      grid.innerHTML = '<p class="col-span-full text-sm text-neutral-400 text-center py-12">No issues published yet.</p>';
-      return;
+    var imgHtml = post.thumbnail_url
+      ? '<img src="' + e(post.thumbnail_url) + '" alt="' + e(post.title) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">'
+      : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
+
+    var badge = prem
+      ? '<span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span>'
+      : '';
+
+    return '<article class="group bg-white border border-neutral-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300" style="animation-delay:' + delay + '">' +
+      '<a href="' + href + '" class="block">' +
+        '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
+          imgHtml +
+          '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
+          '<div class="absolute top-3 left-3"><span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + e(issueNum) + '</span></div>' +
+          '<div class="absolute bottom-3 right-3"><span class="text-[10px] font-semibold text-white/80 bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">' + e(type) + '</span></div>' +
+          (badge ? '<div class="absolute bottom-3 left-3">' + badge + '</div>' : '') +
+        '</div>' +
+      '</a>' +
+      '<div class="p-5">' +
+        (date ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(date) + '</p>' : '') +
+        '<h3 class="text-sm font-display font-bold text-neutral-900 mb-3 group-hover:text-brand-700 transition-colors leading-snug">' + e(post.title) + '</h3>' +
+        '<a href="' + href + '" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>' +
+      '</div>' +
+    '</article>';
+  }
+
+  function _applyFilter(type) {
+    var posts = _altAllPosts;
+    if (type === 'free') {
+      posts = _altAllPosts.filter(function (p) {
+        return (p.content_tags || []).indexOf('altitude-premium') === -1;
+      });
+    } else if (type === 'premium') {
+      posts = _altAllPosts.filter(function (p) {
+        return (p.content_tags || []).indexOf('altitude-premium') !== -1;
+      });
     }
 
-    grid.innerHTML = posts.map(function (post, i) {
-      var prem     = (post.content_tags || []).indexOf('altitude-premium') !== -1;
-      var issueNum = getIssueNum(post);
-      var date     = formatDate(post.published_at);
-      var type     = (post.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
-      var delay    = (i * 0.05) + 's';
-      var href     = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
+    var count = document.getElementById('alt-post-count');
+    if (count) count.textContent = posts.length + (posts.length === 1 ? ' issue' : ' issues');
 
-      var imgHtml = post.thumbnail_url
-        ? '<img src="' + e(post.thumbnail_url) + '" alt="' + e(post.title) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">'
-        : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
+    var grid = document.getElementById('alt-archive-grid');
+    if (!grid) return;
 
-      var badge = prem
-        ? '<span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span>'
-        : '';
+    if (!posts.length) {
+      var label = type === 'free' ? 'free ' : type === 'premium' ? 'premium ' : '';
+      grid.innerHTML = '<p class="col-span-full text-sm text-neutral-400 text-center py-12">No ' + label + 'issues published yet.</p>';
+    } else {
+      grid.innerHTML = posts.map(_renderCard).join('');
+    }
 
-      return '<article class="group bg-white border border-neutral-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300" style="animation-delay:' + delay + '">' +
-        '<a href="' + href + '" class="block">' +
-          '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
-            imgHtml +
-            '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
-            '<div class="absolute top-3 left-3"><span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + e(issueNum) + '</span></div>' +
-            '<div class="absolute bottom-3 right-3"><span class="text-[10px] font-semibold text-white/80 bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">' + e(type) + '</span></div>' +
-            (badge ? '<div class="absolute bottom-3 left-3">' + badge + '</div>' : '') +
-          '</div>' +
-        '</a>' +
-        '<div class="p-5">' +
-          (date ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(date) + '</p>' : '') +
-          '<h3 class="text-sm font-display font-bold text-neutral-900 mb-3 group-hover:text-brand-700 transition-colors leading-snug">' + e(post.title) + '</h3>' +
-          '<a href="' + href + '" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>' +
-        '</div>' +
-      '</article>';
-    }).join('');
+    document.querySelectorAll('.alt-filter-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.filter === type);
+    });
+  }
+
+  function _wireFilters() {
+    document.querySelectorAll('.alt-filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { _applyFilter(btn.dataset.filter); });
+    });
   }
 
   // ─── Utilities ────────────────────────────────────────────────────────────
