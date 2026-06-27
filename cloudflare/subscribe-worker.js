@@ -37,6 +37,15 @@ const ALLOWED_ORIGINS = [
 
 const PUB_BASE_URL    = 'https://skyfarealtitude.beehiiv.com';
 const SITE_URL        = 'https://skyfareconsulting.com';
+
+// Returns the request origin when running locally so redirect URLs
+// (Stripe success, magic link) point back to the local dev server
+// instead of the live site. Production requests fall back to SITE_URL.
+function getBaseUrl(origin) {
+  return (origin && (origin.includes('127.0.0.1') || origin.includes('localhost')))
+    ? origin
+    : SITE_URL;
+}
 const BEEHIIV_TAG_ID  = '4ee8818b-9eeb-46b5-a34b-bca21c8f06e3'; // altitude premium tag
 
 export default {
@@ -178,12 +187,13 @@ async function handleCheckout(request, env, corsHeaders) {
     email = (body.email || '').trim().toLowerCase();
   } catch {}
 
+  const baseUrl = getBaseUrl(request.headers.get('Origin') || '');
   const params = new URLSearchParams({
     mode: 'subscription',
     'line_items[0][price]': env.STRIPE_PRICE_ID,
     'line_items[0][quantity]': '1',
-    success_url: `${SITE_URL}/pages/altitude-success.html?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${SITE_URL}/pages/altitude.html`,
+    success_url: `${baseUrl}/pages/altitude-success.html?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${baseUrl}/pages/altitude.html`,
     allow_promotion_codes: 'true',
   });
   if (email) params.set('customer_email', email);
@@ -840,9 +850,10 @@ async function handleMagicRequest(request, env, corsHeaders) {
     if (kv.status !== 'active') return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);
   }
 
-  // Generate token, store in KV with 15-minute TTL
-  const token   = generateMagicToken();
-  const magicUrl = `${SITE_URL}/pages/altitude.html?magic=${token}`;
+  // Generate token — use local origin so the link works during local dev
+  const token    = generateMagicToken();
+  const baseUrl  = getBaseUrl(request.headers.get('Origin') || '');
+  const magicUrl = `${baseUrl}/pages/altitude.html?magic=${token}`;
   await env.ALTITUDE_KV.put(
     `magic:${token}`,
     JSON.stringify({ email, exp: Date.now() + 3_600_000 }),
