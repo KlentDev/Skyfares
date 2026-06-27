@@ -18,8 +18,14 @@
  */
 
 // Beehiiv automation that applies the altitude-premium tag via Beehiiv's
-// internal update_subscription mechanism (REST PATCH is unreliable for tags).
+// internal update_subscription mechanism. This is the primary tagging method
+// because it fires the segment_action trigger on the "Altitude Access — Welcome"
+// automation. REST API tag methods (PATCH/POST) apply the tag but do NOT fire
+// the internal event that updates segment membership — use them only as fallbacks.
 const ALTITUDE_TAG_AUTOMATION_ID = 'aut_94f6dbad-98e3-4025-aa82-c2eee487ea86';
+const WELCOME_AUTOMATION_ID      = 'aut_c64c648b-9020-4d8b-aa54-8bdfe88911e7';
+const MAGIC_LINK_AUTOMATION_ID   = 'aut_b14dc6cd-8c8f-4b2c-bace-c9324f934006';
+const MAGIC_LINK_CF_NAME         = 'magic_link_url'; // custom field that holds the one-time URL
 
 const ALLOWED_ORIGINS = [
   'https://skyfareconsulting.com',
@@ -34,6 +40,13 @@ const SITE_URL        = 'https://skyfareconsulting.com';
 const BEEHIIV_TAG_ID  = '4ee8818b-9eeb-46b5-a34b-bca21c8f06e3'; // altitude premium tag
 
 export default {
+  // Cron trigger — runs every minute as a safety net. Recalculates both
+  // the Premium and Free segments so any subscriber change is reflected
+  // within at most 60 seconds even if the inline trigger misfired.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(triggerSegmentRecalculation(env));
+  },
+
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
     const isAllowed = ALLOWED_ORIGINS.includes(origin);
@@ -69,6 +82,14 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/altitude/activate') {
       return handleActivate(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/altitude/magic-request') {
+      return handleMagicRequest(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/altitude/magic-verify') {
+      return handleMagicVerify(request, env, corsHeaders);
     }
 
     if (request.method === 'GET' && url.pathname === '/altitude/verify') {
@@ -133,6 +154,8 @@ export default {
     }
 
     if (beehiivRes.status === 201 || beehiivRes.status === 200) {
+      // Kick off segment sync in background so new subscriber appears in Free segment immediately
+      triggerSegmentRecalculation(env).catch(() => {});
       return respond({ success: true }, 200, corsHeaders);
     }
     if (beehiivRes.status === 409) {
@@ -376,6 +399,11 @@ async function handleActivate(request, env, corsHeaders) {
       if (custId) await env.ALTITUDE_KV.put(`customer:${custId}`, memberEmail);
       await setupBeehiivMember(memberEmail, env).catch(() => {});
     }
+
+    // Always recalculate both segments when a subscriber hits the success page.
+    // This fires from the user's own browser — independent of webhook timing —
+    // so it is the most reliable real-time trigger we have.
+    triggerSegmentRecalculation(env).catch(() => {});
   }
 
   // ── Authorize ──────────────────────────────────────────────────────────────
@@ -629,55 +657,102 @@ async function setupBeehiivMember(email, env) {
     }
   );
 
-  if (!subRes.ok) return false;
+  if (!subRes.ok) {
+    const errText = await subRes.text().catch(() => '');
+    console.error(`[setupBeehiivMember] subscribe failed status=${subRes.status} body=${errText}`);
+    return false;
+  }
   const subData = await subRes.json();
   const subId   = subData.data?.id;
-  if (!subId) return false;
+  if (!subId) {
+    console.error(`[setupBeehiivMember] subscribe returned no id — data=${JSON.stringify(subData).slice(0, 200)}`);
+    return false;
+  }
 
   // ── Step 2: Check if already tagged (existing subscriber) ─────────────────
   if (await verifyBeehiivTag(email, env)) return true;
 
-  // ── Step 3: Trigger the "Apply Altitude Premium Tag" automation ───────────
-  // This automation uses Beehiiv's internal update_subscription mechanism
-  // (same as the editor uses) — more reliable than direct REST PATCH.
+  // Beehiiv needs a moment to propagate the new subscriber before it is
+  // addressable by the automation enrollment endpoint.
+  await new Promise(r => setTimeout(r, 3000));
+
+  // ── Step 3: Enroll in automation (PRIMARY) ────────────────────────────────
   const enrollRes = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${ALTITUDE_TAG_AUTOMATION_ID}/subscribers`,
-    {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ email }),
-    }
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${ALTITUDE_TAG_AUTOMATION_ID}/journeys`,
+    { method: 'POST', headers, body: JSON.stringify({ email }) }
   ).catch(() => null);
-
-  if (enrollRes && enrollRes.ok) {
-    // Automation runs asynchronously — give it a moment then verify
-    await new Promise(r => setTimeout(r, 1500));
-    if (await verifyBeehiivTag(email, env)) return true;
+  if (enrollRes) {
+    if (!enrollRes.ok) {
+      const errText = await enrollRes.text().catch(() => '');
+      console.error(`[setupBeehiivMember] automation enroll failed status=${enrollRes.status} body=${errText}`);
+    } else {
+      await new Promise(r => setTimeout(r, 3000));
+      if (await verifyBeehiivTag(email, env)) {
+        await triggerSegmentRecalculation(env);
+        enrollWelcomeAutomation(email, env).catch(() => {});
+        return true;
+      }
+    }
   }
 
-  // ── Step 4: REST PATCH fallbacks (kept as belt-and-suspenders) ────────────
-  const patchBodies = [
-    { tags: ['altitude premium'] },
-    { tags: [{ name: 'altitude premium' }] },
-    { publication_subscriber_tags: [{ id: BEEHIIV_TAG_ID }] },
-  ];
-
-  for (const body of patchBodies) {
-    const res = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
-      { method: 'PATCH', headers, body: JSON.stringify(body) }
-    ).catch(() => null);
-    if (res && res.ok && await verifyBeehiivTag(email, env)) return true;
+  // ── Step 4: PATCH with publication_subscriber_tags (REST fallback) ─────────
+  const patchRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
+    { method: 'PATCH', headers, body: JSON.stringify({ publication_subscriber_tags: [{ id: BEEHIIV_TAG_ID }] }) }
+  ).catch(() => null);
+  if (patchRes) {
+    if (!patchRes.ok) {
+      const errText = await patchRes.text().catch(() => '');
+      console.error(`[setupBeehiivMember] PATCH publication_subscriber_tags failed status=${patchRes.status} body=${errText}`);
+    } else if (await verifyBeehiivTag(email, env)) {
+      await triggerSegmentRecalculation(env);
+      enrollWelcomeAutomation(email, env).catch(() => {});
+      return true;
+    }
   }
 
-  // POST to /tags endpoint
+  // ── Step 5: POST to /tags endpoint (REST fallback) ────────────────────────
   const tagRes = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
-    { method: 'POST', headers, body: JSON.stringify({ tags: [{ name: 'altitude premium' }] }) }
+    { method: 'POST', headers, body: JSON.stringify({ tags: ['altitude premium'] }) }
   ).catch(() => null);
-  if (tagRes && tagRes.ok && await verifyBeehiivTag(email, env)) return true;
+  if (tagRes) {
+    if (!tagRes.ok) {
+      const errText = await tagRes.text().catch(() => '');
+      console.error(`[setupBeehiivMember] POST /tags failed status=${tagRes.status} body=${errText}`);
+    } else if (await verifyBeehiivTag(email, env)) {
+      await triggerSegmentRecalculation(env);
+      enrollWelcomeAutomation(email, env).catch(() => {});
+      return true;
+    }
+  }
 
+  console.error(`[setupBeehiivMember] all tag methods exhausted for ${email}`);
   return false;
+}
+
+const SEG_PREMIUM = 'seg_6b2bf91a-e5fe-42f5-ad9a-e939397add9a';
+const SEG_FREE    = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
+
+async function triggerSegmentRecalculation(env) {
+  await Promise.all([SEG_PREMIUM, SEG_FREE].map(async segId => {
+    const res = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
+      {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      }
+    ).catch(err => { console.error(`[seg-resync:${segId}] network error: ${err.message}`); return null; });
+
+    if (!res) return;
+    if (res.ok) {
+      console.log(`[seg-resync:${segId}] recalculation triggered`);
+    } else {
+      const txt = await res.text().catch(() => '');
+      console.error(`[seg-resync:${segId}] failed status=${res.status} body=${txt.slice(0, 200)}`);
+    }
+  }));
 }
 
 // Re-query the subscription and confirm the tag is actually present.
@@ -695,6 +770,18 @@ async function verifyBeehiivTag(email, env) {
     (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
   );
   return tags.includes('altitude premium') || tags.includes(BEEHIIV_TAG_ID.toLowerCase());
+}
+
+async function enrollWelcomeAutomation(email, env) {
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${WELCOME_AUTOMATION_ID}/journeys`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+      body: JSON.stringify({ email }),
+    }
+  ).catch(() => null);
+  if (res && res.ok) console.log(`[welcome] enrolled ${email}`);
 }
 
 async function removeBeehiivTag(email, env) {
@@ -716,6 +803,109 @@ async function removeBeehiivTag(email, env) {
       headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
     }
   );
+}
+
+// ── Magic link ────────────────────────────────────────────────────────────────
+
+function generateMagicToken() {
+  const b = new Uint8Array(32);
+  crypto.getRandomValues(b);
+  return Array.from(b).map(n => n.toString(16).padStart(2, '0')).join('');
+}
+
+async function handleMagicRequest(request, env, corsHeaders) {
+  let email;
+  try {
+    const body = await request.json();
+    email = (body.email || '').trim().toLowerCase();
+  } catch { return respond({ error: 'Invalid request.' }, 400, corsHeaders); }
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'Please enter a valid email address.' }, 400, corsHeaders);
+  }
+
+  // Rate limit: max 3 magic link requests per email per 10 minutes
+  const rlKey = `magic-rl:${email}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 3) {
+    return respond({ error: 'Too many requests. Please wait a few minutes before trying again.' }, 429, corsHeaders);
+  }
+
+  // Verify premium — Beehiiv tag is authoritative, KV is the fallback
+  const isPremium = await checkBeehiivPremium(email, env).catch(() => null);
+  if (!isPremium) {
+    const kvRaw = await env.ALTITUDE_KV.get(`member:${email}`);
+    if (!kvRaw) return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);
+    const kv = JSON.parse(kvRaw);
+    if (kv.status !== 'active') return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);
+  }
+
+  // Generate token, store in KV with 15-minute TTL
+  const token   = generateMagicToken();
+  const magicUrl = `${SITE_URL}/pages/altitude.html?magic=${token}`;
+  await env.ALTITUDE_KV.put(
+    `magic:${token}`,
+    JSON.stringify({ email, exp: Date.now() + 3_600_000 }),
+    { expirationTtl: 3600 }
+  );
+
+  // Write magic link URL into the subscriber's custom field then enroll in automation
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        custom_fields: [{ name: MAGIC_LINK_CF_NAME, value: magicUrl }],
+      }),
+    }
+  ).catch(() => {});
+
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${MAGIC_LINK_AUTOMATION_ID}/journeys`,
+    { method: 'POST', headers, body: JSON.stringify({ email }) }
+  ).catch(() => {});
+
+  // Increment rate-limit counter
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 600 });
+
+  return respond({ sent: true }, 200, corsHeaders);
+}
+
+async function handleMagicVerify(request, env, corsHeaders) {
+  let token;
+  try {
+    const body = await request.json();
+    token = (body.token || '').trim();
+  } catch { return respond({ error: 'Invalid request.' }, 400, corsHeaders); }
+
+  if (!token) return respond({ error: 'Missing token.' }, 400, corsHeaders);
+
+  const raw = await env.ALTITUDE_KV.get(`magic:${token}`);
+  if (!raw) return respond({ error: 'This link has expired or has already been used.' }, 404, corsHeaders);
+
+  let record;
+  try { record = JSON.parse(raw); } catch { return respond({ error: 'Invalid token.' }, 400, corsHeaders); }
+
+  // Delete immediately — one-time use
+  await env.ALTITUDE_KV.delete(`magic:${token}`);
+
+  if (Date.now() > record.exp) {
+    return respond({ error: 'This link has expired. Please request a new one.' }, 410, corsHeaders);
+  }
+
+  const now = Math.floor(Date.now() / 1000);
+  const jwt = await signJwt(
+    { sub: record.email, typ: 'altitude', iat: now, exp: now + 86400 },
+    env.JWT_SECRET
+  );
+
+  return respond({ token: jwt, email: record.email }, 200, corsHeaders);
 }
 
 // ── JWT helpers (Web Crypto API — no external library needed) ─────────────────

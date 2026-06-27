@@ -13,6 +13,11 @@
   }
 
   function init() {
+    var magic = new URLSearchParams(location.search).get('magic');
+    if (magic) {
+      handleMagicCallback(magic);
+      return;
+    }
     var token = getToken();
     if (token) {
       verifyAndRender(token);
@@ -59,6 +64,39 @@
       });
   }
 
+  function handleMagicCallback(magic) {
+    showMemberShell();
+    fetch(WORKER + '/altitude/magic-verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: magic }),
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (res) {
+        history.replaceState(null, '', location.pathname);
+        if (res.ok && res.data.token) {
+          setToken(res.data.token);
+          populateMemberView(res.data.email, null);
+          loadPremiumPosts(res.data.token);
+          if (window.SkyUI) SkyUI.toast('Welcome back. Access granted.', { type: 'success' });
+        } else {
+          hideMemberShell();
+          wirePublicView();
+          window.openLoginModal && window.openLoginModal();
+          var status = document.getElementById('alt-login-status');
+          if (status) {
+            status.textContent = res.data.error || 'This link has expired or has already been used. Please request a new one.';
+            status.className = 'text-xs text-red-500 mt-2';
+          }
+        }
+      })
+      .catch(function () {
+        history.replaceState(null, '', location.pathname);
+        hideMemberShell();
+        wirePublicView();
+      });
+  }
+
   function showMemberShell() {
     var pub = document.getElementById('alt-public');
     var mem = document.getElementById('alt-member');
@@ -90,6 +128,15 @@
   window.openLoginModal = function () {
     var modal = document.getElementById('alt-login-modal');
     if (modal) {
+      // Always reset to form state
+      var form = document.getElementById('alt-login-form');
+      var sent = document.getElementById('alt-login-sent');
+      if (form) form.style.display = '';
+      if (sent) sent.style.display = 'none';
+      var status = document.getElementById('alt-login-status');
+      if (status) { status.textContent = ''; }
+      var btn = document.getElementById('alt-login-btn');
+      if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
       modal.style.display = 'flex';
       var inp = document.getElementById('alt-login-email');
       if (inp) setTimeout(function () { inp.focus(); }, 80);
@@ -109,10 +156,6 @@
   function populateMemberView(email, member) {
     var emailEl = document.getElementById('alt-member-email');
     if (emailEl) emailEl.textContent = email;
-    var renewEl = document.getElementById('alt-renews');
-    if (renewEl && member && member.current_period_end) {
-      renewEl.textContent = 'Renews ' + formatDate(member.current_period_end);
-    }
     window.__altSignOut = function () { clearToken(); window.location.reload(); };
     document.querySelectorAll('#alt-member .slide-up').forEach(function (el) { el.classList.add('is-visible'); });
 
@@ -156,44 +199,38 @@
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       if (status) { status.textContent = 'Please enter a valid email address.'; status.className = 'text-xs text-red-500 mt-2'; }
-      if (window.SkyUI) SkyUI.toast('Please enter a valid email address.', { type: 'error' });
       return;
     }
 
-    if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending link…'; }
     if (status) { status.textContent = ''; }
 
-    fetch(WORKER + '/altitude/activate', {
+    fetch(WORKER + '/altitude/magic-request', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
     })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
       .then(function (res) {
-        if (res.ok && res.data.token) {
-          setToken(res.data.token);
-          window.closeLoginModal && window.closeLoginModal();
-          if (window.SkyUI) SkyUI.toast('Welcome back. Access granted.', { type: 'success' });
-          showMemberShell();
-          populateMemberView(res.data.email, null);
-          loadPremiumPosts(res.data.token);
+        if (res.ok && res.data.sent) {
+          // Switch modal to sent state
+          var form = document.getElementById('alt-login-form');
+          var sent = document.getElementById('alt-login-sent');
+          var sentEmail = document.getElementById('alt-login-sent-email');
+          if (form) form.style.display = 'none';
+          if (sent) sent.style.display = 'block';
+          if (sentEmail) sentEmail.textContent = email;
         } else {
-          var msg = res.data.error || 'No active membership found for this email.';
-          if (res.status === 429) {
-            msg = 'Too many attempts. Please try again in a few minutes.';
-          } else if (res.data.status === 'cancelled') {
-            msg = 'Your Altitude membership was cancelled. Get Altitude Access to reactivate.';
-          }
+          var msg = res.data.error || 'No active Altitude membership found for this email.';
+          if (res.status === 429) msg = 'Too many requests. Please wait a few minutes before trying again.';
           if (status) { status.textContent = msg; status.className = 'text-xs text-red-500 mt-2'; }
-          if (window.SkyUI) SkyUI.toast(msg, { type: 'error', duration: 6000 });
-          if (btn) { btn.disabled = false; btn.textContent = 'Access Altitude'; }
+          if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
         }
       })
       .catch(function () {
         var msg = 'Network error. Please try again.';
         if (status) { status.textContent = msg; status.className = 'text-xs text-red-500 mt-2'; }
-        if (window.SkyUI) SkyUI.toast(msg, { type: 'error' });
-        if (btn) { btn.disabled = false; btn.textContent = 'Access Altitude'; }
+        if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
       });
   }
 

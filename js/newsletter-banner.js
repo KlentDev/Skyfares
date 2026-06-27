@@ -206,8 +206,14 @@
 
   // ─── Layout ───────────────────────────────────────────────────────────────
 
+  // Matches any dark-gradient hero section so the banner pushes it down correctly
+  // regardless of which page's hero class is in use.
+  function findHero() {
+    return document.querySelector('.hero-brand-fade, .altitude-hero-bg, .newsletter-hero-bg, .flight-hero-bg');
+  }
+
   function pushContentDown(bannerH) {
-    var hero = document.querySelector('.hero-brand-fade');
+    var hero = findHero();
     if (hero) {
       hero.style.paddingTop = (parseFloat(hero.style.paddingTop) || 0) + bannerH + 'px';
     } else {
@@ -218,7 +224,7 @@
 
   function pullContentBack(bannerH) {
     var stored = parseFloat(document.body.dataset.bannerH) || bannerH;
-    var hero   = document.querySelector('.hero-brand-fade');
+    var hero   = findHero();
     if (hero) {
       hero.style.paddingTop = Math.max(0, (parseFloat(hero.style.paddingTop) || 0) - stored) + 'px';
     } else {

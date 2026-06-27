@@ -63,15 +63,31 @@
         <i class="fa-solid fa-key text-[9px]"></i> Member Access
       </div>
       <h2 class="text-xl font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Access your membership</h2>
-      <p class="text-sm text-neutral-400 mb-6 leading-relaxed">Enter your member email to restore your 24-hour access session.</p>
+      <p class="text-sm text-neutral-400 mb-6 leading-relaxed">Enter your member email and we'll send you a secure login link.</p>
       <form id="alt-login-form">
         <input id="alt-login-email" type="email" autocomplete="email" placeholder="member@email.com"
           class="w-full mb-3 px-5 py-3.5 rounded-full border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
         <button id="alt-login-btn" type="submit" class="w-full btn-pill btn-pill-primary">
-          Access Altitude
+          Send Login Link
         </button>
         <p id="alt-login-status" class="text-xs mt-3 text-center min-h-[1.25rem]"></p>
       </form>
+      <!-- Sent state — shown after magic link email is dispatched -->
+      <div id="alt-login-sent" style="display:none;">
+        <div class="flex flex-col items-center text-center gap-3 py-2">
+          <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
+            <i class="fa-solid fa-envelope-circle-check text-brand-600 text-lg"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-neutral-900 mb-1">Check your inbox</p>
+            <p class="text-xs text-neutral-400 leading-relaxed">We sent a login link to <strong id="alt-login-sent-email" class="text-neutral-700"></strong>. It expires in 1 hour and can only be used once.</p>
+          </div>
+          <button type="button" onclick="window.openLoginModal && window.openLoginModal();"
+            class="text-xs text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors mt-1">
+            Use a different email
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -82,38 +98,29 @@
          ============================================================ -->
     <div id="alt-member" class="hidden">
 
-      <section class="altitude-hero-bg relative pb-14 overflow-hidden">
-        <div class="absolute inset-0 pointer-events-none opacity-10"
-          style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
-                 -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
-                 mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
-        </div>
-        <div class="container mx-auto px-4 md:px-6 relative z-10">
-          <div class="max-w-5xl mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-5 slide-up">
-            <div>
-              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-5">
-                <i class="fa-solid fa-crown text-[10px]"></i> Altitude Member
-              </div>
-              <h1 class="text-3xl md:text-4xl font-display font-bold text-white leading-tight tracking-tight mb-1.5">
-                Welcome back.
-              </h1>
-              <p id="alt-member-email" class="text-sm text-white/50 font-medium"></p>
+      <!-- ── Slim member bar ───────────────────────────────────────────────── -->
+      <div class="border-b border-neutral-100 bg-white">
+        <div class="container mx-auto px-4 md:px-6 max-w-5xl h-14 flex items-center justify-between">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-6 h-6 rounded-full bg-brand-900 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-crown text-white text-[8px]"></i>
             </div>
-            <div class="flex items-center gap-4 flex-shrink-0 pb-1">
-              <p id="alt-renews" class="text-xs text-white/30"></p>
-              <button onclick="window.__altSignOut && window.__altSignOut()"
-                class="text-xs font-semibold text-white/40 hover:text-white/70 transition-colors border border-white/15 hover:border-white/30 px-3 py-1.5 rounded-full">
-                Sign out
-              </button>
-            </div>
+            <span class="text-sm font-bold text-neutral-900 font-display flex-shrink-0">Altitude</span>
+            <span class="text-neutral-200 flex-shrink-0">·</span>
+            <span id="alt-member-email" class="text-xs text-neutral-400 truncate"></span>
           </div>
+          <button onclick="window.__altSignOut && window.__altSignOut()"
+            class="text-[11px] text-neutral-300 hover:text-neutral-600 transition-colors flex-shrink-0 ml-4">
+            Sign out
+          </button>
         </div>
-      </section>
+      </div>
 
-      <section class="py-20 bg-neutral-50">
+      <!-- ── Archive ───────────────────────────────────────────────────────── -->
+      <section class="py-16 bg-neutral-50 min-h-screen">
         <div class="container mx-auto px-4 md:px-6 max-w-5xl">
           <div class="flex items-center gap-4 mb-10 slide-up">
-            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Altitude Archive</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Member Archive</p>
             <div class="flex-1 h-px bg-neutral-200"></div>
             <span id="alt-post-count" class="text-[10px] text-neutral-400 font-medium flex-shrink-0"></span>
           </div>
