@@ -27,6 +27,11 @@ const WELCOME_AUTOMATION_ID      = 'aut_c64c648b-9020-4d8b-aa54-8bdfe88911e7';
 const MAGIC_LINK_AUTOMATION_ID   = 'aut_b14dc6cd-8c8f-4b2c-bace-c9324f934006';
 const MAGIC_LINK_CF_NAME         = 'magic_link_url'; // custom field that holds the one-time URL
 
+// Renewal reminder automations — enrolled by the daily cron, not by user actions
+const RENEWAL_7D_AUTOMATION_ID   = 'aut_6f675263-fec5-436d-894a-91d5c168feaf';
+const RENEWAL_3D_AUTOMATION_ID   = 'aut_2093dcea-c91e-4a81-baae-a3b27cf8d671';
+const RENEWAL_1D_AUTOMATION_ID   = 'aut_eb704a34-24c3-4094-b446-b4eeaf3337ac';
+
 const ALLOWED_ORIGINS = [
   'https://skyfareconsulting.com',
   'https://www.skyfareconsulting.com',
@@ -49,11 +54,14 @@ function getBaseUrl(origin) {
 const BEEHIIV_TAG_ID  = '4ee8818b-9eeb-46b5-a34b-bca21c8f06e3'; // altitude premium tag
 
 export default {
-  // Cron trigger — runs every minute as a safety net. Recalculates both
-  // the Premium and Free segments so any subscriber change is reflected
-  // within at most 60 seconds even if the inline trigger misfired.
+  // Cron trigger — runs daily at 01:00 UTC (09:00 SGT).
+  // Recalculates segments and sends renewal reminder emails to Altitude
+  // Access members whose subscription is 7, 3, or 1 day from renewal.
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(triggerSegmentRecalculation(env));
+    ctx.waitUntil(Promise.all([
+      triggerSegmentRecalculation(env),
+      runRenewalReminders(env),
+    ]));
   },
 
   async fetch(request, env) {
@@ -115,6 +123,16 @@ export default {
       const slug = url.searchParams.get('slug');
       if (!slug) return respond({ error: 'Missing slug parameter' }, 400, corsHeaders);
       return handleGetPost(slug, request, env, corsHeaders);
+    }
+
+    // ── Airtable CRM routes ────────────────────────────────────────────────
+
+    if (request.method === 'POST' && url.pathname === '/airtable/flight-application') {
+      return handleFlightApplication(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/airtable/contact') {
+      return handleContactInquiry(request, env, corsHeaders);
     }
 
     // ── Subscribe ──────────────────────────────────────────────────────────
@@ -782,6 +800,82 @@ async function verifyBeehiivTag(email, env) {
   return tags.includes('altitude premium') || tags.includes(BEEHIIV_TAG_ID.toLowerCase());
 }
 
+// ── Renewal reminders (called by daily cron) ──────────────────────────────────
+
+async function enrollInAutomation(automationId, email, env) {
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${automationId}/journeys`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+      body: JSON.stringify({ email }),
+    }
+  ).catch(() => null);
+  return !!(res && res.ok);
+}
+
+async function runRenewalReminders(env) {
+  const now        = Date.now();
+  const ONE_DAY_MS = 86_400_000;
+
+  // Paginate through all member:* KV keys
+  const keys = [];
+  let cursor = undefined;
+  do {
+    const opts = { prefix: 'member:', limit: 100 };
+    if (cursor) opts.cursor = cursor;
+    const page = await env.ALTITUDE_KV.list(opts).catch(() => null);
+    if (!page) break;
+    keys.push(...page.keys);
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor);
+
+  for (const key of keys) {
+    const raw = await env.ALTITUDE_KV.get(key.name).catch(() => null);
+    if (!raw) continue;
+
+    let member;
+    try { member = JSON.parse(raw); } catch { continue; }
+
+    if (member.status !== 'active' || !member.current_period_end || !member.email) continue;
+
+    const renewalMs  = new Date(member.current_period_end).getTime();
+    const daysUntil  = Math.ceil((renewalMs - now) / ONE_DAY_MS);
+    const email      = member.email;
+    let updated = false;
+
+    if (daysUntil === 7 && !member.reminder_7d_sent) {
+      if (await enrollInAutomation(RENEWAL_7D_AUTOMATION_ID, email, env)) {
+        member.reminder_7d_sent = true; updated = true;
+        console.log(`[renewal-cron] 7d reminder → ${email}`);
+      }
+    }
+    if (daysUntil === 3 && !member.reminder_3d_sent) {
+      if (await enrollInAutomation(RENEWAL_3D_AUTOMATION_ID, email, env)) {
+        member.reminder_3d_sent = true; updated = true;
+        console.log(`[renewal-cron] 3d reminder → ${email}`);
+      }
+    }
+    if (daysUntil === 1 && !member.reminder_1d_sent) {
+      if (await enrollInAutomation(RENEWAL_1D_AUTOMATION_ID, email, env)) {
+        member.reminder_1d_sent = true; updated = true;
+        console.log(`[renewal-cron] 1d reminder → ${email}`);
+      }
+    }
+
+    // After renewal has processed, reset flags for the next cycle
+    if (daysUntil <= 0 && daysUntil > -3 && (member.reminder_7d_sent || member.reminder_3d_sent || member.reminder_1d_sent)) {
+      member.reminder_7d_sent = false;
+      member.reminder_3d_sent = false;
+      member.reminder_1d_sent = false;
+      updated = true;
+      console.log(`[renewal-cron] flags reset for next cycle → ${email}`);
+    }
+
+    if (updated) await env.ALTITUDE_KV.put(key.name, JSON.stringify(member));
+  }
+}
+
 async function enrollWelcomeAutomation(email, env) {
   const res = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${WELCOME_AUTOMATION_ID}/journeys`,
@@ -1018,4 +1112,115 @@ function respond(data, status, headers) {
     status,
     headers: { ...headers, 'Content-Type': 'application/json' },
   });
+}
+
+// ── Airtable CRM ──────────────────────────────────────────────────────────────
+
+async function writeToAirtable(tableId, fields, env) {
+  const res = await fetch(`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${tableId}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.AIRTABLE_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ fields }),
+  });
+  if (!res.ok) throw new Error(`Airtable ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function handleFlightApplication(request, env, corsHeaders) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const rlKey = `airtable-flight-rl:${ip}`;
+  const rlCount = parseInt(await env.ALTITUDE_KV.get(rlKey) || '0');
+  if (rlCount >= 3) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+
+  let body;
+  try { body = await request.json(); }
+  catch { return respond({ error: 'invalid_body' }, 400, corsHeaders); }
+
+  if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
+
+  const name        = (body['full-name']   || '').trim().slice(0, 200);
+  const email       = (body['email']       || '').trim().toLowerCase().slice(0, 200);
+  const from        = (body['from']        || '').trim().slice(0, 200);
+  const destination = (body['destination'] || '').trim().slice(0, 2000);
+  const about       = (body['about']       || '').trim().slice(0, 300);
+
+  if (!name || !destination || !about) {
+    return respond({ error: 'missing_fields' }, 400, corsHeaders);
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'invalid_email' }, 400, corsHeaders);
+  }
+
+  const q = Math.ceil((new Date().getMonth() + 1) / 3);
+  const quarter = `Q${q} ${new Date().getFullYear()}`;
+
+  try {
+    await writeToAirtable(env.AIRTABLE_TABLE_FLIGHT_APPLICATIONS, {
+      'Name': name,
+      'Email': email,
+      'From': from,
+      'Destination': destination,
+      'About': about,
+      'Status': 'New',
+      'Quarter': quarter,
+      'Source': 'website',
+      'Submission Date': new Date().toISOString().split('T')[0],
+    }, env);
+  } catch (err) {
+    console.error('Airtable flight application error:', err.message);
+    return respond({ error: 'submission_failed' }, 500, corsHeaders);
+  }
+
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+  return respond({ success: true }, 200, corsHeaders);
+}
+
+async function handleContactInquiry(request, env, corsHeaders) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const rlKey = `airtable-contact-rl:${ip}`;
+  const rlCount = parseInt(await env.ALTITUDE_KV.get(rlKey) || '0');
+  if (rlCount >= 5) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+
+  let body;
+  try { body = await request.json(); }
+  catch { return respond({ error: 'invalid_body' }, 400, corsHeaders); }
+
+  if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
+
+  const name    = (body['name']    || '').trim().slice(0, 200);
+  const email   = (body['email']   || '').trim().toLowerCase().slice(0, 200);
+  const subject = (body['subject'] || '').trim().slice(0, 300);
+  const message = (body['message'] || '').trim().slice(0, 5000);
+
+  if (!name || !message) {
+    return respond({ error: 'missing_fields' }, 400, corsHeaders);
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'invalid_email' }, 400, corsHeaders);
+  }
+
+  try {
+    await writeToAirtable(env.AIRTABLE_TABLE_CONTACT_INQUIRIES, {
+      'Name': name,
+      'Email': email,
+      'Subject': subject || '(no subject)',
+      'Message': message,
+      'Status': 'New',
+      'Source': 'website',
+      'Submission Date': new Date().toISOString().split('T')[0],
+    }, env);
+  } catch (err) {
+    console.error('Airtable contact error:', err.message);
+    return respond({ error: 'submission_failed' }, 500, corsHeaders);
+  }
+
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+  return respond({ success: true }, 200, corsHeaders);
 }
