@@ -54,14 +54,18 @@ function getBaseUrl(origin) {
 const BEEHIIV_TAG_ID  = '4ee8818b-9eeb-46b5-a34b-bca21c8f06e3'; // altitude premium tag
 
 export default {
-  // Cron trigger — runs daily at 01:00 UTC (09:00 SGT).
-  // Recalculates segments and sends renewal reminder emails to Altitude
-  // Access members whose subscription is 7, 3, or 1 day from renewal.
+  // Two cron schedules:
+  //   * * * * *  — every minute: segment recalculation only (safety net)
+  //   0 1 * * *  — daily 01:00 UTC (09:00 SGT): recalculation + renewal reminders
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(Promise.all([
-      triggerSegmentRecalculation(env),
-      runRenewalReminders(env),
-    ]));
+    if (event.cron === '0 1 * * *') {
+      ctx.waitUntil(Promise.all([
+        triggerSegmentRecalculation(env),
+        runRenewalReminders(env),
+      ]));
+    } else {
+      ctx.waitUntil(triggerSegmentRecalculation(env));
+    }
   },
 
   async fetch(request, env) {
