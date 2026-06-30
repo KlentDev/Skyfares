@@ -650,7 +650,12 @@ async function handleGetPosts(env, corsHeaders) {
         p.content && p.content.free    && p.content.free.web,
         p.content && p.content.premium && p.content.premium.web
       ),
-    }));
+    }))
+    // Beehiiv's order_by=created_at sorts by draft-creation time, not actual
+    // publish time -- a post drafted earlier but published later would land
+    // in the wrong slot. Re-sort by the real publish timestamp so posts[0]
+    // (what the homepage banner renders) is always the true latest issue.
+    .sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
 
   return respond({ posts }, 200, { ...corsHeaders, 'Cache-Control': 'no-store' });
 }
