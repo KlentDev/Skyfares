@@ -3,8 +3,8 @@
  *
  * Routes:
  *   POST /                         — subscribe email to newsletter
- *   GET  /newsletter/posts         — latest published posts (cached 5 min)
- *   GET  /newsletter/post?slug=    — single post with content (cached 5 min)
+ *   GET  /newsletter/posts         — latest published posts (live, no cache)
+ *   GET  /newsletter/post?slug=    — single post with content (live, no cache)
  *   POST /altitude/checkout        — create Stripe Checkout session
  *   POST /altitude/webhook         — Stripe webhook handler
  *   POST /altitude/activate        — issue JWT for member access
@@ -597,14 +597,6 @@ async function handleManagePortal(request, env, corsHeaders) {
 
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
 
-const POSTS_LIST_CACHE_KEY = 'cache:newsletter_posts_v2';
-// Short TTLs on purpose: this account publishes and expects to see a new/edited
-// post live within a couple minutes, not within the hour. 5 min still gives real
-// protection against traffic bursts hammering Beehiiv, just not at the cost of
-// "I just hit publish and it's not showing" complaints.
-const POSTS_LIST_CACHE_TTL = 300; // 5 min
-const POST_DETAIL_CACHE_TTL = 300; // 5 min
-
 // A post is premium/exclusive iff Beehiiv rendered genuinely different HTML for
 // premium vs. free readers — i.e. the editor inserted a "Premium" content block
 // in this specific post. This is the ONLY reliable signal for this publication:
@@ -618,62 +610,49 @@ function hasPremiumContent(freeHtml, premiumHtml) {
   return !!(freeHtml && premiumHtml && freeHtml !== premiumHtml);
 }
 
-// `Cache-Control` response headers do nothing by themselves on a bare
-// *.workers.dev subdomain (no zone/Cache Rules, no explicit Cache API use) —
-// every request would otherwise re-fetch full post content from Beehiiv for
-// every visitor. KV gives us a real shared cache for the expensive Beehiiv
-// lookup, while the actual free/premium access decision below is still
-// computed fresh on every request from env.ALTITUDE_KV member status — so a
-// cached entry can never leak one viewer's authorized content to another.
+// No caching here on purpose — this account publishes and expects the new
+// post live immediately, not after a TTL window (a 1hr-then-5min cache TTL
+// here previously hid a freshly published post for several minutes). Every
+// request fetches live from Beehiiv. `Cache-Control: no-store` matches that:
+// don't let browsers/intermediaries cache this response either.
 async function handleGetPosts(env, corsHeaders) {
-  let posts = await env.ALTITUDE_KV.get(POSTS_LIST_CACHE_KEY, { type: 'json' }).catch(() => null);
+  let res;
+  try {
+    res = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
+        `?status=confirmed&order_by=created_at&direction=desc&limit=20` +
+        `&expand[]=free_web_content&expand[]=premium_web_content`,
+      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+    );
+  } catch { return respond({ error: 'Gateway error' }, 502, corsHeaders); }
 
-  if (!posts) {
-    let res;
-    try {
-      res = await fetch(
-        `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
-          `?status=confirmed&order_by=created_at&direction=desc&limit=20` +
-          `&expand[]=free_web_content&expand[]=premium_web_content`,
-        { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-      );
-    } catch { return respond({ error: 'Gateway error' }, 502, corsHeaders); }
+  if (!res.ok) return respond({ error: 'Beehiiv API error' }, res.status, corsHeaders);
 
-    if (!res.ok) return respond({ error: 'Beehiiv API error' }, res.status, corsHeaders);
+  const raw   = await res.json();
+  const items = raw.data || raw.posts || [];
 
-    const raw   = await res.json();
-    const items = raw.data || raw.posts || [];
+  const posts = items
+    .filter(p => p.status === 'confirmed' || p.status === 'published')
+    .map(p => ({
+      id:            p.id || '',
+      title:         p.title || '',
+      subtitle:      p.subtitle || '',
+      slug:          p.slug || '',
+      url:           p.url || (p.slug ? `${PUB_BASE_URL}/p/${p.slug}` : ''),
+      thumbnail_url: p.thumbnail_url || '',
+      published_at:  p.publish_date
+        ? new Date(p.publish_date * 1000).toISOString()
+        : (p.scheduled_at || p.created_at || ''),
+      content_tags: (p.content_tags || [])
+        .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
+        .filter(Boolean),
+      is_premium: hasPremiumContent(
+        p.content && p.content.free    && p.content.free.web,
+        p.content && p.content.premium && p.content.premium.web
+      ),
+    }));
 
-    posts = items
-      .filter(p => p.status === 'confirmed' || p.status === 'published')
-      .map(p => ({
-        id:            p.id || '',
-        title:         p.title || '',
-        subtitle:      p.subtitle || '',
-        slug:          p.slug || '',
-        url:           p.url || (p.slug ? `${PUB_BASE_URL}/p/${p.slug}` : ''),
-        thumbnail_url: p.thumbnail_url || '',
-        published_at:  p.publish_date
-          ? new Date(p.publish_date * 1000).toISOString()
-          : (p.scheduled_at || p.created_at || ''),
-        content_tags: (p.content_tags || [])
-          .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
-          .filter(Boolean),
-        is_premium: hasPremiumContent(
-          p.content && p.content.free    && p.content.free.web,
-          p.content && p.content.premium && p.content.premium.web
-        ),
-      }));
-
-    await env.ALTITUDE_KV.put(POSTS_LIST_CACHE_KEY, JSON.stringify(posts), {
-      expirationTtl: POSTS_LIST_CACHE_TTL,
-    }).catch(() => {});
-  }
-
-  return respond({ posts }, 200, {
-    ...corsHeaders,
-    'Cache-Control': `public, max-age=${POSTS_LIST_CACHE_TTL}, s-maxage=${POSTS_LIST_CACHE_TTL}`,
-  });
+  return respond({ posts }, 200, { ...corsHeaders, 'Cache-Control': 'no-store' });
 }
 
 // ── Newsletter: Get Single Post ────────────────────────────────────────────────
@@ -693,63 +672,42 @@ async function handleGetPost(slug, request, env, corsHeaders) {
     }
   }
 
-  // Find post + fetch its free/premium HTML — cached in KV per slug since this
-  // is expensive (two Beehiiv API calls) and identical for every visitor; the
-  // member-only decision below is computed fresh from this cached data on
-  // every request, so caching here cannot leak premium content cross-viewer.
-  const detailCacheKey = `cache:newsletter_post_v2:${slug}`;
-  let cachedDetail = await env.ALTITUDE_KV.get(detailCacheKey, { type: 'json' }).catch(() => null);
-
-  let postMeta = null, freeHtml = '', premiumHtml = '';
-
-  if (cachedDetail) {
-    ({ postMeta, freeHtml, premiumHtml } = cachedDetail);
-  } else {
-    try {
-      const listRes = await fetch(
-        `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
-          `?status=confirmed&order_by=created_at&direction=desc&limit=50`,
-        { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-      );
-      if (listRes.ok) {
-        const listData = await listRes.json();
-        const items = listData.data || listData.posts || [];
-        postMeta = items.find(p => p.slug === slug) || null;
-      }
-    } catch {}
-
-    if (!postMeta) return respond({ error: 'Post not found' }, 404, corsHeaders);
-
-    // Fetch HTML content — pull both free and premium renderings so members
-    // actually receive Beehiiv's premium content, not just the free/teaser HTML
-    let contentFetchOk = false;
-    try {
-      const contentRes = await fetch(
-        `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts/${postMeta.id}` +
-          `?expand[]=free_email_content&expand[]=premium_email_content`,
-        { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-      );
-      if (contentRes.ok) {
-        const d = await contentRes.json();
-        const p = d.data || d;
-        freeHtml    = (p.content && p.content.free && typeof p.content.free.email === 'string')
-          ? p.content.free.email : '';
-        premiumHtml = (p.content && p.content.premium && typeof p.content.premium.email === 'string')
-          ? p.content.premium.email : '';
-        contentFetchOk = true;
-      }
-    } catch {}
-
-    // Only cache a successful Beehiiv content fetch — a transient failure
-    // shouldn't get baked in as "no premium content" for the full TTL.
-    if (contentFetchOk) {
-      await env.ALTITUDE_KV.put(detailCacheKey, JSON.stringify({ postMeta, freeHtml, premiumHtml }), {
-        expirationTtl: POST_DETAIL_CACHE_TTL,
-      }).catch(() => {});
+  // No caching here either, for the same reason as handleGetPosts — fetch
+  // live from Beehiiv on every request so edits/publishes show immediately.
+  let postMeta = null;
+  try {
+    const listRes = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
+        `?status=confirmed&order_by=created_at&direction=desc&limit=50`,
+      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+    );
+    if (listRes.ok) {
+      const listData = await listRes.json();
+      const items = listData.data || listData.posts || [];
+      postMeta = items.find(p => p.slug === slug) || null;
     }
-  }
+  } catch {}
 
   if (!postMeta) return respond({ error: 'Post not found' }, 404, corsHeaders);
+
+  // Fetch HTML content — pull both free and premium renderings so members
+  // actually receive Beehiiv's premium content, not just the free/teaser HTML
+  let freeHtml = '', premiumHtml = '';
+  try {
+    const contentRes = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts/${postMeta.id}` +
+        `?expand[]=free_email_content&expand[]=premium_email_content`,
+      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+    );
+    if (contentRes.ok) {
+      const d = await contentRes.json();
+      const p = d.data || d;
+      freeHtml    = (p.content && p.content.free && typeof p.content.free.email === 'string')
+        ? p.content.free.email : '';
+      premiumHtml = (p.content && p.content.premium && typeof p.content.premium.email === 'string')
+        ? p.content.premium.email : '';
+    }
+  } catch {}
 
   const tags    = (postMeta.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
@@ -774,10 +732,7 @@ async function handleGetPost(slug, request, env, corsHeaders) {
     preview_html:  premium && !isMember   ? extractPreview(previewSource) : null,
   };
 
-  return respond({ post }, 200, {
-    ...corsHeaders,
-    'Cache-Control': `public, max-age=${POST_DETAIL_CACHE_TTL}, s-maxage=${POST_DETAIL_CACHE_TTL}`,
-  });
+  return respond({ post }, 200, { ...corsHeaders, 'Cache-Control': 'no-store' });
 }
 
 // ── Beehiiv helpers ───────────────────────────────────────────────────────────
