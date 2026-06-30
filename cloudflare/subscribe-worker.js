@@ -597,17 +597,26 @@ async function handleManagePortal(request, env, corsHeaders) {
 
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
 
-// A post is premium/exclusive iff Beehiiv rendered genuinely different HTML for
-// premium vs. free readers — i.e. the editor inserted a "Premium" content block
-// in this specific post. This is the ONLY reliable signal for this publication:
-// Beehiiv's post-level `audience` field stays "free" even on exclusive posts
-// (confirmed against live data — see beehiiv-premium-gating memory), and the old
-// `content_tags.includes('altitude-premium')` approach depended on a manually
-// applied tag that's easy to forget on a republish/duplicate. Used identically
-// by both handleGetPosts (web content) and handleGetPost (email content) so the
-// listing badge and the detail-page gate can never disagree about a post.
-function hasPremiumContent(freeHtml, premiumHtml) {
-  return !!(freeHtml && premiumHtml && freeHtml !== premiumHtml);
+// Beehiiv has two genuinely independent ways a post ends up premium-only, and
+// this account's editor has used both at different times (confirmed against
+// Beehiiv's own docs + live data — see beehiiv-premium-gating memory):
+//
+//   1. The post's "Web Audience" setting (Beehiiv's post-flow Audience step
+//      has SEPARATE Email Audience and Web Audience controls -- setting Email
+//      Audience to paid-only, which is what this account's workflow does,
+//      does NOT change Web Audience, which defaults to "All Free Subscribers"
+//      and stays there unless explicitly changed). This is what the API's
+//      `audience` field ("free"|"premium"|"both") actually reports.
+//   2. An in-body "Premium" content block inserted in the post editor, which
+//      makes Beehiiv render genuinely different free vs. premium HTML even
+//      while the post's audience stays "free".
+//
+// Neither signal alone is reliable for this account, so a post is premium if
+// EITHER is true. Used identically by handleGetPosts (web content) and
+// handleGetPost (email content) so the listing badge and the detail-page gate
+// can never disagree.
+function isPostPremium(audience, freeHtml, premiumHtml) {
+  return audience === 'premium' || !!(freeHtml && premiumHtml && freeHtml !== premiumHtml);
 }
 
 // No caching here on purpose — this account publishes and expects the new
@@ -646,7 +655,8 @@ async function handleGetPosts(env, corsHeaders) {
       content_tags: (p.content_tags || [])
         .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
         .filter(Boolean),
-      is_premium: hasPremiumContent(
+      is_premium: isPostPremium(
+        p.audience,
         p.content && p.content.free    && p.content.free.web,
         p.content && p.content.premium && p.content.premium.web
       ),
@@ -717,7 +727,7 @@ async function handleGetPost(slug, request, env, corsHeaders) {
   const tags    = (postMeta.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
     .filter(Boolean);
-  const premium = hasPremiumContent(freeHtml, premiumHtml);
+  const premium = isPostPremium(postMeta.audience, freeHtml, premiumHtml);
   const cleaned        = cleanHtml((premium && isMember) ? (premiumHtml || freeHtml) : freeHtml);
   const previewSource  = cleanHtml(freeHtml);
 
