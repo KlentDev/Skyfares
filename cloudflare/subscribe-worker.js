@@ -602,7 +602,8 @@ async function handleGetPosts(env, corsHeaders) {
   try {
     res = await fetch(
       `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
-        `?status=confirmed&order_by=created_at&direction=desc&limit=20`,
+        `?status=confirmed&order_by=created_at&direction=desc&limit=20` +
+        `&expand[]=free_web_content&expand[]=premium_web_content`,
       { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
     );
   } catch { return respond({ error: 'Gateway error' }, 502, corsHeaders); }
@@ -627,13 +628,26 @@ async function handleGetPosts(env, corsHeaders) {
       content_tags: (p.content_tags || [])
         .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
         .filter(Boolean),
-      is_premium: p.audience === 'premium',
+      // Beehiiv's "audience" field stays "free" for this publication even on
+      // exclusive posts — the real signal is whether Beehiiv generated separate
+      // premium content (a "Premium" block inserted in the post editor).
+      is_premium: isPostGated(p),
     }));
 
   return respond({ posts }, 200, {
     ...corsHeaders,
     'Cache-Control': 'public, max-age=3600, s-maxage=3600',
   });
+}
+
+// A post is premium/exclusive iff Beehiiv rendered different HTML for premium
+// vs. free readers (i.e. the editor inserted a "Premium" content block).
+// Beehiiv's post-level `audience` field is NOT a reliable signal here — it can
+// stay "free" for the whole post even when a premium block is present.
+function isPostGated(p) {
+  const free    = p.content && p.content.free    && p.content.free.web;
+  const premium = p.content && p.content.premium && p.content.premium.web;
+  return !!(premium && free && premium !== free);
 }
 
 // ── Newsletter: Get Single Post ────────────────────────────────────────────────
@@ -693,9 +707,10 @@ async function handleGetPost(slug, request, env, corsHeaders) {
   const tags    = (postMeta.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
     .filter(Boolean);
-  // Source of truth for post-level access is Beehiiv's native "audience" field
-  // (set via the Free/Premium toggle in the Beehiiv post editor) — not content_tags.
-  const premium = postMeta.audience === 'premium';
+  // A post is premium iff Beehiiv actually generated different content for
+  // premium vs. free readers (a "Premium" block was inserted in the editor).
+  // postMeta.audience is NOT reliable here — see isPostGated().
+  const premium = !!(premiumHtml && freeHtml && premiumHtml !== freeHtml);
   const cleaned        = cleanHtml((premium && isMember) ? (premiumHtml || freeHtml) : freeHtml);
   const previewSource  = cleanHtml(freeHtml);
 
