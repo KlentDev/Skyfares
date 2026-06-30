@@ -1,7 +1,53 @@
 (function () {
-  var WORKER_URL     = 'https://skyfares-altitude.klent-5fa.workers.dev';
-  var PREMIUM_WA_URL = 'https://api.whatsapp.com/send?phone=6581575306&text=' +
-    encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.");
+  var WORKER_URL    = 'https://skyfares-altitude.klent-5fa.workers.dev';
+  var PAYMENT_LINK  = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
+
+  // ─── Altitude Access modal (shared by index.html and pages/newsletter.html) ──
+
+  function ensureModal() {
+    if (document.getElementById('altitude-access-modal')) return;
+
+    var base = window.location.pathname.includes('/pages/') ? '' : 'pages/';
+    var modal = document.createElement('div');
+    modal.id = 'altitude-access-modal';
+    modal.className = 'fixed inset-0 z-[300] items-center justify-center p-4';
+    modal.style.display = 'none';
+    modal.innerHTML =
+      '<div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" onclick="window.closeAltitudeAccessModal()"></div>' +
+      '<div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">' +
+        '<button onclick="window.closeAltitudeAccessModal()" ' +
+          'class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">' +
+          '<i class="fa-solid fa-xmark text-xs"></i>' +
+        '</button>' +
+        '<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-5">' +
+          '<i class="fa-solid fa-crown text-[9px]"></i> Altitude Exclusive' +
+        '</div>' +
+        '<h2 class="text-xl font-display font-bold text-neutral-900 mb-2 tracking-tight">This issue is for Altitude members</h2>' +
+        '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Unlock this issue and the full archive — award alerts, cabin reviews, and routing strategies, delivered weekly.</p>' +
+        '<a href="' + PAYMENT_LINK + '" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+          '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
+        '</a>' +
+        '<p class="text-xs text-neutral-400">Already a member? ' +
+          '<a href="' + base + 'altitude.html" class="text-brand-600 underline underline-offset-2 hover:text-brand-800">Log in here</a>' +
+        '</p>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') window.closeAltitudeAccessModal();
+    });
+  }
+
+  window.openAltitudeAccessModal = function () {
+    ensureModal();
+    document.getElementById('altitude-access-modal').style.display = 'flex';
+  };
+
+  window.closeAltitudeAccessModal = function () {
+    var modal = document.getElementById('altitude-access-modal');
+    if (modal) modal.style.display = 'none';
+  };
 
   // ─── Entry point ───────────────────────────────────────────────────────────
 
@@ -65,18 +111,17 @@
 
     // CTA — bottom of content panel
     var ctaHtml = prem
-      ? '<a href="' + PREMIUM_WA_URL + '" target="_blank" rel="noopener noreferrer"' +
-            ' class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-800 transition-colors self-start">' +
-            'Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
+      ? '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 group-hover:text-amber-800 transition-colors self-start">' +
+            'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
       : '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:text-brand-800 transition-colors self-start">' +
             'Read Issue ' + e(issueNum) + ' <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
-    // Wrapper: clickable <a> for free, non-clickable <div> for premium
+    // Wrapper: clickable <a> for free (opens the issue), clickable <div> for premium (opens the access modal)
     var href     = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
-    var cardBorder = prem ? 'border-amber-200/60' : 'border-neutral-100 hover:shadow-lg';
+    var cardBorder = prem ? 'border-amber-200/60 hover:shadow-lg' : 'border-neutral-100 hover:shadow-lg';
 
     var wrapOpen = prem
-      ? '<div class="flex h-52 max-w-5xl mx-auto rounded-2xl overflow-hidden border ' + cardBorder + ' shadow-sm transition-all duration-300 slide-up" style="animation-delay:.05s;">'
+      ? '<div onclick="window.openAltitudeAccessModal()" class="group flex h-52 max-w-5xl mx-auto rounded-2xl overflow-hidden border ' + cardBorder + ' shadow-sm transition-all duration-300 slide-up cursor-pointer" style="animation-delay:.05s;">'
       : '<a href="' + href + '" class="group flex h-52 max-w-5xl mx-auto rounded-2xl overflow-hidden border ' + cardBorder + ' shadow-sm transition-all duration-300 slide-up" style="animation-delay:.05s;">';
     var wrapClose = prem ? '</div>' : '</a>';
 
@@ -153,21 +198,22 @@
     var href = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
 
     var ctaHtml = prem
-      ? '<a href="' + PREMIUM_WA_URL + '" target="_blank" rel="noopener noreferrer"' +
-            ' class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 hover:text-amber-800 transition-colors">' +
-            'Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>' +
-            '<p class="text-[10px] text-neutral-400 mt-1 italic">Already have access? Check your email.</p>'
+      ? '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 group-hover:text-amber-800 transition-colors">' +
+            'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
+            '<p class="text-[10px] text-neutral-400 mt-1 italic">Already a member? Check your email.</p>'
       : '<a href="' + href + '"' +
             ' class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">' +
             'Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
 
     var cardCls = 'group bg-white border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 slide-up ' +
-      (prem ? 'border-amber-200/60' : 'border-neutral-100 hover:shadow-md');
+      (prem ? 'border-amber-200/60 hover:shadow-md cursor-pointer' : 'border-neutral-100 hover:shadow-md');
 
     var titleCls = 'text-sm font-display font-bold text-neutral-900 mb-3 transition-colors leading-snug' +
       (prem ? '' : ' group-hover:text-brand-700');
 
-    return '<article class="' + cardCls + '" style="animation-delay:' + delay + 's;">' +
+    var clickAttr = prem ? ' onclick="window.openAltitudeAccessModal()"' : '';
+
+    return '<article class="' + cardCls + '"' + clickAttr + ' style="animation-delay:' + delay + 's;">' +
       '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
         imgHtml +
         '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +

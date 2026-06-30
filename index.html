@@ -81,24 +81,55 @@
           </div>
         </div>
 
-        <!-- CTAs -->
-        <div class="flex flex-wrap justify-center items-center gap-4 mb-8">
-          <a href="https://api.whatsapp.com/send?phone=6581575306" rel="noopener noreferrer"
-            class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-gold text-white font-bold text-base hover:bg-gold/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-gold/25">
-            <i class="fa-brands fa-whatsapp text-white text-lg"></i>
-            Book a Flight
-          </a>
-          <a href="pages/altitude.html"
-            class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-white/10 text-white font-bold text-base border border-white/30 hover:bg-white/20 transition-all hover:scale-105 active:scale-95 backdrop-blur-sm">
-            <i class="fa-solid fa-crown"></i>
-            Get Altitude Access
-          </a>
-          <button type="button" id="hero-play-btn" class="group">
-            <span class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center shadow-md group-hover:bg-red-700 group-hover:scale-110 group-hover:shadow-lg transition-all">
-              <i class="fa-solid fa-play text-white text-sm ml-0.5"></i>
-            </span>
-          </button>
+        <!-- Search + Book + Video — single compact row -->
+        <div class="relative max-w-2xl mx-auto mb-8" id="hero-search-wrap">
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+
+            <!-- Search input with fixed SIN origin -->
+            <div class="relative flex-1 min-w-0">
+              <div class="flex items-center pl-4 pr-3 py-2 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm focus-within:border-white/50 transition-all">
+                <i class="fa-solid fa-plane-departure text-white/60 text-[10px] flex-shrink-0"></i>
+                <span class="text-sm font-black text-white flex-shrink-0 ml-1.5 mr-0.5">SIN</span>
+                <i class="fa-solid fa-arrow-right text-white/30 text-[10px] flex-shrink-0 mx-2"></i>
+                <input
+                  id="hero-route-search"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="Where to?"
+                  aria-label="Search destination"
+                  class="flex-1 min-w-0 py-1.5 text-sm text-white placeholder:text-white/40 outline-none bg-transparent"
+                >
+              </div>
+              <!-- Dropdown anchored directly under the input -->
+              <div id="hero-route-dropdown"
+                class="absolute left-0 right-0 mt-2 bg-white rounded-2xl border border-neutral-100 shadow-2xl overflow-hidden z-50 hidden">
+                <ul id="hero-route-list" class="py-1 max-h-52 overflow-y-auto divide-y divide-neutral-50"></ul>
+              </div>
+            </div>
+
+            <!-- Altitude CTA -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <a href="pages/altitude.html"
+                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-gold/60 text-gold font-bold text-sm whitespace-nowrap transition-all active:scale-95 hover:bg-gold/10">
+                <i class="fa-solid fa-crown text-xs"></i>
+                Get Altitude Access
+              </a>
+              <!-- Video button (temporarily hidden) -->
+              <!--
+              <button type="button" id="hero-play-btn" class="group flex-shrink-0">
+                <span class="w-11 h-11 rounded-full bg-red-600 flex items-center justify-center shadow-md group-hover:bg-red-700 group-hover:scale-110 group-hover:shadow-lg transition-all">
+                  <i class="fa-solid fa-play text-white text-xs ml-0.5"></i>
+                </span>
+              </button>
+              -->
+            </div>
+
+          </div>
+
+
         </div>
+
 
         <!-- Mobile-only glance section (shown after CTAs, centered) -->
         <div class="lg:hidden mt-8 pt-8 border-t border-white/20 text-center">
@@ -471,6 +502,40 @@
 
           </div>
         </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- NEWSLETTER PREVIEW -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <!-- Section heading -->
+      <div class="flex items-end justify-between mb-10 slide-up">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">Skyfare Altitude</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
+            Latest from the Newsletter
+          </h2>
+        </div>
+        <a href="pages/newsletter.html" class="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-800 transition-colors">
+          View All Issues <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <!-- Newsletter cards (populated by JS; skeletons show while loading) -->
+      <div id="home-newsletter-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5 slide-up" style="animation-delay:0.1s;">
+        <div class="bg-neutral-100 rounded-2xl h-64 animate-pulse"></div>
+        <div class="bg-neutral-100 rounded-2xl h-64 animate-pulse"></div>
+        <div class="bg-neutral-100 rounded-2xl h-64 animate-pulse"></div>
+      </div>
+
+      <!-- Mobile: View All link -->
+      <div class="mt-8 text-center md:hidden slide-up" style="animation-delay:0.2s;">
+        <a href="pages/newsletter.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-800 transition-colors">
+          View All Issues <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
       </div>
 
     </div>
@@ -1124,7 +1189,7 @@
     }
 
     var popupEnabled = popup ? popup.hasAttribute('data-popup-enabled') : false;
-    if (popupEnabled && !sessionStorage.getItem('altitudePopupShown')) {
+    if (popupEnabled && !sessionStorage.getItem('altitudePopupShown') && !localStorage.getItem('altitudeSubscribed')) {
       setTimeout(openPopup, 5000);
     }
 
@@ -1133,6 +1198,395 @@
     if (backdrop) backdrop.addEventListener('click', closePopup);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closePopup();
+    });
+  })();
+  </script>
+
+  <script>
+  (function () {
+    var WORKER_URL    = 'https://skyfares-altitude.klent-5fa.workers.dev';
+    var PAYMENT_LINK  = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
+
+    function ensureAltitudeAccessModal() {
+      if (document.getElementById('altitude-access-modal')) return;
+
+      var modal = document.createElement('div');
+      modal.id = 'altitude-access-modal';
+      modal.className = 'fixed inset-0 z-[300] items-center justify-center p-4';
+      modal.style.display = 'none';
+      modal.innerHTML =
+        '<div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" onclick="window.closeAltitudeAccessModal()"></div>' +
+        '<div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">' +
+          '<button onclick="window.closeAltitudeAccessModal()" ' +
+            'class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">' +
+            '<i class="fa-solid fa-xmark text-xs"></i>' +
+          '</button>' +
+          '<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-5">' +
+            '<i class="fa-solid fa-crown text-[9px]"></i> Altitude Exclusive' +
+          '</div>' +
+          '<h2 class="text-xl font-display font-bold text-neutral-900 mb-2 tracking-tight">This issue is for Altitude members</h2>' +
+          '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Unlock this issue and the full archive — award alerts, cabin reviews, and routing strategies, delivered weekly.</p>' +
+          '<a href="' + PAYMENT_LINK + '" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+            '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
+          '</a>' +
+          '<p class="text-xs text-neutral-400">Already a member? ' +
+            '<a href="pages/altitude.html" class="text-brand-600 underline underline-offset-2 hover:text-brand-800">Log in here</a>' +
+          '</p>' +
+        '</div>';
+
+      document.body.appendChild(modal);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closeAltitudeAccessModal();
+      });
+    }
+
+    window.openAltitudeAccessModal = function () {
+      ensureAltitudeAccessModal();
+      document.getElementById('altitude-access-modal').style.display = 'flex';
+    };
+
+    window.closeAltitudeAccessModal = function () {
+      var modal = document.getElementById('altitude-access-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    function isPremium(post) {
+      var tags = post.content_tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        if (tags[i] === 'altitude-premium') return true;
+      }
+      return false;
+    }
+
+    function getIssueNum(post) {
+      var tags = post.content_tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
+        if (m) return m[1].padStart(2, '0');
+      }
+      return '01';
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      try {
+        return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } catch (_) { return ''; }
+    }
+
+    function esc(str) {
+      var d = document.createElement('div');
+      d.textContent = String(str || '');
+      return d.innerHTML;
+    }
+
+    function buildCard(post, index) {
+      var prem     = isPremium(post);
+      var issueNum = getIssueNum(post);
+      var date     = formatDate(post.published_at);
+      var delay    = index * 0.05;
+      var href     = 'pages/newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
+
+      var imgHtml = post.thumbnail_url
+        ? '<img src="' + esc(post.thumbnail_url) + '" alt="' + esc(post.title) + '"' +
+            ' class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
+        : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
+
+      var altitudeBadge = prem
+        ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
+        : '';
+
+      var lockIcon = prem
+        ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-amber-500/30 flex items-center justify-center"><i class="fa-solid fa-lock text-amber-300 text-[8px]"></i></div></div>'
+        : '';
+
+      var ctaHtml = prem
+        ? '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 group-hover:text-amber-800 transition-colors">' +
+              'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
+              '<p class="text-[10px] text-neutral-400 mt-1 italic">Already a member? Check your email.</p>'
+        : '<a href="' + href + '"' +
+              ' class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">' +
+              'Read More <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
+
+      var cardCls = 'group bg-white border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 ' +
+        (prem ? 'border-amber-200/60 hover:shadow-md cursor-pointer' : 'border-neutral-100 hover:shadow-md');
+
+      var titleCls = 'text-sm font-display font-bold text-neutral-900 mb-2 transition-colors leading-snug' +
+        (prem ? '' : ' group-hover:text-brand-700');
+
+      var excerpt = post.subtitle
+        ? '<p class="text-[11px] text-neutral-500 mb-3 leading-relaxed line-clamp-2">' + esc(post.subtitle) + '</p>'
+        : '';
+
+      var clickAttr = prem ? ' onclick="window.openAltitudeAccessModal()"' : '';
+
+      return '<article class="' + cardCls + '"' + clickAttr + ' style="animation-delay:' + delay + 's;">' +
+        '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
+          imgHtml +
+          '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
+          '<div class="absolute top-3 left-3">' +
+            '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + esc(issueNum) + '</span>' +
+          '</div>' +
+          altitudeBadge +
+          lockIcon +
+        '</div>' +
+        '<div class="p-5">' +
+          (date ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + esc(date) + '</p>' : '') +
+          '<h3 class="' + titleCls + '">' + esc(post.title) + '</h3>' +
+          excerpt +
+          ctaHtml +
+        '</div>' +
+      '</article>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var grid = document.getElementById('home-newsletter-grid');
+      if (!grid) return;
+
+      fetch(WORKER_URL + '/newsletter/posts')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.posts || !data.posts.length) { grid.innerHTML = ''; return; }
+          var posts = data.posts.slice(0, 3);
+          grid.innerHTML = posts.map(function (post, i) { return buildCard(post, i); }).join('');
+        })
+        .catch(function () { grid.innerHTML = ''; });
+    });
+  })();
+  </script>
+
+  <!-- ── Route Result Modal ─────────────────────────────────────── -->
+  <div id="hero-route-modal" class="fixed inset-0 z-[400] hidden items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm" id="hero-modal-backdrop"></div>
+    <div class="relative bg-white rounded-2xl p-7 max-w-sm w-full shadow-2xl z-10">
+
+      <button id="hero-modal-close"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5">
+        <i class="fa-solid fa-plane text-[9px]"></i> Business Class &middot; KrisFlyer Miles
+      </div>
+
+      <h3 id="modal-result-route" class="text-xl font-display font-bold text-neutral-900 mb-0.5 tracking-tight"></h3>
+      <p id="modal-result-region" class="text-xs text-neutral-400 mb-6"></p>
+
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-brand-50 rounded-xl p-4 text-center">
+          <p class="text-[10px] text-brand-400 font-bold uppercase tracking-widest mb-2">Saver</p>
+          <p id="modal-result-saver" class="text-2xl font-black text-brand-900 leading-none"></p>
+          <p class="text-[10px] text-brand-400 mt-1">miles</p>
+        </div>
+        <div class="bg-neutral-50 rounded-xl p-4 text-center">
+          <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mb-2">Advantage</p>
+          <p id="modal-result-advantage" class="text-2xl font-black text-neutral-700 leading-none"></p>
+          <p class="text-[10px] text-neutral-400 mt-1">miles</p>
+        </div>
+      </div>
+
+      <a id="modal-result-wa" href="#" target="_blank" rel="noopener noreferrer"
+        class="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm transition-all active:scale-95">
+        <i class="fa-brands fa-whatsapp text-base"></i>
+        Enquire via WhatsApp
+      </a>
+      <p class="text-[10px] text-neutral-400 text-center mt-3">Subject to availability &middot; Airline taxes apply</p>
+
+    </div>
+  </div>
+
+  <script>
+  /* ── Hero Route Search ─────────────────────────────────────────── */
+  (function () {
+    var WA_BASE = 'https://api.whatsapp.com/send?phone=6581575306&text=';
+
+    var AWARDS = [
+      // SE Asia
+      { to:'Brunei (BWN)',             region:'SE Asia',           saver:22000,  advantage:33000  },
+      { to:'Denpasar / Bali (DPS)',    region:'SE Asia',           saver:22000,  advantage:33000  },
+      { to:'Jakarta (CGK)',            region:'SE Asia',           saver:22000,  advantage:33000  },
+      { to:'Kuala Lumpur (KUL)',       region:'SE Asia',           saver:22000,  advantage:33000  },
+      { to:'Bangkok (BKK)',            region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Cebu (CEB)',               region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Da Nang (DAD)',            region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Hanoi (HAN)',              region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Ho Chi Minh (SGN)',        region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Manila (MNL)',             region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Phnom Penh (PNH)',         region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Phuket (HKT)',             region:'SE Asia',           saver:25000,  advantage:37000  },
+      { to:'Yangon (RGN)',             region:'SE Asia',           saver:25000,  advantage:37000  },
+      // NE Asia
+      { to:'Chengdu (CTU)',            region:'NE Asia',           saver:35500,  advantage:53000  },
+      { to:'Chongqing (CKG)',          region:'NE Asia',           saver:35500,  advantage:53000  },
+      { to:'Guangzhou (CAN)',          region:'NE Asia',           saver:35500,  advantage:53000  },
+      { to:'Hong Kong (HKG)',          region:'NE Asia',           saver:35500,  advantage:53000  },
+      { to:'Taipei (TPE)',             region:'NE Asia',           saver:35500,  advantage:53000  },
+      { to:'Beijing (PEK)',            region:'NE Asia',           saver:45000,  advantage:67500  },
+      { to:'Shanghai (PVG)',           region:'NE Asia',           saver:45000,  advantage:67500  },
+      // South Asia
+      { to:'Ahmedabad (AMD)',          region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Bengaluru (BLR)',          region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Chennai (MAA)',            region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Cochin (COK)',             region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Colombo (CMB)',            region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Delhi (DEL)',              region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Dhaka (DAC)',              region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Hyderabad (HYD)',          region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Kathmandu (KTM)',          region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Kolkata (CCU)',            region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Male / Maldives (MLE)',    region:'South Asia',        saver:45000,  advantage:67500  },
+      { to:'Mumbai (BOM)',             region:'South Asia',        saver:45000,  advantage:67500  },
+      // Japan/Korea
+      { to:'Busan (PUS)',              region:'Japan/Korea',       saver:54500,  advantage:82000  },
+      { to:'Fukuoka (FUK)',            region:'Japan/Korea',       saver:54500,  advantage:82000  },
+      { to:'Osaka (KIX)',              region:'Japan/Korea',       saver:54500,  advantage:82000  },
+      { to:'Seoul (ICN)',              region:'Japan/Korea',       saver:54500,  advantage:82000  },
+      { to:'Tokyo (NRT/HND)',          region:'Japan/Korea',       saver:54500,  advantage:82000  },
+      // Oceania
+      { to:'Darwin (DRW)',             region:'Oceania',           saver:42500,  advantage:64000  },
+      { to:'Perth (PER)',              region:'Oceania',           saver:42500,  advantage:64000  },
+      { to:'Adelaide (ADL)',           region:'Oceania',           saver:72000,  advantage:108000 },
+      { to:'Auckland (AKL)',           region:'Oceania',           saver:72000,  advantage:108000 },
+      { to:'Brisbane (BNE)',           region:'Oceania',           saver:72000,  advantage:108000 },
+      { to:'Cairns (CNS)',             region:'Oceania',           saver:72000,  advantage:108000 },
+      { to:'Christchurch (CHC)',       region:'Oceania',           saver:72000,  advantage:108000 },
+      { to:'Melbourne (MEL)',          region:'Oceania',           saver:72000,  advantage:108000 },
+      { to:'Sydney (SYD)',             region:'Oceania',           saver:72000,  advantage:108000 },
+      // Africa/Middle East
+      { to:'Cape Town (CPT)',          region:'Africa/Middle East',saver:68000,  advantage:102000 },
+      { to:'Dubai (DXB)',              region:'Africa/Middle East',saver:68000,  advantage:102000 },
+      { to:'Istanbul (IST)',           region:'Africa/Middle East',saver:68000,  advantage:102000 },
+      { to:'Johannesburg (JNB)',       region:'Africa/Middle East',saver:68000,  advantage:102000 },
+      // Europe
+      { to:'Amsterdam (AMS)',          region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Barcelona (BCN)',          region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Brussels (BRU)',           region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Copenhagen (CPH)',         region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Frankfurt (FRA)',          region:'Europe',            saver:108500, advantage:163000 },
+      { to:'London (LHR)',             region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Manchester (MAN)',         region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Milan (MXP)',              region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Munich (MUC)',             region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Paris (CDG)',              region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Rome (FCO)',               region:'Europe',            saver:108500, advantage:163000 },
+      { to:'Zurich (ZRH)',             region:'Europe',            saver:108500, advantage:163000 },
+      // N. America
+      { to:'Los Angeles (LAX)',        region:'N. America',        saver:112500, advantage:169000 },
+      { to:'San Francisco (SFO)',      region:'N. America',        saver:112500, advantage:169000 },
+      { to:'Seattle (SEA)',            region:'N. America',        saver:112500, advantage:169000 },
+      { to:'Houston (IAH)',            region:'N. America',        saver:117000, advantage:176000 },
+      { to:'New York (JFK)',           region:'N. America',        saver:117000, advantage:176000 },
+    ];
+
+    var input    = document.getElementById('hero-route-search');
+    var dropdown = document.getElementById('hero-route-dropdown');
+    var list     = document.getElementById('hero-route-list');
+    var result   = document.getElementById('hero-route-result');
+    var modalEl   = document.getElementById('hero-route-modal');
+    var modalBg   = document.getElementById('hero-modal-backdrop');
+    var modalX    = document.getElementById('hero-modal-close');
+    var modalRoute  = document.getElementById('modal-result-route');
+    var modalRegion = document.getElementById('modal-result-region');
+    var modalSaver  = document.getElementById('modal-result-saver');
+    var modalAdv    = document.getElementById('modal-result-advantage');
+    var modalWa     = document.getElementById('modal-result-wa');
+
+    if (!input) return;
+
+    function fmt(n) { return n.toLocaleString(); }
+
+    function openModal() {
+      if (!modalEl) return;
+      modalEl.classList.remove('hidden');
+      modalEl.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      if (!modalEl) return;
+      modalEl.classList.add('hidden');
+      modalEl.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function showDropdown(rows) {
+      list.innerHTML = '';
+      if (!rows.length) {
+        list.innerHTML = '<li class="px-4 py-3.5 text-sm text-neutral-400 italic">No routes found.</li>';
+      } else {
+        rows.slice(0, 8).forEach(function (r) {
+          var li = document.createElement('li');
+          li.className = 'flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-brand-50 transition-colors group';
+          li.innerHTML =
+            '<span class="text-sm font-semibold text-neutral-900 group-hover:text-brand-700 transition-colors">' +
+              'SIN → ' + r.to +
+            '</span>' +
+            '<span class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 ml-3 flex-shrink-0">' + r.region + '</span>';
+          li.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            selectRoute(r);
+          });
+          list.appendChild(li);
+        });
+      }
+      dropdown.classList.remove('hidden');
+    }
+
+    function selectRoute(r) {
+      input.value = r.to;
+      dropdown.classList.add('hidden');
+      if (modalRoute)  modalRoute.textContent  = 'SIN → ' + r.to;
+      if (modalRegion) modalRegion.textContent = r.region;
+      if (modalSaver)  modalSaver.textContent  = fmt(r.saver);
+      if (modalAdv)    modalAdv.textContent    = fmt(r.advantage);
+      if (modalWa)     modalWa.href = WA_BASE + encodeURIComponent(
+        'Hi Skyfare, I\'d like to enquire about Singapore → ' + r.to + ' in Business Class.'
+      );
+      openModal();
+    }
+
+    function clearSearch() {
+      if (dropdown) dropdown.classList.add('hidden');
+      input.value = '';
+      input.focus();
+    }
+
+    input.addEventListener('input', function () {
+      var q = this.value.trim().toLowerCase();
+      if (!q) { dropdown.classList.add('hidden'); return; }
+      showDropdown(AWARDS.filter(function (r) {
+        return (r.to + ' ' + r.region).toLowerCase().indexOf(q) !== -1;
+      }));
+    });
+
+    input.addEventListener('focus', function () {
+      var q = this.value.trim().toLowerCase();
+      if (q) {
+        showDropdown(AWARDS.filter(function (r) {
+          return (r.to + ' ' + r.region).toLowerCase().indexOf(q) !== -1;
+        }));
+      }
+    });
+
+    input.addEventListener('blur', function () {
+      setTimeout(function () { dropdown.classList.add('hidden'); }, 160);
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { dropdown.classList.add('hidden'); this.blur(); }
+    });
+
+    if (modalX)  modalX.addEventListener('click', closeModal);
+    if (modalBg) modalBg.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modalEl && !modalEl.classList.contains('hidden')) closeModal();
+    });
+
+    document.addEventListener('click', function (e) {
+      var wrap = document.getElementById('hero-search-wrap');
+      if (wrap && !wrap.contains(e.target)) dropdown.classList.add('hidden');
     });
   })();
   </script>
