@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="header-logo h-9 w-auto object-contain transition-all duration-500 group-hover:scale-105 flex-shrink-0">
           <div class="header-wordmark flex flex-col leading-none select-none">
             <span class="skyfare-text text-[13px] font-black uppercase tracking-[0.14em] text-brand-900 transition-colors duration-300">SKYFARE</span>
-            <span class="altitude-text text-[9px] font-bold uppercase tracking-[0.22em] text-neutral-400 transition-colors duration-300 mt-0.5">CONSULATING</span>
+            <span class="altitude-text text-[9px] font-bold uppercase tracking-[0.22em] text-neutral-400 transition-colors duration-300 mt-0.5">CONSULTING</span>
           </div>
         </a>
 
@@ -96,29 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
                       </div>
                       <div class="text-sm font-semibold text-brand-950">Chauffeur</div>
                     </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#fast-track" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#concierge" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-bolt text-sm"></i>
+                        <i class="fa-solid fa-concierge-bell text-sm"></i>
                       </div>
-                      <div class="text-sm font-semibold text-brand-950">Fast Track</div>
-                    </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#visa" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-passport text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Visa Assistance</div>
-                    </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#bookings" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-plane-up text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Flight Bookings</div>
-                    </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#hotels" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-hotel text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Hotel Recommendations</div>
+                      <div class="text-sm font-semibold text-brand-950">Concierge Services</div>
                     </a>
                   </div>
                 </div>
@@ -146,12 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </nav>
 
-        <!-- Right side: Book Now button -->
+        <!-- Right side: Book a Flight button -->
         <div class="hidden lg:flex items-center gap-3 ml-auto">
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html"
             class="book-now-btn inline-flex items-center gap-2 rounded-xl border border-white/70 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:-translate-y-0.5 transition-all active:scale-95">
             <i class="fa-solid fa-calendar-check text-lg"></i>
-            Book Now
+            Book a Flight
           </a>
         </div>
 
@@ -199,17 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-car text-brand-400 w-6 text-base"></i> Chauffeur
               </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#fast-track" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
-                <i class="fa-solid fa-bolt text-brand-400 w-6 text-base"></i> Fast Track
-              </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#visa" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
-                <i class="fa-solid fa-passport text-brand-400 w-6 text-base"></i> Visa Assistance
-              </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#bookings" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
-                <i class="fa-solid fa-plane-up text-brand-400 w-6 text-base"></i> Flight Bookings
-              </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#hotels" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
-                <i class="fa-solid fa-hotel text-brand-400 w-6 text-base"></i> Hotel Recommendations
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#concierge" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-concierge-bell text-brand-400 w-6 text-base"></i> Concierge Services
               </a>
             </div>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
@@ -235,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="mt-auto pt-10">
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
               <i class="fa-solid fa-calendar-check text-xl"></i>
-              Book Now
+              Book a Flight
             </a>
           </div>
         </div>
@@ -251,11 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const heroSection = document.querySelector('.hero-brand-fade');
 
   if (heroSection && headerEl) {
-    // Hero page: float header transparently over the hero
-    document.body.style.paddingTop = '0';
-    heroSection.style.paddingTop = (headerEl.offsetHeight + 32) + 'px';
-    headerEl.classList.add('header-transparent');
-
     function updateHeaderState() {
       if (window.scrollY > 10) {
         headerEl.classList.remove('header-transparent');
@@ -267,11 +235,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', updateHeaderState, { passive: true });
-  } else if (headerEl) {
-    // Non-hero page: solid header from the start
-    document.body.style.paddingTop = headerEl.offsetHeight + 'px';
-    headerEl.classList.add('header-scrolled');
   }
+
+  // Reading headerEl.offsetHeight synchronously right after injection can catch
+  // the header before the Tailwind CDN script has applied its utility classes
+  // (e.g. the dropdown menu's absolute positioning) -- mid-flash, the header can
+  // measure 500+px instead of its real ~75px. Deferring one frame guarantees
+  // Tailwind has settled before anything reads its height.
+  requestAnimationFrame(() => {
+    if (heroSection && headerEl) {
+      // Hero page: float header transparently over the hero
+      document.body.style.paddingTop = '0';
+      heroSection.style.paddingTop = (headerEl.offsetHeight + 32) + 'px';
+      headerEl.classList.add('header-transparent');
+    } else if (headerEl) {
+      // Non-hero page: solid header from the start
+      document.body.style.paddingTop = headerEl.offsetHeight + 'px';
+      headerEl.classList.add('header-scrolled');
+    }
+  });
 
   // --- Global Intersection Observer for Animations ---
   const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
