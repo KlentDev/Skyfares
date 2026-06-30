@@ -597,57 +597,79 @@ async function handleManagePortal(request, env, corsHeaders) {
 
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
 
+const POSTS_LIST_CACHE_KEY = 'cache:newsletter_posts_v2';
+const POSTS_LIST_CACHE_TTL = 3600; // 1 hour — matches documented route cache window
+const POST_DETAIL_CACHE_TTL = 900; // 15 min — matches documented route cache window
+
+// A post is premium/exclusive iff Beehiiv rendered genuinely different HTML for
+// premium vs. free readers — i.e. the editor inserted a "Premium" content block
+// in this specific post. This is the ONLY reliable signal for this publication:
+// Beehiiv's post-level `audience` field stays "free" even on exclusive posts
+// (confirmed against live data — see beehiiv-premium-gating memory), and the old
+// `content_tags.includes('altitude-premium')` approach depended on a manually
+// applied tag that's easy to forget on a republish/duplicate. Used identically
+// by both handleGetPosts (web content) and handleGetPost (email content) so the
+// listing badge and the detail-page gate can never disagree about a post.
+function hasPremiumContent(freeHtml, premiumHtml) {
+  return !!(freeHtml && premiumHtml && freeHtml !== premiumHtml);
+}
+
+// `Cache-Control` response headers do nothing by themselves on a bare
+// *.workers.dev subdomain (no zone/Cache Rules, no explicit Cache API use) —
+// every request would otherwise re-fetch full post content from Beehiiv for
+// every visitor. KV gives us a real shared cache for the expensive Beehiiv
+// lookup, while the actual free/premium access decision below is still
+// computed fresh on every request from env.ALTITUDE_KV member status — so a
+// cached entry can never leak one viewer's authorized content to another.
 async function handleGetPosts(env, corsHeaders) {
-  let res;
-  try {
-    res = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
-        `?status=confirmed&order_by=created_at&direction=desc&limit=20` +
-        `&expand[]=free_web_content&expand[]=premium_web_content`,
-      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-    );
-  } catch { return respond({ error: 'Gateway error' }, 502, corsHeaders); }
+  let posts = await env.ALTITUDE_KV.get(POSTS_LIST_CACHE_KEY, { type: 'json' }).catch(() => null);
 
-  if (!res.ok) return respond({ error: 'Beehiiv API error' }, res.status, corsHeaders);
+  if (!posts) {
+    let res;
+    try {
+      res = await fetch(
+        `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
+          `?status=confirmed&order_by=created_at&direction=desc&limit=20` +
+          `&expand[]=free_web_content&expand[]=premium_web_content`,
+        { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+      );
+    } catch { return respond({ error: 'Gateway error' }, 502, corsHeaders); }
 
-  const raw   = await res.json();
-  const items = raw.data || raw.posts || [];
+    if (!res.ok) return respond({ error: 'Beehiiv API error' }, res.status, corsHeaders);
 
-  const posts = items
-    .filter(p => p.status === 'confirmed' || p.status === 'published')
-    .map(p => ({
-      id:            p.id || '',
-      title:         p.title || '',
-      subtitle:      p.subtitle || '',
-      slug:          p.slug || '',
-      url:           p.url || (p.slug ? `${PUB_BASE_URL}/p/${p.slug}` : ''),
-      thumbnail_url: p.thumbnail_url || '',
-      published_at:  p.publish_date
-        ? new Date(p.publish_date * 1000).toISOString()
-        : (p.scheduled_at || p.created_at || ''),
-      content_tags: (p.content_tags || [])
-        .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
-        .filter(Boolean),
-      // Beehiiv's "audience" field stays "free" for this publication even on
-      // exclusive posts — the real signal is whether Beehiiv generated separate
-      // premium content (a "Premium" block inserted in the post editor).
-      is_premium: isPostGated(p),
-    }));
+    const raw   = await res.json();
+    const items = raw.data || raw.posts || [];
+
+    posts = items
+      .filter(p => p.status === 'confirmed' || p.status === 'published')
+      .map(p => ({
+        id:            p.id || '',
+        title:         p.title || '',
+        subtitle:      p.subtitle || '',
+        slug:          p.slug || '',
+        url:           p.url || (p.slug ? `${PUB_BASE_URL}/p/${p.slug}` : ''),
+        thumbnail_url: p.thumbnail_url || '',
+        published_at:  p.publish_date
+          ? new Date(p.publish_date * 1000).toISOString()
+          : (p.scheduled_at || p.created_at || ''),
+        content_tags: (p.content_tags || [])
+          .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
+          .filter(Boolean),
+        is_premium: hasPremiumContent(
+          p.content && p.content.free    && p.content.free.web,
+          p.content && p.content.premium && p.content.premium.web
+        ),
+      }));
+
+    await env.ALTITUDE_KV.put(POSTS_LIST_CACHE_KEY, JSON.stringify(posts), {
+      expirationTtl: POSTS_LIST_CACHE_TTL,
+    }).catch(() => {});
+  }
 
   return respond({ posts }, 200, {
     ...corsHeaders,
     'Cache-Control': 'public, max-age=3600, s-maxage=3600',
   });
-}
-
-// A post is premium/exclusive iff Beehiiv rendered different HTML for premium
-// vs. free readers (i.e. the editor inserted a "Premium" content block).
-// Beehiiv's post-level `audience` field is NOT a reliable signal here — it can
-// stay "free" for the whole post even when a premium block is present.
-function isPostGated(p) {
-  const free    = p.content && p.content.free    && p.content.free.web;
-  const premium = p.content && p.content.premium && p.content.premium.web;
-  return !!(premium && free && premium !== free);
 }
 
 // ── Newsletter: Get Single Post ────────────────────────────────────────────────
@@ -667,50 +689,68 @@ async function handleGetPost(slug, request, env, corsHeaders) {
     }
   }
 
-  // Find post by slug
-  let postMeta = null;
-  try {
-    const listRes = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
-        `?status=confirmed&order_by=created_at&direction=desc&limit=50`,
-      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-    );
-    if (listRes.ok) {
-      const listData = await listRes.json();
-      const items = listData.data || listData.posts || [];
-      postMeta = items.find(p => p.slug === slug) || null;
+  // Find post + fetch its free/premium HTML — cached in KV per slug since this
+  // is expensive (two Beehiiv API calls) and identical for every visitor; the
+  // member-only decision below is computed fresh from this cached data on
+  // every request, so caching here cannot leak premium content cross-viewer.
+  const detailCacheKey = `cache:newsletter_post_v2:${slug}`;
+  let cachedDetail = await env.ALTITUDE_KV.get(detailCacheKey, { type: 'json' }).catch(() => null);
+
+  let postMeta = null, freeHtml = '', premiumHtml = '';
+
+  if (cachedDetail) {
+    ({ postMeta, freeHtml, premiumHtml } = cachedDetail);
+  } else {
+    try {
+      const listRes = await fetch(
+        `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts` +
+          `?status=confirmed&order_by=created_at&direction=desc&limit=50`,
+        { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+      );
+      if (listRes.ok) {
+        const listData = await listRes.json();
+        const items = listData.data || listData.posts || [];
+        postMeta = items.find(p => p.slug === slug) || null;
+      }
+    } catch {}
+
+    if (!postMeta) return respond({ error: 'Post not found' }, 404, corsHeaders);
+
+    // Fetch HTML content — pull both free and premium renderings so members
+    // actually receive Beehiiv's premium content, not just the free/teaser HTML
+    let contentFetchOk = false;
+    try {
+      const contentRes = await fetch(
+        `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts/${postMeta.id}` +
+          `?expand[]=free_email_content&expand[]=premium_email_content`,
+        { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+      );
+      if (contentRes.ok) {
+        const d = await contentRes.json();
+        const p = d.data || d;
+        freeHtml    = (p.content && p.content.free && typeof p.content.free.email === 'string')
+          ? p.content.free.email : '';
+        premiumHtml = (p.content && p.content.premium && typeof p.content.premium.email === 'string')
+          ? p.content.premium.email : '';
+        contentFetchOk = true;
+      }
+    } catch {}
+
+    // Only cache a successful Beehiiv content fetch — a transient failure
+    // shouldn't get baked in as "no premium content" for the full TTL.
+    if (contentFetchOk) {
+      await env.ALTITUDE_KV.put(detailCacheKey, JSON.stringify({ postMeta, freeHtml, premiumHtml }), {
+        expirationTtl: POST_DETAIL_CACHE_TTL,
+      }).catch(() => {});
     }
-  } catch {}
+  }
 
   if (!postMeta) return respond({ error: 'Post not found' }, 404, corsHeaders);
-
-  // Fetch HTML content — pull both free and premium renderings so members
-  // actually receive Beehiiv's premium content, not just the free/teaser HTML
-  let freeHtml = '';
-  let premiumHtml = '';
-  try {
-    const contentRes = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts/${postMeta.id}` +
-        `?expand[]=free_email_content&expand[]=premium_email_content`,
-      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-    );
-    if (contentRes.ok) {
-      const d = await contentRes.json();
-      const p = d.data || d;
-      freeHtml    = (p.content && p.content.free && typeof p.content.free.email === 'string')
-        ? p.content.free.email : '';
-      premiumHtml = (p.content && p.content.premium && typeof p.content.premium.email === 'string')
-        ? p.content.premium.email : '';
-    }
-  } catch {}
 
   const tags    = (postMeta.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
     .filter(Boolean);
-  // A post is premium iff Beehiiv actually generated different content for
-  // premium vs. free readers (a "Premium" block was inserted in the editor).
-  // postMeta.audience is NOT reliable here — see isPostGated().
-  const premium = !!(premiumHtml && freeHtml && premiumHtml !== freeHtml);
+  const premium = hasPremiumContent(freeHtml, premiumHtml);
   const cleaned        = cleanHtml((premium && isMember) ? (premiumHtml || freeHtml) : freeHtml);
   const previewSource  = cleanHtml(freeHtml);
 
