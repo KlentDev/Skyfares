@@ -619,6 +619,23 @@ function isPostPremium(audience, freeHtml, premiumHtml) {
   return audience === 'premium' || !!(freeHtml && premiumHtml && freeHtml !== premiumHtml);
 }
 
+// Manual override, keyed by slug, set via `wrangler kv key put` (no HTTP route
+// -- this is applied directly by Claude on request, not self-service). Exists
+// because this account's actual workflow -- picking an email-recipient segment
+// on Beehiiv's Audience screen -- is write-only in Beehiiv's API: confirmed via
+// Beehiiv's own docs that `recipients` (which holds segment/tier targeting) is
+// accepted on Create Post but never returned by Get Post, and no webhook or
+// update endpoint exposes it either. Nothing reachable from this Worker can
+// ever detect that workflow after the fact, so for posts where it's used, the
+// override is the only reliable signal. Takes priority over isPostPremium()
+// when present; absence (null) means "no override, use the computed value".
+async function getPremiumOverride(env, slug) {
+  const raw = await env.ALTITUDE_KV.get(`override:premium:${slug}`).catch(() => null);
+  if (raw === 'true') return true;
+  if (raw === 'false') return false;
+  return null;
+}
+
 // No caching here on purpose — this account publishes and expects the new
 // post live immediately, not after a TTL window (a 1hr-then-5min cache TTL
 // here previously hid a freshly published post for several minutes). Every
@@ -640,27 +657,34 @@ async function handleGetPosts(env, corsHeaders) {
   const raw   = await res.json();
   const items = raw.data || raw.posts || [];
 
-  const posts = items
-    .filter(p => p.status === 'confirmed' || p.status === 'published')
-    .map(p => ({
-      id:            p.id || '',
-      title:         p.title || '',
-      subtitle:      p.subtitle || '',
-      slug:          p.slug || '',
-      url:           p.url || (p.slug ? `${PUB_BASE_URL}/p/${p.slug}` : ''),
-      thumbnail_url: p.thumbnail_url || '',
-      published_at:  p.publish_date
-        ? new Date(p.publish_date * 1000).toISOString()
-        : (p.scheduled_at || p.created_at || ''),
-      content_tags: (p.content_tags || [])
-        .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
-        .filter(Boolean),
-      is_premium: isPostPremium(
-        p.audience,
-        p.content && p.content.free    && p.content.free.web,
-        p.content && p.content.premium && p.content.premium.web
-      ),
-    }))
+  const posts = (await Promise.all(
+    items
+      .filter(p => p.status === 'confirmed' || p.status === 'published')
+      .map(async p => {
+        const slug = p.slug || '';
+        const computed = isPostPremium(
+          p.audience,
+          p.content && p.content.free    && p.content.free.web,
+          p.content && p.content.premium && p.content.premium.web
+        );
+        const override = await getPremiumOverride(env, slug);
+        return {
+          id:            p.id || '',
+          title:         p.title || '',
+          subtitle:      p.subtitle || '',
+          slug,
+          url:           p.url || (slug ? `${PUB_BASE_URL}/p/${slug}` : ''),
+          thumbnail_url: p.thumbnail_url || '',
+          published_at:  p.publish_date
+            ? new Date(p.publish_date * 1000).toISOString()
+            : (p.scheduled_at || p.created_at || ''),
+          content_tags: (p.content_tags || [])
+            .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
+            .filter(Boolean),
+          is_premium: override !== null ? override : computed,
+        };
+      })
+  ))
     // Beehiiv's order_by=created_at sorts by draft-creation time, not actual
     // publish time -- a post drafted earlier but published later would land
     // in the wrong slot. Re-sort by the real publish timestamp so posts[0]
@@ -727,7 +751,9 @@ async function handleGetPost(slug, request, env, corsHeaders) {
   const tags    = (postMeta.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
     .filter(Boolean);
-  const premium = isPostPremium(postMeta.audience, freeHtml, premiumHtml);
+  const computedPremium = isPostPremium(postMeta.audience, freeHtml, premiumHtml);
+  const override        = await getPremiumOverride(env, slug);
+  const premium         = override !== null ? override : computedPremium;
   const cleaned        = cleanHtml((premium && isMember) ? (premiumHtml || freeHtml) : freeHtml);
   const previewSource  = cleanHtml(freeHtml);
 
