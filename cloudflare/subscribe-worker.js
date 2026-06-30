@@ -117,6 +117,10 @@ export default {
       return handleVerify(request, env, corsHeaders);
     }
 
+    if (request.method === 'POST' && url.pathname === '/altitude/portal') {
+      return handleManagePortal(request, env, corsHeaders);
+    }
+
     // ── Newsletter routes ──────────────────────────────────────────────────
 
     if (request.method === 'GET' && url.pathname === '/newsletter/posts') {
@@ -545,6 +549,50 @@ async function handleVerify(request, env, corsHeaders) {
   if (member.status !== 'active') return respond({ valid: false, status: member.status }, 403, corsHeaders);
 
   return respond({ valid: true, email: payload.sub, member }, 200, corsHeaders);
+}
+
+// ── Altitude: Manage Membership (Stripe Billing Portal) ───────────────────────
+
+async function handleManagePortal(request, env, corsHeaders) {
+  if (!env.STRIPE_SECRET_KEY) return respond({ error: 'Stripe not configured.' }, 503, corsHeaders);
+
+  const token = getBearer(request);
+  if (!token) return respond({ error: 'Not authenticated.' }, 401, corsHeaders);
+
+  const payload = await verifyJwt(token, env.JWT_SECRET);
+  if (!payload) return respond({ error: 'Not authenticated.' }, 401, corsHeaders);
+
+  const raw = await env.ALTITUDE_KV.get(`member:${payload.sub}`);
+  if (!raw) return respond({ error: 'No membership found for this account.' }, 404, corsHeaders);
+
+  const member = JSON.parse(raw);
+  if (!member.stripe_customer_id) {
+    return respond({ error: 'No billing account found for this membership.' }, 404, corsHeaders);
+  }
+
+  const baseUrl = getBaseUrl(request.headers.get('Origin') || '');
+  const params = new URLSearchParams({
+    customer: member.stripe_customer_id,
+    return_url: `${baseUrl}/pages/altitude.html`,
+  });
+
+  const res = await fetch('https://api.stripe.com/v1/billing_portal/sessions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: params.toString(),
+  }).catch(() => null);
+
+  if (!res || !res.ok) {
+    const errText = res ? await res.text().catch(() => '') : '';
+    console.error(`[handleManagePortal] failed status=${res ? res.status : 'network'} body=${errText.slice(0, 200)}`);
+    return respond({ error: 'Could not open billing portal. Please try again.' }, 502, corsHeaders);
+  }
+
+  const session = await res.json();
+  return respond({ url: session.url }, 200, corsHeaders);
 }
 
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────

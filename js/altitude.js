@@ -167,6 +167,7 @@
     window.__altSignOut = function () { clearToken(); window.location.reload(); };
     document.querySelectorAll('#alt-member .slide-up').forEach(function (el) { el.classList.add('is-visible'); });
     _wireFilters();
+    window.handleManageMembership = handleManageMembership;
 
     // Show welcome message after a successful payment redirect
     try {
@@ -198,6 +199,34 @@
   }
 
   // ─── Member login ──────────────────────────────────────────────────────────
+
+  // ─── Manage Membership (Stripe Billing Portal) ──────────────────────────────
+
+  function handleManageMembership() {
+    var token = getToken();
+    if (!token) return;
+
+    var btn = document.getElementById('alt-manage-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Opening…'; }
+
+    fetch(WORKER + '/altitude/portal', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (res) {
+        if (res.ok && res.data.url) {
+          window.location.href = res.data.url;
+        } else {
+          if (window.SkyUI) SkyUI.toast(res.data.error || 'Could not open billing portal.', { type: 'error' });
+          if (btn) { btn.disabled = false; btn.textContent = 'Manage Membership'; }
+        }
+      })
+      .catch(function () {
+        if (window.SkyUI) SkyUI.toast('Network error. Please try again.', { type: 'error' });
+        if (btn) { btn.disabled = false; btn.textContent = 'Manage Membership'; }
+      });
+  }
 
   function handleMemberLogin(e) {
     e.preventDefault();

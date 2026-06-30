@@ -118,10 +118,17 @@
             <span class="text-neutral-200 flex-shrink-0">·</span>
             <span id="alt-member-email" class="text-xs text-neutral-400 truncate"></span>
           </div>
-          <button onclick="window.__altSignOut && window.__altSignOut()"
-            class="text-[11px] text-neutral-300 hover:text-neutral-600 transition-colors flex-shrink-0 ml-4">
-            Sign out
-          </button>
+          <div class="flex items-center gap-3 flex-shrink-0 ml-4">
+            <button id="alt-manage-btn" onclick="window.handleManageMembership && window.handleManageMembership()"
+              class="text-[11px] text-neutral-400 hover:text-brand-600 transition-colors">
+              Manage Membership
+            </button>
+            <span class="text-neutral-200">·</span>
+            <button onclick="window.__altSignOut && window.__altSignOut()"
+              class="text-[11px] text-neutral-300 hover:text-neutral-600 transition-colors">
+              Sign out
+            </button>
+          </div>
         </div>
       </div>
 
@@ -155,7 +162,7 @@
     <div id="alt-public">
 
       <!-- 1. HERO -->
-      <section id="alt-public-hero" class="altitude-hero-bg relative pb-16 overflow-hidden">
+      <section id="alt-public-hero" class="altitude-hero-bg relative pb-20 overflow-hidden">
 
         <div class="absolute inset-0 pointer-events-none opacity-10"
           style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
@@ -164,7 +171,7 @@
         </div>
 
         <div class="container mx-auto px-4 md:px-6 relative z-10">
-          <div class="max-w-lg mx-auto text-center slide-up">
+          <div class="max-w-xl mx-auto text-center slide-up">
 
             <div id="alt-cancelled-note" class="hidden mb-6">
               <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 text-xs font-semibold">
@@ -182,32 +189,55 @@
               Premium travel<br>intelligence.
             </h1>
 
-            <p class="text-base text-white/60 leading-relaxed mb-8 font-medium">
+            <p class="text-base text-white/60 leading-relaxed mb-10 font-medium">
               Award alerts, cabin reviews, routing strategies, and miles guides — the complete Skyfare intelligence brief, delivered weekly. Full archive access included.
             </p>
 
-            <form id="alt-checkout-form" class="max-w-md mx-auto mb-3">
-              <input id="alt-checkout-email" type="email" autocomplete="email" placeholder="Your email address"
-                class="w-full mb-3 px-5 py-3.5 rounded-full border border-white/20 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm">
-              <div class="flex gap-2">
-                <button id="alt-checkout-btn" type="submit" class="flex-1 btn-pill btn-pill-primary">
-                  <i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access
+            <!-- CTA area -->
+            <div class="max-w-sm mx-auto mt-2">
+
+              <!-- Primary: subscribe + QR -->
+              <form id="alt-checkout-form" class="flex items-center gap-2">
+                <button id="alt-checkout-btn" type="submit"
+                  class="flex-1 btn-pill btn-pill-primary shadow-2xl shadow-brand-950/60">
+                  <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
                 </button>
                 <button type="button" title="Scan QR to subscribe"
                   onclick="document.getElementById('alt-qr-modal').style.display='flex';"
-                  class="w-12 h-12 flex items-center justify-center rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors flex-shrink-0">
-                  <i class="fa-solid fa-qrcode"></i>
+                  class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors">
+                  <i class="fa-solid fa-qrcode text-base"></i>
                 </button>
+              </form>
+              <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">
+                <span>Cancel any time</span>
+                <span aria-hidden="true">&middot;</span>
+                <span>Instant access</span>
+                <span aria-hidden="true">&middot;</span>
+                <span>Secure via Stripe</span>
               </div>
-            </form>
 
-            <p class="text-xs text-white/35">
-              Cancel any time &middot; Instant access &middot; Secure payment via Stripe &middot;
-              <button onclick="window.openLoginModal && window.openLoginModal();"
-                class="underline underline-offset-2 hover:text-white/60 transition-colors">
-                Already a member?
+              <!-- Divider -->
+              <div class="flex items-center gap-3 my-6">
+                <div class="flex-1 h-px bg-white/10"></div>
+                <span class="text-[10px] text-white/20 uppercase tracking-widest">or</span>
+                <div class="flex-1 h-px bg-white/10"></div>
+              </div>
+
+              <!-- Secondary: member login -->
+              <button type="button"
+                onclick="window.openLoginModal && window.openLoginModal();"
+                class="w-full group flex items-center gap-4 px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all text-left">
+                <div class="w-9 h-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <i class="fa-solid fa-key text-white/50 text-xs"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-bold text-white leading-none mb-1">Already a Member?</p>
+                  <p class="text-[11px] text-white/35 leading-none">Log in for instant archive access</p>
+                </div>
+                <i class="fa-solid fa-chevron-right text-white/20 text-xs group-hover:text-white/50 group-hover:translate-x-0.5 transition-all"></i>
               </button>
-            </p>
+
+            </div>
 
           </div>
         </div>
@@ -232,7 +262,7 @@
               <p class="text-base text-neutral-500 leading-relaxed mb-8">
                 One issue per week — written by someone who books 100+ premium cabins a year. No filler, no affiliate spam. Just the intelligence to fly Business and First Class on fewer miles.
               </p>
-              <a href="#alt-checkout-form" onclick="document.getElementById('alt-checkout-email').focus();return false;"
+              <a href="#alt-public-hero" onclick="document.getElementById('alt-public-hero').scrollIntoView({behavior:'smooth'});return false;"
                 class="btn-pill btn-pill-primary inline-flex items-center gap-2">
                 <i class="fa-solid fa-crown text-[10px]"></i> Start for $4.99/month
               </a>
@@ -310,60 +340,15 @@
             <span class="text-[10px] text-white/30 font-medium flex-shrink-0">Members only</span>
           </div>
 
-          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-
-            <div class="card-dark rounded-2xl overflow-hidden slide-up">
-              <div class="h-40 bg-brand-950 relative flex items-center justify-center">
-                <div class="absolute inset-0 opacity-40" style="background:linear-gradient(135deg,#0C4A6E,#1d4ed8);"></div>
-                <div class="relative z-10 text-center px-4">
-                  <div class="w-10 h-10 rounded-full bg-white/10 border border-amber-400/30 flex items-center justify-center mx-auto mb-2">
-                    <i class="fa-solid fa-lock text-amber-300"></i>
-                  </div>
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300 border border-amber-400/30 bg-black/30 px-2.5 py-1 rounded-full">Altitude Exclusive</span>
-                </div>
-              </div>
-              <div class="p-5">
-                <p class="text-[10px] text-white/30 mb-1.5 font-medium uppercase tracking-widest">First Class · Issue 02</p>
-                <h3 class="text-sm font-display font-semibold text-white leading-snug">Tokyo in First Class — 35,000 Miles on JAL</h3>
-              </div>
-            </div>
-
-            <div class="card-dark rounded-2xl overflow-hidden slide-up" style="animation-delay:.05s;">
-              <div class="h-40 bg-brand-950 relative flex items-center justify-center">
-                <div class="absolute inset-0 opacity-40" style="background:linear-gradient(135deg,#071829,#0f2040);"></div>
-                <div class="relative z-10 text-center px-4">
-                  <div class="w-10 h-10 rounded-full bg-white/10 border border-amber-400/30 flex items-center justify-center mx-auto mb-2">
-                    <i class="fa-solid fa-lock text-amber-300"></i>
-                  </div>
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300 border border-amber-400/30 bg-black/30 px-2.5 py-1 rounded-full">Altitude Exclusive</span>
-                </div>
-              </div>
-              <div class="p-5">
-                <p class="text-[10px] text-white/30 mb-1.5 font-medium uppercase tracking-widest">KrisFlyer · Sweet Spot</p>
-                <h3 class="text-sm font-display font-semibold text-white leading-snug">Singapore → London: 62,000 Miles in Business Class</h3>
-              </div>
-            </div>
-
-            <div class="card-dark rounded-2xl overflow-hidden slide-up" style="animation-delay:.1s;">
-              <div class="h-40 bg-brand-950 relative flex items-center justify-center">
-                <div class="absolute inset-0 opacity-40" style="background:linear-gradient(135deg,#071829,#1d4ed8);"></div>
-                <div class="relative z-10 text-center px-4">
-                  <div class="w-10 h-10 rounded-full bg-white/10 border border-amber-400/30 flex items-center justify-center mx-auto mb-2">
-                    <i class="fa-solid fa-lock text-amber-300"></i>
-                  </div>
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300 border border-amber-400/30 bg-black/30 px-2.5 py-1 rounded-full">Altitude Exclusive</span>
-                </div>
-              </div>
-              <div class="p-5">
-                <p class="text-[10px] text-white/30 mb-1.5 font-medium uppercase tracking-widest">Strategy · Members Only</p>
-                <h3 class="text-sm font-display font-semibold text-white leading-snug">The Asia Miles Sweet Spot Nobody Talks About</h3>
-              </div>
-            </div>
-
+          <!-- Populated by JS with real premium posts (locked for non-members) -->
+          <div id="alt-preview-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+            <div class="card-dark rounded-2xl h-48 animate-pulse"></div>
+            <div class="card-dark rounded-2xl h-48 animate-pulse"></div>
+            <div class="card-dark rounded-2xl h-48 animate-pulse"></div>
           </div>
 
           <div class="text-center slide-up" style="animation-delay:.15s;">
-            <a href="#alt-checkout-form" onclick="document.getElementById('alt-checkout-email').focus();return false;"
+            <a href="#alt-public-hero" onclick="document.getElementById('alt-public-hero').scrollIntoView({behavior:'smooth'});return false;"
               class="btn-pill btn-pill-primary inline-flex items-center gap-2">
               <i class="fa-solid fa-crown text-[10px]"></i> Unlock the Archive — $4.99/mo
             </a>
@@ -377,6 +362,91 @@
   </main>
 
   <script src="../js/altitude.js" defer></script>
+
+  <script>
+  /* Fetch real premium posts and render them locked in the public archive preview */
+  (function () {
+    var WORKER = 'https://skyfares-altitude.klent-5fa.workers.dev';
+
+    function getIssueNum(post) {
+      var tags = post.content_tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
+        if (m) return m[1].padStart(2, '0');
+      }
+      return '??';
+    }
+
+    function getType(post) {
+      return (post.content_tags || []).filter(function (t) {
+        return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/i);
+      })[0] || 'Exclusive';
+    }
+
+    function esc(str) {
+      var d = document.createElement('div');
+      d.textContent = String(str || '');
+      return d.innerHTML;
+    }
+
+    function buildCard(post, index) {
+      var issueNum = getIssueNum(post);
+      var type     = getType(post);
+      var delay    = (index * 0.05) + 's';
+
+      var imageArea = post.thumbnail_url
+        ? '<div class="relative h-40 bg-brand-950 overflow-hidden">' +
+            '<img src="' + esc(post.thumbnail_url) + '" alt="' + esc(post.title) + '" class="w-full h-full object-cover opacity-35">' +
+            '<div class="absolute inset-0 bg-brand-950/40"></div>' +
+            '<div class="absolute inset-0 flex items-center justify-center">' +
+              '<div class="text-center">' +
+                '<div class="w-10 h-10 rounded-full bg-white/10 border border-amber-400/30 flex items-center justify-center mx-auto mb-2">' +
+                  '<i class="fa-solid fa-lock text-amber-300"></i>' +
+                '</div>' +
+                '<span class="text-[10px] font-bold uppercase tracking-widest text-amber-300 border border-amber-400/30 bg-black/40 px-2.5 py-1 rounded-full">Altitude Exclusive</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        : '<div class="h-40 bg-brand-950 relative flex items-center justify-center">' +
+            '<div class="absolute inset-0 opacity-40" style="background:linear-gradient(135deg,#0C4A6E,#1d4ed8);"></div>' +
+            '<div class="relative z-10 text-center px-4">' +
+              '<div class="w-10 h-10 rounded-full bg-white/10 border border-amber-400/30 flex items-center justify-center mx-auto mb-2">' +
+                '<i class="fa-solid fa-lock text-amber-300"></i>' +
+              '</div>' +
+              '<span class="text-[10px] font-bold uppercase tracking-widest text-amber-300 border border-amber-400/30 bg-black/30 px-2.5 py-1 rounded-full">Altitude Exclusive</span>' +
+            '</div>' +
+          '</div>';
+
+      return '<div class="card-dark rounded-2xl overflow-hidden slide-up is-visible" style="animation-delay:' + delay + '">' +
+        imageArea +
+        '<div class="p-5">' +
+          '<p class="text-[10px] text-white/30 mb-1.5 font-medium uppercase tracking-widest">' + esc(type) + ' &middot; Issue ' + esc(issueNum) + '</p>' +
+          '<h3 class="text-sm font-display font-semibold text-white leading-snug">' + esc(post.title) + '</h3>' +
+        '</div>' +
+      '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var grid = document.getElementById('alt-preview-grid');
+      if (!grid) return;
+
+      fetch(WORKER + '/newsletter/posts')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.posts) { grid.innerHTML = ''; return; }
+          var premium = data.posts.filter(function (p) {
+            return (p.content_tags || []).indexOf('altitude-premium') !== -1;
+          }).slice(0, 6);
+          if (!premium.length) {
+            grid.innerHTML = '<p class="col-span-full text-sm text-white/30 text-center py-12">Premium issues coming soon.</p>';
+            return;
+          }
+          grid.innerHTML = premium.map(buildCard).join('');
+        })
+        .catch(function () { grid.innerHTML = ''; });
+    });
+  })();
+  </script>
 
   <script>
   (function () {
