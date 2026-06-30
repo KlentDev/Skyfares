@@ -297,7 +297,7 @@
   }
 
   function _renderCard(post, i) {
-    var prem     = (post.content_tags || []).indexOf('altitude-premium') !== -1;
+    var prem     = !!post.is_premium;
     var issueNum = getIssueNum(post);
     var date     = formatDate(post.published_at);
     var type     = (post.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
@@ -333,13 +333,9 @@
   function _applyFilter(type) {
     var posts = _altAllPosts;
     if (type === 'free') {
-      posts = _altAllPosts.filter(function (p) {
-        return (p.content_tags || []).indexOf('altitude-premium') === -1;
-      });
+      posts = _altAllPosts.filter(function (p) { return !p.is_premium; });
     } else if (type === 'premium') {
-      posts = _altAllPosts.filter(function (p) {
-        return (p.content_tags || []).indexOf('altitude-premium') !== -1;
-      });
+      posts = _altAllPosts.filter(function (p) { return !!p.is_premium; });
     }
 
     var count = document.getElementById('alt-post-count');

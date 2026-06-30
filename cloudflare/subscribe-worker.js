@@ -627,6 +627,7 @@ async function handleGetPosts(env, corsHeaders) {
       content_tags: (p.content_tags || [])
         .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
         .filter(Boolean),
+      is_premium: p.audience === 'premium',
     }));
 
   return respond({ posts }, 200, {
@@ -669,26 +670,34 @@ async function handleGetPost(slug, request, env, corsHeaders) {
 
   if (!postMeta) return respond({ error: 'Post not found' }, 404, corsHeaders);
 
-  // Fetch HTML content
-  let contentHtml = '';
+  // Fetch HTML content — pull both free and premium renderings so members
+  // actually receive Beehiiv's premium content, not just the free/teaser HTML
+  let freeHtml = '';
+  let premiumHtml = '';
   try {
     const contentRes = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts/${postMeta.id}?expand[]=free_email_content`,
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts/${postMeta.id}` +
+        `?expand[]=free_email_content&expand[]=premium_email_content`,
       { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
     );
     if (contentRes.ok) {
       const d = await contentRes.json();
       const p = d.data || d;
-      contentHtml = (p.content && p.content.free && typeof p.content.free.email === 'string')
+      freeHtml    = (p.content && p.content.free && typeof p.content.free.email === 'string')
         ? p.content.free.email : '';
+      premiumHtml = (p.content && p.content.premium && typeof p.content.premium.email === 'string')
+        ? p.content.premium.email : '';
     }
   } catch {}
 
   const tags    = (postMeta.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
     .filter(Boolean);
-  const premium = tags.includes('altitude-premium');
-  const cleaned = cleanHtml(contentHtml);
+  // Source of truth for post-level access is Beehiiv's native "audience" field
+  // (set via the Free/Premium toggle in the Beehiiv post editor) — not content_tags.
+  const premium = postMeta.audience === 'premium';
+  const cleaned        = cleanHtml((premium && isMember) ? (premiumHtml || freeHtml) : freeHtml);
+  const previewSource  = cleanHtml(freeHtml);
 
   const post = {
     id:            postMeta.id || '',
@@ -703,7 +712,7 @@ async function handleGetPost(slug, request, env, corsHeaders) {
     is_premium:    premium,
     // Members always get full content; non-members get preview for premium posts
     content_html:  (!premium || isMember) ? cleaned : null,
-    preview_html:  premium && !isMember   ? extractPreview(cleaned) : null,
+    preview_html:  premium && !isMember   ? extractPreview(previewSource) : null,
   };
 
   return respond({ post }, 200, {

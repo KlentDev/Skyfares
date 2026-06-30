@@ -236,11 +236,7 @@
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
   function isPremium(post) {
-    var tags = post.content_tags || [];
-    for (var i = 0; i < tags.length; i++) {
-      if (tags[i] === 'altitude-premium') return true;
-    }
-    return false;
+    return !!post.is_premium;
   }
 
   function getIssueNum(post) {

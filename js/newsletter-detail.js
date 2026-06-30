@@ -498,7 +498,7 @@
     if (!others.length) return;
 
     grid.innerHTML = others.map(function (p, i) {
-      var prem     = (p.content_tags || []).indexOf('altitude-premium') !== -1;
+      var prem     = !!p.is_premium;
       var issueNum = getIssueNum(p);
       var date     = formatDate(p.published_at);
       var type     = (p.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
