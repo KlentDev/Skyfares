@@ -3,8 +3,8 @@
  *
  * Routes:
  *   POST /                         — subscribe email to newsletter
- *   GET  /newsletter/posts         — latest published posts (cached 1 hr)
- *   GET  /newsletter/post?slug=    — single post with content (cached 15 min)
+ *   GET  /newsletter/posts         — latest published posts (cached 5 min)
+ *   GET  /newsletter/post?slug=    — single post with content (cached 5 min)
  *   POST /altitude/checkout        — create Stripe Checkout session
  *   POST /altitude/webhook         — Stripe webhook handler
  *   POST /altitude/activate        — issue JWT for member access
@@ -598,8 +598,12 @@ async function handleManagePortal(request, env, corsHeaders) {
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
 
 const POSTS_LIST_CACHE_KEY = 'cache:newsletter_posts_v2';
-const POSTS_LIST_CACHE_TTL = 3600; // 1 hour — matches documented route cache window
-const POST_DETAIL_CACHE_TTL = 900; // 15 min — matches documented route cache window
+// Short TTLs on purpose: this account publishes and expects to see a new/edited
+// post live within a couple minutes, not within the hour. 5 min still gives real
+// protection against traffic bursts hammering Beehiiv, just not at the cost of
+// "I just hit publish and it's not showing" complaints.
+const POSTS_LIST_CACHE_TTL = 300; // 5 min
+const POST_DETAIL_CACHE_TTL = 300; // 5 min
 
 // A post is premium/exclusive iff Beehiiv rendered genuinely different HTML for
 // premium vs. free readers — i.e. the editor inserted a "Premium" content block
@@ -668,7 +672,7 @@ async function handleGetPosts(env, corsHeaders) {
 
   return respond({ posts }, 200, {
     ...corsHeaders,
-    'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+    'Cache-Control': `public, max-age=${POSTS_LIST_CACHE_TTL}, s-maxage=${POSTS_LIST_CACHE_TTL}`,
   });
 }
 
@@ -772,7 +776,7 @@ async function handleGetPost(slug, request, env, corsHeaders) {
 
   return respond({ post }, 200, {
     ...corsHeaders,
-    'Cache-Control': 'public, max-age=900, s-maxage=900',
+    'Cache-Control': `public, max-age=${POST_DETAIL_CACHE_TTL}, s-maxage=${POST_DETAIL_CACHE_TTL}`,
   });
 }
 
