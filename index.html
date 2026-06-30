@@ -1230,7 +1230,7 @@
             '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
           '</a>' +
           '<p class="text-xs text-neutral-400">Already a member? ' +
-            '<a href="pages/altitude.html" class="text-brand-600 underline underline-offset-2 hover:text-brand-800">Log in here</a>' +
+            '<button type="button" onclick="window.switchToMemberAccessModal()" class="text-brand-600 underline underline-offset-2 hover:text-brand-800">Enter your email for a magic link</button>' +
           '</p>' +
         '</div>';
 
@@ -1249,6 +1249,127 @@
     window.closeAltitudeAccessModal = function () {
       var modal = document.getElementById('altitude-access-modal');
       if (modal) modal.style.display = 'none';
+    };
+
+    // ─── Member Access modal (magic link request) ──────────────────────────
+
+    function ensureMemberAccessModal() {
+      if (document.getElementById('member-access-modal')) return;
+
+      var modal = document.createElement('div');
+      modal.id = 'member-access-modal';
+      modal.className = 'fixed inset-0 z-[300] items-center justify-center p-4';
+      modal.style.display = 'none';
+      modal.innerHTML =
+        '<div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" onclick="window.closeMemberAccessModal()"></div>' +
+        '<div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl">' +
+          '<button onclick="window.closeMemberAccessModal()" ' +
+            'class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">' +
+            '<i class="fa-solid fa-xmark text-xs"></i>' +
+          '</button>' +
+          '<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-100 bg-brand-50 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5">' +
+            '<i class="fa-solid fa-key text-[9px]"></i> Member Access' +
+          '</div>' +
+          '<h2 class="text-xl font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Access your membership</h2>' +
+          '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Enter your member email and we\'ll send you a secure login link.</p>' +
+          '<form id="member-access-form">' +
+            '<input id="member-access-email" type="email" autocomplete="email" placeholder="member@email.com" ' +
+              'class="w-full mb-2 px-5 py-3.5 rounded-full border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">' +
+            '<p class="text-[11px] text-neutral-400 mb-4 px-1 leading-relaxed">' +
+              '<i class="fa-solid fa-circle-info text-[9px] mr-1"></i>One link gets you in and lets you manage your billing too.' +
+            '</p>' +
+            '<button id="member-access-btn" type="submit" class="w-full btn-pill btn-pill-primary">Send Login Link</button>' +
+            '<p id="member-access-status" class="text-xs mt-3 text-center min-h-[1.25rem]"></p>' +
+          '</form>' +
+          '<div id="member-access-sent" style="display:none;">' +
+            '<div class="flex flex-col items-center text-center gap-3 py-2">' +
+              '<div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">' +
+                '<i class="fa-solid fa-envelope-circle-check text-brand-600 text-lg"></i>' +
+              '</div>' +
+              '<div>' +
+                '<p class="text-sm font-semibold text-neutral-900 mb-1">Check your inbox</p>' +
+                '<p class="text-xs text-neutral-400 leading-relaxed">We sent a login link to <strong id="member-access-sent-email" class="text-neutral-700"></strong>. It\'s valid for 1 hour and you can use it as many times as you need during that window.</p>' +
+              '</div>' +
+              '<button type="button" onclick="window.openMemberAccessModal()" class="text-xs text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors mt-1">Use a different email</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      document.body.appendChild(modal);
+      document.getElementById('member-access-form').addEventListener('submit', handleMemberAccessSubmit);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closeMemberAccessModal();
+      });
+    }
+
+    function handleMemberAccessSubmit(e) {
+      e.preventDefault();
+      var input  = document.getElementById('member-access-email');
+      var btn    = document.getElementById('member-access-btn');
+      var status = document.getElementById('member-access-status');
+      var email  = (input ? input.value : '').trim().toLowerCase();
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (status) { status.textContent = 'Please enter a valid email address.'; status.className = 'text-xs text-red-500 mt-2'; }
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending link…'; }
+      if (status) { status.textContent = ''; }
+
+      fetch(WORKER_URL + '/altitude/magic-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email }),
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
+        .then(function (res) {
+          if (res.ok && res.data.sent) {
+            var form = document.getElementById('member-access-form');
+            var sent = document.getElementById('member-access-sent');
+            var sentEmail = document.getElementById('member-access-sent-email');
+            if (form) form.style.display = 'none';
+            if (sent) sent.style.display = 'block';
+            if (sentEmail) sentEmail.textContent = email;
+          } else {
+            var msg = res.data.error || 'No active Altitude membership found for this email.';
+            if (res.status === 429) msg = 'Too many requests. Please wait a few minutes before trying again.';
+            if (status) { status.textContent = msg; status.className = 'text-xs text-red-500 mt-2'; }
+            if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
+          }
+        })
+        .catch(function () {
+          if (status) { status.textContent = 'Network error. Please try again.'; status.className = 'text-xs text-red-500 mt-2'; }
+          if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
+        });
+    }
+
+    window.openMemberAccessModal = function () {
+      ensureMemberAccessModal();
+      var form = document.getElementById('member-access-form');
+      var sent = document.getElementById('member-access-sent');
+      if (form) form.style.display = '';
+      if (sent) sent.style.display = 'none';
+      var status = document.getElementById('member-access-status');
+      if (status) status.textContent = '';
+      var btn = document.getElementById('member-access-btn');
+      if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
+      document.getElementById('member-access-modal').style.display = 'flex';
+      setTimeout(function () {
+        var inp = document.getElementById('member-access-email');
+        if (inp) inp.focus();
+      }, 80);
+    };
+
+    window.closeMemberAccessModal = function () {
+      var modal = document.getElementById('member-access-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.switchToMemberAccessModal = function () {
+      window.closeAltitudeAccessModal();
+      window.openMemberAccessModal();
     };
 
     function isPremium(post) {
