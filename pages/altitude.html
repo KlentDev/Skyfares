@@ -438,7 +438,7 @@
         .then(function (data) {
           if (!data || !data.posts) { grid.innerHTML = ''; return; }
           var premium = data.posts.filter(function (p) {
-            return (p.content_tags || []).indexOf('altitude-premium') !== -1;
+            return !!p.is_premium;
           }).slice(0, 6);
           if (!premium.length) {
             grid.innerHTML = '<p class="col-span-full text-sm text-white/30 text-center py-12">Premium issues coming soon.</p>';
