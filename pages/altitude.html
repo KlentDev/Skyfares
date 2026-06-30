@@ -26,11 +26,12 @@
       font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .06em; padding: 5px 16px; border-radius: 9999px;
       border: 1px solid #e5e7eb; background: white; color: #9ca3af;
-      cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+      cursor: pointer; transition: background .15s, color .15s, border-color .15s, transform .1s;
       white-space: nowrap;
     }
     .alt-filter-btn:hover { background: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
-    .alt-filter-btn.active { background: #0c4a6e; color: white; border-color: #0c4a6e; }
+    .alt-filter-btn:active { transform: scale(0.95); }
+    .alt-filter-btn.active { background: #0066cc; color: white; border-color: #0066cc; }
   </style>
 </head>
 
@@ -111,7 +112,7 @@
     <div id="alt-member" class="hidden">
 
       <!-- ── Slim member bar ───────────────────────────────────────────────── -->
-      <div class="border-b border-neutral-100 bg-white">
+      <div id="alt-member-topbar" class="border-b border-neutral-100 bg-white">
         <div class="container mx-auto px-4 md:px-6 max-w-5xl h-14 flex items-center justify-between">
           <div class="flex items-center gap-2.5 min-w-0">
             <div class="w-6 h-6 rounded-full bg-brand-900 flex items-center justify-center flex-shrink-0">
@@ -121,15 +122,14 @@
             <span class="text-neutral-200 flex-shrink-0">·</span>
             <span id="alt-member-email" class="text-xs text-neutral-400 truncate"></span>
           </div>
-          <div class="flex items-center gap-3 flex-shrink-0 ml-4">
+          <div class="flex items-center gap-2 flex-shrink-0 ml-4">
             <button id="alt-manage-btn" onclick="window.handleManageMembership && window.handleManageMembership()"
-              class="text-[11px] text-neutral-400 hover:text-brand-600 transition-colors">
-              Manage Membership
+              class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-brand-600 border border-brand-200 hover:bg-brand-50 hover:border-brand-300 active:scale-95 transition-all px-3 py-1.5 rounded-full">
+              <i class="fa-solid fa-credit-card text-[9px]"></i> Manage Membership
             </button>
-            <span class="text-neutral-200">·</span>
             <button onclick="window.__altSignOut && window.__altSignOut()"
-              class="text-[11px] text-neutral-300 hover:text-neutral-600 transition-colors">
-              Sign out
+              class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-neutral-400 border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-600 active:scale-95 transition-all px-3 py-1.5 rounded-full">
+              <i class="fa-solid fa-arrow-right-from-bracket text-[9px]"></i> Sign out
             </button>
           </div>
         </div>
@@ -462,7 +462,7 @@
       // Target the specific public hero — querySelector finds the hidden
       // member hero first so we use the explicit ID instead.
       var pubHero  = document.getElementById('alt-public-hero');
-      var memHero  = document.querySelector('#alt-member .altitude-hero-bg');
+      var memHero  = document.getElementById('alt-member-topbar');
 
       function syncPadding() {
         var banner  = document.getElementById('skyfare-newsletter-banner');
