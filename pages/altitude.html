@@ -20,7 +20,11 @@
   <script src="../js/tailwind-config.js" defer></script>
   <style>
     .altitude-hero-bg {
-      background: linear-gradient(135deg, #1A2437 0%, #1e2b40 100%);
+      background:
+        linear-gradient(135deg, rgba(26,36,55,.82) 0%, rgba(30,43,64,.82) 100%),
+        url('../images/page-images/bg-1.png');
+      background-size: cover;
+      background-position: center;
     }
     .alt-filter-btn {
       font-size: 11px; font-weight: 700; text-transform: uppercase;
@@ -204,11 +208,6 @@
                 <button id="alt-checkout-btn" type="submit"
                   class="flex-1 btn-pill btn-pill-primary shadow-2xl shadow-brand-950/60">
                   <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
-                </button>
-                <button type="button" title="Scan QR to subscribe"
-                  onclick="document.getElementById('alt-qr-modal').style.display='flex';"
-                  class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors">
-                  <i class="fa-solid fa-qrcode text-base"></i>
                 </button>
               </form>
               <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">

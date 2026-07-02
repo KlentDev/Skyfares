@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const footerHTML = `
     <!-- FOOTER -->
-    <footer class="bg-deepblue-950 pt-20 pb-10 border-t border-white/5 mt-auto">
+    <footer class="bg-deepblue-950 pt-20 pb-10 mt-auto">
       <div class="container mx-auto px-4 md:px-6">
         <div class="grid md:grid-cols-4 gap-12 mb-16">
           <div class="">

@@ -597,26 +597,42 @@ async function handleManagePortal(request, env, corsHeaders) {
 
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
 
-// Beehiiv has two genuinely independent ways a post ends up premium-only, and
-// this account's editor has used both at different times (confirmed against
-// Beehiiv's own docs + live data — see beehiiv-premium-gating memory):
+// Premium-by-default: every post is treated as premium (gated on the Skyfare
+// website) UNLESS it is explicitly marked free. This means new posts require
+// zero extra steps to gate correctly — the safe default locks them.
 //
-//   1. The post's "Web Audience" setting (Beehiiv's post-flow Audience step
-//      has SEPARATE Email Audience and Web Audience controls -- setting Email
-//      Audience to paid-only, which is what this account's workflow does,
-//      does NOT change Web Audience, which defaults to "All Free Subscribers"
-//      and stays there unless explicitly changed). This is what the API's
-//      `audience` field ("free"|"premium"|"both") actually reports.
-//   2. An in-body "Premium" content block inserted in the post editor, which
-//      makes Beehiiv render genuinely different free vs. premium HTML even
-//      while the post's audience stays "free".
+// Free post signals (checked first — any one makes the post free):
+//   • Content tag "altitude-free" or "altitude free" (hyphen or space, any case)
+//   • Beehiiv Web Audience = "free" AND explicitly opted out via KV override
+//     (override:premium:{slug} = "false")
 //
-// Neither signal alone is reliable for this account, so a post is premium if
-// EITHER is true. Used identically by handleGetPosts (web content) and
-// handleGetPost (email content) so the listing badge and the detail-page gate
-// can never disagree.
-function isPostPremium(audience, freeHtml, premiumHtml) {
-  return audience === 'premium' || !!(freeHtml && premiumHtml && freeHtml !== premiumHtml);
+// Premium overrides (if somehow a post should be forced free by default logic
+// but the KV override = "true", that takes priority — handled in callers via
+// getPremiumOverride which returns null when absent).
+//
+// The net result:
+//   - No tags, no override → premium  (safe default for new posts)
+//   - altitude-free tag  → free       (public/teaser content)
+//   - audience=premium OR altitude-premium tag OR content diff → premium
+//   - KV override:premium:{slug}=false → free  (manual escape hatch)
+//
+// Used identically by handleGetPosts (archive listing) and handleGetPost
+// (detail page) so the badge and the gate can never disagree.
+function isPostPremium(audience, freeHtml, premiumHtml, contentTags) {
+  // Explicit free override — altitude-free tag wins over everything
+  if (Array.isArray(contentTags) && contentTags.some(t =>
+    t.toLowerCase().replace(/[-\s]+/g, '') === 'altitudefree'
+  )) return false;
+
+  // Explicit premium signals
+  if (audience === 'premium') return true;
+  if (Array.isArray(contentTags) && contentTags.some(t =>
+    t.toLowerCase().replace(/[-\s]+/g, '') === 'altitudepremium'
+  )) return true;
+  if (freeHtml && premiumHtml && freeHtml !== premiumHtml) return true;
+
+  // Default: premium. New posts with no tags are gated automatically.
+  return true;
 }
 
 // Manual override, keyed by slug, set via `wrangler kv key put` (no HTTP route
@@ -662,10 +678,14 @@ async function handleGetPosts(env, corsHeaders) {
       .filter(p => p.status === 'confirmed' || p.status === 'published')
       .map(async p => {
         const slug = p.slug || '';
+        const contentTags = (p.content_tags || [])
+          .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
+          .filter(Boolean);
         const computed = isPostPremium(
           p.audience,
           p.content && p.content.free    && p.content.free.web,
-          p.content && p.content.premium && p.content.premium.web
+          p.content && p.content.premium && p.content.premium.web,
+          contentTags
         );
         const override = await getPremiumOverride(env, slug);
         return {
@@ -678,9 +698,7 @@ async function handleGetPosts(env, corsHeaders) {
           published_at:  p.publish_date
             ? new Date(p.publish_date * 1000).toISOString()
             : (p.scheduled_at || p.created_at || ''),
-          content_tags: (p.content_tags || [])
-            .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
-            .filter(Boolean),
+          content_tags:  contentTags,
           is_premium: override !== null ? override : computed,
         };
       })
@@ -751,7 +769,7 @@ async function handleGetPost(slug, request, env, corsHeaders) {
   const tags    = (postMeta.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
     .filter(Boolean);
-  const computedPremium = isPostPremium(postMeta.audience, freeHtml, premiumHtml);
+  const computedPremium = isPostPremium(postMeta.audience, freeHtml, premiumHtml, tags);
   const override        = await getPremiumOverride(env, slug);
   const premium         = override !== null ? override : computedPremium;
   const cleaned        = cleanHtml((premium && isMember) ? (premiumHtml || freeHtml) : freeHtml);

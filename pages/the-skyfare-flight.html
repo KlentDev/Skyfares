@@ -21,7 +21,11 @@
   <script src="../js/tailwind-config.js" defer></script>
   <style>
     .flight-hero-bg {
-      background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
+      background:
+        linear-gradient(160deg, rgba(13,27,53,.82) 0%, rgba(26,36,55,.82) 55%, rgba(15,32,64,.82) 100%),
+        url('../images/page-images/bg-1.png');
+      background-size: cover;
+      background-position: center;
     }
   </style>
 </head>
@@ -171,14 +175,9 @@
 
           <form
             id="flight-form"
-            name="skyfare-flight"
-            method="POST"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
             class="space-y-5 slide-up"
             style="animation-delay:0.1s;"
           >
-            <input type="hidden" name="form-name" value="skyfare-flight">
             <div class="hidden" aria-hidden="true">
               <input name="bot-field" tabindex="-1" autocomplete="off">
             </div>
@@ -192,6 +191,19 @@
                 required
                 autocomplete="name"
                 placeholder="Your full name"
+                class="w-full px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+              >
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-semibold text-neutral-700 mb-1.5">Email address</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="your@email.com"
                 class="w-full px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
               >
             </div>
@@ -294,11 +306,27 @@
   </main>
 
   <script>
-  // Netlify AJAX form submission
   (function () {
     var form = document.getElementById('flight-form');
     var success = document.getElementById('flight-form-success');
     if (!form || !success) return;
+
+    function loadConfetti(cb) {
+      if (typeof confetti === 'function') { cb(); return; }
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js';
+      s.onload = cb;
+      document.head.appendChild(s);
+    }
+
+    function fireConfetti() {
+      loadConfetti(function () {
+        if (typeof confetti !== 'function') return;
+        confetti({ particleCount: 110, spread: 75, origin: { x: 0.5, y: 0.4 }, colors: ['#0C4A6E', '#38bdf8', '#7dd3fc', '#C9A227', '#ffffff'], zIndex: 9999 });
+        setTimeout(function () { confetti({ particleCount: 55, spread: 55, origin: { x: 0.25, y: 0.5 }, colors: ['#0C4A6E', '#bae6fd', '#ffffff'], zIndex: 9999 }); }, 180);
+        setTimeout(function () { confetti({ particleCount: 55, spread: 55, origin: { x: 0.75, y: 0.5 }, colors: ['#C9A227', '#7dd3fc', '#0C4A6E'], zIndex: 9999 }); }, 340);
+      });
+    }
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -306,15 +334,23 @@
       btn.disabled = true;
       btn.textContent = 'Sending…';
 
-      fetch('/', {
+      var payload = {};
+      new FormData(form).forEach(function(v, k) { payload[k] = v; });
+
+      fetch('https://skyfares-altitude.klent-5fa.workers.dev/airtable/flight-application', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(form)).toString()
-      }).then(function () {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data.success) throw new Error(data.error || 'unknown');
+        fireConfetti();
         form.classList.add('hidden');
         success.classList.remove('hidden');
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }).catch(function () {
+      })
+      .catch(function() {
         btn.disabled = false;
         btn.textContent = 'Apply for The Skyfare Flight';
         alert('Something went wrong. Please try again.');

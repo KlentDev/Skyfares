@@ -1,165 +1,298 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Extra Services — Skyfare Consulting</title>
-  <meta name="description"
-    content="Exclusive airport transfers, fast track immigration, visa assistance, and luxury hotel recommendations by Skyfare Consulting." />
+  <meta name="description" content="Premium chauffeur transfers and concierge services — fast track immigration, visa assistance, cash flight bookings, and luxury hotel recommendations." />
   <link rel="icon" href="../logos/logo.webp" />
 
-  <!-- Font Awesome -->
+  <script src="../js/links.js"></script>
   <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
-
-  <!-- Tailwind -->
   <script src="../lib/tailwind/tailwind.min.js"></script>
-  
-  <!-- Injectable Header & Footer -->
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
   <script src="../js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
+  <style>
+    .extra-hero-bg {
+      background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
+    }
+  </style>
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col bg-white">
 
   <div id="page-loader">
     <img src="../logos/logo.webp" alt="Skyfare Consulting">
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <main class="container mx-auto py-16 md:py-24 px-4 md:px-6 relative">
-    <!-- HERO -->
-    <section class="text-center mb-20 slide-up">
-      <h1 class="text-4xl md:text-6xl font-extrabold text-brand-900 mb-6 tracking-tight">
-        Beyond the Flight.
-      </h1>
-      <p class="text-lg md:text-xl text-neutral-600 max-w-3xl mx-auto leading-relaxed">
-        The ultimate luxury travel experience starts long before you board and continues well after you land.
-      </p>
+  <main class="flex-1">
+
+    <!-- =============================================
+         1. HERO
+         ============================================= -->
+    <section id="extra-hero" class="extra-hero-bg relative pb-24 overflow-hidden">
+
+      <div class="absolute inset-0 pointer-events-none opacity-10"
+        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
+               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
+               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
+      </div>
+
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-2xl mx-auto text-center slide-up">
+
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-star text-[10px]"></i>
+            Extra Services
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
+            Beyond the Flight.
+          </h1>
+
+          <p class="text-base md:text-lg leading-relaxed max-w-xl mx-auto font-medium text-white/65">
+            The ultimate luxury travel experience starts long before you board and continues well after you land.
+          </p>
+
+        </div>
+      </div>
     </section>
 
-    <!-- SERVICES GRID -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-32">
 
+    <!-- =============================================
+         2. CHAUFFEUR — white tile
+         ============================================= -->
+    <section class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
 
-      <!-- Fast Track -->
-      <section id="fast-track" class="glass service-card p-8 rounded-[2.5rem] relative overflow-hidden group">
-        <div
-          class="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600 mb-8 text-3xl">
-          <i class="fa-solid fa-bolt"></i>
+        <div class="flex items-center gap-4 mb-12 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Premium Transfer</p>
+          <div class="flex-1 h-px bg-neutral-100"></div>
         </div>
-        <h3 class="text-2xl font-bold text-brand-950 mb-4">Fast Track Immigration</h3>
-        <p class="text-neutral-600 leading-relaxed mb-6">
-          Skip the long queues. Secure expedited immigration and security clearance with our dedicated airport
-          meet-and-greet staff.
-        </p>
-        <ul class="space-y-3 mb-8">
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Gate-to-Curb assistance
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> VIP lane priority
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Personal greeting service
-          </li>
-        </ul>
-        <a href="https://api.whatsapp.com/send?phone=6581575306"
-          class="w-full py-4 rounded-2xl bg-brand-600 text-white font-bold hover:bg-brand-700 active:scale-95 transition-all text-center block">
-          Book Fast Track
-        </a>
-      </section>
 
-      <!-- Visa Assistance -->
-      <section id="visa" class="glass service-card p-8 rounded-[2.5rem] relative overflow-hidden group">
-        <div
-          class="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600 mb-8 text-3xl">
-          <i class="fa-solid fa-passport"></i>
-        </div>
-        <h3 class="text-2xl font-bold text-brand-950 mb-4">Visa Assistance</h3>
-        <p class="text-neutral-600 leading-relaxed mb-6">
-          Navigate complex visa requirements with ease. Our experts handle documentation and filing for major travel
-          destinations.
-        </p>
-        <ul class="space-y-3 mb-8">
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Document verification
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> End-to-end processing
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Expert consultation
-          </li>
-        </ul>
-        <a href="https://api.whatsapp.com/send?phone=6581575306"
-          class="w-full py-4 rounded-2xl bg-brand-600 text-white font-bold hover:bg-brand-700 active:scale-95 transition-all text-center block">
-          Start Application
-        </a>
-      </section>
+        <div class="grid lg:grid-cols-2 gap-12 xl:gap-20 items-center">
 
-      <!-- Flight Bookings -->
-      <section id="bookings" class="glass service-card p-8 rounded-[2.5rem] relative overflow-hidden group">
-        <div
-          class="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600 mb-8 text-3xl">
-          <i class="fa-solid fa-plane-up"></i>
-        </div>
-        <h3 class="text-2xl font-bold text-brand-950 mb-4">Flight Bookings (Cash)</h3>
-        <p class="text-neutral-600 leading-relaxed mb-6">
-          Prefer to pay cash? We leverage corporate contracts and private fares to secure Business and First Class seats
-          at rates unavailable to the public.
-        </p>
-        <ul class="space-y-3 mb-8">
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Corporate net fares
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> 24/7 travel support
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Complex itineraries
-          </li>
-        </ul>
-        <a href="https://api.whatsapp.com/send?phone=6581575306"
-          class="w-full py-4 rounded-2xl bg-brand-600 text-white font-bold hover:bg-brand-700 active:scale-95 transition-all text-center block">
-          Get a Quote
-        </a>
-      </section>
+          <!-- Left: copy + features -->
+          <div class="slide-up">
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
+              Airport Transfers.
+            </h2>
+            <p class="text-[17px] text-neutral-500 leading-relaxed mb-8">
+              Seamless door-to-terminal and terminal-to-door service with professional chauffeurs, real-time flight tracking, and luxury vehicles.
+            </p>
 
-      <!-- Hotel Recommendations -->
-      <section id="hotels" class="glass service-card p-8 rounded-[2.5rem] relative overflow-hidden group">
-        <div
-          class="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600 mb-8 text-3xl">
-          <i class="fa-solid fa-hotel"></i>
+            <div class="space-y-5">
+
+              <div class="flex items-start gap-4">
+                <div class="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-brand-500 flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-gem text-xs"></i>
+                </div>
+                <div>
+                  <p class="text-[15px] font-semibold text-neutral-900 leading-tight mb-0.5">Luxury Vehicles</p>
+                  <p class="text-sm text-neutral-400 leading-relaxed">Premium executive sedans and spacious MPVs.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div class="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-brand-500 flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-user-tie text-xs"></i>
+                </div>
+                <div>
+                  <p class="text-[15px] font-semibold text-neutral-900 leading-tight mb-0.5">Meet &amp; Greet</p>
+                  <p class="text-sm text-neutral-400 leading-relaxed">Personalized name board welcome at the arrival hall.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div class="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-brand-500 flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-plane-arrival text-xs"></i>
+                </div>
+                <div>
+                  <p class="text-[15px] font-semibold text-neutral-900 leading-tight mb-0.5">Real-Time Flight Tracking</p>
+                  <p class="text-sm text-neutral-400 leading-relaxed">We monitor your flight — early or delayed, we'll be there.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div class="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-brand-500 flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-location-dot text-xs"></i>
+                </div>
+                <div>
+                  <p class="text-[15px] font-semibold text-neutral-900 leading-tight mb-0.5">Changi Specialist</p>
+                  <p class="text-sm text-neutral-400 leading-relaxed">Stress-free navigation across all Changi terminals.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: CTA card -->
+          <div class="slide-up" style="animation-delay:0.1s;">
+            <div class="bg-[#f5f5f7] rounded-[18px] p-8 text-center">
+              <div class="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-500 text-xl mx-auto mb-5">
+                <i class="fa-solid fa-car-rear"></i>
+              </div>
+              <h3 class="text-xl font-display font-bold text-neutral-900 mb-2 tracking-tight">Ready for a premium ride?</h3>
+              <p class="text-sm text-neutral-500 leading-relaxed mb-7">
+                Available 24/7. Changi Airport pickups and drop-offs handled with care.
+              </p>
+              <div class="flex flex-col gap-3">
+                <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+                  class="btn-pill btn-pill-primary justify-center">
+                  <i class="fa-brands fa-whatsapp"></i> Book a Transfer
+                </a>
+                <a href="chauffeur.html" class="btn-pill justify-center"
+                  style="border-radius:9999px;padding:0.6875rem 1.375rem;border:1.5px solid #0066cc;color:#0066cc;background:transparent;font-size:inherit;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;">
+                  Full Details <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <h3 class="text-2xl font-bold text-brand-950 mb-4">Hotel Recommendations</h3>
-        <p class="text-neutral-600 leading-relaxed mb-6">
-          Curated stays at the world's most prestigious hotels. Gain access to VIP perks, room upgrades, and exclusive
-          rates through our luxury partners.
-        </p>
-        <ul class="space-y-3 mb-8">
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> VIP status & perks
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Room upgrades
-          </li>
-          <li class="flex items-center gap-3 text-sm text-neutral-700">
-            <i class="fa-solid fa-check text-brand-500"></i> Complimentary breakfast
-          </li>
-        </ul>
-        <a href="https://api.whatsapp.com/send?phone=6581575306"
-          class="w-full py-4 rounded-2xl bg-brand-600 text-white font-bold hover:bg-brand-700 active:scale-95 transition-all text-center block">
-          View Collections
-        </a>
-      </section>
-    </div>
+
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         3. CONCIERGE SERVICES — dark tile
+         ============================================= -->
+    <section id="concierge" class="py-24 tile-dark1">
+      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+
+        <div class="text-center mb-14 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Concierge Services</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight mb-4">
+            Every detail of your journey,<br class="hidden sm:block"> handled.
+          </h2>
+          <p class="text-white/55 text-base max-w-lg mx-auto leading-relaxed">
+            From immigration fast-track to curated hotel stays — we take care of everything beyond the flight.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5 mb-12">
+
+          <!-- Fast Track -->
+          <div class="authority-card rounded-[18px] p-7 slide-up">
+            <div class="w-10 h-10 rounded-lg bg-brand-500/15 flex items-center justify-center text-brand-400 mb-5 flex-shrink-0">
+              <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+            <h3 class="text-[17px] font-display font-semibold text-white mb-2">Fast Track Immigration</h3>
+            <p class="text-sm text-white/50 leading-relaxed mb-5">
+              Skip the queues. Expedited immigration and security clearance with our dedicated airport staff.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Gate-to-Curb assistance
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> VIP lane priority
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Personal greeting service
+              </li>
+            </ul>
+          </div>
+
+          <!-- Visa Assistance -->
+          <div class="authority-card rounded-[18px] p-7 slide-up" style="animation-delay:0.07s;">
+            <div class="w-10 h-10 rounded-lg bg-brand-500/15 flex items-center justify-center text-brand-400 mb-5 flex-shrink-0">
+              <i class="fa-solid fa-passport text-sm"></i>
+            </div>
+            <h3 class="text-[17px] font-display font-semibold text-white mb-2">Visa Assistance</h3>
+            <p class="text-sm text-white/50 leading-relaxed mb-5">
+              Navigate complex visa requirements with ease. Our experts handle documentation and filing for major destinations.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Document verification
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> End-to-end processing
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Expert consultation
+              </li>
+            </ul>
+          </div>
+
+          <!-- Flight Bookings (Cash) -->
+          <div class="authority-card rounded-[18px] p-7 slide-up" style="animation-delay:0.14s;">
+            <div class="w-10 h-10 rounded-lg bg-brand-500/15 flex items-center justify-center text-brand-400 mb-5 flex-shrink-0">
+              <i class="fa-solid fa-plane-up text-sm"></i>
+            </div>
+            <h3 class="text-[17px] font-display font-semibold text-white mb-2">Flight Bookings (Cash)</h3>
+            <p class="text-sm text-white/50 leading-relaxed mb-5">
+              We leverage corporate contracts and private fares to secure Business and First Class seats unavailable to the public.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Corporate net fares
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> 24/7 travel support
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Complex itineraries
+              </li>
+            </ul>
+          </div>
+
+          <!-- Hotel Recommendations -->
+          <div class="authority-card rounded-[18px] p-7 slide-up" style="animation-delay:0.21s;">
+            <div class="w-10 h-10 rounded-lg bg-brand-500/15 flex items-center justify-center text-brand-400 mb-5 flex-shrink-0">
+              <i class="fa-solid fa-hotel text-sm"></i>
+            </div>
+            <h3 class="text-[17px] font-display font-semibold text-white mb-2">Hotel Recommendations</h3>
+            <p class="text-sm text-white/50 leading-relaxed mb-5">
+              Curated stays at the world's most prestigious hotels with VIP perks, room upgrades, and exclusive rates.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> VIP status &amp; perks
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Room upgrades
+              </li>
+              <li class="flex items-center gap-2.5 text-xs text-white/60">
+                <i class="fa-solid fa-check text-brand-400 text-[10px] flex-shrink-0"></i> Complimentary breakfast
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="text-center slide-up" style="animation-delay:0.25s;">
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+            class="btn-pill btn-pill-primary">
+            <i class="fa-brands fa-whatsapp"></i> Enquire on WhatsApp
+          </a>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
-</body>
+  <script>
+  (function () {
+    window.addEventListener('load', function () {
+      var header = document.getElementById('main-header');
+      var hero   = document.getElementById('extra-hero');
+      if (!header || !hero) return;
+      document.body.style.paddingTop = '0';
+      hero.style.paddingTop = (header.offsetHeight + 32) + 'px';
+    });
+  })();
+  </script>
 
+</body>
 </html>

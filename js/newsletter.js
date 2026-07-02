@@ -110,6 +110,7 @@
       if (res.ok && data.success) {
         fireConfetti(wrapperEl);
         showSuccessState(wrapperEl);
+        try { localStorage.setItem('altitudeSubscribed', '1'); } catch (_) {}
         if (window.SkyUI) SkyUI.toast("You're subscribed — welcome aboard!", { type: 'success' });
         if (wrapperEl && wrapperEl.closest('#altitude-popup')) {
           setTimeout(closeSkyPopup, 3500);
@@ -118,6 +119,7 @@
       }
 
       if (res.status === 409 || data.error === 'already_subscribed') {
+        try { localStorage.setItem('altitudeSubscribed', '1'); } catch (_) {}
         var dupMsg = "You're already on the list! Check your inbox for our latest issue.";
         setStatus(statusEl, dupMsg, 'error');
         if (window.SkyUI) SkyUI.toast(dupMsg, { type: 'info', duration: 5000 });

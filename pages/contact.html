@@ -23,63 +23,83 @@
     .contact-hero-bg {
       background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
     }
-    .contact-channel-card {
-      background: #ffffff;
-      border: 1px solid rgba(0, 102, 204, 0.10);
-      border-radius: 18px;
-      padding: 1.75rem;
-      transition: transform 0.3s ease-out, border-color 0.3s ease-out, box-shadow 0.3s ease-out;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    section.contact-hero-bg {
+      background:
+        linear-gradient(160deg, rgba(13,27,53,.82) 0%, rgba(26,36,55,.82) 55%, rgba(15,32,64,.82) 100%),
+        url('../images/page-images/bg-1.png');
+      background-size: cover;
+      background-position: center;
     }
-    .contact-channel-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 102, 204, 0.28);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+    .form-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 0.45rem;
     }
     .form-input {
       width: 100%;
-      padding: 0.875rem 1.25rem;
+      padding: 0.8rem 1.1rem;
       border-radius: 9999px;
-      border: 1px solid rgba(0, 102, 204, 0.18);
-      background: #ffffff;
+      border: 1px solid rgba(0, 102, 204, 0.15);
+      background: #fafafa;
       font-size: 0.875rem;
       color: #1d1d1f;
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       font-family: 'Manrope', sans-serif;
     }
     .form-input:focus {
       border-color: #0066cc;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.10);
     }
     .form-textarea {
       width: 100%;
-      padding: 0.875rem 1.25rem;
-      border-radius: 18px;
-      border: 1px solid rgba(0, 102, 204, 0.18);
-      background: #ffffff;
+      padding: 0.8rem 1.1rem;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 102, 204, 0.15);
+      background: #fafafa;
       font-size: 0.875rem;
       color: #1d1d1f;
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       font-family: 'Manrope', sans-serif;
       line-height: 1.65;
       resize: none;
     }
     .form-textarea:focus {
       border-color: #0066cc;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.10);
     }
-    .form-label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #4b5563;
-      margin-bottom: 0.5rem;
+    .btn-contact-success {
+      background: #10b981 !important;
+      border-color: #10b981 !important;
+      color: #ffffff !important;
+      pointer-events: none;
+    }
+    .btn-contact-error {
+      background: #ef4444 !important;
+      border-color: #ef4444 !important;
+      color: #ffffff !important;
+    }
+    .contact-channel-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .contact-channel-link:last-child {
+      border-bottom: none;
+    }
+    .contact-channel-link:hover {
+      opacity: 0.8;
     }
   </style>
 </head>
@@ -126,129 +146,98 @@
 
 
     <!-- =============================================
-         2. CONTACT CHANNELS — three cards
-         ============================================= -->
-    <section class="py-24 bg-white">
-      <div class="container mx-auto px-4 md:px-6 max-w-4xl">
-
-        <div class="flex items-center gap-4 mb-12 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Reach Us</p>
-          <div class="flex-1 h-px bg-neutral-100"></div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-4">
-
-          <!-- WhatsApp -->
-          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
-            class="contact-channel-card group slide-up">
-            <div class="w-11 h-11 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 text-xl flex-shrink-0">
-              <i class="fa-brands fa-whatsapp"></i>
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-1">WhatsApp</p>
-              <p class="text-base font-semibold text-neutral-900 mb-0.5">+65 8157 5306</p>
-              <p class="text-xs text-neutral-400">Instant reply · Mon–Sat</p>
-            </div>
-            <div class="mt-auto pt-2">
-              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">
-                Message us <i class="fa-solid fa-arrow-right text-[10px]"></i>
-              </span>
-            </div>
-          </a>
-
-          <!-- Email -->
-          <a href="mailto:info@skyfareconsulting.com"
-            class="contact-channel-card group slide-up" style="animation-delay:0.07s;">
-            <div class="w-11 h-11 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-500 text-xl flex-shrink-0">
-              <i class="fa-solid fa-envelope"></i>
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-1">Email</p>
-              <p class="text-base font-semibold text-neutral-900 mb-0.5">info@skyfareconsulting.com</p>
-              <p class="text-xs text-neutral-400">Response within 24 hours</p>
-            </div>
-            <div class="mt-auto pt-2">
-              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">
-                Send email <i class="fa-solid fa-arrow-right text-[10px]"></i>
-              </span>
-            </div>
-          </a>
-
-          <!-- Instagram -->
-          <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
-            class="contact-channel-card group slide-up" style="animation-delay:0.14s;">
-            <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-white text-xl flex-shrink-0"
-              style="background:linear-gradient(135deg,#833ab4 0%,#fd1d1d 55%,#fcb045 100%);">
-              <i class="fa-brands fa-instagram"></i>
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-1">Instagram</p>
-              <p class="text-base font-semibold text-neutral-900 mb-0.5">@skyfareconsulting</p>
-              <p class="text-xs text-neutral-400">Behind the scenes &amp; updates</p>
-            </div>
-            <div class="mt-auto pt-2">
-              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">
-                Follow us <i class="fa-solid fa-arrow-right text-[10px]"></i>
-              </span>
-            </div>
-          </a>
-
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- =============================================
-         3. FOUNDER + CONTACT FORM — parchment tile
+         2. UNIFIED CONTACT CARD
+         Left: dark info panel | Right: white form
          ============================================= -->
     <section class="py-24 bg-neutral-50">
       <div class="container mx-auto px-4 md:px-6 max-w-5xl">
 
-        <div class="grid md:grid-cols-2 gap-8 lg:gap-16 items-start">
+        <div class="rounded-[28px] overflow-hidden border border-neutral-100 shadow-sm grid md:grid-cols-[1fr_1.4fr] slide-up">
 
-          <!-- Founder panel -->
-          <div class="slide-up">
+          <!-- ── LEFT: Info panel ───────────────────── -->
+          <div class="contact-hero-bg p-10 lg:p-12 flex flex-col">
 
-            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-4">Meet the Strategist</p>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
-              Hi, I'm Sahej.
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Contact</p>
+            <h2 class="text-2xl md:text-3xl font-display font-bold text-white mb-3 tracking-tight leading-snug">
+              We're here<br>to help.
             </h2>
-            <p class="text-base text-neutral-500 leading-relaxed mb-8">
-              I started Skyfare Consulting to bridge the gap between complex airline systems and the premium traveler. My mission is to ensure every mile you earn works harder — delivering Business and First Class experiences without the premium cash price tags.
+            <p class="text-sm text-white/55 leading-relaxed mb-10">
+              Whether it's a complex itinerary or a quick question about miles — we're just a message away.
             </p>
 
-            <div class="rounded-[18px] overflow-hidden mb-8" style="aspect-ratio:4/3;">
-              <img src="../logos/about.webp" alt="Sahej Singh — Founder, Skyfare Consulting"
-                class="w-full h-full object-cover">
+            <!-- Channels -->
+            <div class="flex-1">
+
+              <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+                class="contact-channel-link">
+                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <i class="fa-brands fa-whatsapp text-white text-base"></i>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">WhatsApp</p>
+                  <p class="text-sm font-semibold text-white">+65 8157 5306</p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-[10px] text-white/25 ml-auto"></i>
+              </a>
+
+              <a href="mailto:info@skyfareconsulting.com"
+                class="contact-channel-link">
+                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <i class="fa-solid fa-envelope text-white text-sm"></i>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Email</p>
+                  <p class="text-sm font-semibold text-white">info@skyfareconsulting.com</p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-[10px] text-white/25 ml-auto"></i>
+              </a>
+
+              <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
+                class="contact-channel-link">
+                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <i class="fa-brands fa-instagram text-white text-base"></i>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Instagram</p>
+                  <p class="text-sm font-semibold text-white">@skyfareconsulting</p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-[10px] text-white/25 ml-auto"></i>
+              </a>
+
             </div>
 
-            <blockquote class="border-l-2 border-brand-500/30 pl-5">
-              <p class="text-sm text-neutral-400 leading-relaxed italic">
+            <!-- Founder quote -->
+            <blockquote class="mt-10 border-l-2 border-white/15 pl-4">
+              <p class="text-xs text-white/35 leading-relaxed italic">
                 "Our goal is to make premium travel accessible through smarter loyalty strategies."
               </p>
+              <p class="text-[10px] text-white/25 mt-2 font-semibold uppercase tracking-widest">— Sahej Singh, Founder</p>
             </blockquote>
 
           </div>
 
-          <!-- Contact form -->
-          <div class="slide-up" style="animation-delay:0.07s;">
+          <!-- ── RIGHT: Form panel ──────────────────── -->
+          <div class="bg-white p-10 lg:p-12">
 
             <div class="flex items-center gap-4 mb-8">
               <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Send an Inquiry</p>
-              <div class="flex-1 h-px bg-neutral-200"></div>
+              <div class="flex-1 h-px bg-neutral-100"></div>
             </div>
 
-            <form id="contact-form" action="https://formspree.io/f/mqayqlvj" method="POST" class="space-y-5">
+            <form id="contact-form" class="space-y-5">
 
-              <div class="grid sm:grid-cols-2 gap-5">
+              <div class="hidden" aria-hidden="true">
+                <input name="bot-field" tabindex="-1" autocomplete="off">
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="form-label">Full Name</label>
                   <input type="text" name="name" required placeholder="John Doe" class="form-input">
                 </div>
                 <div>
                   <label class="form-label">Email Address</label>
-                  <input type="email" name="email" required placeholder="john@example.com" class="form-input">
+                  <input type="email" name="email" required placeholder="you@example.com" class="form-input">
                 </div>
               </div>
 
@@ -268,8 +257,6 @@
                 Send Inquiry
               </button>
 
-              <p id="form-status" class="text-center text-sm font-medium hidden"></p>
-
             </form>
 
           </div>
@@ -281,7 +268,7 @@
 
 
     <!-- =============================================
-         4. CLOSING CTA — dark tile
+         3. CLOSING CTA — dark tile
          ============================================= -->
     <section class="py-24 tile-dark1">
       <div class="container mx-auto px-4 md:px-6">
