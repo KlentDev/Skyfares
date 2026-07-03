@@ -1057,30 +1057,106 @@
   <!-- SKYFARE ALTITUDE -->
   <section class="py-20 tile-sky">
     <div class="container mx-auto px-4 md:px-6">
-      <div class="max-w-xl mx-auto text-center slide-up">
-        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-4">Skyfare Altitude · Free Newsletter</p>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">Join our newsletter.</h2>
-        <p class="text-neutral-600 text-base leading-relaxed mb-10 font-medium">Award space alerts, routing strategies, and miles guides — written by someone who books 100+ premium cabins a year. Cancel anytime.</p>
-        <div data-newsletter-form class="mb-5 slide-up" style="animation-delay:0.1s;">
-          <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)" class="w-full mb-3 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
-          <div class="flex flex-col sm:flex-row gap-3">
-            <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address" class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
-            <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">Subscribe — Free</button>
-          </div>
-          <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
+      <div class="max-w-xl mx-auto text-center slide-up" data-alt-toggle>
+
+        <!-- Mode toggle: Free Newsletter (default) vs Altitude Waitlist -->
+        <div class="inline-flex items-center gap-1 p-1 rounded-full bg-neutral-100 mb-8" role="tablist" aria-label="Choose what to join">
+          <button type="button" data-alt-tab="newsletter" role="tab" aria-selected="true"
+            class="alt-mode-tab px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide transition-all bg-white shadow-sm text-neutral-900">
+            Free Newsletter
+          </button>
+          <button type="button" data-alt-tab="waitlist" role="tab" aria-selected="false"
+            class="alt-mode-tab px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide transition-all text-neutral-400 hover:text-neutral-600">
+            Altitude Waitlist
+          </button>
         </div>
-        <div data-newsletter-success class="hidden text-center py-2 mb-5">
-          <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-3">
-            <i class="fa-solid fa-check text-xl text-emerald-500"></i>
+
+        <!-- Panel: Free Newsletter (default, shown) -->
+        <div data-alt-panel="newsletter">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-4">Skyfare Altitude · Free Newsletter</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">Join our newsletter.</h2>
+          <p class="text-neutral-600 text-base leading-relaxed mb-10 font-medium">Award space alerts, routing strategies, and miles guides — written by someone who books 100+ premium cabins a year. Cancel anytime.</p>
+          <div data-newsletter-form class="mb-5 slide-up" style="animation-delay:0.1s;">
+            <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)" class="w-full mb-3 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address" class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+              <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">Subscribe — Free</button>
+            </div>
+            <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
           </div>
-          <p class="text-base font-bold text-neutral-900 mb-1">You're on the list.</p>
-          <p class="text-sm text-neutral-500">Welcome to Skyfare Altitude. Your welcome email is on its way — see you next Monday.</p>
+          <div data-newsletter-success class="hidden text-center py-2 mb-5">
+            <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-3">
+              <i class="fa-solid fa-check text-xl text-emerald-500"></i>
+            </div>
+            <p class="text-base font-bold text-neutral-900 mb-1">You're on the list.</p>
+            <p class="text-sm text-neutral-500">Welcome to Skyfare Altitude. Your welcome email is on its way — see you next Monday.</p>
+          </div>
+          <p class="text-xs text-[#64748B]">Free to join · No spam, ever.</p>
+          <a href="pages/newsletter.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-500 hover:underline underline-offset-2">View All Issues <i class="fa-solid fa-arrow-right text-xs"></i></a>
         </div>
-        <p class="text-xs text-[#64748B]">Free to join · No spam, ever.</p>
-        <a href="pages/newsletter.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-500 hover:underline underline-offset-2">View All Issues <i class="fa-solid fa-arrow-right text-xs"></i></a>
+
+        <!-- Panel: Altitude Waitlist (hidden by default) -->
+        <div data-alt-panel="waitlist" class="hidden">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-dark mb-4">Skyfare Altitude · Early Access</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">Join the waitlist.</h2>
+          <p class="text-neutral-600 text-base leading-relaxed mb-10 font-medium">Altitude is our premium membership — award alerts, cabin reviews, and the full archive. It's getting ready for a proper public launch, and waitlist members hear first.</p>
+          <div data-newsletter-form data-newsletter-variant="waitlist" class="mb-5 slide-up" style="animation-delay:0.1s;">
+            <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)" class="w-full mb-3 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address" class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+              <button data-newsletter-btn class="btn-pill btn-pill-gold whitespace-nowrap">Join the Waitlist</button>
+            </div>
+            <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
+          </div>
+          <div data-newsletter-success class="hidden text-center py-2 mb-5">
+            <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-3">
+              <i class="fa-solid fa-check text-xl text-emerald-500"></i>
+            </div>
+            <p class="text-base font-bold text-neutral-900 mb-1">You're on the list.</p>
+            <p class="text-sm text-neutral-500">We'll email you the moment early access opens — no spam between now and then.</p>
+          </div>
+          <p class="text-xs text-[#64748B]">No spam · One email at launch.</p>
+          <a href="pages/altitude-early-access.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-500 hover:underline underline-offset-2">Learn More <i class="fa-solid fa-arrow-right text-xs"></i></a>
+        </div>
+
       </div>
     </div>
   </section>
+
+  <script>
+  // Drives every Free-Newsletter / Altitude-Waitlist toggle on this page (the
+  // "Skyfare Altitude" section below AND the exit-intent popup further down).
+  // Scoped per [data-alt-toggle] container so the two instances never cross-talk,
+  // and gated on DOMContentLoaded so it works regardless of where in the body
+  // each container actually sits.
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-alt-toggle]').forEach(function (container) {
+      var tabs   = container.querySelectorAll('[data-alt-tab]');
+      var panels = container.querySelectorAll('[data-alt-panel]');
+      if (!tabs.length || !panels.length) return;
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var mode = tab.dataset.altTab;
+
+          tabs.forEach(function (t) {
+            var active = t.dataset.altTab === mode;
+            t.setAttribute('aria-selected', active ? 'true' : 'false');
+            t.classList.toggle('bg-white', active);
+            t.classList.toggle('shadow-sm', active);
+            t.classList.toggle('text-neutral-900', active);
+            t.classList.toggle('text-neutral-400', !active);
+            t.classList.toggle('hover:text-neutral-600', !active);
+          });
+
+          panels.forEach(function (p) {
+            p.classList.toggle('hidden', p.dataset.altPanel !== mode);
+          });
+        });
+      });
+    });
+  });
+  </script>
 
   <!-- FINAL CTA SECTION -->
   <section class="py-14 md:py-20 relative overflow-hidden">
@@ -1127,30 +1203,78 @@
         <i class="fa-solid fa-xmark text-sm"></i>
       </button>
       <div class="relative z-10">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5 border border-brand-500/15">
-          <i class="fa-solid fa-envelope-open text-[10px]"></i> Skyfare Altitude
-        </div>
-        <h3 class="text-2xl font-black text-brand-950 mb-3 leading-snug">Fly smarter,<br>every week.</h3>
-        <p class="text-neutral-500 text-sm leading-relaxed mb-6">
-          Weekly award space alerts, routing strategies, and miles guides — free to join, no credit card required.
-        </p>
-        <div data-newsletter-form class="space-y-3 mb-4">
-          <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
-                 class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
-          <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
-                 class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
-          <button data-newsletter-btn
-                  class="w-full py-3.5 rounded-2xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
-            Subscribe — Free
-          </button>
-          <p data-newsletter-status class="hidden text-xs text-center font-medium" aria-live="polite"></p>
-        </div>
-        <div data-newsletter-success class="hidden text-center py-2">
-          <div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
-            <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
+        <div data-alt-toggle>
+
+          <!-- Mode toggle: Free Newsletter (default) vs Altitude Waitlist -->
+          <div class="inline-flex items-center gap-1 p-1 rounded-full bg-neutral-100 mb-5" role="tablist" aria-label="Choose what to join">
+            <button type="button" data-alt-tab="newsletter" role="tab" aria-selected="true"
+              class="alt-mode-tab px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wide transition-all bg-white shadow-sm text-neutral-900">
+              Free Newsletter
+            </button>
+            <button type="button" data-alt-tab="waitlist" role="tab" aria-selected="false"
+              class="alt-mode-tab px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wide transition-all text-neutral-400 hover:text-neutral-600">
+              Altitude Waitlist
+            </button>
           </div>
-          <h3 class="text-xl font-black text-brand-950 mb-2 leading-snug">You're in!</h3>
-          <p class="text-sm text-neutral-500 leading-relaxed">Welcome to Skyfare Altitude — your weekly insider edge. Check your inbox for your welcome email and see you next Monday.</p>
+
+          <!-- Panel: Free Newsletter (default, shown) -->
+          <div data-alt-panel="newsletter">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5 border border-brand-500/15">
+              <i class="fa-solid fa-envelope-open text-[10px]"></i> Skyfare Altitude
+            </div>
+            <h3 class="text-2xl font-black text-brand-950 mb-3 leading-snug">Fly smarter,<br>every week.</h3>
+            <p class="text-neutral-500 text-sm leading-relaxed mb-6">
+              Weekly award space alerts, routing strategies, and miles guides — free to join, no credit card required.
+            </p>
+            <div data-newsletter-form class="space-y-3 mb-4">
+              <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
+                     class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+              <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
+                     class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+              <button data-newsletter-btn
+                      class="w-full py-3.5 rounded-2xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
+                Subscribe — Free
+              </button>
+              <p data-newsletter-status class="hidden text-xs text-center font-medium" aria-live="polite"></p>
+            </div>
+            <div data-newsletter-success class="hidden text-center py-2">
+              <div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
+              </div>
+              <h3 class="text-xl font-black text-brand-950 mb-2 leading-snug">You're in!</h3>
+              <p class="text-sm text-neutral-500 leading-relaxed">Welcome to Skyfare Altitude — your weekly insider edge. Check your inbox for your welcome email and see you next Monday.</p>
+            </div>
+          </div>
+
+          <!-- Panel: Altitude Waitlist (hidden by default) -->
+          <div data-alt-panel="waitlist" class="hidden">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5 border border-gold/30">
+              <i class="fa-solid fa-crown text-[10px]"></i> Altitude Early Access
+            </div>
+            <h3 class="text-2xl font-black text-brand-950 mb-3 leading-snug">Be first,<br>when it's real.</h3>
+            <p class="text-neutral-500 text-sm leading-relaxed mb-6">
+              Altitude is getting ready for a proper public launch. Join the waitlist and we'll email you the moment it opens — no spam before then.
+            </p>
+            <div data-newsletter-form data-newsletter-variant="waitlist" class="space-y-3 mb-4">
+              <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
+                     class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+              <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
+                     class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+              <button data-newsletter-btn
+                      class="w-full py-3.5 rounded-2xl bg-gold text-white font-bold text-sm hover:bg-gold-dark transition-colors">
+                Join the Waitlist
+              </button>
+              <p data-newsletter-status class="hidden text-xs text-center font-medium" aria-live="polite"></p>
+            </div>
+            <div data-newsletter-success class="hidden text-center py-2">
+              <div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
+              </div>
+              <h3 class="text-xl font-black text-brand-950 mb-2 leading-snug">You're on the list!</h3>
+              <p class="text-sm text-neutral-500 leading-relaxed">We'll email you the moment early access opens — no spam between now and then.</p>
+            </div>
+          </div>
+
         </div>
         <button id="altitude-popup-dismiss" class="w-full text-center text-xs text-neutral-400 hover:text-neutral-600 transition-colors py-1">
           Not now

@@ -1,6 +1,31 @@
 (function () {
   var ENDPOINT = 'https://skyfares-altitude.klent-5fa.workers.dev';
 
+  // Variant map: bundles the 3 things that change together for a given form
+  // (destination path, localStorage suppression key, toast copy) into one
+  // atomic switch set via data-newsletter-variant, so they can never drift
+  // out of sync across usages. Omitting the attribute (every existing usage
+  // today) falls through to "default", reproducing today's exact behavior.
+  var VARIANTS = {
+    default: {
+      path: '',
+      storageKey: 'altitudeSubscribed',
+      successToast: "You're subscribed — welcome aboard!",
+      dupToast: "You're already on the list! Check your inbox for our latest issue.",
+    },
+    waitlist: {
+      path: '/altitude/waitlist',
+      storageKey: 'altitudeWaitlistJoined',
+      successToast: "You're on the waitlist — we'll email you the moment early access opens!",
+      dupToast: "You're already on the waitlist!",
+    },
+  };
+
+  function getVariant(wrapperEl) {
+    var key = (wrapperEl && wrapperEl.dataset.newsletterVariant) || 'default';
+    return VARIANTS[key] || VARIANTS.default;
+  }
+
   // Load canvas-confetti from CDN on first use
   var confettiReady = false;
   function loadConfetti(cb) {
@@ -93,12 +118,29 @@
     if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Subscribing…'; }
     if (statusEl) statusEl.classList.add('hidden');
 
+    var variant = getVariant(wrapperEl);
+
     var payload = { email: email.trim() };
     var firstName = (name || '').trim();
     if (firstName) payload.first_name = firstName;
 
+    // Forward UTM params from the URL so a campaign landing page can pass
+    // through real attribution (instagram / altitude_prelaunch / etc.)
+    // instead of relying on the Worker's hardcoded defaults.
     try {
-      var res = await fetch(ENDPOINT, {
+      var qs = new URLSearchParams(window.location.search);
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
+        var v = qs.get(k);
+        if (v) payload[k] = v;
+      });
+    } catch (_) {}
+
+    // Honeypot passthrough -- no-op unless the form markup includes one.
+    var honeypot = wrapperEl && wrapperEl.querySelector('[data-newsletter-honeypot]');
+    if (honeypot && honeypot.value) payload['bot-field'] = honeypot.value;
+
+    try {
+      var res = await fetch(ENDPOINT + variant.path, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -108,10 +150,17 @@
       try { data = await res.json(); } catch (_) {}
 
       if (res.ok && data.success) {
+        if (data.already_premium) {
+          var alreadyMsg = "You already have full Altitude Access — no need to join the waitlist!";
+          setStatus(statusEl, alreadyMsg, 'error');
+          if (window.SkyUI) SkyUI.toast(alreadyMsg, { type: 'info', duration: 6000 });
+          if (btnEl) { btnEl.disabled = false; btnEl.textContent = originalText; }
+          return;
+        }
         fireConfetti(wrapperEl);
         showSuccessState(wrapperEl);
-        try { localStorage.setItem('altitudeSubscribed', '1'); } catch (_) {}
-        if (window.SkyUI) SkyUI.toast("You're subscribed — welcome aboard!", { type: 'success' });
+        try { localStorage.setItem(variant.storageKey, '1'); } catch (_) {}
+        if (window.SkyUI) SkyUI.toast(variant.successToast, { type: 'success' });
         if (wrapperEl && wrapperEl.closest('#altitude-popup')) {
           setTimeout(closeSkyPopup, 3500);
         }
@@ -119,10 +168,13 @@
       }
 
       if (res.status === 409 || data.error === 'already_subscribed') {
-        try { localStorage.setItem('altitudeSubscribed', '1'); } catch (_) {}
-        var dupMsg = "You're already on the list! Check your inbox for our latest issue.";
-        setStatus(statusEl, dupMsg, 'error');
-        if (window.SkyUI) SkyUI.toast(dupMsg, { type: 'info', duration: 5000 });
+        try { localStorage.setItem(variant.storageKey, '1'); } catch (_) {}
+        setStatus(statusEl, variant.dupToast, 'error');
+        if (window.SkyUI) SkyUI.toast(variant.dupToast, { type: 'info', duration: 5000 });
+      } else if (res.status === 429 || data.error === 'rate_limited') {
+        var rlMsg = 'Too many requests. Please wait a few minutes before trying again.';
+        setStatus(statusEl, rlMsg, 'error');
+        if (window.SkyUI) SkyUI.toast(rlMsg, { type: 'error' });
       } else {
         var errMsg = data.error || 'Something went wrong. Please try again.';
         setStatus(statusEl, errMsg, 'error');
