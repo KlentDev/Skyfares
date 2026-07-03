@@ -420,6 +420,33 @@ details .accordion-body > div {
 .tile-parch { background-color: #ffffff; }
 .tile-sky   { background-color: #ffffff; }
 
+/* Canonical page hero — every interior page shares this exact gradient
+   treatment; each page sets --hero-img inline to swap in its own photo. */
+.page-hero-bg {
+  --hero-img: url('../images/page-images/bg-3.JPG');
+  background:
+    linear-gradient(160deg, rgba(13,27,53,.82) 0%, rgba(26,36,55,.82) 55%, rgba(15,32,64,.82) 100%),
+    var(--hero-img);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Icon chip — standard feature-icon container (light + dark variants) */
+.icon-chip {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #f0f7ff;
+  color: #0066cc;
+}
+.icon-chip-sm { width: 2rem; height: 2rem; border-radius: 0.5rem; font-size: 0.75rem; }
+.icon-chip-lg { width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; font-size: 1.125rem; }
+.icon-chip-dark { background: rgba(0, 102, 204, 0.15); color: #38a1ff; }
+
 /* Utility card — white surface, 1px hairline, 18px radius, no shadow */
 .card-utility {
   background: #ffffff;
@@ -470,6 +497,141 @@ details .accordion-body > div {
   border: none;
 }
 .btn-pill-dark:hover { background: #1a1a1b; }
+
+/* Secondary outline pill — light surfaces only (design.md: button-secondary-pill) */
+.btn-pill-outline {
+  background: transparent;
+  color: #0066cc;
+  border: 1.5px solid #0066cc;
+}
+.btn-pill-outline:hover { background: rgba(0, 102, 204, 0.06); }
+
+/* Secondary pill — ghost button for white / light-tile surfaces */
+.btn-pill-secondary {
+  background: #ffffff;
+  color: #001a33;
+  border: 1px solid #b3dcff;
+}
+.btn-pill-secondary:hover { background: #f0f7ff; }
+
+.btn-pill-gold {
+  background: #C9A227;
+  color: #ffffff;
+  border: none;
+}
+.btn-pill-gold:hover { background: #9E7B0D; }
+
+/* ── Popular Routes Accordion ─────────────────────────────────── */
+.routes-row {
+  display: flex;
+  gap: 10px;
+  height: 240px;
+  margin-bottom: 12px;
+}
+.routes-row:last-child { margin-bottom: 0; }
+
+.route-card {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  transition: flex 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  display: block;
+}
+.route-card:hover { flex: 3; }
+
+.route-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.55s ease;
+}
+.route-card:hover .route-card-bg { transform: scale(1.08); }
+
+.route-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.12) 100%);
+}
+
+.route-card-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.route-card-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.route-code {
+  font-family: 'Lexend', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  display: block;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.route-city {
+  font-family: 'Lexend', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.route-miles {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.80);
+  white-space: nowrap;
+  margin-bottom: 1px;
+}
+
+.route-cabin {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+}
+
+.route-enquire-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  color: #ffffff;
+  background: rgba(0, 102, 204, 0.85);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+.route-enquire-btn:hover { background: rgba(0, 82, 163, 0.95); }
 
 /* Step number watermark — Lexend, Sky Blue at 12% opacity */
 .step-number {
@@ -584,6 +746,18 @@ details[open] > summary .faq-indicator i {
 .faq-item:hover { border-color: rgba(0, 102, 204, 0.35); }
 .faq-item summary { list-style: none; cursor: pointer; }
 .faq-item summary::-webkit-details-marker { display: none; }
+
+/* FAQ card on light tile — white surface with visible hairline */
+.faq-item-light {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: border-color 0.25s ease-out;
+}
+.faq-item-light:hover { border-color: rgba(0, 102, 204, 0.35); }
+.faq-item-light summary { list-style: none; cursor: pointer; }
+.faq-item-light summary::-webkit-details-marker { display: none; }
 
 /* Section lead copy — Manrope 500 for elevated readability */
 .section-lead {
@@ -1375,4 +1549,126 @@ button[class*="bg-emerald-"]:active {
   .sky-modal__card { padding: 1.5rem; }
   .sky-modal__actions { flex-direction: column-reverse; }
   .sky-modal__actions > * { width: 100%; justify-content: center; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDESIGN 2026 — Interior-page premium consistency layer
+   Shared components that bring every /pages/* file up to the homepage bar.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Restore the light-tile rhythm — parchment sits a hair off pure white so two
+   consecutive light sections read as distinct bands (design.md token). */
+.tile-parch { background-color: #f5f5f7; }
+
+/* ── WhatsApp pill — the single canonical WhatsApp CTA (green) ─────────────── */
+.btn-pill-whatsapp {
+  background: #22c55e;
+  color: #ffffff;
+  border: none;
+}
+.btn-pill-whatsapp:hover { background: #16a34a; }
+
+/* ── Gold savings badge — savings context uses gold; large savings figures use
+   the Tailwind `text-gold` token. (Blue .savings-badge kept for non-savings.) */
+.savings-badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(201, 162, 39, 0.10);
+  border: 1px solid rgba(201, 162, 39, 0.30);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #C9A227;
+}
+
+/* ── Shared form input — pill single-line, 18px multiline, brand focus ring ── */
+.form-input {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.form-input::placeholder { color: #9ca3af; }
+.form-input:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+}
+textarea.form-input { border-radius: 1.125rem; resize: vertical; }
+
+/* Dark-surface form input — for forms on dark panels (e.g. contact info panel) */
+.form-input-dark {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+.form-input-dark::placeholder { color: rgba(255, 255, 255, 0.45); }
+.form-input-dark:focus {
+  border-color: #38a1ff;
+  box-shadow: 0 0 0 3px rgba(56, 161, 255, 0.20);
+}
+
+/* ── Shared closing CTA band ───────────────────────────────────────────────
+   Decorative hero-bg-icons.svg artwork over dark navy, with a veil that fades
+   UPWARD from the bottom so copy stays legible while the artwork reads up top.
+     <section class="cta-band">
+       <div class="cta-band__art"></div><div class="cta-band__veil"></div>
+       <div class="container mx-auto px-4 md:px-6 relative z-10"> …content… </div>
+     </section>                                                              */
+.cta-band {
+  position: relative;
+  overflow: hidden;
+  background-color: #1A2437;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+@media (min-width: 768px) {
+  .cta-band { padding-top: 7rem; padding-bottom: 7rem; }
+}
+.cta-band__art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('../images/hero-bg-icons.svg');
+  background-repeat: repeat;
+  background-size: 320px 224px;
+  opacity: 0.08;
+}
+.cta-band__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    #0d1526 0%,
+    rgba(13, 21, 38, 0.92) 30%,
+    rgba(13, 21, 38, 0.55) 60%,
+    rgba(13, 21, 38, 0.15) 100%
+  );
+}
+
+/* Gold eyebrow pill used atop the CTA band */
+.cta-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  background: #C9A227;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
 }

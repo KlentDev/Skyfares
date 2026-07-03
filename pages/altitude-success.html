@@ -37,17 +37,17 @@
 
       <!-- Success state -->
       <div id="state-success" class="hidden">
-        <div class="w-16 h-16 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-6">
-          <i class="fa-solid fa-crown text-amber-500 text-xl"></i>
+        <div class="w-16 h-16 rounded-full bg-gold-50 border-2 border-gold/30 flex items-center justify-center mx-auto mb-6">
+          <i class="fa-solid fa-crown text-gold text-xl"></i>
         </div>
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-300/50 bg-amber-50 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-5">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
           <i class="fa-solid fa-check text-[9px]"></i> Access Granted
         </div>
         <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3 tracking-tight">Welcome to Altitude.</h1>
         <p class="text-neutral-500 text-sm leading-relaxed mb-8">
           Your membership is active. You now have full access to the Altitude archive, exclusive content, and premium newsletters delivered to your inbox.
         </p>
-        <a href="altitude.html" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
+        <a href="altitude.html" class="btn-pill btn-pill-primary">
           Enter Altitude <i class="fa-solid fa-arrow-right text-xs"></i>
         </a>
         <p class="text-xs text-neutral-400 mt-4">Check your email for a welcome message from the Skyfare team.</p>
@@ -62,14 +62,14 @@
         <p id="error-msg" class="text-neutral-500 text-sm leading-relaxed mb-8">
           We couldn't activate your access. Your payment was processed — please contact us and we'll sort this out immediately.
         </p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onclick="retryActivation()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
+        <div class="flex flex-wrap gap-3 justify-center">
+          <button onclick="retryActivation()" class="btn-pill btn-pill-primary">
             Try Again
           </button>
           <a href="https://api.whatsapp.com/send?phone=6581575306&text=Hi%20Skyfare%2C%20I%20paid%20for%20Altitude%20Access%20but%20couldn%27t%20activate%20it."
              target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-neutral-200 text-neutral-600 font-semibold text-sm hover:border-neutral-400 transition-colors">
-            <i class="fa-brands fa-whatsapp text-green-500"></i> Contact Support
+             class="btn-pill btn-pill-secondary">
+            <i class="fa-brands fa-whatsapp text-emerald-500"></i> Contact Support
           </a>
         </div>
       </div>

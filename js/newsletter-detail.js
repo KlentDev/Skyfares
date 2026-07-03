@@ -86,8 +86,8 @@
     var accessBadge = document.getElementById('nsl-access-badge');
     if (accessBadge) {
       accessBadge.innerHTML = post.is_premium
-        ? '<span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2.5 py-1 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Altitude Exclusive</span>'
-        : '<span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-black/30 backdrop-blur-sm border border-emerald-500/20 px-2.5 py-1 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free to read</span>';
+        ? '<span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2.5 py-1 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Altitude Exclusive</span>'
+        : '<span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free to read</span>';
     }
 
     // Content tags
@@ -509,15 +509,15 @@
         ? '<img src="' + e(p.thumbnail_url) + '" alt="' + e(p.title) + '" class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
         : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
 
-      var cardCls = 'group bg-white border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 slide-up is-visible ' +
-        (prem ? 'border-amber-200/60' : 'border-neutral-100 hover:shadow-md');
+      var cardCls = 'group card-utility overflow-hidden slide-up is-visible' +
+        (prem ? ' border-gold/30 hover:border-gold/60' : '');
 
       var ctaHtml = prem
-        ? '<a href="https://api.whatsapp.com/send?phone=6581575306&text=' + encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.") + '" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 hover:text-amber-800 transition-colors">Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
+        ? '<a href="https://api.whatsapp.com/send?phone=6581575306&text=' + encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.") + '" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
         : '<a href="' + href + '" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
 
       var altitudeBadge = prem
-        ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
+        ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
         : '';
 
       return '<article class="' + cardCls + '" style="animation-delay:' + delay + 's;">' +

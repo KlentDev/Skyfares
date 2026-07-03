@@ -129,9 +129,9 @@
 
     var metaSuffix = date ? ' &middot; ' + e(date) : '';
 
-    // ─── Badge — amber for premium, blue for free ─────────────────────────
+    // ─── Badge — gold for premium, blue for free ──────────────────────────
     var badgeStyle = prem
-      ? 'background:rgba(217,119,6,0.2);border:1px solid rgba(217,119,6,0.4);color:#fcd34d;'
+      ? 'background:rgba(201,162,39,0.2);border:1px solid rgba(201,162,39,0.4);color:#E8C547;'
       : 'background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.35);color:#93c5fd;';
     var badgeIcon  = prem ? 'fa-crown' : 'fa-newspaper';
     var badgeText  = prem ? 'Altitude Exclusive' : 'Issue&nbsp;' + e(issueNum);
@@ -143,13 +143,13 @@
         '</span>'
       : '';
 
-    // ─── CTA — amber WhatsApp link for premium, on-site detail page for free ───
+    // ─── CTA — gold WhatsApp link for premium, on-site detail page for free ───
     // Path is relative: pages/ prefix for root-level pages, none for /pages/ pages
     var detailBase = window.location.pathname.includes('/pages/') ? '' : 'pages/';
     var ctaHref  = prem ? PREMIUM_WA_URL : (detailBase + 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug || ''));
     var ctaText  = prem ? 'Get Premium Access' : 'Read Issue&nbsp;' + e(issueNum);
-    var ctaBg    = prem ? '#d97706' : '#1d4ed8';
-    var ctaHover = prem ? '#b45309'  : '#1e40af';
+    var ctaBg    = prem ? '#C9A227' : '#1d4ed8';
+    var ctaHover = prem ? '#9E7B0D'  : '#1e40af';
 
     el.innerHTML =
       '<div style="max-width:1280px;margin:0 auto;padding:0 20px;' +

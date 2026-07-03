@@ -221,28 +221,29 @@
 
     // Access badge (bottom-left of image)
     var accessBadge = prem
-      ? '<span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Altitude</span>'
-      : '<span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-black/30 backdrop-blur-sm border border-emerald-500/20 px-2 py-0.5 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free</span>';
+      ? '<span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Altitude</span>'
+      : '<span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free</span>';
 
     // Lock icon (top-right, premium only)
     var lockOverlay = prem
-      ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-amber-500/30 flex items-center justify-center"><i class="fa-solid fa-lock text-amber-300 text-[8px]"></i></div></div>'
+      ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-lock text-gold-light text-[8px]"></i></div></div>'
       : '';
 
     // CTA — bottom of content panel
     var ctaHtml = prem
-      ? '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 group-hover:text-amber-800 transition-colors self-start">' +
+      ? '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-gold-dark group-hover:text-gold transition-colors self-start">' +
             'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
       : '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:text-brand-800 transition-colors self-start">' +
             'Read Issue ' + e(issueNum) + ' <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
     // Wrapper: clickable <a> for free (opens the issue), clickable <div> for premium (opens the access modal)
     var href     = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
-    var cardBorder = prem ? 'border-amber-200/60 hover:shadow-lg' : 'border-neutral-100 hover:shadow-lg';
+    var cardCls  = 'card-utility group flex h-52 max-w-5xl mx-auto overflow-hidden slide-up' +
+      (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
 
     var wrapOpen = prem
-      ? '<div onclick="window.openAltitudeAccessModal()" class="group flex h-52 max-w-5xl mx-auto rounded-2xl overflow-hidden border ' + cardBorder + ' shadow-sm transition-all duration-300 slide-up cursor-pointer" style="animation-delay:.05s;">'
-      : '<a href="' + href + '" class="group flex h-52 max-w-5xl mx-auto rounded-2xl overflow-hidden border ' + cardBorder + ' shadow-sm transition-all duration-300 slide-up" style="animation-delay:.05s;">';
+      ? '<div onclick="window.openAltitudeAccessModal()" class="' + cardCls + '" style="animation-delay:.05s;">'
+      : '<a href="' + href + '" class="' + cardCls + '" style="animation-delay:.05s;">';
     var wrapClose = prem ? '</div>' : '</a>';
 
     container.innerHTML =
@@ -260,7 +261,7 @@
 
         '<div class="flex-1 bg-white p-5 md:p-7 flex flex-col justify-center min-w-0">' +
           (tagHtml ? '<div class="flex flex-wrap gap-1 mb-3">' + tagHtml + '</div>' : '') +
-          '<h2 class="text-base md:text-lg font-display font-bold text-neutral-900 leading-snug mb-2 ' + (prem ? '' : 'group-hover:text-brand-700') + ' transition-colors">' + e(post.title) + '</h2>' +
+          '<h3 class="text-base md:text-lg font-display font-bold text-neutral-900 leading-snug mb-2 ' + (prem ? '' : 'group-hover:text-brand-700') + ' transition-colors">' + e(post.title) + '</h3>' +
           (post.subtitle ? '<p class="text-xs text-neutral-400 mb-3 font-medium truncate">' + e(post.subtitle) + '</p>' : '') +
           (date ? '<div class="flex items-center gap-2 text-xs text-neutral-400 mb-4"><i class="fa-regular fa-calendar text-[10px]"></i><span>' + e(date) + '</span></div>' : '') +
           ctaHtml +
@@ -308,25 +309,25 @@
       : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
 
     var altitudeBadge = prem
-      ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
+      ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
       : '';
 
     var lockIcon = prem
-      ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-amber-500/30 flex items-center justify-center"><i class="fa-solid fa-lock text-amber-300 text-[8px]"></i></div></div>'
+      ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-lock text-gold-light text-[8px]"></i></div></div>'
       : '';
 
     var href = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
 
     var ctaHtml = prem
-      ? '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 group-hover:text-amber-800 transition-colors">' +
+      ? '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark group-hover:text-gold transition-colors">' +
             'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
             '<p class="text-[10px] text-neutral-400 mt-1 italic">Already a member? Check your email.</p>'
       : '<a href="' + href + '"' +
             ' class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">' +
             'Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
 
-    var cardCls = 'group bg-white border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 slide-up ' +
-      (prem ? 'border-amber-200/60 hover:shadow-md cursor-pointer' : 'border-neutral-100 hover:shadow-md');
+    var cardCls = 'group card-utility overflow-hidden slide-up' +
+      (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
 
     var titleCls = 'text-sm font-display font-bold text-neutral-900 mb-3 transition-colors leading-snug' +
       (prem ? '' : ' group-hover:text-brand-700');

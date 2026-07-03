@@ -20,15 +20,8 @@
   <script src="../js/tailwind-config.js" defer></script>
   <script src="../js/contact.js" defer></script>
   <style>
-    .contact-hero-bg {
+    .contact-panel-bg {
       background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
-    }
-    section.contact-hero-bg {
-      background:
-        linear-gradient(160deg, rgba(13,27,53,.82) 0%, rgba(26,36,55,.82) 55%, rgba(15,32,64,.82) 100%),
-        url('../images/page-images/bg-1.png');
-      background-size: cover;
-      background-position: center;
     }
     .form-label {
       display: block;
@@ -39,51 +32,15 @@
       color: #6b7280;
       margin-bottom: 0.45rem;
     }
-    .form-input {
-      width: 100%;
-      padding: 0.8rem 1.1rem;
-      border-radius: 9999px;
-      border: 1px solid rgba(0, 102, 204, 0.15);
-      background: #fafafa;
-      font-size: 0.875rem;
-      color: #1d1d1f;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      font-family: 'Manrope', sans-serif;
-    }
-    .form-input:focus {
-      border-color: #0066cc;
-      background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.10);
-    }
-    .form-textarea {
-      width: 100%;
-      padding: 0.8rem 1.1rem;
-      border-radius: 14px;
-      border: 1px solid rgba(0, 102, 204, 0.15);
-      background: #fafafa;
-      font-size: 0.875rem;
-      color: #1d1d1f;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      font-family: 'Manrope', sans-serif;
-      line-height: 1.65;
-      resize: none;
-    }
-    .form-textarea:focus {
-      border-color: #0066cc;
-      background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.10);
-    }
     .btn-contact-success {
-      background: #10b981 !important;
-      border-color: #10b981 !important;
+      background: #16a34a !important;
+      border-color: #16a34a !important;
       color: #ffffff !important;
       pointer-events: none;
     }
     .btn-contact-error {
-      background: #ef4444 !important;
-      border-color: #ef4444 !important;
+      background: #dc2626 !important;
+      border-color: #dc2626 !important;
       color: #ffffff !important;
     }
     .contact-channel-link {
@@ -116,13 +73,7 @@
     <!-- =============================================
          1. HERO
          ============================================= -->
-    <section class="contact-hero-bg relative pb-20 overflow-hidden">
-
-      <div class="absolute inset-0 pointer-events-none opacity-10"
-        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
-               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
-               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
-      </div>
+    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/contact.png');">
 
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-2xl mx-auto text-center slide-up">
@@ -136,9 +87,13 @@
             Let's Start Your<br class="hidden sm:block"> Next Journey.
           </h1>
 
-          <p class="text-base md:text-lg leading-relaxed max-w-xl mx-auto font-medium text-white/65">
+          <p class="text-base md:text-lg leading-relaxed max-w-xl mx-auto font-medium text-white/65 mb-10">
             Have a question or a complex itinerary in mind? Our strategists are just a message away.
           </p>
+
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp">
+            <i class="fa-brands fa-whatsapp text-sm"></i> Chat on WhatsApp
+          </a>
 
         </div>
       </div>
@@ -152,10 +107,10 @@
     <section class="py-24 bg-neutral-50">
       <div class="container mx-auto px-4 md:px-6 max-w-5xl">
 
-        <div class="rounded-[28px] overflow-hidden border border-neutral-100 shadow-sm grid md:grid-cols-[1fr_1.4fr] slide-up">
+        <div class="rounded-[18px] overflow-hidden border border-neutral-100 grid md:grid-cols-[1fr_1.4fr] slide-up">
 
           <!-- ── LEFT: Info panel ───────────────────── -->
-          <div class="contact-hero-bg p-10 lg:p-12 flex flex-col">
+          <div class="contact-panel-bg p-10 lg:p-12 flex flex-col">
 
             <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Contact</p>
             <h2 class="text-2xl md:text-3xl font-display font-bold text-white mb-3 tracking-tight leading-snug">
@@ -170,8 +125,8 @@
 
               <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
                 class="contact-channel-link">
-                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <i class="fa-brands fa-whatsapp text-white text-base"></i>
+                <div class="icon-chip icon-chip-dark flex-shrink-0">
+                  <i class="fa-brands fa-whatsapp"></i>
                 </div>
                 <div>
                   <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">WhatsApp</p>
@@ -182,8 +137,8 @@
 
               <a href="mailto:info@skyfareconsulting.com"
                 class="contact-channel-link">
-                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <i class="fa-solid fa-envelope text-white text-sm"></i>
+                <div class="icon-chip icon-chip-dark flex-shrink-0">
+                  <i class="fa-solid fa-envelope"></i>
                 </div>
                 <div>
                   <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Email</p>
@@ -194,8 +149,8 @@
 
               <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
                 class="contact-channel-link">
-                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <i class="fa-brands fa-instagram text-white text-base"></i>
+                <div class="icon-chip icon-chip-dark flex-shrink-0">
+                  <i class="fa-brands fa-instagram"></i>
                 </div>
                 <div>
                   <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Instagram</p>
@@ -253,7 +208,7 @@
                   class="form-textarea"></textarea>
               </div>
 
-              <button type="submit" class="btn-pill btn-pill-primary w-full justify-center text-sm">
+              <button type="submit" class="btn-pill btn-pill-primary w-full justify-center text-sm py-3.5">
                 Send Inquiry
               </button>
 
@@ -268,47 +223,34 @@
 
 
     <!-- =============================================
-         3. CLOSING CTA — dark tile
+         3. CLOSING CTA BAND
          ============================================= -->
-    <section class="py-24 tile-dark1">
-      <div class="container mx-auto px-4 md:px-6">
-        <div class="max-w-lg mx-auto text-center">
-
-          <div class="slide-up">
-            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Ready?</p>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight mb-4">
-              Start your journey today.
-            </h2>
-            <p class="section-lead-dark mb-8">
-              The fastest way to reach us is WhatsApp. We typically respond within minutes.
-            </p>
-          </div>
-
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up" style="animation-delay:0.1s;">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" class="btn-pill btn-pill-primary">
+    <section class="cta-band">
+      <div class="cta-band__art"></div>
+      <div class="cta-band__veil"></div>
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-xl mx-auto text-center slide-up">
+          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Ready?</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+            Start your journey today.
+          </h2>
+          <p class="section-lead-dark mb-9 max-w-md mx-auto">
+            The fastest way to reach us is WhatsApp. We typically respond within minutes.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+              class="btn-pill btn-pill-whatsapp text-base" style="padding:0.875rem 1.75rem;">
               <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
             </a>
-            <a href="services.html" class="btn-pill btn-pill-ghost">
+            <a href="services.html" class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
               See Our Services
             </a>
           </div>
-
         </div>
       </div>
     </section>
 
   </main>
 
-  <script>
-  (function () {
-    window.addEventListener('load', function () {
-      var header = document.getElementById('main-header');
-      var hero   = document.querySelector('.contact-hero-bg');
-      if (!header || !hero) return;
-      document.body.style.paddingTop = '0';
-      hero.style.paddingTop = (header.offsetHeight + 32) + 'px';
-    });
-  })();
-  </script>
 </body>
 </html>

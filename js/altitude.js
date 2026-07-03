@@ -309,10 +309,10 @@
       : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
 
     var badge = prem
-      ? '<span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span>'
+      ? '<span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span>'
       : '';
 
-    return '<article class="group bg-white border border-neutral-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300" style="animation-delay:' + delay + '">' +
+    return '<article class="group card-utility overflow-hidden" style="animation-delay:' + delay + '">' +
       '<a href="' + href + '" class="block">' +
         '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
           imgHtml +

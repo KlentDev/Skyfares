@@ -19,15 +19,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
-  <style>
-    .flight-hero-bg {
-      background:
-        linear-gradient(160deg, rgba(13,27,53,.82) 0%, rgba(26,36,55,.82) 55%, rgba(15,32,64,.82) 100%),
-        url('../images/page-images/bg-1.png');
-      background-size: cover;
-      background-position: center;
-    }
-  </style>
 </head>
 
 <body class="min-h-screen flex flex-col bg-white">
@@ -45,13 +36,7 @@
          window.load script at the bottom sets the
          hero's paddingTop to match the rendered header.
          ============================================= -->
-    <section class="flight-hero-bg relative pb-24 overflow-hidden">
-
-      <div class="absolute inset-0 pointer-events-none opacity-10"
-        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
-               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
-               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
-      </div>
+    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/skyfare-flight.JPG');">
 
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="text-center max-w-2xl mx-auto slide-up">
@@ -89,7 +74,7 @@
           <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-6 tracking-tight">
             One flight. Once a quarter.<br class="hidden sm:block"> For someone who deserves it.
           </h2>
-          <p class="text-base md:text-[17px] text-neutral-600 leading-relaxed">
+          <p class="section-lead">
             Once every three months, Skyfare arranges a flight for one person. No catch, no competition — just a story that moved us. We handle everything. All you have to do is apply.
           </p>
 
@@ -115,7 +100,7 @@
 
           <div class="card-dark p-8 flex-1 text-center slide-up">
             <div class="step-number mb-1">01</div>
-            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+            <div class="icon-chip icon-chip-lg icon-chip-dark mb-4 mx-auto">
               <i class="fa-solid fa-pen-nib"></i>
             </div>
             <h3 class="text-base font-display font-semibold text-white mb-2">Apply</h3>
@@ -128,7 +113,7 @@
 
           <div class="card-dark p-8 flex-1 text-center slide-up" style="animation-delay:0.1s;">
             <div class="step-number mb-1">02</div>
-            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+            <div class="icon-chip icon-chip-lg icon-chip-dark mb-4 mx-auto">
               <i class="fa-solid fa-heart"></i>
             </div>
             <h3 class="text-base font-display font-semibold text-white mb-2">We Choose</h3>
@@ -141,7 +126,7 @@
 
           <div class="card-dark p-8 flex-1 text-center slide-up" style="animation-delay:0.2s;">
             <div class="step-number mb-1">03</div>
-            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+            <div class="icon-chip icon-chip-lg icon-chip-dark mb-4 mx-auto">
               <i class="fa-solid fa-plane-departure"></i>
             </div>
             <h3 class="text-base font-display font-semibold text-white mb-2">You Fly</h3>
@@ -168,7 +153,7 @@
             <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
               Tell us your story.
             </h2>
-            <p class="text-base text-neutral-500 leading-relaxed">
+            <p class="section-lead">
               Applications are open year-round. We read every one.
             </p>
           </div>
@@ -191,7 +176,7 @@
                 required
                 autocomplete="name"
                 placeholder="Your full name"
-                class="w-full px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+                class="form-input"
               >
             </div>
 
@@ -204,7 +189,7 @@
                 required
                 autocomplete="email"
                 placeholder="your@email.com"
-                class="w-full px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+                class="form-input"
               >
             </div>
 
@@ -216,7 +201,7 @@
                 type="text"
                 required
                 placeholder="City, country"
-                class="w-full px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white"
+                class="form-input"
               >
             </div>
 
@@ -228,7 +213,7 @@
                 rows="3"
                 required
                 placeholder="The place, and what draws you to it."
-                class="w-full px-5 py-3.5 rounded-2xl border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white resize-none leading-relaxed"
+                class="form-input"
               ></textarea>
             </div>
 
@@ -241,7 +226,7 @@
                 required
                 maxlength="300"
                 placeholder="A few sentences is plenty."
-                class="w-full px-5 py-3.5 rounded-2xl border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white resize-none leading-relaxed"
+                class="form-input"
                 oninput="document.getElementById('char-count').textContent = this.value.length"
               ></textarea>
               <p class="text-xs text-neutral-400 mt-1.5 text-right"><span id="char-count">0</span>&thinsp;/&thinsp;300</p>
@@ -276,22 +261,22 @@
          route + one-line story. No personal details
          unless consented.
          ============================================= -->
-    <section class="py-24 tile-dark1">
+    <section class="py-24 tile-parch">
       <div class="container mx-auto px-4 md:px-6">
 
         <div class="text-center mb-10 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Past Recipients</p>
-          <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight mb-4">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">Past Recipients</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight mb-4">
             Flights We've Given
           </h2>
-          <p class="text-white/40 text-base max-w-xs mx-auto leading-relaxed">
+          <p class="section-lead max-w-xs mx-auto">
             This section fills each quarter. The first flight is coming.
           </p>
         </div>
 
         <div class="max-w-sm mx-auto slide-up" style="animation-delay:0.1s;">
-          <div class="authority-card p-10 flex flex-col items-center text-center">
-            <div class="w-12 h-12 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-xl mb-4">
+          <div class="card-dark p-10 flex flex-col items-center text-center">
+            <div class="icon-chip icon-chip-lg icon-chip-dark mb-4">
               <i class="fa-regular fa-clock"></i>
             </div>
             <p class="text-sm text-white/40 leading-relaxed">
@@ -300,6 +285,34 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+
+    <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
+    <section class="cta-band">
+      <div class="cta-band__art"></div>
+      <div class="cta-band__veil"></div>
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-xl mx-auto text-center slide-up">
+          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-paper-plane text-[10px]"></i> Your Turn</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+            Could the next flight be yours?
+          </h2>
+          <p class="section-lead-dark mb-9 max-w-md mx-auto">
+            It takes two minutes to apply, and we read every story. Tell us where you'd go.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <a href="#apply" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'});return false;"
+              class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
+              <i class="fa-solid fa-paper-plane text-sm"></i> Apply Now
+            </a>
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+              class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
+              <i class="fa-brands fa-whatsapp"></i> Ask a Question
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -322,9 +335,9 @@
     function fireConfetti() {
       loadConfetti(function () {
         if (typeof confetti !== 'function') return;
-        confetti({ particleCount: 110, spread: 75, origin: { x: 0.5, y: 0.4 }, colors: ['#0C4A6E', '#38bdf8', '#7dd3fc', '#C9A227', '#ffffff'], zIndex: 9999 });
-        setTimeout(function () { confetti({ particleCount: 55, spread: 55, origin: { x: 0.25, y: 0.5 }, colors: ['#0C4A6E', '#bae6fd', '#ffffff'], zIndex: 9999 }); }, 180);
-        setTimeout(function () { confetti({ particleCount: 55, spread: 55, origin: { x: 0.75, y: 0.5 }, colors: ['#C9A227', '#7dd3fc', '#0C4A6E'], zIndex: 9999 }); }, 340);
+        confetti({ particleCount: 110, spread: 75, origin: { x: 0.5, y: 0.4 }, colors: ['#003d7a', '#0066cc', '#38a1ff', '#C9A227', '#ffffff'], zIndex: 9999 });
+        setTimeout(function () { confetti({ particleCount: 55, spread: 55, origin: { x: 0.25, y: 0.5 }, colors: ['#0066cc', '#7ac0ff', '#ffffff'], zIndex: 9999 }); }, 180);
+        setTimeout(function () { confetti({ particleCount: 55, spread: 55, origin: { x: 0.75, y: 0.5 }, colors: ['#C9A227', '#38a1ff', '#003d7a'], zIndex: 9999 }); }, 340);
       });
     }
 
@@ -355,19 +368,6 @@
         btn.textContent = 'Apply for The Skyfare Flight';
         alert('Something went wrong. Please try again.');
       });
-    });
-  })();
-
-  // Hero padding-top fix — same pattern as newsletter.html.
-  // header.js measures header height before fonts load (DOMContentLoaded),
-  // so we override it here on window.load when fonts are stable.
-  (function () {
-    window.addEventListener('load', function () {
-      var header = document.getElementById('main-header');
-      var hero   = document.querySelector('.flight-hero-bg');
-      if (!header || !hero) return;
-      document.body.style.paddingTop = '0';
-      hero.style.paddingTop = (header.offsetHeight + 32) + 'px';
     });
   })();
   </script>

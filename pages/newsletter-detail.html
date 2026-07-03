@@ -52,7 +52,7 @@
       </div>
       <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3">Issue not found</h1>
       <p class="text-neutral-500 mb-8 text-sm">This issue may have moved or been unpublished.</p>
-      <a href="javascript:void(0)" onclick="goBack()" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
+      <a href="javascript:void(0)" onclick="goBack()" class="btn-pill btn-pill-primary">
         <i class="fa-solid fa-arrow-left text-xs"></i> Back to Newsletter
       </a>
     </div>
@@ -123,8 +123,8 @@
           <div class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none" style="background:linear-gradient(to top,#ffffff 0%,transparent 100%);"></div>
         </div>
         <!-- Upgrade block -->
-        <div class="mt-2 rounded-2xl border border-amber-200/60 bg-amber-50/40 p-8 md:p-10 text-center">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-5">
+        <div class="mt-2 rounded-[18px] border border-gold/30 bg-gold-50 p-8 md:p-10 text-center">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/40 bg-gold/10 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
             <i class="fa-solid fa-crown text-[9px]"></i> Altitude Exclusive
           </div>
           <h2 class="text-xl font-display font-bold text-neutral-900 mb-3">This edition is for Altitude members.</h2>
@@ -132,7 +132,7 @@
           <a id="nsl-gate-cta"
              href="https://api.whatsapp.com/send?phone=6581575306&text=Hi%20Skyfare%2C%20I%27d%20like%20to%20upgrade%20to%20Altitude%20Premium."
              target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-600 text-white font-bold text-sm hover:bg-amber-700 transition-colors mb-4">
+             class="btn-pill btn-pill-gold mb-4">
             <i class="fa-brands fa-whatsapp"></i> Get Altitude Access
           </a>
           <p class="text-xs text-neutral-400 italic">Already a member? The full edition is in your inbox.</p>
@@ -161,7 +161,7 @@
     </div><!-- /nsl-content -->
 
     <!-- ── Related issues ────────────────────────────────────────────────── -->
-    <section id="nsl-related" class="hidden py-16 bg-neutral-50">
+    <section id="nsl-related" class="hidden py-16 tile-parch">
       <div class="container mx-auto px-4 md:px-6 max-w-5xl">
         <div class="flex items-center gap-4 mb-8">
           <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-500 flex-shrink-0">More Issues</p>
@@ -180,11 +180,11 @@
           <div data-newsletter-form>
             <label for="nd-name" class="sr-only">First name (optional)</label>
             <input id="nd-name" data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
-              class="w-full mb-3 px-5 py-3.5 rounded-full border border-white/10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm">
+              class="form-input mb-3">
             <div class="flex flex-col sm:flex-row gap-3">
               <label for="nd-email" class="sr-only">Email address</label>
               <input id="nd-email" data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
-                class="flex-1 px-5 py-3.5 rounded-full border border-white/10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm">
+                class="form-input flex-1">
               <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">Subscribe</button>
             </div>
             <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>

@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       </div>
                       <div class="text-sm font-semibold text-brand-950">Chauffeur</div>
                     </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#concierge" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-concierge-bell text-sm"></i>
                       </div>
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- Right side: Book a Flight button -->
         <div class="hidden lg:flex items-center gap-3 ml-auto">
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html"
-            class="book-now-btn inline-flex items-center gap-2 rounded-xl border border-white/70 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:-translate-y-0.5 transition-all active:scale-95">
+            class="book-now-btn inline-flex items-center gap-2 rounded-full border border-white/70 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:-translate-y-0.5 transition-all active:scale-95">
             <i class="fa-solid fa-calendar-check text-lg"></i>
             Book a Flight
           </a>
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-car text-brand-400 w-6 text-base"></i> Chauffeur
               </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html#concierge" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-concierge-bell text-brand-400 w-6 text-base"></i> Concierge Services
               </a>
             </div>
@@ -219,9 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject into body at the start
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Transparent-on-hero / solid-on-scroll header logic
+  // Transparent-on-hero / solid-on-scroll header logic.
+  // Matches the homepage hero (.hero-brand-fade) AND every interior page hero
+  // (.page-hero-bg) so all dark heroes get the transparent white-nav treatment.
   const headerEl = document.getElementById('main-header');
-  const heroSection = document.querySelector('.hero-brand-fade');
+  const heroSection = document.querySelector('.hero-brand-fade, .page-hero-bg');
 
   if (heroSection && headerEl) {
     function updateHeaderState() {

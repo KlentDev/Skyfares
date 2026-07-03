@@ -428,12 +428,13 @@
       tbody.innerHTML = '';
       rows.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-brand-50/5 transition-colors border-b border-neutral-100";
+        tr.className =
+          "hover:bg-brand-50/5 transition-colors border-b border-neutral-100 last:border-0";
         tr.innerHTML = `
-            <td class="px-8 py-5 font-bold text-brand-950">Singapore → ${r.to}</td>
-            <td class="px-8 py-5"><span class="px-3 py-1 rounded-full bg-neutral-100 text-neutral-600 text-[10px] font-black uppercase tracking-wider">${r.region}</span></td>
-            <td class="px-8 py-5 font-semibold text-neutral-700">${r.saver.toLocaleString()} mi</td>
-            <td class="px-8 py-5 font-semibold text-neutral-700">${r.advantage.toLocaleString()} mi</td>
+            <td class="px-8 py-5 text-sm font-bold text-brand-950">Singapore → ${r.to}</td>
+            <td class="px-8 py-5 text-sm font-black text-neutral-400 text-center uppercase tracking-widest"><span class="px-3 py-1 bg-neutral-100 rounded-full text-[10px]">${r.region}</span></td>
+            <td class="px-8 py-5 text-right font-bold text-neutral-600 font-mono">${r.saver.toLocaleString()} mi</td>
+            <td class="px-8 py-5 text-right font-bold text-neutral-600 font-mono">${r.advantage.toLocaleString()} mi</td>
           `;
         tbody.appendChild(tr);
       });

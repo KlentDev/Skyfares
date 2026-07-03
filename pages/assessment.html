@@ -17,15 +17,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
-  <style>
-    .assessment-hero-bg {
-      background:
-        linear-gradient(135deg, rgba(26,36,55,.82) 0%, rgba(30,43,64,.82) 100%),
-        url('../images/page-images/bg-1.png');
-      background-size: cover;
-      background-position: center;
-    }
-  </style>
 </head>
 
 <body class="min-h-screen flex flex-col bg-white">
@@ -38,30 +29,24 @@
   <main class="flex-1">
 
     <!-- ─── HERO ─────────────────────────────────────────────────── -->
-    <section class="assessment-hero-bg relative pb-24 overflow-hidden">
-      <div class="absolute inset-0 pointer-events-none opacity-10"
-        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
-               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
-               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
-      </div>
+    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/assessment-call.png');">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-2xl mx-auto text-center slide-up">
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
             <i class="fa-solid fa-calendar-check text-[10px]"></i>
             Complimentary &middot; No Obligation
           </div>
-          <h1 class="text-4xl md:text-5xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
             Free Assessment<br>Call.
           </h1>
-          <p class="text-base text-white/60 leading-relaxed mb-10 font-medium max-w-lg mx-auto">
+          <p class="text-base md:text-lg text-white/65 leading-relaxed mb-10 font-medium max-w-xl mx-auto">
             A 20–30 minute expert consultation to scope your trip, check feasibility across cash and miles, and map the smartest next steps for your journey.
           </p>
           <div class="flex flex-wrap justify-center gap-3">
             <a href="book.html?service=assessment" class="btn-pill btn-pill-primary">
               <i class="fa-solid fa-calendar-check text-sm"></i> Book Free Call
             </a>
-            <a href="services.html"
-              class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 bg-white/10 text-white text-sm font-semibold hover:bg-white/20 transition-all">
+            <a href="services.html" class="btn-pill btn-pill-ghost">
               See All Services
             </a>
           </div>
@@ -77,16 +62,16 @@
         <div class="flex items-center gap-4 mb-14 slide-up">
           <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">What's Included</p>
           <div class="flex-1 h-px bg-neutral-100"></div>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full flex-shrink-0">Free</span>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border border-brand-100 px-3 py-1 rounded-full flex-shrink-0">Free</span>
         </div>
 
         <div class="grid md:grid-cols-2 gap-14 md:gap-20 items-start">
 
           <div class="slide-up">
-            <h2 class="text-3xl font-display font-bold text-neutral-900 mb-5 tracking-tight leading-tight">
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-5 tracking-tight leading-tight">
               A clear flight strategy in 30 minutes.
             </h2>
-            <p class="text-base text-neutral-500 leading-relaxed mb-8">
+            <p class="section-lead mb-8">
               We audit your travel goals, check feasibility across all major airlines, and identify the highest-value redemption paths for your dates and destination — no strings attached.
             </p>
             <a href="book.html?service=assessment" class="btn-pill btn-pill-primary">
@@ -96,8 +81,8 @@
 
           <div class="space-y-7 slide-up" style="animation-delay:.05s;">
             <div class="flex items-start gap-4">
-              <div class="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-route text-brand-500 text-xs"></i>
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-route"></i>
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 mb-1">Feasibility Check</p>
@@ -105,8 +90,8 @@
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <div class="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-bolt text-brand-500 text-xs"></i>
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-bolt"></i>
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 mb-1">Sweet-Spot Scan</p>
@@ -114,12 +99,30 @@
               </div>
             </div>
             <div class="flex items-start gap-4">
-              <div class="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-envelope-open-text text-brand-500 text-xs"></i>
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-envelope-open-text"></i>
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 mb-1">Written Action Plan</p>
                 <p class="text-sm text-neutral-400 leading-relaxed">A detailed summary email with your clear next steps — delivered within 24 hours of the call.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-handshake-slash"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-neutral-900 mb-1">No Sales Pressure</p>
+                <p class="text-sm text-neutral-400 leading-relaxed">Ask anything freely. Our goal is to provide real value — not create obligations or push you toward a sale.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-neutral-900 mb-1">Private &amp; Secure</p>
+                <p class="text-sm text-neutral-400 leading-relaxed">All trip details and personal information are kept strictly confidential and never shared.</p>
               </div>
             </div>
           </div>
@@ -130,12 +133,12 @@
 
 
     <!-- ─── THE CALL PROCESS ──────────────────────────────────────── -->
-    <section class="py-24 tile-dark1">
+    <section class="py-24 tile-parch">
       <div class="container mx-auto px-4 md:px-6">
 
         <div class="text-center mb-14 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">How It Works</p>
-          <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">How It Works</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
             Simple 3-step process.
           </h2>
         </div>
@@ -144,7 +147,7 @@
 
           <div class="card-dark p-8 flex-1 text-center slide-up">
             <div class="step-number mb-1">01</div>
-            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+            <div class="icon-chip icon-chip-lg icon-chip-dark mb-4 mx-auto">
               <i class="fa-solid fa-pen-to-square"></i>
             </div>
             <h3 class="text-base font-display font-semibold text-white mb-2">Share the Basics</h3>
@@ -157,7 +160,7 @@
 
           <div class="card-dark p-8 flex-1 text-center slide-up" style="animation-delay:.1s;">
             <div class="step-number mb-1">02</div>
-            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+            <div class="icon-chip icon-chip-lg icon-chip-dark mb-4 mx-auto">
               <i class="fa-solid fa-comments"></i>
             </div>
             <h3 class="text-base font-display font-semibold text-white mb-2">Free Consult</h3>
@@ -170,7 +173,7 @@
 
           <div class="card-dark p-8 flex-1 text-center slide-up" style="animation-delay:.2s;">
             <div class="step-number mb-1">03</div>
-            <div class="w-11 h-11 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400 text-lg mb-4 mx-auto">
+            <div class="icon-chip icon-chip-lg icon-chip-dark mb-4 mx-auto">
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </div>
             <h3 class="text-base font-display font-semibold text-white mb-2">Your Next Step</h3>
@@ -189,87 +192,33 @@
     </section>
 
 
-    <!-- ─── OUR PROMISE ───────────────────────────────────────────── -->
-    <section class="py-24 bg-white">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-
-        <div class="flex items-center gap-4 mb-14 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Our Promise</p>
-          <div class="flex-1 h-px bg-neutral-100"></div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-x-14 gap-y-10 slide-up" style="animation-delay:.05s;">
-
-          <div class="flex items-start gap-4">
-            <div class="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <i class="fa-solid fa-handshake-slash text-brand-500 text-xs"></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-neutral-900 mb-1">No Sales Pressure</p>
-              <p class="text-sm text-neutral-400 leading-relaxed">Ask anything freely. Our goal is to provide real value, not push upsells or create obligations.</p>
-            </div>
+    <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
+    <section class="cta-band">
+      <div class="cta-band__art"></div>
+      <div class="cta-band__veil"></div>
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-xl mx-auto text-center slide-up">
+          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Ready?</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+            Let's talk — no commitment.
+          </h2>
+          <p class="section-lead-dark mb-9 max-w-md mx-auto">
+            Not sure if Business Class on miles is right for you? Start with a free call and we'll give you an honest answer.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+              class="btn-pill btn-pill-whatsapp text-base" style="padding:0.875rem 1.75rem;">
+              <i class="fa-brands fa-whatsapp"></i> Message on WhatsApp
+            </a>
+            <a href="book.html?service=assessment" class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
+              <i class="fa-solid fa-calendar-check text-sm"></i> Book Free Assessment
+            </a>
           </div>
-
-          <div class="flex items-start gap-4">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <i class="fa-solid fa-shield-halved text-emerald-500 text-xs"></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-neutral-900 mb-1">Private &amp; Secure</p>
-              <p class="text-sm text-neutral-400 leading-relaxed">All trip details and personal information are kept strictly confidential and never shared.</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-4">
-            <div class="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <i class="fa-solid fa-clock-rotate-left text-brand-500 text-xs"></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-neutral-900 mb-1">Fast Turnaround</p>
-              <p class="text-sm text-neutral-400 leading-relaxed">Your personalized flight strategy summary lands in your inbox within 24 hours of the call.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ─── CTA ───────────────────────────────────────────────────── -->
-    <section class="py-20 tile-sky">
-      <div class="container mx-auto px-4 md:px-6 max-w-xl text-center slide-up">
-        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">Still deciding?</p>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
-          Let's talk first — no commitment.
-        </h2>
-        <p class="text-neutral-600 text-base leading-relaxed mb-8">
-          Not sure if Business Class on miles is right for you? Start with a free chat and we'll give you an honest answer.
-        </p>
-        <div class="flex flex-wrap justify-center gap-3">
-          <a href="book.html?service=assessment" class="btn-pill btn-pill-primary">
-            <i class="fa-solid fa-calendar-check text-sm"></i> Book Free Assessment
-          </a>
-          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-brand-200 bg-white text-brand-900 text-sm font-semibold hover:bg-brand-50 transition-all">
-            <i class="fa-brands fa-whatsapp text-sm"></i> Message on WhatsApp
-          </a>
         </div>
       </div>
     </section>
 
   </main>
-
-  <script>
-  (function () {
-    window.addEventListener('load', function () {
-      var header = document.getElementById('main-header');
-      var hero   = document.querySelector('.assessment-hero-bg');
-      if (!header || !hero) return;
-      document.body.style.paddingTop = '0';
-      hero.style.paddingTop = (header.offsetHeight + 32) + 'px';
-    });
-  })();
-  </script>
 
 </body>
 </html>

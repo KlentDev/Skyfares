@@ -19,15 +19,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
-  <style>
-    .newsletter-hero-bg {
-      background:
-        linear-gradient(135deg, rgba(26,36,55,.82) 0%, rgba(30,43,64,.82) 100%),
-        url('../images/page-images/bg-1.png');
-      background-size: cover;
-      background-position: center;
-    }
-  </style>
 </head>
 
 <body class="min-h-screen flex flex-col bg-white">
@@ -42,13 +33,7 @@
     <!-- =============================================
          1. HERO — publication header + subscribe form
          ============================================= -->
-    <section class="newsletter-hero-bg relative pb-16 overflow-hidden">
-
-      <div class="absolute inset-0 pointer-events-none opacity-10"
-        style="background-image:url('../images/hero-bg-icons.svg');background-repeat:repeat;background-size:320px 224px;
-               -webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);
-               mask-image:linear-gradient(to bottom,black 50%,transparent 100%);">
-      </div>
+    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/newsletter.png');">
 
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-lg mx-auto text-center slide-up">
@@ -58,11 +43,11 @@
             Skyfare Altitude &middot; Free
           </div>
 
-          <h1 class="text-4xl md:text-5xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
             The Premium Travel Newsletter
           </h1>
 
-          <p class="text-base text-white/60 leading-relaxed mb-8 font-medium">
+          <p class="text-base md:text-lg text-white/65 leading-relaxed mb-8 font-medium">
             Award alerts, cabin reviews, and routing strategies for travelers who fly Business and First Class on points. One issue per week.
           </p>
 
@@ -74,7 +59,7 @@
               type="text"
               autocomplete="given-name"
               placeholder="First name (optional)"
-              class="w-full mb-3 px-5 py-3.5 rounded-full border border-white/20 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm"
+              class="form-input mb-3"
             >
             <div class="flex flex-col sm:flex-row gap-3">
               <label for="hero-email" class="sr-only">Email address</label>
@@ -84,7 +69,7 @@
                 type="email"
                 autocomplete="email"
                 placeholder="Your email address"
-                class="flex-1 px-5 py-3.5 rounded-full border border-white/20 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm"
+                class="form-input flex-1"
               >
               <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">
                 Subscribe Free
@@ -103,20 +88,23 @@
     <!-- =============================================
          2. FEATURED ISSUE — cover-story layout
          ============================================= -->
-    <section class="py-20 bg-white">
+    <section class="py-24 bg-white" data-section="latest-issue">
       <div class="container mx-auto px-4 md:px-6">
 
         <!-- Section rule -->
-        <div class="flex items-center gap-4 mb-10 slide-up">
+        <div class="flex items-center gap-4 mb-4 slide-up">
           <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Latest Issue</p>
           <div class="flex-1 h-px bg-neutral-100"></div>
-          <span class="text-[10px] text-neutral-400 font-medium flex-shrink-0">Jun 24, 2026</span>
+          <span data-issue-date class="text-[10px] text-neutral-400 font-medium flex-shrink-0">Jun 24, 2026</span>
         </div>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-10 tracking-tight slide-up">
+          Fresh from the flight deck.
+        </h2>
 
         <!-- Split editorial card — replaced dynamically by newsletter-archive.js -->
         <div id="featured-issue-container">
         <a href="newsletter-detail.html?slug=emirates-business-class-dubai-to-athens"
-           class="group flex h-52 max-w-5xl mx-auto rounded-2xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-lg transition-all duration-300 slide-up"
+           class="card-utility group flex h-52 max-w-5xl mx-auto overflow-hidden slide-up"
            style="animation-delay:.05s;">
 
           <!-- Image panel -->
@@ -131,7 +119,7 @@
               <span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/90 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue 01</span>
             </div>
             <div class="absolute bottom-3 left-3">
-              <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-black/30 backdrop-blur-sm border border-emerald-500/20 px-2 py-0.5 rounded-full">
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full">
                 <i class="fa-solid fa-unlock text-[8px]"></i> Free
               </span>
             </div>
@@ -143,9 +131,9 @@
               <span class="text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border border-brand-100 px-2 py-0.5 rounded-full">Cabin Review</span>
               <span class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-full">Emirates</span>
             </div>
-            <h2 class="text-base md:text-lg font-display font-bold text-neutral-900 leading-snug mb-2 group-hover:text-brand-700 transition-colors">
+            <h3 class="text-base md:text-lg font-display font-bold text-neutral-900 leading-snug mb-2 group-hover:text-brand-700 transition-colors">
               Emirates Business Class — Dubai to Athens
-            </h2>
+            </h3>
             <p class="text-xs text-neutral-400 mb-3 font-medium truncate">Boeing 777-300ER · Seat 9J · 29 May 2025</p>
             <p class="text-xs text-neutral-500 leading-relaxed mb-4 line-clamp-2 hidden md:block">
               Fully flat, privacy shell that works. Starlink at 284 Mbps gate-to-gate. Full scorecard inside.
@@ -171,19 +159,22 @@
          3. ARCHIVE — all issues grid
          Add new cards here as issues publish.
          ============================================= -->
-    <section class="py-20 bg-neutral-50" id="archive">
+    <section class="py-24 tile-parch" id="archive">
       <div class="container mx-auto px-4 md:px-6">
 
-        <div class="flex items-center gap-4 mb-10 slide-up">
+        <div class="flex items-center gap-4 mb-4 slide-up">
           <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-500 flex-shrink-0">All Issues</p>
           <div class="flex-1 h-px bg-neutral-200"></div>
           <span id="archive-count" class="text-[10px] text-neutral-400 font-medium flex-shrink-0">1 issue</span>
         </div>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-10 tracking-tight slide-up">
+          Every issue, all in one place.
+        </h2>
 
         <div id="archive-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
 
           <!-- Issue 01 -->
-          <article class="group bg-white border border-neutral-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 slide-up">
+          <article class="group card-utility overflow-hidden slide-up">
             <div class="relative h-44 bg-brand-950 overflow-hidden">
               <img
                 src="https://media.beehiiv.com/cdn-cgi/image/fit=scale-down,format=auto,onerror=redirect,quality=80/uploads/asset/file/b7bd0167-2bf4-4e36-baec-cde7551fed1a/27w-usb.png?t=1782126854"
@@ -222,7 +213,7 @@
     <!-- =============================================
          4. ABOUT — brief coverage summary
          ============================================= -->
-    <section class="py-20 bg-white">
+    <section class="py-24 bg-white">
       <div class="container mx-auto px-4 md:px-6 max-w-5xl">
 
         <div class="flex items-center gap-4 mb-10 slide-up">
@@ -233,18 +224,18 @@
         <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-start slide-up" style="animation-delay:.05s;">
 
           <div>
-            <h2 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
               What Skyfare Altitude covers
             </h2>
-            <p class="text-base text-neutral-500 leading-relaxed">
+            <p class="section-lead">
               One issue per week — written by someone who books 100+ premium cabins a year. No filler, no affiliate spam. Just the intelligence to fly Business and First Class on fewer miles.
             </p>
           </div>
 
           <div class="grid grid-cols-2 gap-5">
             <div class="flex items-start gap-3">
-              <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-satellite-dish text-brand-500 text-xs"></i>
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-satellite-dish"></i>
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 mb-0.5">Award Alerts</p>
@@ -252,8 +243,8 @@
               </div>
             </div>
             <div class="flex items-start gap-3">
-              <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-couch text-brand-500 text-xs"></i>
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-couch"></i>
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 mb-0.5">Cabin Reviews</p>
@@ -261,8 +252,8 @@
               </div>
             </div>
             <div class="flex items-start gap-3">
-              <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-route text-brand-500 text-xs"></i>
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-route"></i>
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 mb-0.5">Routing Strategies</p>
@@ -270,8 +261,8 @@
               </div>
             </div>
             <div class="flex items-start gap-3">
-              <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <i class="fa-solid fa-book-open text-brand-500 text-xs"></i>
+              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-book-open"></i>
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 mb-0.5">Miles Guides</p>
@@ -286,20 +277,23 @@
 
 
     <!-- =============================================
-         5. FOOTER CTA — single minimal subscribe form
+         5. FOOTER CTA BAND — single minimal subscribe form
          ============================================= -->
-    <section class="py-20 tile-dark1">
-      <div class="container mx-auto px-4 md:px-6">
-        <div class="max-w-md mx-auto text-center">
+    <section class="cta-band">
+      <div class="cta-band__art"></div>
+      <div class="cta-band__veil"></div>
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-md mx-auto text-center slide-up">
 
-          <h2 class="text-3xl font-display font-bold text-white mb-2 tracking-tight slide-up">
+          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-envelope-open-text text-[10px]"></i> Subscribe Free</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
             Get it in your inbox.
           </h2>
-          <p class="text-white/40 text-sm mb-8 slide-up" style="animation-delay:.05s;">
+          <p class="section-lead-dark mb-9">
             Weekly. Free. No spam.
           </p>
 
-          <div data-newsletter-form class="slide-up" style="animation-delay:.1s;">
+          <div data-newsletter-form>
             <label for="cta-name" class="sr-only">First name (optional)</label>
             <input
               id="cta-name"
@@ -307,7 +301,7 @@
               type="text"
               autocomplete="given-name"
               placeholder="First name (optional)"
-              class="w-full mb-3 px-5 py-3.5 rounded-full border border-white/10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm"
+              class="form-input mb-3"
             >
             <div class="flex flex-col sm:flex-row gap-3">
               <label for="cta-email" class="sr-only">Email address</label>
@@ -317,7 +311,7 @@
                 type="email"
                 autocomplete="email"
                 placeholder="Your email address"
-                class="flex-1 px-5 py-3.5 rounded-full border border-white/10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white shadow-sm"
+                class="form-input flex-1"
               >
               <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">
                 Subscribe
@@ -335,16 +329,5 @@
   <script src="../js/newsletter-archive.js" defer></script>
   <script src="../js/newsletter.js" defer></script>
 
-  <script>
-  (function () {
-    window.addEventListener('load', function () {
-      var header = document.getElementById('main-header');
-      var hero   = document.querySelector('.newsletter-hero-bg');
-      if (!header || !hero) return;
-      document.body.style.paddingTop = '0';
-      hero.style.paddingTop = (header.offsetHeight + 32) + 'px';
-    });
-  })();
-  </script>
 </body>
 </html>
