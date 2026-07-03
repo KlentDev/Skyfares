@@ -9,7 +9,6 @@
  *   POST /altitude/webhook         — Stripe webhook handler
  *   POST /altitude/activate        — issue JWT for member access
  *   GET  /altitude/verify          — verify JWT
- *   POST /altitude/waitlist        — join the pre-launch Altitude waitlist
  *
  * Required secrets (wrangler secret put):
  *   BEEHIIV_API_KEY   STRIPE_SECRET_KEY   STRIPE_WEBHOOK_SECRET
@@ -32,15 +31,6 @@ const MAGIC_LINK_CF_NAME         = 'magic_link_url'; // custom field that holds 
 const RENEWAL_7D_AUTOMATION_ID   = 'aut_6f675263-fec5-436d-894a-91d5c168feaf';
 const RENEWAL_3D_AUTOMATION_ID   = 'aut_2093dcea-c91e-4a81-baae-a3b27cf8d671';
 const RENEWAL_1D_AUTOMATION_ID   = 'aut_eb704a34-24c3-4094-b446-b4eeaf3337ac';
-
-// Pre-launch Altitude waitlist — same reliability pattern as the Altitude
-// Premium cascade below: tag-applying automation is the primary path (fires
-// segment_action on the Welcome automation), REST tag PATCH/POST are
-// fallbacks only. Both automations are created as drafts in Beehiiv and must
-// be published from the editor before they'll actually fire.
-const ALTITUDE_WAITLIST_TAG_ID       = 'a3ca1725-4564-4ff9-afa1-fe7d1aaafcbc';
-const WAITLIST_TAG_AUTOMATION_ID     = 'aut_bcb05979-2bd2-4e3d-a4bc-91b93b40994d'; // "Apply Altitude Waitlist Tag"
-const WAITLIST_WELCOME_AUTOMATION_ID = 'aut_cde997bd-fbc8-4231-9811-875a8e06def5'; // "Altitude Waitlist — Welcome"
 
 const ALLOWED_ORIGINS = [
   'https://skyfareconsulting.com',
@@ -129,12 +119,6 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/altitude/portal') {
       return handleManagePortal(request, env, corsHeaders);
-    }
-
-    // ── Altitude Waitlist ───────────────────────────────────────────────────
-
-    if (request.method === 'POST' && url.pathname === '/altitude/waitlist') {
-      return handleWaitlist(request, env, corsHeaders);
     }
 
     // ── Newsletter routes ──────────────────────────────────────────────────
@@ -909,12 +893,11 @@ async function setupBeehiivMember(email, env) {
   return false;
 }
 
-const SEG_PREMIUM  = 'seg_6b2bf91a-e5fe-42f5-ad9a-e939397add9a';
-const SEG_FREE     = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
-const SEG_WAITLIST = 'seg_3a12536f-79a3-4330-858f-0e15191bd058'; // Altitude Waitlist
+const SEG_PREMIUM = 'seg_6b2bf91a-e5fe-42f5-ad9a-e939397add9a';
+const SEG_FREE    = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
 
 async function triggerSegmentRecalculation(env) {
-  await Promise.all([SEG_PREMIUM, SEG_FREE, SEG_WAITLIST].map(async segId => {
+  await Promise.all([SEG_PREMIUM, SEG_FREE].map(async segId => {
     const res = await fetch(
       `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
       {
@@ -949,191 +932,6 @@ async function verifyBeehiivTag(email, env) {
     (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
   );
   return tags.includes('altitude premium') || tags.includes(BEEHIIV_TAG_ID.toLowerCase());
-}
-
-// ── Altitude Waitlist ─────────────────────────────────────────────────────────
-
-async function handleWaitlist(request, env, corsHeaders) {
-  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  const rlKey = `waitlist-rl:${ip}`;
-  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
-  if (rlCount >= 10) {
-    return respond({ error: 'rate_limited' }, 429, corsHeaders);
-  }
-
-  let body;
-  try { body = await request.json(); }
-  catch { return respond({ error: 'Invalid request.' }, 400, corsHeaders); }
-
-  // Honeypot — silently accept, matching the Airtable handlers' pattern, so
-  // bots get no signal. Worth having here (unlike the plain subscribe route)
-  // since this route is specifically the one advertised on Instagram.
-  if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
-
-  const email     = (body.email || '').trim().toLowerCase();
-  const firstName = (body.first_name || '').toString().trim().slice(0, 80);
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return respond({ error: 'Please enter a valid email address.' }, 400, corsHeaders);
-  }
-
-  const utm = {
-    source:   (body.utm_source   || 'website').toString().trim().slice(0, 100),
-    medium:   (body.utm_medium   || 'organic').toString().trim().slice(0, 100),
-    campaign: (body.utm_campaign || '').toString().trim().slice(0, 100),
-  };
-
-  // Already a paying member — don't tag into the waitlist; a distinct response
-  // lets the frontend show "you already have access" instead of the generic
-  // success state, and keeps the Waitlist segment clean for the eventual
-  // launch-announcement send (you wouldn't want to email that to someone who
-  // already paid).
-  const isPremium = await checkBeehiivPremium(email, env).catch(() => null);
-  if (isPremium === true) {
-    await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
-    return respond({ success: true, already_premium: true }, 200, corsHeaders);
-  }
-
-  const joined = await setupBeehiivWaitlistMember(email, firstName, utm, env).catch(() => false);
-
-  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
-
-  if (!joined) return respond({ error: 'Something went wrong. Please try again.' }, 500, corsHeaders);
-  return respond({ success: true }, 200, corsHeaders);
-}
-
-// Deliberately a parallel, independent cascade rather than a parametrized
-// refactor of setupBeehiivMember(): that function backs the live Stripe
-// revenue path (checkout.session.completed), so it shouldn't gain new
-// branches for an unrelated, lower-stakes flow. Same proven shape (subscribe
-// -> verify -> enroll-in-tag-automation -> verify -> REST fallbacks), with
-// one deliberate deviation: a 409 on the initial subscribe is NOT treated as
-// failure, since "email already has a subscription" is the expected, common
-// case here (an existing free subscriber joining the waitlist), not an error.
-async function setupBeehiivWaitlistMember(email, firstName, utm, env) {
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${env.BEEHIIV_API_KEY}`,
-  };
-
-  const payload = {
-    email,
-    reactivate_existing: true,
-    send_welcome_email: false,
-    double_opt_override: 'disabled',
-    utm_source: utm.source,
-    utm_medium: utm.medium,
-  };
-  if (utm.campaign) payload.utm_campaign = utm.campaign;
-  if (firstName) payload.custom_fields = [{ name: 'first_name', value: firstName }];
-
-  const subRes = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
-    { method: 'POST', headers, body: JSON.stringify(payload) }
-  );
-
-  if (!subRes.ok && subRes.status !== 409) {
-    const errText = await subRes.text().catch(() => '');
-    console.error(`[setupBeehiivWaitlistMember] subscribe failed status=${subRes.status} body=${errText}`);
-    return false;
-  }
-
-  if (await verifyBeehiivWaitlistTag(email, env)) return true;
-
-  // Beehiiv needs a moment to propagate the new subscriber before it is
-  // addressable by the automation enrollment endpoint.
-  await new Promise(r => setTimeout(r, 3000));
-
-  const enrollRes = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${WAITLIST_TAG_AUTOMATION_ID}/journeys`,
-    { method: 'POST', headers, body: JSON.stringify({ email }) }
-  ).catch(() => null);
-  if (enrollRes) {
-    if (!enrollRes.ok) {
-      const errText = await enrollRes.text().catch(() => '');
-      console.error(`[setupBeehiivWaitlistMember] automation enroll failed status=${enrollRes.status} body=${errText}`);
-    } else {
-      await new Promise(r => setTimeout(r, 3000));
-      if (await verifyBeehiivWaitlistTag(email, env)) {
-        await triggerSegmentRecalculation(env);
-        enrollWaitlistWelcomeAutomation(email, env).catch(() => {});
-        return true;
-      }
-    }
-  }
-
-  // REST fallbacks need the subscriber id, which a 409 response above doesn't
-  // give us — look it up (same GET-by-email idiom as verifyBeehiivTag/
-  // checkBeehiivPremium already use elsewhere in this file).
-  const subId = await lookupSubscriberId(email, env);
-  if (subId) {
-    const patchRes = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}`,
-      { method: 'PATCH', headers, body: JSON.stringify({ publication_subscriber_tags: [{ id: ALTITUDE_WAITLIST_TAG_ID }] }) }
-    ).catch(() => null);
-    if (patchRes) {
-      if (!patchRes.ok) {
-        const errText = await patchRes.text().catch(() => '');
-        console.error(`[setupBeehiivWaitlistMember] PATCH publication_subscriber_tags failed status=${patchRes.status} body=${errText}`);
-      } else if (await verifyBeehiivWaitlistTag(email, env)) {
-        await triggerSegmentRecalculation(env);
-        enrollWaitlistWelcomeAutomation(email, env).catch(() => {});
-        return true;
-      }
-    }
-
-    const tagRes = await fetch(
-      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
-      { method: 'POST', headers, body: JSON.stringify({ tags: ['altitude-waitlist'] }) }
-    ).catch(() => null);
-    if (tagRes) {
-      if (!tagRes.ok) {
-        const errText = await tagRes.text().catch(() => '');
-        console.error(`[setupBeehiivWaitlistMember] POST /tags failed status=${tagRes.status} body=${errText}`);
-      } else if (await verifyBeehiivWaitlistTag(email, env)) {
-        await triggerSegmentRecalculation(env);
-        enrollWaitlistWelcomeAutomation(email, env).catch(() => {});
-        return true;
-      }
-    }
-  }
-
-  console.error(`[setupBeehiivWaitlistMember] all tag methods exhausted for ${email}`);
-  return false;
-}
-
-async function lookupSubscriberId(email, env) {
-  const res = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions?email=${encodeURIComponent(email)}&limit=1`,
-    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-  ).catch(() => null);
-  if (!res || !res.ok) return null;
-  const data = await res.json();
-  return (data.data || [])[0]?.id || null;
-}
-
-async function verifyBeehiivWaitlistTag(email, env) {
-  const res = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
-      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
-    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
-  ).catch(() => null);
-  if (!res || !res.ok) return false;
-  const data = await res.json();
-  const sub  = (data.data || data.subscriptions || [])[0];
-  const tags = (sub?.tags || []).map(t => (typeof t === 'string' ? t : (t.name || '')).toLowerCase());
-  return tags.includes('altitude-waitlist') || tags.includes(ALTITUDE_WAITLIST_TAG_ID.toLowerCase());
-}
-
-async function enrollWaitlistWelcomeAutomation(email, env) {
-  const res = await fetch(
-    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${WAITLIST_WELCOME_AUTOMATION_ID}/journeys`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
-      body: JSON.stringify({ email }),
-    }
-  ).catch(() => null);
-  if (res && res.ok) console.log(`[waitlist-welcome] enrolled ${email}`);
 }
 
 // ── Renewal reminders (called by daily cron) ──────────────────────────────────
