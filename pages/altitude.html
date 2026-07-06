@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Altitude Access — Skyfare</title>
+  <meta name="description" content="Premium travel intelligence for Business and First Class travelers. Award alerts, cabin reviews, routing strategies, and exclusive content. $4.99/month." />
+  <link rel="icon" href="../logos/logo.webp" />
+
+  <script src="../js/links.js"></script>
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+  <script src="../js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+  <style>
+    .alt-filter-btn {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; padding: 5px 16px; border-radius: 9999px;
+      border: 1px solid #e5e7eb; background: white; color: #9ca3af;
+      cursor: pointer; transition: background .15s, color .15s, border-color .15s, transform .1s;
+      white-space: nowrap;
+    }
+    .alt-filter-btn:hover { background: #f5f5f7; color: #6b7280; border-color: #d1d5db; }
+    .alt-filter-btn:active { transform: scale(0.95); }
+    .alt-filter-btn.active { background: #0066cc; color: white; border-color: #0066cc; }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <!--
+    DISABLED (temporarily) — QR Modal. Altitude Premium isn't purchasable yet
+    (confirmed by Sahej, 2026-07-03). Already unreachable through the UI (no
+    trigger sets display:flex on it), but kept commented rather than deleted
+    so it can be restored once Premium officially launches:
+
+    <div id="alt-qr-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
+      <div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm"
+        onclick="document.getElementById('alt-qr-modal').style.display='none';"></div>
+      <div class="relative bg-white rounded-2xl p-8 max-w-xs w-full text-center shadow-2xl">
+        <button onclick="document.getElementById('alt-qr-modal').style.display='none';"
+          class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
+          <i class="fa-solid fa-crown text-[9px]"></i> Altitude Access
+        </div>
+        <img src="../images/stripe-QR.png" alt="Scan to subscribe" class="w-48 h-48 mx-auto rounded-2xl mb-4">
+        <p class="text-sm font-semibold text-neutral-900 mb-1">Scan to subscribe</p>
+        <p class="text-xs text-neutral-400">Opens Stripe checkout &middot; $4.99/mo</p>
+      </div>
+    </div>
+  -->
+
+
+  <!-- ── Login Modal ──────────────────────────────────────────────────────── -->
+  <div id="alt-login-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
+    <div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm"
+      onclick="window.closeLoginModal && window.closeLoginModal();"></div>
+    <div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl">
+      <button onclick="window.closeLoginModal && window.closeLoginModal();"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-100 bg-brand-50 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5">
+        <i class="fa-solid fa-key text-[9px]"></i> Member Access
+      </div>
+      <h2 class="text-xl font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Access your membership</h2>
+      <p class="text-sm text-neutral-400 mb-6 leading-relaxed">Enter your member email and we'll send you a secure login link.</p>
+      <form id="alt-login-form">
+        <input id="alt-login-email" type="email" autocomplete="email" placeholder="member@email.com"
+          class="w-full mb-2 px-5 py-3.5 rounded-full border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+        <p class="text-[11px] text-neutral-400 mb-4 px-1 leading-relaxed">
+          <i class="fa-solid fa-circle-info text-[9px] mr-1"></i>One link gets you in and lets you manage your billing too.
+        </p>
+        <button id="alt-login-btn" type="submit" class="w-full btn-pill btn-pill-primary">
+          Send Login Link
+        </button>
+        <p id="alt-login-status" class="text-xs mt-3 text-center min-h-[1.25rem]"></p>
+      </form>
+      <!-- Sent state — shown after magic link email is dispatched -->
+      <div id="alt-login-sent" style="display:none;">
+        <div class="flex flex-col items-center text-center gap-3 py-2">
+          <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
+            <i class="fa-solid fa-envelope-circle-check text-brand-600 text-lg"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-neutral-900 mb-1">Check your inbox</p>
+            <p class="text-xs text-neutral-400 leading-relaxed">We sent a login link to <strong id="alt-login-sent-email" class="text-neutral-700"></strong>. It's valid for 1 hour and you can use it as many times as you need during that window.</p>
+          </div>
+          <button type="button" onclick="window.openLoginModal && window.openLoginModal();"
+            class="text-xs text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors mt-1">
+            Use a different email
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-1">
+
+    <!-- ============================================================
+         MEMBER VIEW
+         ============================================================ -->
+    <div id="alt-member" class="hidden">
+
+      <!-- ── Slim member bar ───────────────────────────────────────────────── -->
+      <div id="alt-member-topbar" class="border-b border-neutral-100 bg-white">
+        <div class="container mx-auto px-4 md:px-6 max-w-5xl h-14 flex items-center justify-between">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-6 h-6 rounded-full bg-brand-900 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-crown text-white text-[8px]"></i>
+            </div>
+            <span class="text-sm font-bold text-neutral-900 font-display flex-shrink-0">Altitude</span>
+            <span class="text-neutral-200 flex-shrink-0">·</span>
+            <span id="alt-member-email" class="text-xs text-neutral-400 truncate"></span>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0 ml-4">
+            <button id="alt-manage-btn" onclick="window.handleManageMembership && window.handleManageMembership()"
+              class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-brand-600 border border-brand-200 hover:bg-brand-50 hover:border-brand-300 active:scale-95 transition-all px-3 py-1.5 rounded-full">
+              <i class="fa-solid fa-credit-card text-[9px]"></i> Manage Membership
+            </button>
+            <button onclick="window.__altSignOut && window.__altSignOut()"
+              class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-neutral-400 border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-600 active:scale-95 transition-all px-3 py-1.5 rounded-full">
+              <i class="fa-solid fa-arrow-right-from-bracket text-[9px]"></i> Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Archive ───────────────────────────────────────────────────────── -->
+      <section class="pt-6 pb-16 tile-parch">
+        <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+          <div class="flex items-center gap-4 mb-6 slide-up">
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Member Archive</p>
+            <div class="flex-1 h-px bg-neutral-200"></div>
+            <span id="alt-post-count" class="text-[10px] text-neutral-400 font-medium flex-shrink-0"></span>
+          </div>
+          <div class="flex items-center gap-2 mb-7 slide-up" id="alt-filters">
+            <button data-filter="all"     class="alt-filter-btn active">All</button>
+            <button data-filter="free"    class="alt-filter-btn">Free</button>
+            <button data-filter="premium" class="alt-filter-btn">Premium</button>
+          </div>
+          <div id="alt-archive-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="col-span-full text-center py-16">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 animate-pulse mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+
+    <!-- ============================================================
+         PUBLIC VIEW
+         ============================================================ -->
+    <div id="alt-public">
+
+      <!-- 1. HERO -->
+      <section id="alt-public-hero" class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/altitude.jpg');">
+
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+          <div class="max-w-xl mx-auto text-center slide-up">
+
+            <div id="alt-cancelled-note" class="hidden mb-6">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold/40 bg-gold/10 text-gold-light text-xs font-semibold">
+                <i class="fa-solid fa-circle-info text-[10px]"></i>
+                Your membership was cancelled. Reactivate below.
+              </div>
+            </div>
+
+            <!--
+              DISABLED (temporarily) — Altitude Premium isn't purchasable yet (confirmed
+              by Sahej, 2026-07-03). Original badge kept here, not deleted, so it can be
+              restored once Premium officially launches:
+
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+                <i class="fa-solid fa-crown text-[10px]"></i>
+                Altitude Access &middot; $4.99 / month
+              </div>
+            -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+              <i class="fa-solid fa-crown text-[10px]"></i>
+              Altitude Access &middot; Launching <span class="text-gold-pulse">Soon</span>
+            </div>
+
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
+              Premium travel<br>intelligence.
+            </h1>
+
+            <p class="text-base md:text-lg text-white/65 leading-relaxed mb-10 font-medium">
+              Award alerts, cabin reviews, routing strategies, and miles guides — the complete Skyfare intelligence brief, delivered weekly. Full archive access included.
+            </p>
+
+            <!-- CTA area -->
+            <div class="max-w-sm mx-auto mt-2">
+
+              <!--
+                DISABLED (temporarily) — original checkout form + real Stripe redirect
+                (handled by handleCheckout in js/altitude.js, also kept commented there).
+                Restore both together once Premium officially launches:
+
+                <form id="alt-checkout-form" class="flex items-center gap-2">
+                  <button id="alt-checkout-btn" type="submit"
+                    class="flex-1 btn-pill btn-pill-primary">
+                    <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
+                  </button>
+                </form>
+                <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">
+                  <span>Cancel any time</span>
+                  <span aria-hidden="true">&middot;</span>
+                  <span>Instant access</span>
+                  <span aria-hidden="true">&middot;</span>
+                  <span>Secure via Stripe</span>
+                </div>
+              -->
+              <!-- Primary: not purchasable yet, join the pre-launch waitlist instead -->
+              <a id="alt-checkout-btn" href="pre-signup-link.html"
+                class="flex-1 btn-pill btn-pill-primary flex items-center justify-center">
+                <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+              </a>
+              <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">
+                <span>No spam</span>
+                <span aria-hidden="true">&middot;</span>
+                <span>One email at launch</span>
+                <span aria-hidden="true">&middot;</span>
+                <span>Unsubscribe anytime</span>
+              </div>
+
+              <!--
+                DISABLED (temporarily) — "Already a Member? Log In" hidden entirely.
+                Altitude Premium isn't purchasable yet (confirmed by Sahej, 2026-07-03),
+                and per explicit instruction this page should show no member-login path
+                for now either. Note: this means the one existing paying member has no
+                way to log in from this page until it's restored — they'd need another
+                channel (WhatsApp/email) until then. Two versions preserved below (the
+                original full-width card, and the smaller restyled link that briefly
+                replaced it) so either can be restored once ready:
+
+                <div class="flex items-center gap-3 my-6">
+                  <div class="flex-1 h-px bg-white/10"></div>
+                  <span class="text-[10px] text-white/20 uppercase tracking-widest">or</span>
+                  <div class="flex-1 h-px bg-white/10"></div>
+                </div>
+                <button type="button"
+                  onclick="window.openLoginModal && window.openLoginModal();"
+                  class="w-full group flex items-center gap-4 px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all text-left">
+                  <div class="w-9 h-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-key text-white/50 text-xs"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-white leading-none mb-1">Already a Member?</p>
+                    <p class="text-[11px] text-white/35 leading-none">Log in for instant archive access</p>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-white/20 text-xs group-hover:text-white/50 group-hover:translate-x-0.5 transition-all"></i>
+                </button>
+
+                <div class="text-center mt-6">
+                  <button type="button"
+                    onclick="window.openLoginModal && window.openLoginModal();"
+                    class="text-[11px] text-white/25 hover:text-white/50 underline underline-offset-2 transition-colors">
+                    Already a member? Log in
+                  </button>
+                </div>
+              -->
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 2. WHAT'S INCLUDED -->
+      <section class="py-24 bg-white">
+        <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+
+          <div class="flex items-center gap-4 mb-12 slide-up">
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">What's included</p>
+            <div class="flex-1 h-px bg-neutral-100"></div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-start">
+
+            <div class="slide-up">
+              <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
+                Everything you need to fly premium for less.
+              </h2>
+              <p class="section-lead mb-8">
+                One issue per week — written by someone who books 100+ premium cabins a year. No filler, no affiliate spam. Just the intelligence to fly Business and First Class on fewer miles.
+              </p>
+              <!-- DISABLED (temporarily) — was: <a href="#alt-public-hero" onclick="...">Start for $4.99/month</a>; restore when Premium launches -->
+              <a href="pre-signup-link.html"
+                class="btn-pill btn-pill-primary inline-flex items-center gap-2">
+                <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+              </a>
+            </div>
+
+            <div class="grid grid-cols-2 gap-5 slide-up" style="animation-delay:.05s;">
+              <div class="flex items-start gap-3">
+                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Award Alerts</p>
+                  <p class="text-xs text-neutral-400 leading-relaxed">Live award windows before they close</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-couch"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Cabin Reviews</p>
+                  <p class="text-xs text-neutral-400 leading-relaxed">First-hand Business &amp; First Class reviews</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-route"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Routing Strategies</p>
+                  <p class="text-xs text-neutral-400 leading-relaxed">Itineraries that maximise cabin quality</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Miles Guides</p>
+                  <p class="text-xs text-neutral-400 leading-relaxed">KrisFlyer, transfer partners, award charts</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-newspaper"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Full Archive</p>
+                  <p class="text-xs text-neutral-400 leading-relaxed">Every issue, readable on-site, any time</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5" style="background:#fefce8;color:#C9A227;">
+                  <i class="fa-solid fa-crown"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Members Only</p>
+                  <p class="text-xs text-neutral-400 leading-relaxed">Exclusive content never sent to the free list</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 3. ARCHIVE PREVIEW -->
+      <section class="py-24 tile-parch">
+        <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+
+          <div class="flex items-center gap-4 mb-12 slide-up">
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Altitude Archive</p>
+            <div class="flex-1 h-px bg-neutral-100"></div>
+            <span class="text-[10px] text-neutral-400 font-medium flex-shrink-0">Members only</span>
+          </div>
+
+          <!-- Populated by JS with real premium posts (locked for non-members) -->
+          <div id="alt-preview-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+            <div class="card-dark h-48 animate-pulse"></div>
+            <div class="card-dark h-48 animate-pulse"></div>
+            <div class="card-dark h-48 animate-pulse"></div>
+          </div>
+
+          <div class="text-center slide-up" style="animation-delay:.15s;">
+            <!-- DISABLED (temporarily) — was: <a href="#alt-public-hero" onclick="...">Unlock the Archive — $4.99/mo</a>; restore when Premium launches -->
+            <a href="pre-signup-link.html"
+              class="btn-pill btn-pill-primary inline-flex items-center gap-2">
+              <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- 4. CTA BAND -->
+      <section class="cta-band">
+        <div class="cta-band__art"></div>
+        <div class="cta-band__veil"></div>
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+          <div class="max-w-xl mx-auto text-center slide-up">
+            <!--
+              DISABLED (temporarily) — original eyebrow/heading/subtitle/button, restore
+              together when Premium officially launches:
+
+              <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Get Started</span>
+              <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+                Ready to fly premium for less?
+              </h2>
+              <p class="section-lead-dark mb-9 max-w-md mx-auto">
+                Join Altitude for weekly award alerts, cabin reviews, and full archive access — for less than a coffee a week.
+              </p>
+              <a href="#alt-public-hero" onclick="document.getElementById('alt-public-hero').scrollIntoView({behavior:'smooth'});return false;"
+                class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
+                <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
+              </a>
+            -->
+            <span class="cta-eyebrow mb-6"><i class="fa-solid fa-bell text-[10px]"></i> Coming Soon</span>
+            <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+              Be first when it's ready.
+            </h2>
+            <p class="section-lead-dark mb-9 max-w-md mx-auto">
+              Join the waitlist for weekly award alerts, cabin reviews, and full archive access — the moment Altitude opens.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+              <a href="pre-signup-link.html"
+                class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
+                <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+              </a>
+              <!--
+                DISABLED (temporarily) — member login hidden here too, same reason as
+                the hero section above (see note there for full context):
+
+                <button type="button" onclick="window.openLoginModal && window.openLoginModal();"
+                  class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
+                  Already a Member? Log In
+                </button>
+              -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /alt-public -->
+
+  </main>
+
+  <script src="../js/altitude.js" defer></script>
+
+  <script>
+  /* Fetch real premium posts and render them locked in the public archive preview */
+  (function () {
+    var WORKER = 'https://skyfares-altitude.klent-5fa.workers.dev';
+
+    function getIssueNum(post) {
+      var tags = post.content_tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
+        if (m) return m[1].padStart(2, '0');
+      }
+      return '??';
+    }
+
+    function getType(post) {
+      return (post.content_tags || []).filter(function (t) {
+        return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/i);
+      })[0] || 'Exclusive';
+    }
+
+    function esc(str) {
+      var d = document.createElement('div');
+      d.textContent = String(str || '');
+      return d.innerHTML;
+    }
+
+    function buildCard(post, index) {
+      var issueNum = getIssueNum(post);
+      var type     = getType(post);
+      var delay    = (index * 0.05) + 's';
+
+      var imageArea = post.thumbnail_url
+        ? '<div class="relative h-40 bg-brand-950 overflow-hidden">' +
+            '<img src="' + esc(post.thumbnail_url) + '" alt="' + esc(post.title) + '" class="w-full h-full object-cover opacity-35">' +
+            '<div class="absolute inset-0 bg-brand-950/40"></div>' +
+            '<div class="absolute inset-0 flex items-center justify-center">' +
+              '<div class="text-center">' +
+                '<div class="w-10 h-10 rounded-full bg-white/10 border border-gold/30 flex items-center justify-center mx-auto mb-2">' +
+                  '<i class="fa-solid fa-lock text-gold-light"></i>' +
+                '</div>' +
+                '<span class="text-[10px] font-bold uppercase tracking-widest text-gold-light border border-gold/30 bg-black/40 px-2.5 py-1 rounded-full">Altitude Exclusive</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        : '<div class="h-40 bg-brand-950 relative flex items-center justify-center">' +
+            '<div class="absolute inset-0 opacity-40" style="background:linear-gradient(135deg,#0C4A6E,#1d4ed8);"></div>' +
+            '<div class="relative z-10 text-center px-4">' +
+              '<div class="w-10 h-10 rounded-full bg-white/10 border border-gold/30 flex items-center justify-center mx-auto mb-2">' +
+                '<i class="fa-solid fa-lock text-gold-light"></i>' +
+              '</div>' +
+              '<span class="text-[10px] font-bold uppercase tracking-widest text-gold-light border border-gold/30 bg-black/30 px-2.5 py-1 rounded-full">Altitude Exclusive</span>' +
+            '</div>' +
+          '</div>';
+
+      return '<div class="card-dark overflow-hidden slide-up is-visible" style="animation-delay:' + delay + '">' +
+        imageArea +
+        '<div class="p-5">' +
+          '<p class="text-[10px] text-white/30 mb-1.5 font-medium uppercase tracking-widest">' + esc(type) + ' &middot; Issue ' + esc(issueNum) + '</p>' +
+          '<h3 class="text-sm font-display font-semibold text-white leading-snug">' + esc(post.title) + '</h3>' +
+        '</div>' +
+      '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var grid = document.getElementById('alt-preview-grid');
+      if (!grid) return;
+
+      fetch(WORKER + '/newsletter/posts')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.posts) { grid.innerHTML = ''; return; }
+          var premium = data.posts.filter(function (p) {
+            return !!p.is_premium;
+          }).slice(0, 6);
+          if (!premium.length) {
+            grid.innerHTML = '<p class="col-span-full text-sm text-white/30 text-center py-12">Premium issues coming soon.</p>';
+            return;
+          }
+          grid.innerHTML = premium.map(buildCard).join('');
+        })
+        .catch(function () { grid.innerHTML = ''; });
+    });
+  })();
+  </script>
+
+  <script>
+  (function () {
+    window.addEventListener('load', function () {
+      var header = document.getElementById('main-header');
+      if (!header) return;
+
+      // Mirrors newsletter.html pattern but also accounts for the announcement
+      // banner whenever it appears or is dismissed.
+      // Target the specific public hero — querySelector finds the hidden
+      // member hero first so we use the explicit ID instead.
+      var pubHero  = document.getElementById('alt-public-hero');
+      var memHero  = document.getElementById('alt-member-topbar');
+
+      function syncPadding() {
+        var banner  = document.getElementById('skyfare-newsletter-banner');
+        var bannerH = (banner && banner.offsetHeight) ? banner.offsetHeight : 0;
+        var offset  = header.offsetHeight + 32 + bannerH;
+        document.body.style.paddingTop = '0';
+        if (pubHero) pubHero.style.paddingTop = offset + 'px';
+        if (memHero) memHero.style.paddingTop = offset + 'px';
+      }
+
+      syncPadding();                                     // run immediately
+      setTimeout(syncPadding, 700);                      // catch late-loading banner
+      new MutationObserver(syncPadding)                  // re-sync on add/remove
+        .observe(document.body, { childList: true });
+    });
+  })();
+  </script>
+
+</body>
+</html>

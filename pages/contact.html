@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — Skyfare Consulting</title>
+  <meta name="description" content="Get in touch with Skyfare Consulting for expert assistance with your Business and First Class flight bookings." />
+  <link rel="icon" href="../logos/logo.webp" />
+
+  <script src="../js/links.js"></script>
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+  <script src="../js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+  <script src="../js/contact.js" defer></script>
+  <style>
+    .contact-panel-bg {
+      background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
+    }
+    .form-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 0.45rem;
+    }
+    .btn-contact-success {
+      background: #16a34a !important;
+      border-color: #16a34a !important;
+      color: #ffffff !important;
+      pointer-events: none;
+    }
+    .btn-contact-error {
+      background: #dc2626 !important;
+      border-color: #dc2626 !important;
+      color: #ffffff !important;
+    }
+    .contact-channel-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .contact-channel-link:last-child {
+      border-bottom: none;
+    }
+    .contact-channel-link:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1">
+
+    <!-- =============================================
+         1. HERO
+         ============================================= -->
+    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/contact.png');">
+
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-2xl mx-auto text-center slide-up">
+
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-paper-plane-top text-[10px]"></i>
+            Get in Touch
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
+            Let's Start Your<br class="hidden sm:block"> Next Journey.
+          </h1>
+
+          <p class="text-base md:text-lg leading-relaxed max-w-xl mx-auto font-medium text-white/65 mb-10">
+            Have a question or a complex itinerary in mind? Our strategists are just a message away.
+          </p>
+
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp">
+            <i class="fa-brands fa-whatsapp text-sm"></i> Chat on WhatsApp
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         2. UNIFIED CONTACT CARD
+         Left: dark info panel | Right: white form
+         ============================================= -->
+    <section class="py-24 bg-neutral-50">
+      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+
+        <div class="rounded-[18px] overflow-hidden border border-neutral-100 grid md:grid-cols-[1fr_1.4fr] slide-up">
+
+          <!-- ── LEFT: Info panel ───────────────────── -->
+          <div class="contact-panel-bg p-10 lg:p-12 flex flex-col">
+
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Contact</p>
+            <h2 class="text-2xl md:text-3xl font-display font-bold text-white mb-3 tracking-tight leading-snug">
+              We're here<br>to help.
+            </h2>
+            <p class="text-sm text-white/55 leading-relaxed mb-10">
+              Whether it's a complex itinerary or a quick question about miles — we're just a message away.
+            </p>
+
+            <!-- Channels -->
+            <div class="flex-1">
+
+              <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+                class="contact-channel-link">
+                <div class="icon-chip icon-chip-dark flex-shrink-0">
+                  <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">WhatsApp</p>
+                  <p class="text-sm font-semibold text-white">+65 8157 5306</p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-[10px] text-white/25 ml-auto"></i>
+              </a>
+
+              <a href="mailto:info@skyfareconsulting.com"
+                class="contact-channel-link">
+                <div class="icon-chip icon-chip-dark flex-shrink-0">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Email</p>
+                  <p class="text-sm font-semibold text-white">info@skyfareconsulting.com</p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-[10px] text-white/25 ml-auto"></i>
+              </a>
+
+              <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
+                class="contact-channel-link">
+                <div class="icon-chip icon-chip-dark flex-shrink-0">
+                  <i class="fa-brands fa-instagram"></i>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Instagram</p>
+                  <p class="text-sm font-semibold text-white">@skyfareconsulting</p>
+                </div>
+                <i class="fa-solid fa-arrow-right text-[10px] text-white/25 ml-auto"></i>
+              </a>
+
+            </div>
+
+            <!-- Founder quote -->
+            <blockquote class="mt-10 border-l-2 border-white/15 pl-4">
+              <p class="text-xs text-white/35 leading-relaxed italic">
+                "Our goal is to make premium travel accessible through smarter loyalty strategies."
+              </p>
+              <p class="text-[10px] text-white/25 mt-2 font-semibold uppercase tracking-widest">— Sahej Singh, Founder</p>
+            </blockquote>
+
+          </div>
+
+          <!-- ── RIGHT: Form panel ──────────────────── -->
+          <div class="bg-white p-10 lg:p-12">
+
+            <div class="flex items-center gap-4 mb-8">
+              <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Send an Inquiry</p>
+              <div class="flex-1 h-px bg-neutral-100"></div>
+            </div>
+
+            <form id="contact-form" class="space-y-5">
+
+              <div class="hidden" aria-hidden="true">
+                <input name="bot-field" tabindex="-1" autocomplete="off">
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Full Name</label>
+                  <input type="text" name="name" required placeholder="John Doe" class="form-input">
+                </div>
+                <div>
+                  <label class="form-label">Email Address</label>
+                  <input type="email" name="email" required placeholder="you@example.com" class="form-input">
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label">Subject</label>
+                <input type="text" name="subject" placeholder="e.g. Business Class SIN → LHR" class="form-input">
+              </div>
+
+              <div>
+                <label class="form-label">Message</label>
+                <textarea name="message" rows="5" required
+                  placeholder="Tell us about your trip, preferred dates, cabin class, or any general questions..."
+                  class="form-textarea"></textarea>
+              </div>
+
+              <button type="submit" class="btn-pill btn-pill-primary w-full justify-center text-sm py-3.5">
+                Send Inquiry
+              </button>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         3. CLOSING CTA BAND
+         ============================================= -->
+    <section class="cta-band">
+      <div class="cta-band__art"></div>
+      <div class="cta-band__veil"></div>
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-xl mx-auto text-center slide-up">
+          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Ready?</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+            Start your journey today.
+          </h2>
+          <p class="section-lead-dark mb-9 max-w-md mx-auto">
+            The fastest way to reach us is WhatsApp. We typically respond within minutes.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+              class="btn-pill btn-pill-whatsapp text-base" style="padding:0.875rem 1.75rem;">
+              <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+            </a>
+            <a href="services.html" class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
+              See Our Services
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You're Offline — Skyfare Consulting</title>
+  <meta name="description" content="No internet connection detected. We'll reconnect automatically once you're back online." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="logos/logo.webp" />
+
+  <script src="js/links.js"></script>
+  <link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
+  <script src="lib/tailwind/tailwind.min.js"></script>
+  <script src="js/header.js" defer></script>
+  <script src="js/footer.js" defer></script>
+  <script src="js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/tailwind-config.js" defer></script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1 flex items-center justify-center py-24 px-4">
+    <div class="max-w-md w-full text-center slide-up">
+
+      <img src="images/no-internet.png" alt="No internet connection illustration" class="status-illustration animate-float">
+
+      <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">No Connection</p>
+      <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-3 tracking-tight">
+        You're offline.
+      </h1>
+      <p class="section-lead mb-6">
+        Check your Wi-Fi or mobile data connection. We'll reconnect automatically once you're back online.
+      </p>
+
+      <p id="offline-status" class="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 bg-neutral-100 px-4 py-2 rounded-full mb-9" aria-live="polite">
+        <i class="fa-solid fa-circle-notch fa-spin text-[10px]"></i> Waiting for connection…
+      </p>
+
+      <div class="flex flex-wrap gap-3 justify-center">
+        <button type="button" id="offline-retry-btn" class="btn-pill btn-pill-primary">
+          <i class="fa-solid fa-arrow-rotate-right text-sm"></i> Retry
+        </button>
+        <a href="index.html" class="btn-pill btn-pill-outline">
+          <i class="fa-solid fa-house text-sm"></i> Return to Home
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    var statusEl = document.getElementById('offline-status');
+    var retryBtn = document.getElementById('offline-retry-btn');
+
+    function setWaiting() {
+      statusEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-[10px]"></i> Waiting for connection…';
+      statusEl.className = 'inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 bg-neutral-100 px-4 py-2 rounded-full mb-9';
+    }
+
+    function setReconnected() {
+      statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-[10px]"></i> Back online — redirecting…';
+      statusEl.className = 'inline-flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full mb-9';
+      setTimeout(function () { window.location.href = 'index.html'; }, 1200);
+    }
+
+    function checkConnection() {
+      if (navigator.onLine) {
+        setReconnected();
+      } else {
+        setWaiting();
+      }
+    }
+
+    window.addEventListener('online', setReconnected);
+    window.addEventListener('offline', setWaiting);
+    retryBtn.addEventListener('click', checkConnection);
+
+    checkConnection();
+  })();
+  </script>
+
+</body>
+</html>
