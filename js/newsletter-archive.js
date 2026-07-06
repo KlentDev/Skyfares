@@ -32,7 +32,7 @@
         //   '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
         // '</a>' +
         '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Altitude isn\'t open for purchase yet — join the waitlist and we\'ll email you the moment it is.</p>' +
-        '<a href="altitude-early-access.html" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+        '<a href="pre-signup-link.html" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
           '<i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist' +
         '</a>' +
         '<p class="text-xs text-neutral-400">Already a member? ' +

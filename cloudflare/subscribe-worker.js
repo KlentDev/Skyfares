@@ -56,7 +56,7 @@ const BEEHIIV_TAG_ID  = '4ee8818b-9eeb-46b5-a34b-bca21c8f06e3'; // altitude prem
 
 export default {
   // Two cron schedules:
-  //   * * * * *  — every minute: segment recalculation only (safety net)
+  //   * * * * *  — every minute: segment recalculation safety net
   //   0 1 * * *  — daily 01:00 UTC (09:00 SGT): recalculation + renewal reminders
   async scheduled(event, env, ctx) {
     if (event.cron === '0 1 * * *') {
@@ -1007,22 +1007,19 @@ const SEG_PREMIUM   = 'seg_6b2bf91a-e5fe-42f5-ad9a-e939397add9a';
 const SEG_FREE      = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
 const SEG_PRELAUNCH = 'seg_3b2edb32-94a4-43b8-af13-1668923ffa95'; // Pre-Launch Subscribers (utm_campaign=altitude_prelaunch)
 
+// Beehiiv's recalculate endpoint silently no-ops if the request includes a
+// body or a Content-Type header (returns 204 but never advances the
+// segment's last_processed_at). Confirmed 2026-07-06 via a live A/B test:
+// a bare PUT with only the Authorization header genuinely triggers
+// recalculation (last_processed_at advances within seconds, reproduced
+// across all 3 segments). Do not add a body or Content-Type back here.
 async function triggerSegmentRecalculation(env) {
   await Promise.all([SEG_PREMIUM, SEG_FREE, SEG_PRELAUNCH].map(async segId => {
-    // POST, not PUT -- this is the one place in the file that used PUT for a
-    // Beehiiv "trigger an action" endpoint (every other call here is POST/PATCH/
-    // GET/DELETE). PUT was silently accepted by Beehiiv (touches the segment's
-    // updated_at) without ever actually starting the recalculation job, which is
-    // why last_processed_at stopped advancing even though these calls looked
-    // like they were succeeding. Confirmed by triggering a recalculation
-    // directly via the Beehiiv API (equivalent to a POST) and seeing
-    // last_processed_at move immediately, unlike this PUT call.
     const res = await fetch(
       `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
       {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
       }
     ).catch(err => { console.error(`[seg-resync:${segId}] network error: ${err.message}`); return null; });
 

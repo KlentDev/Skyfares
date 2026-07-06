@@ -519,7 +519,7 @@
       // DISABLED (temporarily) -- original WhatsApp upgrade link, restore when Premium launches:
       // '<a href="' + PREMIUM_WA_URL + '" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
       var ctaHtml = prem
-        ? '<a href="altitude-early-access.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Join the Waitlist <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
+        ? '<a href="pre-signup-link.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Join the Waitlist <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
         : '<a href="' + href + '" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
 
       var altitudeBadge = prem
