@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- Right side: Book a Flight button -->
         <div class="hidden lg:flex items-center gap-3 ml-auto">
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html"
-            class="book-now-btn inline-flex items-center gap-2 rounded-full border border-white/70 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:-translate-y-0.5 transition-all active:scale-95">
+            class="book-now-btn inline-flex items-center gap-2 rounded-full border border-brand-500 px-6 py-2.5 text-sm font-semibold text-brand-500 hover:bg-brand-50 hover:-translate-y-0.5 transition-all active:scale-95">
             <i class="fa-solid fa-calendar-check text-lg"></i>
             Book a Flight
           </a>
@@ -219,13 +219,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject into body at the start
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Transparent-on-hero / solid-on-scroll header logic.
-  // Matches the homepage hero (.hero-brand-fade) AND every interior page hero
-  // (.page-hero-bg) so all dark heroes get the transparent white-nav treatment.
+  // Transparent-on-hero / solid-on-scroll header logic. Two hero flavors:
+  //  - Dark-photo heroes (.hero-brand-fade on the old homepage hero,
+  //    .page-hero-bg on interior pages): header floats transparently over
+  //    the photo with white nav text, then becomes a solid white bar with
+  //    shadow/blur (.header-scrolled) once scrolled -- the original pattern.
+  //  - Light-background hero (.hero-photo-section, current homepage): the
+  //    page background around the photo is white, so white nav text would be
+  //    invisible. It starts in the header's plain base state (transparent,
+  //    default dark nav text) and also gains the solid .header-scrolled bar
+  //    on scroll -- same "adds a background on scroll" behavior, dark text
+  //    throughout since that's already legible against a light hero.
   const headerEl = document.getElementById('main-header');
-  const heroSection = document.querySelector('.hero-brand-fade, .page-hero-bg');
+  const darkHeroSection = document.querySelector('.hero-brand-fade, .page-hero-bg');
+  const lightHeroSection = document.querySelector('.hero-photo-section');
 
-  if (heroSection && headerEl) {
+  if (darkHeroSection && headerEl) {
     function updateHeaderState() {
       if (window.scrollY > 10) {
         headerEl.classList.remove('header-transparent');
@@ -237,6 +246,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', updateHeaderState, { passive: true });
+  } else if (lightHeroSection && headerEl) {
+    function updateHeaderStateLight() {
+      if (window.scrollY > 10) {
+        headerEl.classList.add('header-scrolled');
+      } else {
+        headerEl.classList.remove('header-scrolled');
+      }
+    }
+
+    window.addEventListener('scroll', updateHeaderStateLight, { passive: true });
   }
 
   // Reading headerEl.offsetHeight synchronously right after injection can catch
@@ -245,11 +264,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // measure 500+px instead of its real ~75px. Deferring one frame guarantees
   // Tailwind has settled before anything reads its height.
   requestAnimationFrame(() => {
-    if (heroSection && headerEl) {
-      // Hero page: float header transparently over the hero
+    if (darkHeroSection && headerEl) {
+      // Dark photo hero: float header transparently over it, with extra
+      // clearance so the hero's own overlaid content starts below the header.
       document.body.style.paddingTop = '0';
-      heroSection.style.paddingTop = (headerEl.offsetHeight + 32) + 'px';
+      darkHeroSection.style.paddingTop = (headerEl.offsetHeight + 32) + 'px';
       headerEl.classList.add('header-transparent');
+    } else if (lightHeroSection && headerEl) {
+      // Light-background hero: header reserves its own space above the hero
+      // (no overlap needed), starts transparent, solid bar appears on scroll.
+      document.body.style.paddingTop = headerEl.offsetHeight + 'px';
     } else if (headerEl) {
       // Non-hero page: solid header from the start
       document.body.style.paddingTop = headerEl.offsetHeight + 'px';
@@ -310,6 +334,14 @@ document.addEventListener('DOMContentLoaded', () => {
   (function () {
     var s = document.createElement('script');
     s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/newsletter-banner.js';
+    s.defer = true;
+    document.head.appendChild(s);
+  })();
+
+  // --- Global error / offline handler ---
+  (function () {
+    var s = document.createElement('script');
+    s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/error-handler.js';
     s.defer = true;
     document.head.appendChild(s);
   })();

@@ -2,7 +2,16 @@
   var WORKER        = 'https://skyfares-altitude.klent-5fa.workers.dev';
   var JWT_KEY       = 'altitude_jwt';
   var PUB_BASE      = 'https://skyfarealtitude.beehiiv.com';
-  var PAYMENT_LINK  = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
+
+  // ─── DISABLED (temporarily) ──────────────────────────────────────────────
+  // Altitude Premium isn't purchasable yet (confirmed by Sahej, 2026-07-03).
+  // The checkout button on pages/altitude.html now links straight to the
+  // pre-launch waitlist page instead. Everything below (PAYMENT_LINK,
+  // handleCheckout, and the form-submit wiring in wirePublicView) is kept
+  // commented out, not deleted, so real checkout can be switched back on
+  // by uncommenting once Premium officially launches.
+  //
+  // var PAYMENT_LINK = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
 
   // ─── Boot ─────────────────────────────────────────────────────────────────
 
@@ -120,8 +129,10 @@
   }
 
   function wirePublicView(hint) {
-    var checkoutForm = document.getElementById('alt-checkout-form');
-    if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckout);
+    // DISABLED (temporarily) -- see note above. Re-enable once #alt-checkout-form
+    // exists again on pages/altitude.html:
+    // var checkoutForm = document.getElementById('alt-checkout-form');
+    // if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckout);
     var loginForm = document.getElementById('alt-login-form');
     if (loginForm) loginForm.addEventListener('submit', handleMemberLogin);
     if (hint === 'cancelled') {
@@ -185,18 +196,18 @@
     } catch (_) {}
   }
 
-  // ─── Checkout ─────────────────────────────────────────────────────────────
-
-  function handleCheckout(e) {
-    e.preventDefault();
-    var btn = document.getElementById('alt-checkout-btn');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-[11px]"></i> Redirecting…'; }
-    if (window.SkyUI) SkyUI.toast('Taking you to secure checkout…', { type: 'info', duration: 2500 });
-    // Pre-fill email in Stripe so it matches what was entered here
-    var emailVal = (document.getElementById('alt-checkout-email') || {}).value || '';
-    var stripeUrl = PAYMENT_LINK + (emailVal.trim() ? '?prefilled_email=' + encodeURIComponent(emailVal.trim()) : '');
-    window.location.href = stripeUrl;
-  }
+  // ─── Checkout -- DISABLED (temporarily), see note near top of file ─────────
+  //
+  // function handleCheckout(e) {
+  //   e.preventDefault();
+  //   var btn = document.getElementById('alt-checkout-btn');
+  //   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-[11px]"></i> Redirecting…'; }
+  //   if (window.SkyUI) SkyUI.toast('Taking you to secure checkout…', { type: 'info', duration: 2500 });
+  //   // Pre-fill email in Stripe so it matches what was entered here
+  //   var emailVal = (document.getElementById('alt-checkout-email') || {}).value || '';
+  //   var stripeUrl = PAYMENT_LINK + (emailVal.trim() ? '?prefilled_email=' + encodeURIComponent(emailVal.trim()) : '');
+  //   window.location.href = stripeUrl;
+  // }
 
   // ─── Member login ──────────────────────────────────────────────────────────
 

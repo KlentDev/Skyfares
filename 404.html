@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page Not Found — Skyfare Consulting</title>
+  <meta name="description" content="The page you're looking for doesn't exist. Return to Skyfare Consulting to keep exploring premium travel." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="logos/logo.webp" />
+
+  <script src="js/links.js"></script>
+  <link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
+  <script src="lib/tailwind/tailwind.min.js"></script>
+  <script src="js/header.js" defer></script>
+  <script src="js/footer.js" defer></script>
+  <script src="js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/tailwind-config.js" defer></script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1 flex items-center justify-center py-24 px-4">
+    <div class="max-w-md w-full text-center slide-up">
+
+      <img src="images/404.png" alt="Page not found illustration" class="status-illustration animate-float">
+
+      <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">Error 404</p>
+      <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-3 tracking-tight">
+        This route doesn't exist.
+      </h1>
+      <p class="section-lead mb-9">
+        The page you're looking for may have been moved, renamed, or never existed. Let's get you back on course.
+      </p>
+
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href="index.html" class="btn-pill btn-pill-primary">
+          <i class="fa-solid fa-house text-sm"></i> Return to Home
+        </a>
+        <button type="button" onclick="history.back()" class="btn-pill btn-pill-outline">
+          <i class="fa-solid fa-arrow-left text-sm"></i> Go Back
+        </button>
+      </div>
+
+      <p class="text-xs text-neutral-400 mt-8">
+        Need help? <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors">Chat with us on WhatsApp</a>
+      </p>
+
+    </div>
+  </main>
+
+</body>
+</html>

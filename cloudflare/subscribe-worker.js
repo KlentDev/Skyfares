@@ -9,6 +9,7 @@
  *   POST /altitude/webhook         — Stripe webhook handler
  *   POST /altitude/activate        — issue JWT for member access
  *   GET  /altitude/verify          — verify JWT
+ *   POST /altitude/waitlist        — join the pre-launch Altitude waitlist
  *
  * Required secrets (wrangler secret put):
  *   BEEHIIV_API_KEY   STRIPE_SECRET_KEY   STRIPE_WEBHOOK_SECRET
@@ -121,6 +122,10 @@ export default {
       return handleManagePortal(request, env, corsHeaders);
     }
 
+    if (request.method === 'POST' && url.pathname === '/altitude/waitlist') {
+      return handleWaitlist(request, env, corsHeaders);
+    }
+
     // ── Newsletter routes ──────────────────────────────────────────────────
 
     if (request.method === 'GET' && url.pathname === '/newsletter/posts') {
@@ -149,14 +154,27 @@ export default {
       return respond({ error: 'Method Not Allowed' }, 405, corsHeaders);
     }
 
+    const subRlKey = `subscribe-rl:${request.headers.get('CF-Connecting-IP') || 'unknown'}`;
+    const subRlCount = parseInt((await env.ALTITUDE_KV.get(subRlKey)) || '0', 10);
+    if (subRlCount >= 15) {
+      return respond({ error: 'rate_limited' }, 429, corsHeaders);
+    }
+
     let email, firstName;
     try {
       const body = await request.json();
+      // Honeypot — silently accept so bots get no signal. No-op today since no
+      // form on the site sends bot-field to this route yet; matches the same
+      // convention already used by /altitude/waitlist and the Airtable routes.
+      if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
       email = (body.email || '').trim().toLowerCase();
       firstName = (body.first_name || '').toString().trim().slice(0, 80);
     } catch {
       return respond({ error: 'Invalid request.' }, 400, corsHeaders);
     }
+
+    // Count every real (non-honeypot) attempt once here, regardless of outcome.
+    await env.ALTITUDE_KV.put(subRlKey, String(subRlCount + 1), { expirationTtl: 3600 });
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return respond({ error: 'Please enter a valid email address.' }, 400, corsHeaders);
@@ -595,6 +613,98 @@ async function handleManagePortal(request, env, corsHeaders) {
   return respond({ url: session.url }, 200, corsHeaders);
 }
 
+// ── Altitude: Pre-Launch Waitlist ──────────────────────────────────────────────
+
+// Deliberately NOT a parallel of setupBeehiivMember's tag cascade — a pre-launch
+// signup is a plain Free subscriber, nothing more. There is no "waitlist" tag,
+// segment, or automation to enroll into here; the only thing that marks someone
+// as a pre-launch signup is utm_campaign, a native Beehiiv attribute captured
+// automatically on subscribe. The "Pre-Launch Subscribers" segment (Beehiiv UI)
+// filters on utm_campaign = 'altitude_prelaunch' — no subscriber-side plumbing
+// needed here beyond setting that default.
+async function handleWaitlist(request, env, corsHeaders) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const rlKey = `waitlist-rl:${ip}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 10) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+
+  let body;
+  try { body = await request.json(); }
+  catch { return respond({ error: 'Invalid request.' }, 400, corsHeaders); }
+
+  // Honeypot — silently accept so bots get no signal. Worth having here
+  // (unlike the plain subscribe route below) since this route is specifically
+  // the one advertised on Instagram/TikTok bio links.
+  if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
+
+  const email     = (body.email || '').trim().toLowerCase();
+  const firstName = (body.first_name || '').toString().trim().slice(0, 80);
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'Please enter a valid email address.' }, 400, corsHeaders);
+  }
+
+  // Already a paying member — don't re-subscribe, just tell the frontend so it
+  // can show "you already have access" instead of the generic success state.
+  const isPremium = await checkBeehiivPremium(email, env).catch(() => null);
+  if (isPremium === true) {
+    await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+    return respond({ success: true, already_premium: true }, 200, corsHeaders);
+  }
+
+  // Same plain Beehiiv subscribe the newsletter route uses below — utm_source/
+  // medium stay visitor-supplied (or fall back to generic defaults) for
+  // channel-level analytics, but utm_campaign always defaults to
+  // 'altitude_prelaunch' so every signup through this endpoint is captured by
+  // the segment regardless of which platform (if any) the visitor arrived from.
+  // Note: on a 409 (existing subscriber), Beehiiv does not retroactively update
+  // utm_campaign on the existing record — an existing free subscriber clicking
+  // this form again simply won't newly match the segment, which is fine, they
+  // already receive the newsletter and will hear about launch through it.
+  const beehiivPayload = {
+    email,
+    reactivate_existing: true,
+    send_welcome_email: false,
+    double_opt_override: 'disabled',
+    utm_source:   (body.utm_source   || 'website').toString().trim().slice(0, 100),
+    utm_medium:   (body.utm_medium   || 'organic').toString().trim().slice(0, 100),
+    utm_campaign: (body.utm_campaign || 'altitude_prelaunch').toString().trim().slice(0, 100),
+  };
+  if (firstName) {
+    beehiivPayload.custom_fields = [{ name: 'first_name', value: firstName }];
+  }
+
+  let beehiivRes;
+  try {
+    beehiivRes = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+        body: JSON.stringify(beehiivPayload),
+      }
+    );
+  } catch {
+    return respond({ error: 'Could not reach Beehiiv. Please try again.' }, 502, corsHeaders);
+  }
+
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+
+  if (beehiivRes.status === 201 || beehiivRes.status === 200) {
+    // Kick off segment sync so the new subscriber lands in Free + Pre-Launch
+    // Subscribers promptly, which is what lets the pre-launch welcome
+    // automation (segment_action trigger) fire without a long delay.
+    triggerSegmentRecalculation(env).catch(() => {});
+    return respond({ success: true }, 200, corsHeaders);
+  }
+  // 409 (already subscribed to the newsletter) is expected here, not an error.
+  if (beehiivRes.status === 409) {
+    return respond({ success: true }, 200, corsHeaders);
+  }
+  return respond({ error: 'Something went wrong. Please try again.' }, 500, corsHeaders);
+}
+
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
 
 // Premium-by-default: every post is treated as premium (gated on the Skyfare
@@ -893,11 +1003,12 @@ async function setupBeehiivMember(email, env) {
   return false;
 }
 
-const SEG_PREMIUM = 'seg_6b2bf91a-e5fe-42f5-ad9a-e939397add9a';
-const SEG_FREE    = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
+const SEG_PREMIUM   = 'seg_6b2bf91a-e5fe-42f5-ad9a-e939397add9a';
+const SEG_FREE      = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
+const SEG_PRELAUNCH = 'seg_3b2edb32-94a4-43b8-af13-1668923ffa95'; // Pre-Launch Subscribers (utm_campaign=altitude_prelaunch)
 
 async function triggerSegmentRecalculation(env) {
-  await Promise.all([SEG_PREMIUM, SEG_FREE].map(async segId => {
+  await Promise.all([SEG_PREMIUM, SEG_FREE, SEG_PRELAUNCH].map(async segId => {
     const res = await fetch(
       `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
       {

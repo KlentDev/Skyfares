@@ -1,7 +1,11 @@
 (function () {
   var WORKER_URL     = 'https://skyfares-altitude.klent-5fa.workers.dev';
-  var PREMIUM_WA_URL = 'https://api.whatsapp.com/send?phone=6581575306&text=' +
-    encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.");
+
+  // DISABLED (temporarily) -- Altitude Premium isn't purchasable yet (confirmed
+  // by Sahej, 2026-07-03). PREMIUM_WA_URL is kept commented, not deleted, so the
+  // WhatsApp upgrade path can be restored below once Premium launches.
+  // var PREMIUM_WA_URL = 'https://api.whatsapp.com/send?phone=6581575306&text=' +
+  //   encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.");
 
   function goBack() {
     try {
@@ -512,8 +516,10 @@
       var cardCls = 'group card-utility overflow-hidden slide-up is-visible' +
         (prem ? ' border-gold/30 hover:border-gold/60' : '');
 
+      // DISABLED (temporarily) -- original WhatsApp upgrade link, restore when Premium launches:
+      // '<a href="' + PREMIUM_WA_URL + '" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
       var ctaHtml = prem
-        ? '<a href="https://api.whatsapp.com/send?phone=6581575306&text=' + encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.") + '" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
+        ? '<a href="altitude-early-access.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Join the Waitlist <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
         : '<a href="' + href + '" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
 
       var altitudeBadge = prem

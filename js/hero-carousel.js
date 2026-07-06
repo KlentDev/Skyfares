@@ -1,57 +1,91 @@
-// Hero Carousel Auto-slide
+// Hero Carousel — auto-slide + swipe/drag (translateX-based, not a crossfade)
 (function() {
-  let currentSlide = 0;
+  const track = document.getElementById('hero-carousel-track');
   const slides = document.querySelectorAll('.hero-carousel-item');
   const dots = document.querySelectorAll('.hero-carousel-dot');
   const totalSlides = slides.length;
+  let currentSlide = 0;
   let autoSlideInterval;
 
-  if (totalSlides === 0) return;
+  if (totalSlides === 0 || !track) return;
+
+  function positionSlides(offsetPercent) {
+    const offset = offsetPercent || 0;
+    slides.forEach((slide, i) => {
+      slide.style.transform = 'translateX(' + ((i - currentSlide) * 100 + offset) + '%)';
+    });
+  }
 
   function showSlide(index) {
-    // Remove active class from all slides and dots
-    slides.forEach(slide => slide.classList.remove('active'));
-    dots.forEach(dot => dot.classList.remove('active'));
-
-    // Add active class to current slide and dot
-    slides[index].classList.add('active');
-    dots[index].classList.add('active');
+    currentSlide = (index + totalSlides) % totalSlides;
+    positionSlides(0);
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
   }
 
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    showSlide(currentSlide);
-  }
+  function nextSlide() { showSlide(currentSlide + 1); }
 
   function goToSlide(index) {
-    currentSlide = index;
-    showSlide(currentSlide);
-    // Reset auto-slide interval
+    showSlide(index);
     clearInterval(autoSlideInterval);
     startAutoSlide();
   }
 
   function startAutoSlide() {
-    autoSlideInterval = setInterval(nextSlide, 3000); // 3 seconds interval
+    autoSlideInterval = setInterval(nextSlide, 4000);
   }
 
-  // Add click event to dots
   dots.forEach((dot, index) => {
     dot.addEventListener('click', () => goToSlide(index));
   });
 
-  // Start auto-slide
+  showSlide(0);
   startAutoSlide();
 
-  // Pause on hover
-  const carouselContainer = document.querySelector('.hero-image-panel');
-  if (carouselContainer) {
-    carouselContainer.addEventListener('mouseenter', () => {
-      clearInterval(autoSlideInterval);
-    });
+  track.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+  track.addEventListener('mouseleave', () => startAutoSlide());
 
-    carouselContainer.addEventListener('mouseleave', () => {
-      startAutoSlide();
-    });
+  // --- Swipe / drag support (Pointer Events cover mouse + touch + pen) ---
+  let dragging = false;
+  let startX = 0;
+  let dragOffsetPercent = 0;
+  let trackWidth = 0;
+
+  function onPointerDown(e) {
+    dragging = true;
+    startX = e.clientX;
+    trackWidth = track.getBoundingClientRect().width || 1;
+    track.classList.add('dragging');
+    clearInterval(autoSlideInterval);
   }
+
+  function onPointerMove(e) {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    dragOffsetPercent = (dx / trackWidth) * 100;
+    positionSlides(dragOffsetPercent);
+  }
+
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false;
+    track.classList.remove('dragging');
+
+    const threshold = 12; // % of track width needed to commit to a slide change
+    if (dragOffsetPercent <= -threshold) {
+      showSlide(currentSlide + 1);
+    } else if (dragOffsetPercent >= threshold) {
+      showSlide(currentSlide - 1);
+    } else {
+      positionSlides(0);
+    }
+    dragOffsetPercent = 0;
+    startAutoSlide();
+  }
+
+  track.addEventListener('pointerdown', onPointerDown);
+  track.addEventListener('pointermove', onPointerMove);
+  track.addEventListener('pointerup', endDrag);
+  track.addEventListener('pointerleave', endDrag);
+  track.addEventListener('pointercancel', endDrag);
 })();

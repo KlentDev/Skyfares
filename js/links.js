@@ -126,4 +126,12 @@ document.addEventListener('DOMContentLoaded', function () {
   if (founderIg) founderIg.href = L.instagram.url;
   if (founderTt) founderTt.href = L.tiktok.consulting.url;
   if (founderWa) founderWa.href = L.whatsapp;
+
+  // ── Hero section social icons (index.html only) ────────────────────────
+  var heroIg = document.getElementById('hero-instagram-link');
+  var heroTt = document.getElementById('hero-tiktok-link');
+  var heroWa = document.getElementById('hero-whatsapp-link');
+  if (heroIg) heroIg.href = L.instagram.url;
+  if (heroTt) heroTt.href = L.tiktok.consulting.url;
+  if (heroWa) heroWa.href = L.whatsapp;
 });

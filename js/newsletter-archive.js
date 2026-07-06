@@ -1,6 +1,10 @@
 (function () {
   var WORKER_URL    = 'https://skyfares-altitude.klent-5fa.workers.dev';
-  var PAYMENT_LINK  = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
+
+  // DISABLED (temporarily) -- Altitude Premium isn't purchasable yet (confirmed
+  // by Sahej, 2026-07-03). PAYMENT_LINK is kept commented, not deleted, so real
+  // checkout can be restored below by uncommenting once Premium launches.
+  // var PAYMENT_LINK = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
 
   // ─── Altitude Access modal (shared by index.html and pages/newsletter.html) ──
 
@@ -22,9 +26,14 @@
           '<i class="fa-solid fa-crown text-[9px]"></i> Altitude Exclusive' +
         '</div>' +
         '<h2 class="text-xl font-display font-bold text-neutral-900 mb-2 tracking-tight">This issue is for Altitude members</h2>' +
-        '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Unlock this issue and the full archive — award alerts, cabin reviews, and routing strategies, delivered weekly.</p>' +
-        '<a href="' + PAYMENT_LINK + '" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
-          '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
+        // DISABLED (temporarily) -- original copy + real checkout link, restore when Premium launches:
+        // '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Unlock this issue and the full archive — award alerts, cabin reviews, and routing strategies, delivered weekly.</p>' +
+        // '<a href="' + PAYMENT_LINK + '" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+        //   '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
+        // '</a>' +
+        '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Altitude isn\'t open for purchase yet — join the waitlist and we\'ll email you the moment it is.</p>' +
+        '<a href="altitude-early-access.html" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+          '<i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist' +
         '</a>' +
         '<p class="text-xs text-neutral-400">Already a member? ' +
           '<button type="button" onclick="window.switchToMemberAccessModal()" class="text-brand-600 underline underline-offset-2 hover:text-brand-800">Enter your email for a magic link</button>' +
@@ -230,9 +239,11 @@
       : '';
 
     // CTA — bottom of content panel
+    // DISABLED (temporarily) -- original label, restore when Premium launches:
+    // 'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
     var ctaHtml = prem
       ? '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-gold-dark group-hover:text-gold transition-colors self-start">' +
-            'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
+            'Coming Soon <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
       : '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:text-brand-800 transition-colors self-start">' +
             'Read Issue ' + e(issueNum) + ' <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
@@ -318,9 +329,11 @@
 
     var href = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
 
+    // DISABLED (temporarily) -- original label, restore when Premium launches:
+    // 'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
     var ctaHtml = prem
       ? '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark group-hover:text-gold transition-colors">' +
-            'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
+            'Coming Soon <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
             '<p class="text-[10px] text-neutral-400 mt-1 italic">Already a member? Check your email.</p>'
       : '<a href="' + href + '"' +
             ' class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">' +

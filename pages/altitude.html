@@ -39,23 +39,30 @@
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
-  <!-- ── QR Modal ─────────────────────────────────────────────────────────── -->
-  <div id="alt-qr-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
-    <div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm"
-      onclick="document.getElementById('alt-qr-modal').style.display='none';"></div>
-    <div class="relative bg-white rounded-2xl p-8 max-w-xs w-full text-center shadow-2xl">
-      <button onclick="document.getElementById('alt-qr-modal').style.display='none';"
-        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
-        <i class="fa-solid fa-xmark text-xs"></i>
-      </button>
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
-        <i class="fa-solid fa-crown text-[9px]"></i> Altitude Access
+  <!--
+    DISABLED (temporarily) — QR Modal. Altitude Premium isn't purchasable yet
+    (confirmed by Sahej, 2026-07-03). Already unreachable through the UI (no
+    trigger sets display:flex on it), but kept commented rather than deleted
+    so it can be restored once Premium officially launches:
+
+    <div id="alt-qr-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
+      <div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm"
+        onclick="document.getElementById('alt-qr-modal').style.display='none';"></div>
+      <div class="relative bg-white rounded-2xl p-8 max-w-xs w-full text-center shadow-2xl">
+        <button onclick="document.getElementById('alt-qr-modal').style.display='none';"
+          class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
+          <i class="fa-solid fa-crown text-[9px]"></i> Altitude Access
+        </div>
+        <img src="../images/stripe-QR.png" alt="Scan to subscribe" class="w-48 h-48 mx-auto rounded-2xl mb-4">
+        <p class="text-sm font-semibold text-neutral-900 mb-1">Scan to subscribe</p>
+        <p class="text-xs text-neutral-400">Opens Stripe checkout &middot; $4.99/mo</p>
       </div>
-      <img src="../images/stripe-QR.png" alt="Scan to subscribe" class="w-48 h-48 mx-auto rounded-2xl mb-4">
-      <p class="text-sm font-semibold text-neutral-900 mb-1">Scan to subscribe</p>
-      <p class="text-xs text-neutral-400">Opens Stripe checkout &middot; $4.99/mo</p>
     </div>
-  </div>
+  -->
+
 
   <!-- ── Login Modal ──────────────────────────────────────────────────────── -->
   <div id="alt-login-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
@@ -174,9 +181,19 @@
               </div>
             </div>
 
+            <!--
+              DISABLED (temporarily) — Altitude Premium isn't purchasable yet (confirmed
+              by Sahej, 2026-07-03). Original badge kept here, not deleted, so it can be
+              restored once Premium officially launches:
+
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+                <i class="fa-solid fa-crown text-[10px]"></i>
+                Altitude Access &middot; $4.99 / month
+              </div>
+            -->
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
               <i class="fa-solid fa-crown text-[10px]"></i>
-              Altitude Access &middot; $4.99 / month
+              Altitude Access &middot; Launching <span class="text-gold-pulse">Soon</span>
             </div>
 
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
@@ -190,41 +207,74 @@
             <!-- CTA area -->
             <div class="max-w-sm mx-auto mt-2">
 
-              <!-- Primary: subscribe + QR -->
-              <form id="alt-checkout-form" class="flex items-center gap-2">
-                <button id="alt-checkout-btn" type="submit"
-                  class="flex-1 btn-pill btn-pill-primary">
-                  <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
-                </button>
-              </form>
+              <!--
+                DISABLED (temporarily) — original checkout form + real Stripe redirect
+                (handled by handleCheckout in js/altitude.js, also kept commented there).
+                Restore both together once Premium officially launches:
+
+                <form id="alt-checkout-form" class="flex items-center gap-2">
+                  <button id="alt-checkout-btn" type="submit"
+                    class="flex-1 btn-pill btn-pill-primary">
+                    <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
+                  </button>
+                </form>
+                <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">
+                  <span>Cancel any time</span>
+                  <span aria-hidden="true">&middot;</span>
+                  <span>Instant access</span>
+                  <span aria-hidden="true">&middot;</span>
+                  <span>Secure via Stripe</span>
+                </div>
+              -->
+              <!-- Primary: not purchasable yet, join the pre-launch waitlist instead -->
+              <a id="alt-checkout-btn" href="altitude-early-access.html"
+                class="flex-1 btn-pill btn-pill-primary flex items-center justify-center">
+                <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+              </a>
               <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">
-                <span>Cancel any time</span>
+                <span>No spam</span>
                 <span aria-hidden="true">&middot;</span>
-                <span>Instant access</span>
+                <span>One email at launch</span>
                 <span aria-hidden="true">&middot;</span>
-                <span>Secure via Stripe</span>
+                <span>Unsubscribe anytime</span>
               </div>
 
-              <!-- Divider -->
-              <div class="flex items-center gap-3 my-6">
-                <div class="flex-1 h-px bg-white/10"></div>
-                <span class="text-[10px] text-white/20 uppercase tracking-widest">or</span>
-                <div class="flex-1 h-px bg-white/10"></div>
-              </div>
+              <!--
+                DISABLED (temporarily) — "Already a Member? Log In" hidden entirely.
+                Altitude Premium isn't purchasable yet (confirmed by Sahej, 2026-07-03),
+                and per explicit instruction this page should show no member-login path
+                for now either. Note: this means the one existing paying member has no
+                way to log in from this page until it's restored — they'd need another
+                channel (WhatsApp/email) until then. Two versions preserved below (the
+                original full-width card, and the smaller restyled link that briefly
+                replaced it) so either can be restored once ready:
 
-              <!-- Secondary: member login -->
-              <button type="button"
-                onclick="window.openLoginModal && window.openLoginModal();"
-                class="w-full group flex items-center gap-4 px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all text-left">
-                <div class="w-9 h-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <i class="fa-solid fa-key text-white/50 text-xs"></i>
+                <div class="flex items-center gap-3 my-6">
+                  <div class="flex-1 h-px bg-white/10"></div>
+                  <span class="text-[10px] text-white/20 uppercase tracking-widest">or</span>
+                  <div class="flex-1 h-px bg-white/10"></div>
                 </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-bold text-white leading-none mb-1">Already a Member?</p>
-                  <p class="text-[11px] text-white/35 leading-none">Log in for instant archive access</p>
+                <button type="button"
+                  onclick="window.openLoginModal && window.openLoginModal();"
+                  class="w-full group flex items-center gap-4 px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all text-left">
+                  <div class="w-9 h-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-key text-white/50 text-xs"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-white leading-none mb-1">Already a Member?</p>
+                    <p class="text-[11px] text-white/35 leading-none">Log in for instant archive access</p>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-white/20 text-xs group-hover:text-white/50 group-hover:translate-x-0.5 transition-all"></i>
+                </button>
+
+                <div class="text-center mt-6">
+                  <button type="button"
+                    onclick="window.openLoginModal && window.openLoginModal();"
+                    class="text-[11px] text-white/25 hover:text-white/50 underline underline-offset-2 transition-colors">
+                    Already a member? Log in
+                  </button>
                 </div>
-                <i class="fa-solid fa-chevron-right text-white/20 text-xs group-hover:text-white/50 group-hover:translate-x-0.5 transition-all"></i>
-              </button>
+              -->
 
             </div>
 
@@ -251,9 +301,10 @@
               <p class="section-lead mb-8">
                 One issue per week — written by someone who books 100+ premium cabins a year. No filler, no affiliate spam. Just the intelligence to fly Business and First Class on fewer miles.
               </p>
-              <a href="#alt-public-hero" onclick="document.getElementById('alt-public-hero').scrollIntoView({behavior:'smooth'});return false;"
+              <!-- DISABLED (temporarily) — was: <a href="#alt-public-hero" onclick="...">Start for $4.99/month</a>; restore when Premium launches -->
+              <a href="altitude-early-access.html"
                 class="btn-pill btn-pill-primary inline-flex items-center gap-2">
-                <i class="fa-solid fa-crown text-[10px]"></i> Start for $4.99/month
+                <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
               </a>
             </div>
 
@@ -337,9 +388,10 @@
           </div>
 
           <div class="text-center slide-up" style="animation-delay:.15s;">
-            <a href="#alt-public-hero" onclick="document.getElementById('alt-public-hero').scrollIntoView({behavior:'smooth'});return false;"
+            <!-- DISABLED (temporarily) — was: <a href="#alt-public-hero" onclick="...">Unlock the Archive — $4.99/mo</a>; restore when Premium launches -->
+            <a href="altitude-early-access.html"
               class="btn-pill btn-pill-primary inline-flex items-center gap-2">
-              <i class="fa-solid fa-crown text-[10px]"></i> Unlock the Archive — $4.99/mo
+              <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
             </a>
           </div>
 
@@ -353,22 +405,43 @@
         <div class="cta-band__veil"></div>
         <div class="container mx-auto px-4 md:px-6 relative z-10">
           <div class="max-w-xl mx-auto text-center slide-up">
-            <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Get Started</span>
-            <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
-              Ready to fly premium for less?
-            </h2>
-            <p class="section-lead-dark mb-9 max-w-md mx-auto">
-              Join Altitude for weekly award alerts, cabin reviews, and full archive access — for less than a coffee a week.
-            </p>
-            <div class="flex flex-wrap justify-center gap-3">
+            <!--
+              DISABLED (temporarily) — original eyebrow/heading/subtitle/button, restore
+              together when Premium officially launches:
+
+              <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Get Started</span>
+              <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+                Ready to fly premium for less?
+              </h2>
+              <p class="section-lead-dark mb-9 max-w-md mx-auto">
+                Join Altitude for weekly award alerts, cabin reviews, and full archive access — for less than a coffee a week.
+              </p>
               <a href="#alt-public-hero" onclick="document.getElementById('alt-public-hero').scrollIntoView({behavior:'smooth'});return false;"
                 class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
                 <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
               </a>
-              <button type="button" onclick="window.openLoginModal && window.openLoginModal();"
-                class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
-                Already a Member? Log In
-              </button>
+            -->
+            <span class="cta-eyebrow mb-6"><i class="fa-solid fa-bell text-[10px]"></i> Coming Soon</span>
+            <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+              Be first when it's ready.
+            </h2>
+            <p class="section-lead-dark mb-9 max-w-md mx-auto">
+              Join the waitlist for weekly award alerts, cabin reviews, and full archive access — the moment Altitude opens.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+              <a href="altitude-early-access.html"
+                class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
+                <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+              </a>
+              <!--
+                DISABLED (temporarily) — member login hidden here too, same reason as
+                the hero section above (see note there for full context):
+
+                <button type="button" onclick="window.openLoginModal && window.openLoginModal();"
+                  class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
+                  Already a Member? Log In
+                </button>
+              -->
             </div>
           </div>
         </div>

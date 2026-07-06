@@ -6,7 +6,7 @@
  * so the banner works even before the Worker is deployed.
  *
  * Free posts  → blue badge, "Read Issue X" CTA → Beehiiv post.
- * Premium posts → amber badge, "Get Premium Access" CTA → WhatsApp.
+ * Premium posts → amber badge, "Join the Waitlist" CTA → pre-launch sign-up page (Altitude isn't purchasable yet).
  *
  * localStorage tracks dismissed/read state per post ID so the banner
  * never resurfaces for the same issue but always reappears for a new one.
@@ -16,8 +16,13 @@
 (function () {
   var WORKER_URL     = 'https://skyfares-altitude.klent-5fa.workers.dev';
   var STORE_PREFIX   = 'skyfare_banner_v1_';
-  var PREMIUM_WA_URL = 'https://api.whatsapp.com/send?phone=6581575306&text=' +
-    encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.");
+  var SESSION_KEY    = 'skyfare_banner_dismissed_session';
+
+  // DISABLED (temporarily) -- Altitude Premium isn't purchasable yet (confirmed
+  // by Sahej, 2026-07-03). PREMIUM_WA_URL is kept commented, not deleted, so the
+  // WhatsApp upgrade path can be restored below once Premium launches.
+  // var PREMIUM_WA_URL = 'https://api.whatsapp.com/send?phone=6581575306&text=' +
+  //   encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.");
 
   // Static fallback — used when Worker is unreachable (e.g. not yet deployed)
   var FALLBACK_POST = {
@@ -30,12 +35,29 @@
   };
 
   // ─── localStorage helpers ─────────────────────────────────────────────────
+  // Permanent dismissal only — set exclusively when the user explicitly closes
+  // the banner (X) or opens/reads the newsletter (CTA click). Nothing else may
+  // hide it: it's expected to reappear on every page until one of those two
+  // actions happens, even across separate page loads/navigations.
 
   function hasSeen(id) {
     try { return !!localStorage.getItem(STORE_PREFIX + id); } catch (e) { return false; }
   }
   function markSeen(id) {
     try { localStorage.setItem(STORE_PREFIX + id, '1'); } catch (e) {}
+  }
+
+  // Session-level suppression: once the user has closed or engaged with a
+  // banner on ANY page, don't show a banner again for the rest of that
+  // browsing session (tab), even if a subsequent page load resolves to a
+  // different post id (e.g. the live Worker fetch briefly falls back to the
+  // hardcoded FALLBACK_POST, which has its own separate id) — this is what
+  // stops "I already closed it" from reappearing while navigating the site.
+  function dismissedThisSession() {
+    try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch (e) { return false; }
+  }
+  function markDismissedThisSession() {
+    try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) {}
   }
 
   // ─── Boot ─────────────────────────────────────────────────────────────────
@@ -47,6 +69,7 @@
   }
 
   function boot() {
+    if (dismissedThisSession()) return;
     if (typeof fetch === 'undefined') { tryFallback(); return; }
 
     fetch(WORKER_URL + '/newsletter/posts')
@@ -83,17 +106,21 @@
       banner.style.transform = 'translateY(0)';
     });
 
-    document.getElementById('nb-close').addEventListener('click', function () {
+    function dismiss() {
       markSeen(post.id);
+      markDismissedThisSession();
       hideBanner(banner);
-    });
+    }
+
+    document.getElementById('nb-close').addEventListener('click', dismiss);
 
     var cta = document.getElementById('nb-cta');
     if (cta) {
-      cta.addEventListener('click', function () {
-        markSeen(post.id);
-        hideBanner(banner);
-      });
+      // 'click' covers left-click and keyboard activation; 'auxclick' covers
+      // middle-click (mouse wheel button), which opens the link in a new tab
+      // without ever firing a 'click' event in most browsers.
+      cta.addEventListener('click', dismiss);
+      cta.addEventListener('auxclick', dismiss);
     }
   }
 
@@ -143,11 +170,14 @@
         '</span>'
       : '';
 
-    // ─── CTA — gold WhatsApp link for premium, on-site detail page for free ───
+    // ─── CTA — gold waitlist link for premium (not purchasable yet), on-site detail page for free ───
     // Path is relative: pages/ prefix for root-level pages, none for /pages/ pages
     var detailBase = window.location.pathname.includes('/pages/') ? '' : 'pages/';
-    var ctaHref  = prem ? PREMIUM_WA_URL : (detailBase + 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug || ''));
-    var ctaText  = prem ? 'Get Premium Access' : 'Read Issue&nbsp;' + e(issueNum);
+    // DISABLED (temporarily) -- original WhatsApp upgrade link + label, restore when Premium launches:
+    // var ctaHref = prem ? PREMIUM_WA_URL : (detailBase + 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug || ''));
+    // var ctaText = prem ? 'Get Premium Access' : 'Read Issue&nbsp;' + e(issueNum);
+    var ctaHref  = prem ? (detailBase + 'altitude-early-access.html') : (detailBase + 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug || ''));
+    var ctaText  = prem ? 'Join the Waitlist' : 'Read Issue&nbsp;' + e(issueNum);
     var ctaBg    = prem ? '#C9A227' : '#1d4ed8';
     var ctaHover = prem ? '#9E7B0D'  : '#1e40af';
 
@@ -207,9 +237,13 @@
   // ─── Layout ───────────────────────────────────────────────────────────────
 
   // Matches any dark-gradient hero section so the banner pushes it down correctly
-  // regardless of which page's hero class is in use.
+  // regardless of which page's hero class is in use. Must stay in sync with the
+  // hero selector in header.js (.hero-brand-fade for the homepage, .page-hero-bg
+  // for every interior page) — a stale selector here causes the banner to pad
+  // document.body instead of the hero element, breaking the transparent header's
+  // contrast against the hero image.
   function findHero() {
-    return document.querySelector('.hero-brand-fade, .altitude-hero-bg, .newsletter-hero-bg, .flight-hero-bg');
+    return document.querySelector('.hero-brand-fade, .page-hero-bg');
   }
 
   function pushContentDown(bannerH) {
