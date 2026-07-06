@@ -125,8 +125,8 @@
 
             </div>
 
-            <!-- MIDDLE: search bar, inside the image, centered, below the vertical center — glass/outline, no solid fill -->
-            <div class="flex-1 flex items-center justify-center py-6" id="hero-search-wrap">
+            <!-- MIDDLE: search bar, then Skyfare at a Glance directly below it — both centered together below the vertical center -->
+            <div class="flex-1 flex flex-col items-center justify-center gap-6 py-6" id="hero-search-wrap">
               <div class="w-full max-w-xl rounded-2xl border border-white/30 bg-white/10 backdrop-blur-md shadow-2xl p-3 md:p-4">
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
 
@@ -153,19 +153,13 @@
 
                 </div>
               </div>
-            </div>
 
-            <!-- BOTTOM: Skyfare at a Glance (left, horizontal bullets) + stats (right) — pinned to the very bottom, desktop only -->
-            <div class="hidden lg:flex items-end justify-between gap-8">
-
-              <div class="flex-1 min-w-0">
-                <div class="inline-flex items-center px-3 py-1 rounded-full bg-gold/25 text-gold text-[10px] font-bold uppercase tracking-widest mb-3">
-                  Skyfare at a Glance
-                </div>
+              <!-- Monthly miles stat (horizontal bullets) — desktop only, directly below search, centered to match it -->
+              <div class="hidden lg:block w-full max-w-xl text-center">
                 <h3 class="text-white text-xl md:text-2xl font-extrabold mb-3 leading-tight">
-                  Monthly 1–5 Million Miles Redeemed
+                  Monthly 1–5 Million Miles Utilised
                 </h3>
-                <div class="flex gap-5 md:gap-8">
+                <div class="flex justify-center gap-5 md:gap-8">
                   <div class="min-w-0">
                     <p class="text-white text-xs font-bold leading-snug">Business &amp; First Class</p>
                     <p class="text-white/50 text-[10px] leading-snug mt-0.5">Confirmed seat redemptions</p>
@@ -180,8 +174,10 @@
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Social links — glass circular icon buttons -->
+            <!-- BOTTOM: social links — glass circular icon buttons, pinned bottom-right, desktop only -->
+            <div class="hidden lg:flex justify-end">
               <div class="flex-shrink-0 flex items-center gap-2">
                 <a id="hero-instagram-link" href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
                    class="w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
@@ -200,7 +196,6 @@
                   <i class="fa-solid fa-envelope"></i>
                 </a>
               </div>
-
             </div>
 
           </div>
@@ -210,9 +205,8 @@
       <!-- Mobile-only: Skyfare at a Glance + stats (dark card, normal flow beneath the image) -->
       <div class="lg:hidden mt-6">
         <div class="card-dark p-6">
-          <p class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold mb-1">Skyfare at a Glance</p>
           <h3 class="text-lg font-extrabold text-white mb-4 leading-snug">
-            Monthly 1–5 Million Miles Redeemed
+            Monthly 1–5 Million Miles Utilised
           </h3>
           <div class="flex flex-col gap-3 mb-5">
             <div>
@@ -288,7 +282,7 @@
     <!-- Mobile avatar (shown only on mobile, outside flow so it doesn't affect layout) -->
     <div class="md:hidden bg-white pb-4 pt-14">
       <div class="flex flex-col items-center">
-        <img src="images/founder-mobile.png" alt="Sahej Singh"
+        <img src="images/founder-mobile.JPG" alt="Sahej Singh"
           class="w-32 h-32 rounded-full object-cover border-4 border-gold/20 shadow-xl mb-6">
       </div>
     </div>
@@ -489,7 +483,7 @@
 
       <!-- Section heading -->
       <div class="text-center max-w-2xl mx-auto mb-12 slide-up">
-        <p class="section-eyebrow-dark">Two Ways to Fly Smarter</p>
+        <p class="section-eyebrow-dark">Ways to Fly Smarter</p>
         <h2 class="text-3xl md:text-4xl font-display font-bold text-white leading-tight tracking-tight mb-4">
           Fly However You Fly Best
         </h2>
@@ -1840,6 +1834,7 @@
   })();
   </script>
 
+  <script src="js/fly-carousel.js" defer></script>
   <script src="js/marquee.js" defer></script>
   <script src="js/hero-bg-video.js" defer></script>
   <script src="js/newsletter.js" defer></script>
