@@ -426,14 +426,13 @@
       tbody.innerHTML = '';
       rows.forEach((r, index) => {
         const tr = document.createElement('tr');
-        tr.className =
-          "hover:bg-brand-50/5 transition-colors border-b border-neutral-100 last:border-0";
+        tr.className = "hover:bg-brand-50/60 transition-colors";
         tr.innerHTML = `
-            <td class="px-8 py-5 text-sm font-bold text-neutral-400 font-mono">${index + 1}</td>
-            <td class="px-8 py-5 text-sm font-bold text-brand-950">Singapore → ${r.to}</td>
-            <td class="px-8 py-5 text-sm font-black text-neutral-400 text-center uppercase tracking-widest"><span class="px-3 py-1 bg-neutral-100 rounded-full text-[10px]">${r.region}</span></td>
-            <td class="px-8 py-5 text-right font-bold text-neutral-600 font-mono">${r.saver.toLocaleString()} mi</td>
-            <td class="px-8 py-5 text-right font-bold text-neutral-600 font-mono">${r.advantage.toLocaleString()} mi</td>
+            <td class="px-6 py-4 text-sm font-bold text-neutral-300 tabular-nums">${index + 1}</td>
+            <td class="px-6 py-4 text-sm font-semibold text-neutral-900">Singapore <span class="text-brand-400">&rarr;</span> ${r.to}</td>
+            <td class="px-6 py-4 text-center"><span class="inline-block px-2.5 py-1 bg-brand-50 text-brand-600 rounded-full text-[10px] font-bold uppercase tracking-wider">${r.region}</span></td>
+            <td class="px-6 py-4 text-right text-sm font-bold text-neutral-900 tabular-nums">${r.saver.toLocaleString()}<span class="text-neutral-400 font-medium"> mi</span></td>
+            <td class="px-6 py-4 text-right text-sm font-semibold text-neutral-500 tabular-nums">${r.advantage.toLocaleString()}<span class="text-neutral-400 font-normal"> mi</span></td>
           `;
         tbody.appendChild(tr);
       });

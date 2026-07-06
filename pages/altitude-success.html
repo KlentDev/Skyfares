@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Activating Altitude Access — Skyfare</title>
+  <link rel="icon" href="../logos/logo.webp" />
+  <script src="../js/links.js"></script>
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+</head>
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1 flex items-center justify-center py-24 px-4">
+    <div class="max-w-md w-full text-center">
+
+      <!-- Loading state -->
+      <div id="state-loading">
+        <div class="w-16 h-16 rounded-full bg-brand-50 flex items-center justify-center mx-auto mb-6 animate-pulse">
+          <i class="fa-solid fa-crown text-brand-500 text-xl"></i>
+        </div>
+        <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3 tracking-tight">Activating your access…</h1>
+        <p class="text-neutral-500 text-sm">Confirming your payment and setting up Altitude Access. This only takes a moment.</p>
+      </div>
+
+      <!-- Success state -->
+      <div id="state-success" class="hidden">
+        <div class="w-16 h-16 rounded-full bg-gold-50 border-2 border-gold/30 flex items-center justify-center mx-auto mb-6">
+          <i class="fa-solid fa-crown text-gold text-xl"></i>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
+          <i class="fa-solid fa-check text-[9px]"></i> Access Granted
+        </div>
+        <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3 tracking-tight">Welcome to Altitude.</h1>
+        <p class="text-neutral-500 text-sm leading-relaxed mb-8">
+          Your membership is active. You now have full access to the Altitude archive, exclusive content, and premium newsletters delivered to your inbox.
+        </p>
+        <a href="altitude.html" class="btn-pill btn-pill-primary">
+          Enter Altitude <i class="fa-solid fa-arrow-right text-xs"></i>
+        </a>
+        <p class="text-xs text-neutral-400 mt-4">Check your email for a welcome message from the Skyfare team.</p>
+      </div>
+
+      <!-- Error state -->
+      <div id="state-error" class="hidden">
+        <div class="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-6">
+          <i class="fa-solid fa-triangle-exclamation text-neutral-400 text-xl"></i>
+        </div>
+        <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3 tracking-tight">Something went wrong</h1>
+        <p id="error-msg" class="text-neutral-500 text-sm leading-relaxed mb-8">
+          We couldn't activate your access. Your payment was processed — please contact us and we'll sort this out immediately.
+        </p>
+        <div class="flex flex-wrap gap-3 justify-center">
+          <button onclick="retryActivation()" class="btn-pill btn-pill-primary">
+            Try Again
+          </button>
+          <a href="https://api.whatsapp.com/send?phone=6581575306&text=Hi%20Skyfare%2C%20I%20paid%20for%20Altitude%20Access%20but%20couldn%27t%20activate%20it."
+             target="_blank" rel="noopener noreferrer"
+             class="btn-pill btn-pill-secondary">
+            <i class="fa-brands fa-whatsapp text-emerald-500"></i> Contact Support
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    var WORKER = 'https://skyfares-altitude.klent-5fa.workers.dev';
+
+    function show(id) {
+      ['state-loading','state-success','state-error'].forEach(function(s) {
+        document.getElementById(s).classList.add('hidden');
+      });
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    var params    = new URLSearchParams(window.location.search);
+    var sessionId = params.get('session_id');
+
+    function activate() {
+      if (!sessionId) {
+        document.getElementById('error-msg').textContent = 'No session ID found. Please contact support.';
+        show('state-error');
+        return;
+      }
+
+      fetch(WORKER + '/altitude/activate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId }),
+      })
+        .then(function (r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+          if (res.ok && res.data.token) {
+            try { localStorage.setItem('altitude_jwt', res.data.token); } catch (_) {}
+            // Flag altitude.html to show the welcome message, then redirect there
+            try { sessionStorage.setItem('altitude_welcome', '1'); } catch (_) {}
+            window.location.replace('altitude.html');
+          } else {
+            document.getElementById('error-msg').textContent =
+              res.data.error || 'Could not activate your access. Please contact support.';
+            show('state-error');
+          }
+        })
+        .catch(function () {
+          document.getElementById('error-msg').textContent = 'Network error. Please try again.';
+          show('state-error');
+        });
+    }
+
+    window.retryActivation = activate;
+
+    // Small delay for page-loader animation to complete
+    setTimeout(activate, 800);
+  })();
+  </script>
+
+</body>
+</html>

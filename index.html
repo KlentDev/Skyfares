@@ -1,16 +1,25 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Skyfare Consulting — Fly Premium for Less</title>
   <meta name="description"
-    content="Buy KrisFlyer miles and book confirmed Business & First Class redemptions. Nominee redemption or direct transfer — handled end-to-end." />
+    content="Fly Business and First Class for up to 60% less. Skyfare arranges premium cabin award travel so you can enjoy the luxury without learning the system." />
+  <link rel="canonical" href="https://skyfareconsulting.com/" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://skyfareconsulting.com/" />
+  <meta property="og:title"       content="Skyfare Consulting — Fly Premium for Less" />
+  <meta property="og:description" content="Fly Business and First Class for up to 60% less. Skyfare arranges premium cabin award travel so you can enjoy the luxury without learning the system." />
+  <meta property="og:image"       content="https://skyfareconsulting.com/images/page-images/our-flights.jpg" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Skyfare Consulting — Fly Premium for Less" />
+  <meta name="twitter:description" content="Fly Business and First Class for up to 60% less." />
+  <meta name="twitter:image"       content="https://skyfareconsulting.com/images/page-images/our-flights.jpg" />
   <link rel="icon" href="logos/logo.webp" />
 
-  <!-- Meta Pixel Code -->
-  <script src="js/meta-pixel.js" defer></script>
-  <!-- End Meta Pixel Code -->
+  <!-- Central link store (no defer — must run before header/footer) -->
+  <script src="js/links.js"></script>
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
@@ -21,583 +30,1204 @@
   <!-- Injectable Header & Footer -->
   <script src="js/header.js" defer></script>
   <script src="js/footer.js" defer></script>
+  <script src="js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/tailwind-config.js" defer></script>
 </head>
 
 <body class="min-h-screen flex flex-col">
+
+  <!-- PAGE LOADER: appears immediately on first render (before any other content) -->
+  <div id="page-loader">
+    <img src="logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
   <!-- HEADER -->
 
   <!-- HERO SECTION -->
-  <section class="relative min-h-[90vh] flex items-center overflow-hidden py-20 lg:py-0">
-    <!-- Background Elements -->
-    <div class="absolute inset-0 deep-blue-gradient z-0"></div>
-    <div class="hero-glow"></div>
-
-    <!-- Animated Circles -->
-    <div class="absolute top-1/4 -left-20 w-96 h-96 bg-brand-500/10 rounded-full blur-[100px] animate-pulse"></div>
-    <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-brand-300/10 rounded-full blur-[100px] animate-pulse"
-      style="animation-delay: 2s;"></div>
-    <!-- Decorative Bubbles -->
-    <div class="absolute top-20 right-[15%] w-64 h-64 bg-brand-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s;"></div>
-    <div class="absolute bottom-40 left-[20%] w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse" style="animation-duration: 6s; animation-delay: 3s;"></div>
-
-    <div class="container mx-auto px-4 md:px-6 relative z-10">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <!-- Text Content -->
-        <div class="slide-up">
-          <div
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-400/10 border border-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-widest mb-6">
-            <i class="fa-solid fa-crown text-[10px]"></i>
-            Luxury Travel Concierge
-          </div>
-
-          <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6">
-            Premium Cabins, <br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-100">Without Premium
-              Prices</span>
-          </h1>
-
-          <p class="text-lg md:text-xl text-brand-100/80 max-w-xl mb-8 leading-relaxed">
-            Fly Business & First Class for up to <span
-              class="text-white font-bold underline decoration-brand-400 decoration-2 underline-offset-4">60%
-              less</span>. We handle the complexity of miles redemptions so you can enjoy the luxury.
-          </p>
-
-          <div class="flex flex-wrap gap-4 mb-10">
-            <a href="how-it-works.html"
-              class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white text-brand-900 font-bold text-lg hover:bg-brand-50 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10">
-              Explore More
-              <i class="fa-solid fa-arrow-right"></i>
-            </a>
-            <a href="https://api.whatsapp.com/send?phone=6581575306"
-              class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-brand-600/20 text-white font-bold text-lg border border-brand-500/30 hover:bg-brand-600/30 transition-all hover:scale-105 active:scale-95">
-              <i class="fa-brands fa-whatsapp text-xl"></i>
-              WhatsApp Us
-            </a>
-          </div>
-          <div class=""> 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-[20px] pt-[20px]">
-            <div class="animate-float p-4 rounded-[1.5rem] bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-brand-500/10 hover:border-brand-400/30 transition-all group cursor-default">
-              <div class="w-9 h-9 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-300 mb-2 group-hover:scale-110 transition-transform">
-                <i class="fa-solid fa-percent icon-bold text-sm"></i>
-              </div>
-              <div class="text-xl font-black text-white">60%</div>
-              <div class="text-[10px] text-brand-300 uppercase font-black tracking-widest">Avg. Savings</div>
-            </div>
-            <div class="animate-float p-4 rounded-[1.5rem] bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-brand-500/10 hover:border-brand-400/30 transition-all group cursor-default" style="animation-delay: 1s;">
-              <div class="w-9 h-9 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-300 mb-2 group-hover:scale-110 transition-transform">
-                <i class="fa-solid fa-plane-up icon-bold text-sm"></i>
-              </div>
-              <div class="text-xl font-black text-white">100+</div>
-              <div class="text-[10px] text-brand-300 uppercase font-black tracking-widest">Airlines</div>
-            </div>
-            <div class="animate-float p-4 rounded-[1.5rem] bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-brand-500/10 hover:border-brand-400/30 transition-all group cursor-default" style="animation-delay: 2s;">
-              <div class="w-9 h-9 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-300 mb-2 group-hover:scale-110 transition-transform">
-                <i class="fa-solid fa-headset icon-bold text-sm"></i>
-              </div>
-              <div class="text-xl font-black text-white">24/7</div>
-              <div class="text-[10px] text-brand-300 uppercase font-black tracking-widest">Concierge</div>
-            </div>
-          </div>
-          </div>
-        </div>
-
-        <!-- Feature Card / At a Glance -->
-        <div class="relative lg:ml-auto w-full max-w-lg slide-up" style="animation-delay: 0.2s;">
-          <div class="bg-white p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden group">
-            <!-- Decorative elements -->
-            <div
-              class="absolute top-0 right-0 w-32 h-32 bg-brand-400/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-brand-400/20 transition-colors">
-            </div>
-
-            <div class="mb-8 relative z-10">
-              <span class="text-brand-600 text-xs font-bold uppercase tracking-widest block mb-2">Skyfare at a
-                glance</span>
-              <h2 class="text-3xl font-extrabold text-brand-950">Monthly 1–5 Million Miles Redeemed</h2>
-            </div>
-
-            <div class="space-y-6">
-              <!-- Stat Item -->
-              <div
-                class="flex items-center gap-5 p-4 rounded-2xl bg-brand-500/5 border border-brand-500/10 hover:bg-brand-500/10 transition-colors cursor-default">
-                <div
-                  class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-xl">
-                  <i class="fa-solid fa-plane-circle-check"></i>
-                </div>
-                <div>
-                  <div class="text-lg font-bold text-brand-950">Business & First Class</div>
-                  <div class="text-sm text-neutral-500">Confirmed seat redemptions</div>
-                </div>
-              </div>
-
-              <!-- Stat Item -->
-              <div
-                class="flex items-center gap-5 p-4 rounded-2xl bg-brand-500/5 border border-brand-500/10 hover:bg-brand-500/10 transition-colors cursor-default">
-                <div
-                  class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-xl">
-                  <i class="fa-solid fa-clock-rotate-left"></i>
-                </div>
-                <div>
-                  <div class="text-lg font-bold text-brand-950">No Waitlists</div>
-                  <div class="text-sm text-neutral-500">Direct booking pathways</div>
-                </div>
-              </div>
-
-              <!-- Stat Item -->
-              <div
-                class="flex items-center gap-5 p-4 rounded-2xl bg-brand-500/5 border border-brand-500/10 hover:bg-brand-500/10 transition-colors cursor-default">
-                <div
-                  class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-xl">
-                  <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div>
-                  <div class="text-lg font-bold text-brand-950">100% Safe & Legal</div>
-                  <div class="text-sm text-neutral-500">Airline-compliant redemptions</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Real Example Box -->
-            <div class="mt-10 p-6 rounded-2xl bg-white border border-brand-100 shadow-xl relative z-10">
-              <div class="text-[10px] uppercase font-bold text-brand-600 tracking-widest mb-3">Real Redemption Example
-              </div>
-              <div class="text-brand-950 font-black text-lg mb-4 flex items-center gap-2">
-                SIN <i class="fa-solid fa-arrow-right text-xs text-brand-400"></i> JFK
-              </div>
-              <div class="flex justify-between items-end">
-                <div class="flex flex-col">
-                  <span class="text-[10px] text-neutral-500 uppercase font-bold tracking-tighter">Skyfare Rate</span>
-                  <div class="text-3xl font-black text-brand-600">117k Miles</div>
-                </div>
-                <div class="text-right">
-                  <span class="text-[10px] text-neutral-400 uppercase font-bold tracking-tighter">Market Price</span>
-                  <div class="text-sm text-neutral-400 line-through font-bold">S$6,200 Cash</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS SECTION -->
-  <section class="py-24 bg-brand-950 relative overflow-hidden text-white">
-    <!-- Background Glows -->
-    <div class="absolute top-1/2 left-1/4 w-96 h-96 bg-brand-500/10 rounded-full blur-[120px] pointer-events-none">
-    </div>
-    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-300/10 rounded-full blur-[120px] pointer-events-none">
-    </div>
-
-    <div class="container mx-auto px-4 md:px-6 relative z-10">
-      <div class="text-center max-w-3xl mx-auto mb-20 slide-up">
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-400/10 border border-brand-400/20 text-brand-300 text-[10px] font-bold uppercase tracking-widest mb-4">
-          The Process
-        </div>
-        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">How It Works</h2>
-        <p class="text-brand-100/80 text-lg">
-          A seamless, end-to-end luxury experience. From your initial enquiry to the moment you step on board, we handle
-          every strategic detail.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-        <!-- Connector line (Desktop only) -->
-        <div
-          class="hidden lg:block absolute top-[120px] left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-400/20 to-transparent z-0">
-        </div>
-
-        <!-- Step 1 -->
-        <div class="relative group slide-up" style="animation-delay: 0.1s;">
-          <div
-            class="bg-white p-8 rounded-[3rem] h-full border border-brand-100 hover:border-brand-400/40 transition-all hover:-translate-y-2 relative overflow-hidden z-10 shadow-xl shadow-brand-950/5">
-            <!-- Large background number -->
-            <div
-              class="absolute -top-4 right-6 text-[8rem] font-black text-brand-500/10 group-hover:text-brand-500/20 transition-colors pointer-events-none italic">
-              1</div>
-
-            <div
-              class="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-3xl mb-8 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all font-bold">
-              <i class="fa-solid fa-paper-plane"></i>
-            </div>
-            <h3 class="text-xl font-extrabold text-brand-950 mb-4">Request a Quote</h3>
-            <p class="text-neutral-600 text-sm font-medium leading-relaxed">
-              Connect via WhatsApp or our form with your travel details: dates, route, and preferred cabin.
-            </p>
-          </div>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="relative group slide-up" style="animation-delay: 0.2s;">
-          <div
-            class="bg-white p-8 rounded-[3rem] h-full border border-brand-100 hover:border-brand-400/40 transition-all hover:-translate-y-2 relative overflow-hidden z-10 shadow-xl shadow-brand-950/5">
-            <div
-              class="absolute -top-4 right-6 text-[8rem] font-black text-brand-500/10 group-hover:text-brand-500/20 transition-colors pointer-events-none italic">
-              2</div>
-
-            <div
-              class="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-3xl mb-8 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all font-bold">
-              <i class="fa-solid fa-magnifying-glass-chart"></i>
-            </div>
-            <h3 class="text-xl font-extrabold text-brand-950 mb-4">Expert Sourcing</h3>
-            <p class="text-neutral-600 text-sm font-medium leading-relaxed">
-              We scan award availability across Star Alliance and partner networks to find the best value for your
-              miles.
-            </p>
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="relative group slide-up" style="animation-delay: 0.3s;">
-          <div
-            class="bg-white p-8 rounded-[3rem] h-full border border-brand-100 hover:border-brand-400/40 transition-all hover:-translate-y-2 relative overflow-hidden z-10 shadow-xl shadow-brand-950/5">
-            <div
-              class="absolute -top-4 right-6 text-[8rem] font-black text-brand-500/10 group-hover:text-brand-500/20 transition-colors pointer-events-none italic">
-              3</div>
-
-            <div
-              class="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-3xl mb-8 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all font-bold">
-              <i class="fa-solid fa-ticket"></i>
-            </div>
-            <h3 class="text-xl font-extrabold text-brand-950 mb-4">Secure Ticket</h3>
-            <p class="text-neutral-600 text-sm font-medium leading-relaxed">
-              Once approved, we handle the nominee redemption or direct transfer to ticket your flight immediately.
-            </p>
-          </div>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="relative group slide-up" style="animation-delay: 0.4s;">
-          <div
-            class="bg-white p-8 rounded-[3rem] h-full border border-brand-100 hover:border-brand-400/40 transition-all hover:-translate-y-2 relative overflow-hidden z-10 shadow-xl shadow-brand-950/5">
-            <div
-              class="absolute -top-4 right-6 text-[8rem] font-black text-brand-500/10 group-hover:text-brand-500/20 transition-colors pointer-events-none italic">
-              4</div>
-
-            <div
-              class="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-600 text-3xl mb-8 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all font-bold">
-              <i class="fa-solid fa-plane-arrival"></i>
-            </div>
-            <h3 class="text-xl font-extrabold text-brand-950 mb-4">Fly Premium</h3>
-            <p class="text-neutral-600 text-sm font-medium leading-relaxed">
-              Enjoy your Business or First Class experience, knowing you saved thousands compared to cash fares.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-20 text-center slide-up">
-        <a href="how-it-works.html"
-          class="inline-flex items-center gap-2 text-brand-300 font-bold hover:gap-4 transition-all">
-          See Detailed Process <i class="fa-solid fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS SECTION -->
-  <section class="py-24 bg-white relative overflow-hidden px-4 md:px-6">
-    <div class="container mx-auto">
-      <div class="text-center max-w-3xl mx-auto mb-20 slide-up">
-        <h2 class="text-3xl md:text-5xl font-bold text-brand-900 mb-6">What Our Clients Say</h2>
-        <p class="text-neutral-600 text-lg">
-          Join hundreds of premium travelers who fly in luxury for less with Skyfare.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- Testimonial 1 -->
-        <div
-          class="glass p-8 rounded-[2.5rem] border-brand-200/20 hover:border-brand-400/40 transition-all flex flex-col slide-up"
-          style="animation-delay: 0.1s;">
-          <div class="flex gap-1 text-brand-500 mb-6">
-            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-              class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-          </div>
-          <p class="text-neutral-600 italic mb-8 flex-1 leading-relaxed">
-            "Skyfare saved me over S$4,000 on my Business Class flight to London. The nominee process was seamless and
-            the support was exceptional."
-          </p>
-          <div class="flex items-center gap-4">
-            <div>
-              <div class="font-bold text-brand-950">Ronit S.</div>
-              <div
-                class="text-xs text-brand-500 text-brand-600 font-semibold uppercase tracking-widest">
-                Business Traveler</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Testimonial 2 -->
-        <div
-          class="glass p-8 rounded-[2.5rem] border-brand-200/20 hover:border-brand-400/40 transition-all flex flex-col slide-up"
-          style="animation-delay: 0.2s;">
-          <div class="flex gap-1 text-brand-500 mb-6">
-            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-              class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-          </div>
-          <p class="text-neutral-600 italic mb-8 flex-1 leading-relaxed">
-            "We booked Business Class for the whole family to Tokyo. Skyfare found confirmed space on our exact dates
-            when everyone else said there was no hope."
-          </p>
-          <div class="flex items-center gap-4">
-            <div>
-              <div class="font-bold text-brand-950">Harry</div>
-              <div
-                class="text-xs text-brand-500 text-brand-600 font-semibold uppercase tracking-widest">
-                Frequent Traveler</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Testimonial 3 -->
-        <div
-          class="glass p-8 rounded-[2.5rem] border-brand-200/20 hover:border-brand-400/40 transition-all flex flex-col slide-up"
-          style="animation-delay: 0.3s;">
-          <div class="flex gap-1 text-brand-500 mb-6">
-            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-              class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-          </div>
-          <p class="text-neutral-600 italic mb-8 flex-1 leading-relaxed">
-            "Incredible service. They handled the entire redemption technicalities while I just sat back and waited for
-            my e-ticket. Highly recommend!"
-          </p>
-          <div class="flex items-center gap-4">
-            <div>
-              <div class="font-bold text-brand-950">Adi A.</div>
-              <div
-                class="text-xs text-brand-500 text-brand-600 font-semibold uppercase tracking-widest">
-                Executive</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROMO SECTION -->
-  <section class="py-16 md:py-24 overflow-hidden">
+  <section class="hero-photo-section pt-2 pb-8 md:pt-3 md:pb-10">
     <div class="container mx-auto px-4 md:px-6">
-      <div class="relative rounded-[3rem] overflow-hidden group">
-        <!-- Background Gradient -->
-        <div class="absolute inset-0 brand-gradient transition-transform duration-700 group-hover:scale-105"></div>
 
-        <div class="relative z-10 grid lg:grid-cols-2 gap-12 items-center p-8 md:p-16 lg:p-24">
-          <div class="slide-up">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              Star Alliance <br> Nominee Redemptions
-            </h2>
-            <p class="text-white/80 text-lg mb-8 leading-relaxed">
-              Secure your dream flight with our exclusive nominee redemption pathways. We work across Star Alliance and
-              major global partners to offer you the best value for your miles, with zero waitlists and confirmed
-              ticketing.
-            </p>
+      <!-- Photo card — bleeds past the container margin on purpose (wider than the page's normal content width).
+           No bleed below md: at mobile widths, the -mx-16 amount used at md/lg would overflow the viewport
+           since it's larger than the container's own side padding. -->
+      <div class="mx-0 md:-mx-28 lg:-mx-40">
+        <div class="relative rounded-[28px] overflow-hidden h-[80vh] md:h-[86vh] flex flex-col"
+             style="background-image:url('images/page-images/bg-hero.svg'); background-size:cover; background-position:center top;">
 
-            <div class="space-y-4 mb-10">
-              <div class="flex items-center gap-3 text-white">
-                <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs">
-                  <i class="fa-solid fa-check"></i>
-                </div>
-                <span class="font-medium">Available Nominee redemptions</span>
+          <!-- Background video: plays forward, then reverses back to start instead of
+               jump-cutting (boomerang loop) -- see js/hero-bg-video.js -->
+          <video id="hero-bg-video" class="absolute inset-0 w-full h-full object-cover" style="object-position:center top;" autoplay muted playsinline>
+            <source src="images/page-images/bg-hero.mp4" type="video/mp4">
+          </video>
+
+          <div class="hero-photo-scrim"></div>
+
+          <!-- Content wrapper: generous padding on all sides -->
+          <div class="relative z-10 flex flex-col flex-1 px-6 sm:px-12 md:px-16 py-8 sm:py-12 md:py-14">
+
+            <!-- TOP: badge / h1 / description / CTAs -->
+            <div class="w-full mx-auto text-center">
+
+              <!-- Badge -->
+              <div class="badge-shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-4"
+                   style="box-shadow:0 4px 20px rgba(201,162,39,0.55), 0 1px 0 rgba(255,255,255,0.25) inset;
+                          border:1px solid rgba(255,220,100,0.45);">
+                <i class="fa-solid fa-crown text-[10px]" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></i>
+                Luxury Travel Concierge
               </div>
-              <div class="flex items-center gap-3 text-white">
-                <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs">
-                  <i class="fa-solid fa-check"></i>
+
+              <!-- H1 -->
+              <h1 class="font-display font-bold leading-tight tracking-tight mb-4 whitespace-normal md:whitespace-nowrap" style="font-size:clamp(1.75rem,5.2vw,4.5rem);">
+                <span class="text-white">Fly premium.</span> <span class="text-gold-light">Think smarter.</span>
+              </h1>
+
+              <!-- Description -->
+              <p class="text-base text-white/80 mb-2 leading-relaxed max-w-md mx-auto font-medium">
+                Fly Business &amp; First Class for up to <span
+                  class="text-white font-bold underline decoration-gold decoration-2 underline-offset-4">60%
+                  less</span>. We arrange your award travel so you can focus on the journey.
+              </p>
+
+              <!-- Stats -->
+              <div class="flex justify-center items-start divide-x divide-white/20 mt-4">
+                <div class="text-center px-3 sm:px-5">
+                  <div class="text-2xl font-black text-gold-light leading-none">60%</div>
+                  <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Avg. Savings</div>
                 </div>
-                <span class="font-medium">Confirmed Business & First Class Seats</span>
+                <div class="text-center px-3 sm:px-5">
+                  <div class="text-2xl font-black text-gold-light leading-none">100+</div>
+                  <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Airlines</div>
+                </div>
+                <div class="text-center px-3 sm:px-5">
+                  <div class="text-2xl font-black text-gold-light leading-none">24/7</div>
+                  <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Concierge</div>
+                </div>
+              </div>
+
+              <!-- CTAs -->
+              <div class="flex flex-wrap items-center justify-center gap-3 mt-5">
+                <a href="pages/altitude.html"
+                  class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-gold text-white font-bold text-sm whitespace-nowrap transition-all active:scale-95 hover:brightness-105">
+                  <i class="fa-solid fa-crown text-xs text-white"></i>
+                  Explore Altitude
+                </a>
+                <a href="pages/book.html"
+                  class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-white text-brand-500 font-bold text-sm whitespace-nowrap transition-all active:scale-95 hover:bg-neutral-100">
+                  <i class="fa-solid fa-calendar-check text-xs text-brand-500"></i>
+                  Book a Strategy Call
+                </a>
+              </div>
+
+            </div>
+
+            <!-- MIDDLE: search bar, inside the image, centered, below the vertical center — glass/outline, no solid fill -->
+            <div class="flex-1 flex items-center justify-center py-6" id="hero-search-wrap">
+              <div class="w-full max-w-xl rounded-2xl border border-white/30 bg-white/10 backdrop-blur-md shadow-2xl p-3 md:p-4">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+
+                  <div class="relative flex-1 min-w-0">
+                    <div class="flex items-center pl-4 pr-3 py-2.5 rounded-full border border-white/25 bg-white/5 focus-within:border-white/50 transition-all">
+                      <i class="fa-solid fa-plane-departure text-white/60 text-xs flex-shrink-0"></i>
+                      <span class="text-sm font-black text-white flex-shrink-0 ml-2 mr-1">SIN</span>
+                      <i class="fa-solid fa-arrow-right text-white/30 text-[10px] flex-shrink-0 mx-2"></i>
+                      <input
+                        id="hero-route-search"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Search destination"
+                        aria-label="Search destination"
+                        class="flex-1 min-w-0 py-1 text-sm text-white placeholder:text-white/50 outline-none bg-transparent"
+                      >
+                    </div>
+                    <!-- Dropdown -->
+                    <div id="hero-route-dropdown"
+                      class="absolute left-0 right-0 mt-2 bg-white rounded-2xl border border-neutral-100 shadow-2xl overflow-hidden z-50 hidden">
+                      <ul id="hero-route-list" class="py-1 max-h-52 overflow-y-auto divide-y divide-neutral-50"></ul>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-4">
-              <a href="services.html"
-                class="px-8 py-4 rounded-2xl bg-white text-brand-900 font-bold hover:bg-brand-50 transition-all hover:scale-105 active:scale-95 shadow-xl">
-                View All Services
-              </a>
-              <a href="contact.html"
-                class="px-8 py-4 rounded-2xl bg-brand-900/20 text-white font-bold border border-white/20 hover:bg-brand-900/30 transition-all hover:scale-105 active:scale-95">
-                Enquire Now
-              </a>
+            <!-- BOTTOM: Skyfare at a Glance (left, horizontal bullets) + stats (right) — pinned to the very bottom, desktop only -->
+            <div class="hidden lg:flex items-end justify-between gap-8">
+
+              <div class="flex-1 min-w-0">
+                <div class="inline-flex items-center px-3 py-1 rounded-full bg-gold/25 text-gold text-[10px] font-bold uppercase tracking-widest mb-3">
+                  Skyfare at a Glance
+                </div>
+                <h3 class="text-white text-xl md:text-2xl font-extrabold mb-3 leading-tight">
+                  Monthly 1–5 Million Miles Redeemed
+                </h3>
+                <div class="flex gap-5 md:gap-8">
+                  <div class="min-w-0">
+                    <p class="text-white text-xs font-bold leading-snug">Business &amp; First Class</p>
+                    <p class="text-white/50 text-[10px] leading-snug mt-0.5">Confirmed seat redemptions</p>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-white text-xs font-bold leading-snug">No Waitlists</p>
+                    <p class="text-white/50 text-[10px] leading-snug mt-0.5">Direct booking pathways</p>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-white text-xs font-bold leading-snug">100% Safe &amp; Legal</p>
+                    <p class="text-white/50 text-[10px] leading-snug mt-0.5">Airline-compliant redemptions</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Social links — glass circular icon buttons -->
+              <div class="flex-shrink-0 flex items-center gap-2">
+                <a id="hero-instagram-link" href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                   class="w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
+                  <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a id="hero-tiktok-link" href="https://www.tiktok.com/@skyfareconsulting" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+                   class="w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
+                  <i class="fa-brands fa-tiktok"></i>
+                </a>
+                <a id="hero-whatsapp-link" href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+                   class="w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
+                  <i class="fa-brands fa-whatsapp"></i>
+                </a>
+                <a href="mailto:info@skyfareconsulting.com" aria-label="Email"
+                   class="w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
+                  <i class="fa-solid fa-envelope"></i>
+                </a>
+              </div>
+
             </div>
+
           </div>
+        </div>
+      </div>
 
-          <div class="relative slide-up group/img" style="animation-delay: 0.2s;">
-            <div class="glass p-4 rounded-[2.5rem] transition-transform duration-500">
-              <div
-                class="rounded-[3rem] overflow-hidden shadow-2xl border border-white/10  transition-transform duration-700 h-full">
-                <div class="h-64 md:h-80 lg:h-full bg-white flex items-center justify-center p-12">
-                  <img src="logos/Logo_Star_Alliance.webp" alt="Star Alliance Logo"
-                    class="w-full h-full object-contain filter drop-shadow-2xl opacity-90 transition-transform duration-1000">
-                </div>
-              </div>
+      <!-- Mobile-only: Skyfare at a Glance + stats (dark card, normal flow beneath the image) -->
+      <div class="lg:hidden mt-6">
+        <div class="card-dark p-6">
+          <p class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold mb-1">Skyfare at a Glance</p>
+          <h3 class="text-lg font-extrabold text-white mb-4 leading-snug">
+            Monthly 1–5 Million Miles Redeemed
+          </h3>
+          <div class="flex flex-col gap-3 mb-5">
+            <div>
+              <p class="text-sm font-bold text-white leading-tight">Business &amp; First Class</p>
+              <p class="text-xs text-white/55 mt-0.5">Confirmed seat redemptions</p>
             </div>
-            <!-- Floating badges -->
-            <div class="absolute -top-6 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce">
-              <div class="text-brand-900 font-bold text-xl leading-none">60%</div>
-              <div class="text-[10px] text-brand-600 font-bold uppercase tracking-widest">Savings</div>
+            <div>
+              <p class="text-sm font-bold text-white leading-tight">No Waitlists</p>
+              <p class="text-xs text-white/55 mt-0.5">Direct booking pathways</p>
             </div>
-            <div class="absolute -bottom-6 -right-6 bg-brand-300 p-4 rounded-2xl shadow-xl">
-              <div class="text-brand-900 font-bold text-xl leading-none">100+</div>
-              <div class="text-[10px] text-brand-900/60 font-bold uppercase tracking-widest">Partners</div>
+            <div>
+              <p class="text-sm font-bold text-white leading-tight">100% Safe &amp; Legal</p>
+              <p class="text-xs text-white/55 mt-0.5">Airline-compliant redemptions</p>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- PARTNERS SECTION -->
-  <section class="py-20 bg-brand-50/50 border-y border-brand-100/50">
+  <!-- PARTNERS MARQUEE SECTION -->
+
+  <section class="py-16 tile-sky">
     <div class="container mx-auto px-4 md:px-6">
-      <p class="text-center text-brand-600 font-bold uppercase tracking-[0.3em] text-xs mb-16">
+      <p class="text-center text-brand-600 font-bold uppercase tracking-[0.3em] text-xs mb-8">
         Trusted by travelers flying with
       </p>
-      <div
-        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-12 items-center justify-items-center opacity-80">
-        <img src="logos/singapore-airlines.webp" alt="Singapore Airlines"
-          class="h-10 md:h-14 w-auto grayscale hover:grayscale-0 transition-all hover:opacity-100" />
-        <img src="logos/Logo_Star_Alliance.webp" alt="Star Alliance"
-          class="h-10 md:h-14 w-auto grayscale hover:grayscale-0 transition-all hover:opacity-100" />
-        <img src="logos/emirates.webp" alt="Emirates"
-          class="h-10 md:h-14 w-auto grayscale hover:grayscale-0 transition-all hover:opacity-100" />
-        <img src="logos/ana.webp" alt="ANA"
-          class="h-10 md:h-14 w-auto grayscale hover:grayscale-0 transition-all hover:opacity-100" />
-        <img src="logos/united.webp" alt="United"
-          class="h-10 md:h-14 w-auto grayscale hover:grayscale-0 transition-all hover:opacity-100" />
-        <img src="logos/amex.webp" alt="American Express"
-          class="h-10 md:h-14 w-auto grayscale hover:grayscale-0 transition-all hover:opacity-100" />
-        <img src="logos/chase.webp" alt="Chase"
-          class="h-10 md:h-14 w-auto grayscale hover:grayscale-0 transition-all hover:opacity-100" />
+      <div class="marquee-outer">
+        <div class="marquee-track">
+          <!-- Set 1 -->
+          <div class="marquee-item"><img src="logos/singapore-airlines.webp" alt="Singapore Airlines" /></div>
+          <div class="marquee-item"><img src="logos/Logo_Star_Alliance.webp" alt="Star Alliance" /></div>
+          <div class="marquee-item"><img src="logos/emirates.webp" alt="Emirates" /></div>
+          <div class="marquee-item"><img src="logos/ana.webp" alt="ANA" /></div>
+          <div class="marquee-item"><img src="logos/united.webp" alt="United Airlines" /></div>
+          <div class="marquee-item"><img src="logos/Qatar_Airways_logo.webp" alt="Qatar Airways" /></div>
+          <div class="marquee-item"><img src="logos/British_Airways_Logo.webp" alt="British Airways" /></div>
+          <div class="marquee-item"><img src="logos/Lufthansa_Logo_2018.webp" alt="Lufthansa" /></div>
+          <div class="marquee-item"><img src="logos/cathay.webp" alt="Cathay Pacific" /></div>
+          <div class="marquee-item"><img src="logos/Japan-Airlines-logo.webp" alt="Japan Airlines" /></div>
+          <div class="marquee-item"><img src="logos/turkish-airlines.webp" alt="Turkish Airlines" /></div>
+          <div class="marquee-item"><img src="logos/swiss.webp" alt="Swiss" /></div>
+          <!-- Set 2 — duplicate for seamless loop -->
+          <div class="marquee-item" aria-hidden="true"><img src="logos/singapore-airlines.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/Logo_Star_Alliance.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/emirates.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/ana.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/united.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/Qatar_Airways_logo.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/British_Airways_Logo.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/Lufthansa_Logo_2018.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/cathay.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/Japan-Airlines-logo.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/turkish-airlines.webp" alt="" /></div>
+          <div class="marquee-item" aria-hidden="true"><img src="logos/swiss.webp" alt="" /></div>
+        </div>
       </div>
-      <p class="mt-12 text-center text-[10px] text-neutral-400 max-w-2xl mx-auto italic">
+      <p class="mt-8 text-center text-[10px] text-neutral-400 max-w-2xl mx-auto italic">
         Logos are for descriptive purposes only and do not imply direct endorsement or corporate partnership.
       </p>
     </div>
   </section>
 
-  <!-- FAQ SECTION (Quick) -->
-  <section class="py-24 bg-white/50">
-    <div class="container mx-auto px-4 md:px-6">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-16 slide-up">
-          <h2 class="text-3xl md:text-5xl font-bold text-brand-900 mb-6">Frequently Requested</h2>
-          <p class="text-neutral-600 text-lg">Quick answers to common enquiries. For more
-            details, visit our full FAQ page.</p>
-        </div>
+  <!-- MEET THE FOUNDER SECTION -->
+  <section class="founder-section relative overflow-hidden">
+    <!-- Full-bleed background image (desktop only) -->
+    <div class="absolute inset-0 hidden md:block" aria-hidden="true">
+      <img src="images/founder.png" alt="" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-l from-brand-950/95 via-brand-950/80 to-transparent"></div>
+    </div>
 
-        <div class="space-y-4 slide-up" style="animation-delay: 0.2s;">
-          <details
-            class="group bg-white rounded-3xl border border-brand-100 overflow-hidden transition-all hover:shadow-lg">
-            <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer list-none">
-              <span class="text-lg md:text-xl font-bold text-brand-950">What if there’s no award
-                space on my dates?</span>
-              <div
-                class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 transition-transform group-open:rotate-180">
-                <i class="fa-solid fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="px-6 md:px-8 pb-8 text-neutral-600 leading-relaxed">
-              We propose 1–2 alternates (date/route) and can use nominee redemption paths that avoid waitlists. Our
-              experts are skilled at finding hidden availability that doesn't always show on standard search engines.
-            </div>
-          </details>
+    <!-- Mobile avatar (shown only on mobile, outside flow so it doesn't affect layout) -->
+    <div class="md:hidden bg-white pb-4 pt-14">
+      <div class="flex flex-col items-center">
+        <img src="images/founder-mobile.png" alt="Sahej Singh"
+          class="w-32 h-32 rounded-full object-cover border-4 border-gold/20 shadow-xl mb-6">
+      </div>
+    </div>
 
-          <details
-            class="group bg-white rounded-3xl border border-brand-100 overflow-hidden transition-all hover:shadow-lg">
-            <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer list-none">
-              <span class="text-lg md:text-xl font-bold text-brand-950">Do I need to add you as a
-                nominee?</span>
-              <div
-                class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 transition-transform group-open:rotate-180">
-                <i class="fa-solid fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="px-6 md:px-8 pb-8 text-neutral-600 leading-relaxed">
-              Only if you choose nominee redemption; we’ll share simple, step-by-step instructions. Direct transfer
-              works, too. We ensure the process is transparent and handled with the utmost security.
-            </div>
-          </details>
+    <!-- Content — single source of truth for all copy -->
+    <div class="relative z-10 w-full md:min-h-[700px] md:flex md:items-center bg-white md:bg-transparent">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="max-w-3xl py-10 md:py-20 md:ml-auto text-center md:text-left slide-up">
 
-          <details
-            class="group bg-white rounded-3xl border border-brand-100 overflow-hidden transition-all hover:shadow-lg">
-            <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer list-none">
-              <span class="text-lg md:text-xl font-bold text-brand-950">How fast can I fly?</span>
-              <div
-                class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 transition-transform group-open:rotate-180">
-                <i class="fa-solid fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="px-6 md:px-8 pb-8 text-neutral-600 leading-relaxed">
-              Nominee bookings can be immediate once space is secured. Direct transfers typically complete in ≈5
-              business days. For urgent travel, we recommend contacting us immediately via WhatsApp.
-            </div>
-          </details>
-        </div>
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 md:bg-gold/20 border border-gold/30 md:border-gold/40 text-gold text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-user-tie text-[10px]"></i>
+            Meet the Strategist
+          </div>
 
-        <div class="mt-12 text-center slide-up">
-          <a href="faq.html"
-            class="inline-flex items-center gap-2 text-brand-600 font-bold hover:gap-4 transition-all">
-            View All FAQs <i class="fa-solid fa-arrow-right"></i>
-          </a>
+          <!-- Title -->
+          <h2 class="text-3xl md:text-5xl lg:text-7xl font-black text-brand-950 md:text-white mb-3 leading-[1.1] tracking-tight">
+            Hi, I'm Sahej. 👋
+          </h2>
+
+          <!-- Role -->
+          <p class="text-gold font-semibold italic text-lg md:text-xl mb-8 tracking-wide">
+            Founder & CEO
+          </p>
+
+          <!-- Body Copy -->
+          <div class="space-y-4 md:space-y-5 text-neutral-600 md:text-white text-sm md:text-lg leading-relaxed font-light max-w-xl mx-auto md:mx-0">
+            <p>
+              Flying Business and First Class isn't just my work, it's my passion. I'm genuinely obsessed with points, loyalty programmes, and the small details that make a premium cabin worth the hype.
+            </p>
+            <p>
+              I vlog most of my own flights, reviewing the seats, the lounges, the service—partly because I love it and partly because it's the best way to actually test what I recommend to clients.
+            </p>
+            <p>
+              Somewhere along the way, friends and then strangers started asking me to book the same seats for them. That's Skyfare: the same strategies and standards I hold myself to, turned into a service so you don't have to learn the system to benefit from it.
+            </p>
+          </div>
+
+          <!-- Social Links -->
+          <div class="mt-8 md:mt-10 flex items-center justify-center md:justify-start gap-4">
+            <p class="text-brand-950 md:text-white text-base font-semibold">Follow me on:</p>
+            <a id="founder-instagram-link" href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
+              class="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center text-white hover:scale-110 transition-all shadow-lg shadow-pink-500/30">
+              <i class="fa-brands fa-instagram text-xl"></i>
+            </a>
+            <a id="founder-tiktok-link" href="https://www.tiktok.com/@skyfareconsulting" target="_blank" rel="noopener noreferrer"
+              class="w-12 h-12 rounded-full bg-black flex items-center justify-center text-white hover:scale-110 transition-all shadow-lg">
+              <i class="fa-brands fa-tiktok text-xl"></i>
+            </a>
+            <a id="founder-whatsapp-link" href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+              class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white hover:scale-110 transition-all shadow-lg shadow-green-500/30">
+              <i class="fa-brands fa-whatsapp text-xl"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- INSTAGRAM SECTION -->
-<section class="py-12 md:py-20 relative">
-    <div class="max-w-5xl mx-auto px-4 md:px-6">
-      <div class="glass p-8 md:p-12 rounded-[3.5rem] border-brand-200/20 text-center relative overflow-hidden group">
-        <!-- Floating Logo Icon -->
-        <div class="absolute inset-0 brand-gradient transition-transform duration-700 group-hover:scale-105"></div>
-        
-        <div class="relative z-10 text-center">
-          <div class="relative inline-block mb-6">
-            <div class="w-20 h-20 rounded-[2rem] bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center text-white text-4xl shadow-2xl shadow-pink-500/30">
-              <i class="fa-brands fa-instagram"></i>
-            </div>
-            <!-- Live Badge -->
-            <div class="absolute -top-2 -right-4 flex items-center gap-1.5 px-3 py-1 bg-red-600 text-white text-[10px] font-black uppercase rounded-full border-2 border-white animate-pulse">
-              <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
-              Live
-            </div>
-          </div>
-          
-          <h2 class="text-3xl md:text-5xl font-black text-white mb-4 tracking-tighter">Follow Our Journey</h2>
-          <p class="text-white text-lg mb-10 max-w-xl mx-auto italic font-medium">
-             Get real-time deal alerts, travel inspiration, and premium flight strategies.
+  <!-- HOW IT WORKS -->
+  <section class="py-20 tile-sky">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <!-- Header -->
+      <div class="text-center max-w-2xl mx-auto mb-14 slide-up">
+        <p class="section-eyebrow">The Process</p>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
+          From First Message to Boarding Pass
+        </h2>
+        <p class="text-neutral-600 text-base leading-relaxed font-medium">
+          We handle the complexity of award travel so you can focus on the journey.
+        </p>
+      </div>
+
+      <!-- 4-step grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+
+        <div class="card-dark process-step p-7 relative overflow-hidden slide-up" style="animation-delay:0.1s;">
+          <div class="step-number absolute top-2 right-3">01</div>
+          <div class="icon-chip icon-chip-dark mb-4"><i class="fa-solid fa-comment-dots"></i></div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 01</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Request a Quote</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Connect via WhatsApp with your travel details: dates, route, and preferred cabin class.
           </p>
-          
-          <a href="https://www.instagram.com/skyfareconsulting/" target="_blank" class="inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-white text-brand-950 font-black text-xl border border-brand-100 shadow-xl hover:bg-brand-50 hover:scale-105 active:scale-95 transition-all">
-            <span class="text-brand-600">@</span>skyfareconsulting
-            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-brand-400"></i>
+        </div>
+
+        <div class="card-dark process-step p-7 relative overflow-hidden slide-up" style="animation-delay:0.2s;">
+          <div class="step-number absolute top-2 right-3">02</div>
+          <div class="icon-chip icon-chip-dark mb-4"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 02</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Expert Sourcing</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            We scan award availability across Star Alliance and partner networks to find the best value.
+          </p>
+        </div>
+
+        <div class="card-dark process-step p-7 relative overflow-hidden slide-up" style="animation-delay:0.3s;">
+          <div class="step-number absolute top-2 right-3">03</div>
+          <div class="icon-chip icon-chip-dark mb-4"><i class="fa-solid fa-ticket"></i></div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 03</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Secure Your Ticket</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            We handle the booking. Your confirmed ticket is sent directly to you.
+          </p>
+        </div>
+
+        <div class="card-dark process-step p-7 relative overflow-hidden slide-up" style="animation-delay:0.4s;">
+          <div class="step-number absolute top-2 right-3">04</div>
+          <div class="icon-chip icon-chip-dark mb-4"><i class="fa-solid fa-plane-departure"></i></div>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">Step 04</p>
+          <h3 class="text-base font-display font-semibold text-white mb-2">Fly Premium</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Enjoy Business or First Class knowing you saved thousands versus a standard cash fare.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Savings comparison strip -->
+      <div class="border-t border-neutral-100 pt-14 slide-up" style="animation-delay:0.5s;">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+
+          <!-- Left: heading + description -->
+          <div>
+            <p class="section-eyebrow">Real Bookings</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
+              Real Savings, Real Results
+            </h2>
+            <p class="text-neutral-600 text-base leading-relaxed font-medium">
+              Every itinerary below is a real booking we arranged. Actual miles spent, taxes paid, and savings made.
+            </p>
+            <p class="mt-6 text-[10px] text-neutral-400 italic">
+              *Includes airline taxes and service fees. Subject to seasonal availability.
+              <a href="pages/how-it-works.html" class="ml-1 text-brand-500 not-italic font-semibold hover:underline underline-offset-2">More examples →</a>
+            </p>
+          </div>
+
+          <!-- Right: cards -->
+          <div class="grid grid-cols-2 gap-4">
+
+            <!-- SIN → JFK -->
+            <div class="card-dark p-6 slide-up reveal-pop" style="animation-delay:0.1s;">
+              <div class="flex items-center gap-2 mb-5">
+                <div class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-plane text-xs"></i></div>
+                <span class="text-sm font-semibold text-white">SIN → JFK &nbsp;·&nbsp; Business Class</span>
+              </div>
+              <div class="fare-standard flex items-center justify-between mb-2 bg-white/[0.03] rounded-lg px-3 py-2">
+                <span class="text-xs text-white/45">Standard cash fare</span>
+                <span class="text-sm font-semibold text-white/30 line-through">S$6,800+</span>
+              </div>
+              <div class="fare-strategy flex items-center justify-between mb-4 bg-brand-500/10 border border-brand-500/15 rounded-lg px-3 py-2.5">
+                <span class="text-xs text-white/70 font-medium">Skyfare strategy</span>
+                <div class="text-right">
+                  <span class="text-base font-bold text-white">S$2,244</span>
+                  <span class="block text-[10px] text-white/45 mt-0.5">117,000 miles</span>
+                </div>
+              </div>
+              <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                <span class="savings-badge"><i class="fa-solid fa-arrow-down text-[9px]"></i> You save</span>
+                <span class="text-base font-bold text-brand-400">S$4,556</span>
+              </div>
+            </div>
+
+            <!-- LHR → SIN -->
+            <div class="card-dark p-6 slide-up reveal-pop" style="animation-delay:0.2s;">
+              <div class="flex items-center gap-2 mb-5">
+                <div class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-plane text-xs"></i></div>
+                <span class="text-sm font-semibold text-white">LHR → SIN &nbsp;·&nbsp; Business Class</span>
+              </div>
+              <div class="fare-standard flex items-center justify-between mb-2 bg-white/[0.03] rounded-lg px-3 py-2">
+                <span class="text-xs text-white/45">Standard cash fare</span>
+                <span class="text-sm font-semibold text-white/30 line-through">S$4,500+</span>
+              </div>
+              <div class="fare-strategy flex items-center justify-between mb-4 bg-brand-500/10 border border-brand-500/15 rounded-lg px-3 py-2.5">
+                <span class="text-xs text-white/70 font-medium">Skyfare strategy</span>
+                <div class="text-right">
+                  <span class="text-base font-bold text-white">S$2,305</span>
+                  <span class="block text-[10px] text-white/45 mt-0.5">108,500 miles</span>
+                </div>
+              </div>
+              <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                <span class="savings-badge"><i class="fa-solid fa-arrow-down text-[9px]"></i> You save</span>
+                <span class="text-base font-bold text-brand-400">S$2,195</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CHOOSE YOUR PATH -->
+  <section class="py-20 tile-dark1">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <!-- Section heading -->
+      <div class="text-center max-w-2xl mx-auto mb-12 slide-up">
+        <p class="section-eyebrow-dark">Two Ways to Fly Smarter</p>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-white leading-tight tracking-tight mb-4">
+          Fly However You Fly Best
+        </h2>
+        <p class="text-white/55 text-base leading-relaxed font-medium">
+          Full-service concierge booking, or the insider knowledge to book premium cabins yourself — either way, you fly for less.
+        </p>
+      </div>
+
+      <!-- Image strip — one continuous track that steps left by one slot
+           every second: the leftmost slot exits left, the rest shift over
+           together, and the next slot slides in from the right. Each
+           repeating group keeps the original bento proportions (large /
+           medium / stacked top+bottom pair); the two-batch sequence repeats
+           on the track so the loop is seamless (pure CSS, no JS). -->
+      <div class="fly-carousel h-[420px] md:h-[460px] mb-8 slide-up" style="animation-delay:0.1s;">
+        <div class="fly-carousel-track">
+
+          <!-- Batch 1 -->
+          <div class="fc-slot fc-large"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/our-flights.jpg" alt="Skyfare cabin interior" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-medium"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/concierge-services.png" alt="Skyfare concierge service" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-pair">
+            <div class="rounded-[18px] overflow-hidden"><img src="images/page-images/skyfare-flight.JPG" alt="Premium cabin seating" class="w-full h-full object-cover"></div>
+            <div class="rounded-[18px] overflow-hidden"><img src="images/page-images/altitude.jpg" alt="Skyfare Altitude travelers" class="w-full h-full object-cover"></div>
+          </div>
+
+          <!-- Batch 2 -->
+          <div class="fc-slot fc-large"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/assessment-call.png" alt="Skyfare assessment call" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-medium"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/first-class.jpg" alt="First class cabin" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-pair">
+            <div class="rounded-[18px] overflow-hidden"><img src="images/hero/2.png" alt="Luxury cabin experience" class="w-full h-full object-cover"></div>
+            <div class="rounded-[18px] overflow-hidden"><img src="images/page-images/newsletter.png" alt="Skyfare Altitude newsletter" class="w-full h-full object-cover"></div>
+          </div>
+
+          <!-- Batch 1 repeated so the loop wraps seamlessly -->
+          <div class="fc-slot fc-large" aria-hidden="true"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/our-flights.jpg" alt="" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-medium" aria-hidden="true"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/concierge-services.png" alt="" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-pair" aria-hidden="true">
+            <div class="rounded-[18px] overflow-hidden"><img src="images/page-images/skyfare-flight.JPG" alt="" class="w-full h-full object-cover"></div>
+            <div class="rounded-[18px] overflow-hidden"><img src="images/page-images/altitude.jpg" alt="" class="w-full h-full object-cover"></div>
+          </div>
+
+          <!-- Batch 2 repeated -->
+          <div class="fc-slot fc-large" aria-hidden="true"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/assessment-call.png" alt="" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-medium" aria-hidden="true"><div class="rounded-[18px] overflow-hidden"><img src="images/page-images/first-class.jpg" alt="" class="w-full h-full object-cover"></div></div>
+          <div class="fc-slot fc-pair" aria-hidden="true">
+            <div class="rounded-[18px] overflow-hidden"><img src="images/hero/2.png" alt="" class="w-full h-full object-cover"></div>
+            <div class="rounded-[18px] overflow-hidden"><img src="images/page-images/newsletter.png" alt="" class="w-full h-full object-cover"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="text-center text-[11px] font-bold uppercase tracking-[0.25em] text-white/35 mb-6 slide-up" style="animation-delay:0.15s;">Choose Your Path</p>
+
+      <!-- 3-column decision grid -->
+      <div class="grid md:grid-cols-3 gap-5">
+
+        <!-- Skyfare Concierge -->
+        <div class="authority-card p-8 flex flex-col slide-up reveal-pop" style="animation-delay:0.1s;">
+          <div class="mb-6">
+            <div class="icon-chip icon-chip-dark mb-4"><i class="fa-brands fa-whatsapp"></i></div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2">Skyfare Concierge</p>
+            <h3 class="text-xl font-display font-semibold text-white mb-1">Done for you.</h3>
+            <p class="text-sm text-white/55 leading-relaxed">
+              Best for: travelers who want confirmed Business or First Class seats without learning the system.
+            </p>
+          </div>
+          <ul class="space-y-3 mb-8 flex-1 text-sm text-white/75">
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              End-to-end booking — you show up at the gate
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              Nominee or direct transfer, handled for you
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              Dedicated consultant, custom quote
+            </li>
+          </ul>
+          <a href="https://api.whatsapp.com/send?phone=6581575306"
+             target="_blank" rel="noopener noreferrer"
+             class="btn-pill btn-pill-primary self-start">
+            <i class="fa-brands fa-whatsapp"></i>
+            Book via WhatsApp
           </a>
         </div>
+
+        <!-- Book a Strategy Call -->
+        <div class="authority-card p-8 flex flex-col slide-up reveal-pop" style="animation-delay:0.15s;">
+          <div class="mb-6">
+            <div class="icon-chip icon-chip-dark mb-4"><i class="fa-solid fa-calendar-check"></i></div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2">Strategy Call</p>
+            <h3 class="text-xl font-display font-semibold text-white mb-1">Talk it through.</h3>
+            <p class="text-sm text-white/55 leading-relaxed">
+              Best for: travelers who want a live walkthrough before committing.
+            </p>
+          </div>
+          <ul class="space-y-3 mb-8 flex-1 text-sm text-white/75">
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              Live route &amp; award space review
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              Clear miles, routing &amp; cabin plan
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              We handle the full redemption
+            </li>
+          </ul>
+          <a href="https://calendly.com/sahejsingh1/30min"
+             target="_blank" rel="noopener noreferrer"
+             class="btn-pill btn-pill-primary self-start">
+            <i class="fa-solid fa-calendar-check"></i>
+            Book a Strategy Call
+          </a>
+        </div>
+
+        <!-- Skyfare Altitude (highlighted with ring) -->
+        <div class="authority-card p-8 flex flex-col ring-2 ring-brand-500 ring-offset-2 ring-offset-[#1A2437] slide-up reveal-pop" style="animation-delay:0.2s;">
+          <div class="mb-6">
+            <div class="icon-chip icon-chip-dark mb-4"><i class="fa-solid fa-crown"></i></div>
+            <div class="flex items-center gap-2 mb-2">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400">Skyfare Altitude</p>
+              <span class="pill-tag">Coming Soon</span>
+            </div>
+            <h3 class="text-xl font-display font-semibold text-white mb-1">The insider edge.</h3>
+            <p class="text-sm text-white/55 leading-relaxed">
+              Best for: frequent travelers who want to learn the system and book premium cabins themselves.
+            </p>
+          </div>
+          <ul class="space-y-3 mb-8 flex-1 text-sm text-white/75">
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              Weekly award space alerts and deal breakdowns
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              Routing strategies and miles guides
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+              Written by someone who books 100+ premium cabins a year
+            </li>
+          </ul>
+          <!-- Label relabeled while Premium isn't purchasable yet, was "Get Altitude Access" -->
+          <a href="pages/altitude.html"
+             class="btn-pill btn-pill-primary self-start">
+            <i class="fa-solid fa-crown"></i>
+            Explore Altitude
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Free tier footnote -->
+      <p class="text-center mt-8 text-sm text-white/35 slide-up" style="animation-delay:0.3s;">
+        Just browsing? Our free deal highlights are always at
+        <a href="pages/past-flight-deals.html"
+           class="text-white/55 underline underline-offset-2 hover:text-white/80 transition-colors">skyfareconsulting.com</a>.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- NEWSLETTER PREVIEW -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <!-- Section heading -->
+      <div class="flex items-end justify-between mb-10 slide-up">
+        <div>
+          <p class="section-eyebrow">Skyfare Altitude</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-3 tracking-tight">
+            Latest from the Newsletter
+          </h2>
+          <p class="text-neutral-500 text-sm font-medium max-w-md">
+            Award space alerts, routing strategies, and premium cabin reviews — delivered every week.
+          </p>
+        </div>
+        <a href="pages/newsletter.html" class="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-800 transition-colors">
+          View All Issues <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <!-- Newsletter cards (populated by JS; skeletons show while loading) -->
+      <div id="home-newsletter-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5 slide-up" style="animation-delay:0.1s;">
+        <div class="rounded-2xl border border-neutral-100 overflow-hidden animate-pulse">
+          <div class="h-44 bg-neutral-100"></div>
+          <div class="p-5 space-y-2">
+            <div class="h-2.5 w-16 bg-neutral-100 rounded-full"></div>
+            <div class="h-3.5 w-4/5 bg-neutral-100 rounded-full"></div>
+            <div class="h-2.5 w-20 bg-neutral-100 rounded-full mt-3"></div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-neutral-100 overflow-hidden animate-pulse">
+          <div class="h-44 bg-neutral-100"></div>
+          <div class="p-5 space-y-2">
+            <div class="h-2.5 w-16 bg-neutral-100 rounded-full"></div>
+            <div class="h-3.5 w-4/5 bg-neutral-100 rounded-full"></div>
+            <div class="h-2.5 w-20 bg-neutral-100 rounded-full mt-3"></div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-neutral-100 overflow-hidden animate-pulse">
+          <div class="h-44 bg-neutral-100"></div>
+          <div class="p-5 space-y-2">
+            <div class="h-2.5 w-16 bg-neutral-100 rounded-full"></div>
+            <div class="h-3.5 w-4/5 bg-neutral-100 rounded-full"></div>
+            <div class="h-2.5 w-20 bg-neutral-100 rounded-full mt-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile: View All link -->
+      <div class="mt-8 text-center md:hidden slide-up" style="animation-delay:0.2s;">
+        <a href="pages/newsletter.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-800 transition-colors">
+          View All Issues <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- POPULAR ROUTES -->
+  <section class="py-20 tile-dark1">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <div class="text-center mb-10 slide-up">
+        <p class="section-eyebrow-dark">Popular Routes</p>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-4 tracking-tight">
+          Fly Business. Fly First.
+        </h2>
+        <p class="text-white/55 text-base max-w-xl mx-auto leading-relaxed font-medium">
+          These are the routes our clients fly most — and where we get the best redemptions.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+           class="route-tile group slide-up" style="animation-delay:0.05s;">
+          <div class="route-tile-bg" style="background-image:url('images/routes-images/new-york.jpg');"></div>
+          <div class="route-tile-overlay"></div>
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-5">
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → JFK</span>
+              <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-1">New York City</h3>
+            <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">117,000</span> mi · Business Class</p>
+            <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+              <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+              <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+           class="route-tile group slide-up" style="animation-delay:0.10s;">
+          <div class="route-tile-bg" style="background-image:url('images/routes-images/london.jpg');"></div>
+          <div class="route-tile-overlay"></div>
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-5">
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → LHR</span>
+              <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-1">London</h3>
+            <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">108,500</span> mi · Business Class</p>
+            <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+              <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+              <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+           class="route-tile group slide-up" style="animation-delay:0.15s;">
+          <div class="route-tile-bg" style="background-image:url('images/routes-images/melbourne.jpg');"></div>
+          <div class="route-tile-overlay"></div>
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-5">
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → MEL</span>
+              <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-1">Melbourne</h3>
+            <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">72,000</span> mi · Business Class</p>
+            <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+              <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+              <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+           class="route-tile group slide-up" style="animation-delay:0.20s;">
+          <div class="route-tile-bg" style="background-image:url('images/routes-images/dubai.jpg');"></div>
+          <div class="route-tile-overlay"></div>
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-5">
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → DXB</span>
+              <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-1">Dubai</h3>
+            <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">68,000</span> mi · Business Class</p>
+            <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+              <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+              <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+           class="route-tile group slide-up" style="animation-delay:0.25s;">
+          <div class="route-tile-bg" style="background-image:url('images/routes-images/paris.jpg');"></div>
+          <div class="route-tile-overlay"></div>
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-5">
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → CDG</span>
+              <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-1">Paris</h3>
+            <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">108,500</span> mi · Business Class</p>
+            <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+              <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+              <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+           class="route-tile group slide-up" style="animation-delay:0.30s;">
+          <div class="route-tile-bg" style="background-image:url('images/routes-images/los-angeles.jpg');"></div>
+          <div class="route-tile-overlay"></div>
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-5">
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → LAX</span>
+              <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-1">Los Angeles</h3>
+            <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">112,500</span> mi · Business Class</p>
+            <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+              <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+              <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="flex justify-end mt-6 slide-up" style="animation-delay:0.35s;">
+        <a href="pages/services.html#routes"
+          class="inline-flex items-center gap-2 text-xs font-semibold text-white/45 hover:text-white/80 transition-colors group">
+          See more routes
+          <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform duration-200"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- Modal (shared, one per page) — must stay in DOM for TikTok JS -->
+  <div id="tiktok-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div id="tiktok-modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer"></div>
+    <div class="relative z-10 flex flex-col items-center">
+      <button id="tiktok-modal-close"
+        class="mb-4 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white text-lg hover:bg-white/20 transition-all self-end"
+        aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="tiktok-modal-frame"
+        class="rounded-2xl overflow-hidden bg-black w-[min(360px,90vw)]"
+        style="height:min(739px,80vh);">
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL PROOF -->
+  <section class="py-20 tile-parch">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <!-- Section header -->
+      <div class="text-center max-w-xl mx-auto mb-14 slide-up">
+        <p class="section-eyebrow">Client Results</p>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight">
+          What Our Clients Say
+        </h2>
+        <p class="text-neutral-600 text-base leading-relaxed font-medium mb-5">
+          Real travelers, real premium cabins, real savings — verified on every booking we arrange.
+        </p>
+        <span class="inline-flex items-center gap-2 bg-white border border-brand-500/15 rounded-full px-4 py-2 text-xs font-semibold text-neutral-700">
+          Avg. client savings: <span class="font-bold text-neutral-900">S$3,400 per booking</span>
+        </span>
+      </div>
+
+      <!-- Testimonial grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Ronit S. -->
+        <div class="card-utility group overflow-hidden flex flex-col slide-up reveal-pop" style="animation-delay:0.1s;">
+          <div class="h-56 flex-shrink-0 relative overflow-hidden">
+            <img src="images/testimonials/ronit.JPG" alt="Ronit S."
+                 class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
+            <div class="absolute bottom-3 left-3">
+              <span class="savings-callout text-[10px] py-1 px-3">
+                <i class="fa-solid fa-arrow-down text-[8px]"></i> Saved S$4,000+
+              </span>
+            </div>
+          </div>
+          <div class="flex-1 p-6 flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex gap-0.5 text-gold">
+                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+                <i class="fa-solid fa-star text-xs"></i>
+              </div>
+              <i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>
+            </div>
+            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
+              "Skyfare saved me over S$4,000 on my Business Class flight to London. The nominee process was seamless and the support was exceptional."
+            </blockquote>
+            <div class="pt-4 border-t border-neutral-100">
+              <p class="font-semibold text-neutral-900 text-sm">Ronit S.</p>
+              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Business Traveler</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Amrita B. -->
+        <div class="card-utility group overflow-hidden flex flex-col slide-up" style="animation-delay:0.2s;">
+          <div class="h-56 flex-shrink-0 overflow-hidden">
+            <img src="images/testimonials/amrita.JPG" alt="Amrita B."
+                 class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
+          </div>
+          <div class="flex-1 p-6 flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex gap-0.5 text-gold">
+                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+                <i class="fa-solid fa-star text-xs"></i>
+              </div>
+              <i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>
+            </div>
+            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
+              "We booked Business Class for the whole family to Tokyo. Skyfare found confirmed space when everyone else said there was no hope."
+            </blockquote>
+            <div class="pt-4 border-t border-neutral-100">
+              <p class="font-semibold text-neutral-900 text-sm">Amrita B.</p>
+              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Frequent Traveler</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leon L. -->
+        <div class="card-utility group overflow-hidden flex flex-col slide-up" style="animation-delay:0.3s;">
+          <div class="h-56 flex-shrink-0 overflow-hidden">
+            <img src="images/testimonials/leon.JPG" alt="Leon L."
+                 class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
+          </div>
+          <div class="flex-1 p-6 flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex gap-0.5 text-gold">
+                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
+                <i class="fa-solid fa-star text-xs"></i>
+              </div>
+              <i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>
+            </div>
+            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
+              "They handled the entire booking process while I just sat back and waited for my e-ticket. Highly recommend."
+            </blockquote>
+            <div class="pt-4 border-t border-neutral-100">
+              <p class="font-semibold text-neutral-900 text-sm">Leon L.</p>
+              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Executive</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SOCIAL FEEDS (TikTok + Instagram — no background) -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4 md:px-6">
+
+      <div class="grid lg:grid-cols-2 gap-6 items-start slide-up">
+
+        <!-- LEFT: TikTok column -->
+        <div class="social-col">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2">
+              <i class="fa-brands fa-tiktok text-sm text-neutral-400"></i>
+              <span id="tiktok-handle" class="text-xs font-bold text-neutral-500 uppercase tracking-widest">@skyfareconsulting</span>
+            </div>
+            <a id="tiktok-follow-link" href="https://www.tiktok.com/@skyfareconsulting" target="_blank" rel="noopener noreferrer"
+               class="btn-pill btn-pill-primary" style="padding:0.4rem 1rem;font-size:0.75rem;">
+              Follow <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+          <div class="grid grid-cols-2 gap-3 social-col-embed">
+            <div id="tiktok-card-1" class="tiktok-card relative overflow-hidden cursor-pointer bg-black rounded-xl" data-video-id="">
+              <div style="height:739px;">
+                <iframe id="tiktok-iframe-1" src="" style="width:100%;height:100%;border:none;display:block;" allow="encrypted-media; fullscreen" loading="lazy" title=""></iframe>
+              </div>
+            </div>
+            <div id="tiktok-card-2" class="tiktok-card relative overflow-hidden cursor-pointer bg-black rounded-xl" data-video-id="">
+              <div style="height:739px;">
+                <iframe id="tiktok-iframe-2" src="" style="width:100%;height:100%;border:none;display:block;" allow="encrypted-media; fullscreen" loading="lazy" title=""></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Instagram column -->
+        <div class="social-col">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2">
+              <i class="fa-brands fa-instagram text-sm text-pink-500"></i>
+              <span id="instagram-handle" class="text-xs font-bold text-neutral-500 uppercase tracking-widest">@skyfareconsulting</span>
+            </div>
+            <a id="instagram-follow-link" href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
+               class="btn-pill btn-pill-primary" style="padding:0.4rem 1rem;font-size:0.75rem;">
+              Follow <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+          <div class="grid grid-cols-2 gap-3 social-col-embed">
+            <div id="instagram-embed-1" class="relative rounded-xl overflow-hidden" style="height:739px;"></div>
+            <div id="instagram-embed-2" class="relative rounded-xl overflow-hidden" style="height:739px;"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    var modal        = document.getElementById('tiktok-modal');
+    var modalFrame   = document.getElementById('tiktok-modal-frame');
+    var modalClose   = document.getElementById('tiktok-modal-close');
+    var modalBackdrop = document.getElementById('tiktok-modal-backdrop');
+
+    function openModal(embedUrl) {
+      var iframe = document.createElement('iframe');
+      iframe.src = embedUrl;
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('allow', 'encrypted-media; autoplay; fullscreen');
+      iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
+      modalFrame.appendChild(iframe);
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalFrame.innerHTML = '';
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    /* TikTok card clicks */
+    document.querySelectorAll('.tiktok-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        openModal('https://www.tiktok.com/embed/v2/' + this.dataset.videoId + '?autoplay=1');
+      });
+    });
+
+    /* Instagram card clicks */
+    document.querySelectorAll('.instagram-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        openModal(this.dataset.embedUrl);
+      });
+    });
+
+    /* Close handlers */
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+  })();
+  </script>
+
+  <!-- FAQ -->
+  <section class="py-20 tile-dark1">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="max-w-4xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-12 slide-up">
+          <p class="section-eyebrow-dark">Quick Answers</p>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-4 tracking-tight">
+            Common Questions
+          </h2>
+          <p class="text-white/55 text-base leading-relaxed font-medium max-w-lg">
+            Straight answers about nominee redemption, timing, and fees — before you reach out.
+          </p>
+        </div>
+
+        <!-- Accordion grid -->
+        <div class="grid lg:grid-cols-2 gap-3">
+
+          <details class="faq-item slide-up" style="animation-delay:0.05s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3">
+              <span class="flex items-center gap-3 min-w-0">
+                <span class="icon-chip icon-chip-sm icon-chip-dark flex-shrink-0"><i class="fa-solid fa-scale-balanced text-xs"></i></span>
+                <span class="text-base font-semibold text-white">Is nominee redemption legal?</span>
+              </span>
+              <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
+            </summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-white/55 leading-relaxed">
+              Yes. KrisFlyer's programme rules allow members to redeem miles for nominated individuals. We operate fully within the programme's terms — we handle the search, strategy, and booking on your behalf.
+            </div></div>
+          </details>
+
+          <details class="faq-item slide-up" style="animation-delay:0.10s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3">
+              <span class="flex items-center gap-3 min-w-0">
+                <span class="icon-chip icon-chip-sm icon-chip-dark flex-shrink-0"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
+                <span class="text-base font-semibold text-white">What if there's no award space on my dates?</span>
+              </span>
+              <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
+            </summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-white/55 leading-relaxed">
+              We propose 1–2 alternates (date or route) and use nominee redemption paths that avoid waitlists. Our experts find hidden availability that doesn't appear on standard search engines.
+            </div></div>
+          </details>
+
+          <details class="faq-item slide-up" style="animation-delay:0.15s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3">
+              <span class="flex items-center gap-3 min-w-0">
+                <span class="icon-chip icon-chip-sm icon-chip-dark flex-shrink-0"><i class="fa-solid fa-bolt text-xs"></i></span>
+                <span class="text-base font-semibold text-white">How fast can I fly?</span>
+              </span>
+              <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
+            </summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-white/55 leading-relaxed">
+              Nominee bookings can be immediate once space is confirmed. Direct transfers typically complete in approximately 5 business days. For urgent travel, contact us via WhatsApp straightaway.
+            </div></div>
+          </details>
+
+          <details class="faq-item slide-up" style="animation-delay:0.20s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3">
+              <span class="flex items-center gap-3 min-w-0">
+                <span class="icon-chip icon-chip-sm icon-chip-dark flex-shrink-0"><i class="fa-solid fa-sack-dollar text-xs"></i></span>
+                <span class="text-base font-semibold text-white">How do your fees work?</span>
+              </span>
+              <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
+            </summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-white/55 leading-relaxed">
+              Assessment Calls (S$99) determine feasibility. Itinerary Design (from S$240) handles deep strategy. Nominee redemptions follow a clear tiered rate. No hidden mark-ups.
+            </div></div>
+          </details>
+
+        </div>
+
+        <!-- See all FAQs -->
+        <div class="mt-10 slide-up" style="animation-delay:0.25s;">
+          <a href="pages/faq.html"
+             class="inline-flex items-center gap-2 text-base font-semibold text-white/55 hover:text-white transition-colors">
+            See all 20+ questions
+            <i class="fa-solid fa-arrow-right text-sm"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SKYFARE ALTITUDE -->
+  <section class="py-20 tile-sky">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="max-w-xl mx-auto text-center slide-up">
+        <p class="section-eyebrow">Skyfare Altitude · Free Newsletter</p>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">Join our newsletter.</h2>
+        <p class="text-neutral-600 text-base leading-relaxed mb-8 font-medium">Award space alerts, routing strategies, and miles guides — written by someone who books 100+ premium cabins a year. Cancel anytime.</p>
+
+        <div class="bg-brand-50 border border-brand-100 rounded-[18px] p-6 sm:p-8 slide-up reveal-pop" style="animation-delay:0.1s;">
+          <div data-newsletter-form class="mb-1">
+            <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)" class="w-full mb-3 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address" class="flex-1 px-5 py-3.5 rounded-full border border-brand-200/60 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+              <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">Subscribe — Free</button>
+            </div>
+            <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
+          </div>
+          <div data-newsletter-success class="hidden text-center py-2">
+            <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-3">
+              <i class="fa-solid fa-check text-xl text-emerald-500"></i>
+            </div>
+            <p class="text-base font-bold text-neutral-900 mb-1">You're on the list.</p>
+            <p class="text-sm text-neutral-500">Welcome to Skyfare Altitude. Your welcome email is on its way — see you next Monday.</p>
+          </div>
+          <p class="text-xs text-neutral-500 mt-4">Free to join · No spam, ever.</p>
+        </div>
+
+        <a href="pages/newsletter.html" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-500 hover:underline underline-offset-2">View All Issues <i class="fa-solid fa-arrow-right text-xs"></i></a>
       </div>
     </div>
   </section>
 
   <!-- FINAL CTA SECTION -->
-  <section class="py-24 relative overflow-hidden">
-    <div class="absolute inset-0 deep-blue-gradient"></div>
+  <section class="py-14 md:py-20 relative overflow-hidden">
+    <!-- Background image -->
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image:url('images/page-images/bg-3.JPG');"></div>
+    <!-- Gradient: brand-950 solid at bottom, fades to transparent at centre — mirrors Founder section -->
+    <div class="absolute inset-0" style="background:linear-gradient(to top, #000000 0%, rgba(0,0,0,0.90) 30%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.15) 75%, transparent 100%);"></div>
     <div class="container mx-auto px-4 md:px-6 relative z-10">
-      <div class=" p-12 md:p-20 rounded-[4rem] text-center border-white/5 relative overflow-hidden group">
-        <h2 class="text-3xl md:text-6xl font-bold text-white mb-8 leading-tight">Ready for a Premium <br> Travel
-          Experience?</h2>
-        <p class="text-brand-100/70 text-lg md:text-xl max-w-2xl mx-auto mb-12">
-          Get a quick assessment today. Tell us your dates and routes, and we’ll propose high-value options within 24–48
-          hours.
+      <div class="py-6 text-center">
+        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-5" style="background:#C9A227;">
+          <i class="fa-solid fa-arrow-up text-[10px] text-white"></i>
+          Your Upgrade Awaits
+        </div>
+        <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+          Ready to Fly Premium?
+        </h2>
+        <p class="text-white/60 text-base md:text-lg max-w-lg mx-auto mb-10 font-medium leading-relaxed">
+          Book your next Business or First Class seat — or start with the insider knowledge to do it yourself.
         </p>
-
-        <div class="flex flex-wrap justify-center gap-6">
+        <div class="flex flex-wrap justify-center gap-4">
           <a href="https://api.whatsapp.com/send?phone=6581575306"
-            class="px-10 py-5 rounded-2xl bg-brand-600 text-white font-bold text-xl hover:bg-brand-700 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-brand-600/40">
-            <i class="fa-brands fa-whatsapp mr-2"></i> Chat on WhatsApp
+             class="btn-pill text-base active:scale-95"
+             style="padding:0.875rem 2rem;background:#22c55e;color:#ffffff;">
+            <i class="fa-brands fa-whatsapp"></i> Book via WhatsApp
           </a>
-          <a href="contact.html"
-            class="px-10 py-5 rounded-2xl bg-white text-brand-900 font-bold text-xl hover:bg-brand-50 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-white/10">
-            Contact Form
+          <!-- Label relabeled while Premium isn't purchasable yet, was "Get Altitude Access" -->
+          <a href="pages/altitude.html"
+             class="inline-flex items-center gap-2 text-base font-semibold text-white rounded-full border border-white/25 hover:bg-white/10 transition-all active:scale-95"
+             style="padding:0.875rem 2rem;">
+            <i class="fa-solid fa-crown text-amber-300"></i> Explore Altitude
           </a>
         </div>
       </div>
@@ -606,6 +1236,613 @@
 
   <!-- FOOTER -->
 
+  <!-- ALTITUDE NEWSLETTER POPUP -->
+  <div id="altitude-popup" data-popup-enabled class="fixed inset-0 z-[200] hidden items-center justify-center p-4" aria-modal="true" role="dialog">
+    <div id="altitude-popup-backdrop" class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm"></div>
+    <div class="relative z-10 w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-10 overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-60 h-60 bg-brand-400/10 rounded-full blur-[80px] pointer-events-none"></div>
+      <button id="altitude-popup-close" class="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-brand-50 text-brand-400 hover:bg-brand-100 transition-all" aria-label="Close">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+      <div class="relative z-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5 border border-brand-500/15">
+          <i class="fa-solid fa-envelope-open text-[10px]"></i> Skyfare Altitude
+        </div>
+        <h3 class="text-2xl font-black text-brand-950 mb-3 leading-snug">Fly smarter,<br>every week.</h3>
+        <p class="text-neutral-500 text-sm leading-relaxed mb-6">
+          Weekly award space alerts, routing strategies, and miles guides — free to join, no credit card required.
+        </p>
+        <div data-newsletter-form class="space-y-3 mb-4">
+          <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
+                 class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+          <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
+                 class="w-full px-5 py-3.5 rounded-2xl bg-white border border-brand-100 text-sm text-brand-900 placeholder:text-brand-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all">
+          <button data-newsletter-btn
+                  class="w-full py-3.5 rounded-2xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 transition-colors">
+            Subscribe — Free
+          </button>
+          <p data-newsletter-status class="hidden text-xs text-center font-medium" aria-live="polite"></p>
+        </div>
+        <div data-newsletter-success class="hidden text-center py-2">
+          <div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
+          </div>
+          <h3 class="text-xl font-black text-brand-950 mb-2 leading-snug">You're in!</h3>
+          <p class="text-sm text-neutral-500 leading-relaxed">Welcome to Skyfare Altitude — your weekly insider edge. Check your inbox for your welcome email and see you next Monday.</p>
+        </div>
+        <button id="altitude-popup-dismiss" class="w-full text-center text-xs text-neutral-400 hover:text-neutral-600 transition-colors py-1">
+          Not now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var popup    = document.getElementById('altitude-popup');
+    var backdrop = document.getElementById('altitude-popup-backdrop');
+    var closeBtn = document.getElementById('altitude-popup-close');
+    var dismiss  = document.getElementById('altitude-popup-dismiss');
+
+    function openPopup() {
+      popup.classList.remove('hidden');
+      popup.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePopup() {
+      popup.classList.add('hidden');
+      popup.classList.remove('flex');
+      document.body.style.overflow = '';
+      sessionStorage.setItem('altitudePopupShown', '1');
+    }
+
+    var popupEnabled = popup ? popup.hasAttribute('data-popup-enabled') : false;
+    if (popupEnabled && !sessionStorage.getItem('altitudePopupShown') && !localStorage.getItem('altitudeSubscribed')) {
+      setTimeout(openPopup, 5000);
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closePopup);
+    if (dismiss)  dismiss.addEventListener('click', closePopup);
+    if (backdrop) backdrop.addEventListener('click', closePopup);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closePopup();
+    });
+  })();
+  </script>
+
+  <script>
+  (function () {
+    var WORKER_URL    = 'https://skyfares-altitude.klent-5fa.workers.dev';
+
+    // DISABLED (temporarily) -- Altitude Premium isn't purchasable yet (confirmed
+    // by Sahej, 2026-07-03). PAYMENT_LINK is kept commented, not deleted, so real
+    // checkout can be restored below by uncommenting once Premium launches.
+    // var PAYMENT_LINK = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
+
+    function ensureAltitudeAccessModal() {
+      if (document.getElementById('altitude-access-modal')) return;
+
+      var modal = document.createElement('div');
+      modal.id = 'altitude-access-modal';
+      modal.className = 'fixed inset-0 z-[300] items-center justify-center p-4';
+      modal.style.display = 'none';
+      modal.innerHTML =
+        '<div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" onclick="window.closeAltitudeAccessModal()"></div>' +
+        '<div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">' +
+          '<button onclick="window.closeAltitudeAccessModal()" ' +
+            'class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">' +
+            '<i class="fa-solid fa-xmark text-xs"></i>' +
+          '</button>' +
+          '<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-5">' +
+            '<i class="fa-solid fa-crown text-[9px]"></i> Altitude Exclusive' +
+          '</div>' +
+          '<h2 class="text-xl font-display font-bold text-neutral-900 mb-2 tracking-tight">This issue is for Altitude members</h2>' +
+          // DISABLED (temporarily) -- original copy + real checkout link, restore when Premium launches:
+          // '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Unlock this issue and the full archive — award alerts, cabin reviews, and routing strategies, delivered weekly.</p>' +
+          // '<a href="' + PAYMENT_LINK + '" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+          //   '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
+          // '</a>' +
+          '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Altitude isn\'t open for purchase yet — join the waitlist and we\'ll email you the moment it is.</p>' +
+          '<a href="pages/pre-signup-link.html" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+            '<i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist' +
+          '</a>' +
+          '<p class="text-xs text-neutral-400">Already a member? ' +
+            '<button type="button" onclick="window.switchToMemberAccessModal()" class="text-brand-600 underline underline-offset-2 hover:text-brand-800">Enter your email for a magic link</button>' +
+          '</p>' +
+        '</div>';
+
+      document.body.appendChild(modal);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closeAltitudeAccessModal();
+      });
+    }
+
+    window.openAltitudeAccessModal = function () {
+      ensureAltitudeAccessModal();
+      document.getElementById('altitude-access-modal').style.display = 'flex';
+    };
+
+    window.closeAltitudeAccessModal = function () {
+      var modal = document.getElementById('altitude-access-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    // ─── Member Access modal (magic link request) ──────────────────────────
+
+    function ensureMemberAccessModal() {
+      if (document.getElementById('member-access-modal')) return;
+
+      var modal = document.createElement('div');
+      modal.id = 'member-access-modal';
+      modal.className = 'fixed inset-0 z-[300] items-center justify-center p-4';
+      modal.style.display = 'none';
+      modal.innerHTML =
+        '<div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" onclick="window.closeMemberAccessModal()"></div>' +
+        '<div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl">' +
+          '<button onclick="window.closeMemberAccessModal()" ' +
+            'class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">' +
+            '<i class="fa-solid fa-xmark text-xs"></i>' +
+          '</button>' +
+          '<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-100 bg-brand-50 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5">' +
+            '<i class="fa-solid fa-key text-[9px]"></i> Member Access' +
+          '</div>' +
+          '<h2 class="text-xl font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Access your membership</h2>' +
+          '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Enter your member email and we\'ll send you a secure login link.</p>' +
+          '<form id="member-access-form">' +
+            '<input id="member-access-email" type="email" autocomplete="email" placeholder="member@email.com" ' +
+              'class="w-full mb-2 px-5 py-3.5 rounded-full border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">' +
+            '<p class="text-[11px] text-neutral-400 mb-4 px-1 leading-relaxed">' +
+              '<i class="fa-solid fa-circle-info text-[9px] mr-1"></i>One link gets you in and lets you manage your billing too.' +
+            '</p>' +
+            '<button id="member-access-btn" type="submit" class="w-full btn-pill btn-pill-primary">Send Login Link</button>' +
+            '<p id="member-access-status" class="text-xs mt-3 text-center min-h-[1.25rem]"></p>' +
+          '</form>' +
+          '<div id="member-access-sent" style="display:none;">' +
+            '<div class="flex flex-col items-center text-center gap-3 py-2">' +
+              '<div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">' +
+                '<i class="fa-solid fa-envelope-circle-check text-brand-600 text-lg"></i>' +
+              '</div>' +
+              '<div>' +
+                '<p class="text-sm font-semibold text-neutral-900 mb-1">Check your inbox</p>' +
+                '<p class="text-xs text-neutral-400 leading-relaxed">We sent a login link to <strong id="member-access-sent-email" class="text-neutral-700"></strong>. It\'s valid for 1 hour and you can use it as many times as you need during that window.</p>' +
+              '</div>' +
+              '<button type="button" onclick="window.openMemberAccessModal()" class="text-xs text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors mt-1">Use a different email</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      document.body.appendChild(modal);
+      document.getElementById('member-access-form').addEventListener('submit', handleMemberAccessSubmit);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closeMemberAccessModal();
+      });
+    }
+
+    function handleMemberAccessSubmit(e) {
+      e.preventDefault();
+      var input  = document.getElementById('member-access-email');
+      var btn    = document.getElementById('member-access-btn');
+      var status = document.getElementById('member-access-status');
+      var email  = (input ? input.value : '').trim().toLowerCase();
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (status) { status.textContent = 'Please enter a valid email address.'; status.className = 'text-xs text-red-500 mt-2'; }
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending link…'; }
+      if (status) { status.textContent = ''; }
+
+      fetch(WORKER_URL + '/altitude/magic-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email }),
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
+        .then(function (res) {
+          if (res.ok && res.data.sent) {
+            var form = document.getElementById('member-access-form');
+            var sent = document.getElementById('member-access-sent');
+            var sentEmail = document.getElementById('member-access-sent-email');
+            if (form) form.style.display = 'none';
+            if (sent) sent.style.display = 'block';
+            if (sentEmail) sentEmail.textContent = email;
+          } else {
+            var msg = res.data.error || 'No active Altitude membership found for this email.';
+            if (res.status === 429) msg = 'Too many requests. Please wait a few minutes before trying again.';
+            if (status) { status.textContent = msg; status.className = 'text-xs text-red-500 mt-2'; }
+            if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
+          }
+        })
+        .catch(function () {
+          if (status) { status.textContent = 'Network error. Please try again.'; status.className = 'text-xs text-red-500 mt-2'; }
+          if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
+        });
+    }
+
+    window.openMemberAccessModal = function () {
+      ensureMemberAccessModal();
+      var form = document.getElementById('member-access-form');
+      var sent = document.getElementById('member-access-sent');
+      if (form) form.style.display = '';
+      if (sent) sent.style.display = 'none';
+      var status = document.getElementById('member-access-status');
+      if (status) status.textContent = '';
+      var btn = document.getElementById('member-access-btn');
+      if (btn) { btn.disabled = false; btn.textContent = 'Send Login Link'; }
+      document.getElementById('member-access-modal').style.display = 'flex';
+      setTimeout(function () {
+        var inp = document.getElementById('member-access-email');
+        if (inp) inp.focus();
+      }, 80);
+    };
+
+    window.closeMemberAccessModal = function () {
+      var modal = document.getElementById('member-access-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.switchToMemberAccessModal = function () {
+      window.closeAltitudeAccessModal();
+      window.openMemberAccessModal();
+    };
+
+    function isPremium(post) {
+      return !!post.is_premium;
+    }
+
+    function getIssueNum(post) {
+      var tags = post.content_tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
+        if (m) return m[1].padStart(2, '0');
+      }
+      return '01';
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      try {
+        return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } catch (_) { return ''; }
+    }
+
+    function esc(str) {
+      var d = document.createElement('div');
+      d.textContent = String(str || '');
+      return d.innerHTML;
+    }
+
+    function buildCard(post, index) {
+      var prem     = isPremium(post);
+      var issueNum = getIssueNum(post);
+      var date     = formatDate(post.published_at);
+      var delay    = index * 0.05;
+      var href     = 'pages/newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
+
+      var imgHtml = post.thumbnail_url
+        ? '<img src="' + esc(post.thumbnail_url) + '" alt="' + esc(post.title) + '"' +
+            ' class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
+        : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
+
+      var altitudeBadge = prem
+        ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
+        : '';
+
+      var lockIcon = prem
+        ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-amber-500/30 flex items-center justify-center"><i class="fa-solid fa-lock text-amber-300 text-[8px]"></i></div></div>'
+        : '';
+
+      // DISABLED (temporarily) -- original label, restore when Premium launches:
+      // 'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
+      var ctaHtml = prem
+        ? '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 group-hover:text-amber-800 transition-colors">' +
+              'Coming Soon <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
+              '<p class="text-[10px] text-neutral-400 mt-1 italic">Already a member? Check your email.</p>'
+        : '<a href="' + href + '"' +
+              ' class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">' +
+              'Read More <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
+
+      var cardCls = 'group bg-white border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 ' +
+        (prem ? 'border-amber-200/60 hover:shadow-md cursor-pointer' : 'border-neutral-100 hover:shadow-md');
+
+      var titleCls = 'text-sm font-display font-bold text-neutral-900 mb-2 transition-colors leading-snug' +
+        (prem ? '' : ' group-hover:text-brand-700');
+
+      var excerpt = post.subtitle
+        ? '<p class="text-[11px] text-neutral-500 mb-3 leading-relaxed line-clamp-2">' + esc(post.subtitle) + '</p>'
+        : '';
+
+      var clickAttr = prem ? ' onclick="window.openAltitudeAccessModal()"' : '';
+
+      return '<article class="' + cardCls + '"' + clickAttr + ' style="animation-delay:' + delay + 's;">' +
+        '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
+          imgHtml +
+          '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
+          '<div class="absolute top-3 left-3">' +
+            '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + esc(issueNum) + '</span>' +
+          '</div>' +
+          altitudeBadge +
+          lockIcon +
+        '</div>' +
+        '<div class="p-5">' +
+          (date ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + esc(date) + '</p>' : '') +
+          '<h3 class="' + titleCls + '">' + esc(post.title) + '</h3>' +
+          excerpt +
+          ctaHtml +
+        '</div>' +
+      '</article>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var grid = document.getElementById('home-newsletter-grid');
+      if (!grid) return;
+
+      fetch(WORKER_URL + '/newsletter/posts')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.posts || !data.posts.length) { grid.innerHTML = ''; return; }
+          var posts = data.posts.slice(0, 3);
+          grid.innerHTML = posts.map(function (post, i) { return buildCard(post, i); }).join('');
+        })
+        .catch(function () { grid.innerHTML = ''; });
+    });
+  })();
+  </script>
+
+  <!-- ── Route Result Modal ─────────────────────────────────────── -->
+  <div id="hero-route-modal" class="fixed inset-0 z-[400] hidden items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm" id="hero-modal-backdrop"></div>
+    <div class="relative bg-white rounded-2xl max-w-sm w-full shadow-2xl z-10 overflow-hidden">
+
+      <button id="hero-modal-close"
+        class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <div class="relative h-40 w-full bg-neutral-100 flex-shrink-0">
+        <img id="modal-result-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/10 pointer-events-none"></div>
+      </div>
+
+      <div class="p-7 pt-5">
+
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5">
+          <i class="fa-solid fa-plane text-[9px]"></i> Business Class &middot; KrisFlyer Miles
+        </div>
+
+        <h3 id="modal-result-route" class="text-xl font-display font-bold text-neutral-900 mb-0.5 tracking-tight"></h3>
+        <p id="modal-result-region" class="text-xs text-neutral-400 mb-6"></p>
+
+        <div class="grid grid-cols-2 gap-3 mb-5">
+          <div class="bg-brand-50 rounded-xl p-4 text-center">
+            <p class="text-[10px] text-brand-400 font-bold uppercase tracking-widest mb-2">Saver</p>
+            <p id="modal-result-saver" class="text-2xl font-black text-brand-900 leading-none"></p>
+            <p class="text-[10px] text-brand-400 mt-1">miles</p>
+          </div>
+          <div class="bg-neutral-50 rounded-xl p-4 text-center">
+            <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mb-2">Advantage</p>
+            <p id="modal-result-advantage" class="text-2xl font-black text-neutral-700 leading-none"></p>
+            <p class="text-[10px] text-neutral-400 mt-1">miles</p>
+          </div>
+        </div>
+
+        <a id="modal-result-wa" href="#" target="_blank" rel="noopener noreferrer"
+          class="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm transition-all active:scale-95">
+          <i class="fa-brands fa-whatsapp text-base"></i>
+          Enquire via WhatsApp
+        </a>
+        <p class="text-[10px] text-neutral-400 text-center mt-3">Subject to availability &middot; Airline taxes apply</p>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ── Hero Route Search ─────────────────────────────────────────── */
+  (function () {
+    var WA_BASE = 'https://api.whatsapp.com/send?phone=6581575306&text=';
+
+    var AWARDS = [
+      // SE Asia
+      { to:'Brunei (BWN)',             region:'SE Asia',           saver:22000,  advantage:33000,  img:'images/destinations/brunei.jpg' },
+      { to:'Denpasar / Bali (DPS)',    region:'SE Asia',           saver:22000,  advantage:33000,  img:'images/destinations/bali.jpg' },
+      { to:'Jakarta (CGK)',            region:'SE Asia',           saver:22000,  advantage:33000,  img:'images/destinations/jakarta.jpg' },
+      { to:'Kuala Lumpur (KUL)',       region:'SE Asia',           saver:22000,  advantage:33000,  img:'images/destinations/kuala-lumpur.jpg' },
+      { to:'Bangkok (BKK)',            region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/bangkok.jpg' },
+      { to:'Cebu (CEB)',               region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/cebu.jpg' },
+      { to:'Da Nang (DAD)',            region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/da-nang.jpg' },
+      { to:'Hanoi (HAN)',              region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/hanoi.jpg' },
+      { to:'Ho Chi Minh (SGN)',        region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/ho-chi-minh.jpg' },
+      { to:'Manila (MNL)',             region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/manila.jpg' },
+      { to:'Phnom Penh (PNH)',         region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/phnom-penh.jpg' },
+      { to:'Phuket (HKT)',             region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/phuket.jpg' },
+      { to:'Yangon (RGN)',             region:'SE Asia',           saver:25000,  advantage:37000,  img:'images/destinations/yangon.jpg' },
+      // NE Asia
+      { to:'Chengdu (CTU)',            region:'NE Asia',           saver:35500,  advantage:53000,  img:'images/destinations/chengdu.jpg' },
+      { to:'Chongqing (CKG)',          region:'NE Asia',           saver:35500,  advantage:53000,  img:'images/destinations/chongqing.jpg' },
+      { to:'Guangzhou (CAN)',          region:'NE Asia',           saver:35500,  advantage:53000,  img:'images/destinations/guangzhou.jpg' },
+      { to:'Hong Kong (HKG)',          region:'NE Asia',           saver:35500,  advantage:53000,  img:'images/destinations/hong-kong.jpg' },
+      { to:'Taipei (TPE)',             region:'NE Asia',           saver:35500,  advantage:53000,  img:'images/destinations/taipei.jpg' },
+      { to:'Beijing (PEK)',            region:'NE Asia',           saver:45000,  advantage:67500,  img:'images/destinations/beijing.jpg' },
+      { to:'Shanghai (PVG)',           region:'NE Asia',           saver:45000,  advantage:67500,  img:'images/destinations/shanghai.jpg' },
+      // South Asia
+      { to:'Ahmedabad (AMD)',          region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/ahmedabad.jpg' },
+      { to:'Bengaluru (BLR)',          region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/bengaluru.jpg' },
+      { to:'Chennai (MAA)',            region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/chennai.jpg' },
+      { to:'Cochin (COK)',             region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/cochin.jpg' },
+      { to:'Colombo (CMB)',            region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/colombo.png' },
+      { to:'Delhi (DEL)',              region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/delhi.jpg' },
+      { to:'Dhaka (DAC)',              region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/dhaka.jpg' },
+      { to:'Hyderabad (HYD)',          region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/hyderabad.png' },
+      { to:'Kathmandu (KTM)',          region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/kathmandu.jpg' },
+      { to:'Kolkata (CCU)',            region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/kolkata.jpg' },
+      { to:'Male / Maldives (MLE)',    region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/maldives.jpg' },
+      { to:'Mumbai (BOM)',             region:'South Asia',        saver:45000,  advantage:67500,  img:'images/destinations/mumbai.jpg' },
+      // Japan/Korea
+      { to:'Busan (PUS)',              region:'Japan/Korea',       saver:54500,  advantage:82000,  img:'images/destinations/busan.jpg' },
+      { to:'Fukuoka (FUK)',            region:'Japan/Korea',       saver:54500,  advantage:82000,  img:'images/destinations/fukuoka.jpg' },
+      { to:'Osaka (KIX)',              region:'Japan/Korea',       saver:54500,  advantage:82000,  img:'images/destinations/osaka.jpg' },
+      { to:'Seoul (ICN)',              region:'Japan/Korea',       saver:54500,  advantage:82000,  img:'images/destinations/seoul.jpg' },
+      { to:'Tokyo (NRT/HND)',          region:'Japan/Korea',       saver:54500,  advantage:82000,  img:'images/destinations/tokyo.jpg' },
+      // Oceania
+      { to:'Darwin (DRW)',             region:'Oceania',           saver:42500,  advantage:64000,  img:'images/destinations/darwin.jpg' },
+      { to:'Perth (PER)',              region:'Oceania',           saver:42500,  advantage:64000,  img:'images/destinations/perth.jpg' },
+      { to:'Adelaide (ADL)',           region:'Oceania',           saver:72000,  advantage:108000, img:'images/destinations/adelaide.jpg' },
+      { to:'Auckland (AKL)',           region:'Oceania',           saver:72000,  advantage:108000, img:'images/destinations/auckland.jpg' },
+      { to:'Brisbane (BNE)',           region:'Oceania',           saver:72000,  advantage:108000, img:'images/destinations/brisbane.jpg' },
+      { to:'Cairns (CNS)',             region:'Oceania',           saver:72000,  advantage:108000, img:'images/destinations/cairns.jpg' },
+      { to:'Christchurch (CHC)',       region:'Oceania',           saver:72000,  advantage:108000, img:'images/destinations/christchurch.jpg' },
+      { to:'Melbourne (MEL)',          region:'Oceania',           saver:72000,  advantage:108000, img:'images/routes-images/melbourne.jpg' },
+      { to:'Sydney (SYD)',             region:'Oceania',           saver:72000,  advantage:108000, img:'images/destinations/sydney.jpg' },
+      // Africa/Middle East
+      { to:'Cape Town (CPT)',          region:'Africa/Middle East',saver:68000,  advantage:102000, img:'images/destinations/cape-town.jpg' },
+      { to:'Dubai (DXB)',              region:'Africa/Middle East',saver:68000,  advantage:102000, img:'images/routes-images/dubai.jpg' },
+      { to:'Istanbul (IST)',           region:'Africa/Middle East',saver:68000,  advantage:102000, img:'images/destinations/istanbul.jpg' },
+      { to:'Johannesburg (JNB)',       region:'Africa/Middle East',saver:68000,  advantage:102000, img:'images/destinations/johannesburg.jpg' },
+      // Europe
+      { to:'Amsterdam (AMS)',          region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/amsterdam.png' },
+      { to:'Barcelona (BCN)',          region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/barcelona.jpg' },
+      { to:'Brussels (BRU)',           region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/brussels.jpg' },
+      { to:'Copenhagen (CPH)',         region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/copenhagen.jpg' },
+      { to:'Frankfurt (FRA)',          region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/frankfurt.jpg' },
+      { to:'London (LHR)',             region:'Europe',            saver:108500, advantage:163000, img:'images/routes-images/london.jpg' },
+      { to:'Manchester (MAN)',         region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/manchester.jpg' },
+      { to:'Milan (MXP)',              region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/milan.jpg' },
+      { to:'Munich (MUC)',             region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/munich.jpg' },
+      { to:'Paris (CDG)',              region:'Europe',            saver:108500, advantage:163000, img:'images/routes-images/paris.jpg' },
+      { to:'Rome (FCO)',               region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/rome.jpg' },
+      { to:'Zurich (ZRH)',             region:'Europe',            saver:108500, advantage:163000, img:'images/destinations/zurich.jpg' },
+      // N. America
+      { to:'Los Angeles (LAX)',        region:'N. America',        saver:112500, advantage:169000, img:'images/routes-images/los-angeles.jpg' },
+      { to:'San Francisco (SFO)',      region:'N. America',        saver:112500, advantage:169000, img:'images/destinations/san-francisco.jpg' },
+      { to:'Seattle (SEA)',            region:'N. America',        saver:112500, advantage:169000, img:'images/destinations/seattle.jpg' },
+      { to:'Houston (IAH)',            region:'N. America',        saver:117000, advantage:176000, img:'images/destinations/houston.jpg' },
+      { to:'New York (JFK)',           region:'N. America',        saver:117000, advantage:176000, img:'images/routes-images/new-york.jpg' },
+    ];
+
+    var input    = document.getElementById('hero-route-search');
+    var dropdown = document.getElementById('hero-route-dropdown');
+    var list     = document.getElementById('hero-route-list');
+    var result   = document.getElementById('hero-route-result');
+    var modalEl   = document.getElementById('hero-route-modal');
+    var modalBg   = document.getElementById('hero-modal-backdrop');
+    var modalX    = document.getElementById('hero-modal-close');
+    var modalRoute  = document.getElementById('modal-result-route');
+    var modalRegion = document.getElementById('modal-result-region');
+    var modalSaver  = document.getElementById('modal-result-saver');
+    var modalAdv    = document.getElementById('modal-result-advantage');
+    var modalWa     = document.getElementById('modal-result-wa');
+    var modalImg    = document.getElementById('modal-result-image');
+
+    if (!input) return;
+
+    function fmt(n) { return n.toLocaleString(); }
+
+    function openModal() {
+      if (!modalEl) return;
+      modalEl.classList.remove('hidden');
+      modalEl.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      if (!modalEl) return;
+      modalEl.classList.add('hidden');
+      modalEl.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function showDropdown(rows) {
+      list.innerHTML = '';
+      if (!rows.length) {
+        list.innerHTML = '<li class="px-4 py-3.5 text-sm text-neutral-400 italic">No routes found.</li>';
+      } else {
+        rows.slice(0, 8).forEach(function (r) {
+          var li = document.createElement('li');
+          li.className = 'flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-brand-50 transition-colors group';
+          li.innerHTML =
+            '<span class="text-sm font-semibold text-neutral-900 group-hover:text-brand-700 transition-colors">' +
+              'SIN → ' + r.to +
+            '</span>' +
+            '<span class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 ml-3 flex-shrink-0">' + r.region + '</span>';
+          li.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            selectRoute(r);
+          });
+          list.appendChild(li);
+        });
+      }
+      dropdown.classList.remove('hidden');
+    }
+
+    function selectRoute(r) {
+      input.value = r.to;
+      dropdown.classList.add('hidden');
+      if (modalRoute)  modalRoute.textContent  = 'SIN → ' + r.to;
+      if (modalRegion) modalRegion.textContent = r.region;
+      if (modalSaver)  modalSaver.textContent  = fmt(r.saver);
+      if (modalAdv)    modalAdv.textContent    = fmt(r.advantage);
+      if (modalImg) {
+        modalImg.src = r.img || '';
+        modalImg.alt = r.to;
+      }
+      if (modalWa)     modalWa.href = WA_BASE + encodeURIComponent(
+        'Hi Skyfare, I\'d like to enquire about Singapore → ' + r.to + ' in Business Class.'
+      );
+      openModal();
+    }
+
+    function clearSearch() {
+      if (dropdown) dropdown.classList.add('hidden');
+      input.value = '';
+      input.focus();
+    }
+
+    input.addEventListener('input', function () {
+      var q = this.value.trim().toLowerCase();
+      if (!q) { dropdown.classList.add('hidden'); return; }
+      showDropdown(AWARDS.filter(function (r) {
+        return (r.to + ' ' + r.region).toLowerCase().indexOf(q) !== -1;
+      }));
+    });
+
+    input.addEventListener('focus', function () {
+      var q = this.value.trim().toLowerCase();
+      if (q) {
+        showDropdown(AWARDS.filter(function (r) {
+          return (r.to + ' ' + r.region).toLowerCase().indexOf(q) !== -1;
+        }));
+      }
+    });
+
+    input.addEventListener('blur', function () {
+      setTimeout(function () { dropdown.classList.add('hidden'); }, 160);
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { dropdown.classList.add('hidden'); this.blur(); }
+    });
+
+    if (modalX)  modalX.addEventListener('click', closeModal);
+    if (modalBg) modalBg.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modalEl && !modalEl.classList.contains('hidden')) closeModal();
+    });
+
+    document.addEventListener('click', function (e) {
+      var wrap = document.getElementById('hero-search-wrap');
+      if (wrap && !wrap.contains(e.target)) dropdown.classList.add('hidden');
+    });
+  })();
+  </script>
+
+  <script src="js/marquee.js" defer></script>
+  <script src="js/hero-bg-video.js" defer></script>
+  <script src="js/newsletter.js" defer></script>
 </body>
 
 </html>
