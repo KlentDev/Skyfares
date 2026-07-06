@@ -225,6 +225,13 @@ async function handleCheckout(request, env, corsHeaders) {
     return respond({ error: 'Stripe not configured.' }, 503, corsHeaders);
   }
 
+  const rlKey = `checkout-rl:${request.headers.get('CF-Connecting-IP') || 'unknown'}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 10) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+
   let email = '';
   try {
     const body = await request.json();
@@ -573,6 +580,13 @@ async function handleVerify(request, env, corsHeaders) {
 
 async function handleManagePortal(request, env, corsHeaders) {
   if (!env.STRIPE_SECRET_KEY) return respond({ error: 'Stripe not configured.' }, 503, corsHeaders);
+
+  const rlKey = `portal-rl:${request.headers.get('CF-Connecting-IP') || 'unknown'}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 20) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
 
   const token = getBearer(request);
   if (!token) return respond({ error: 'Not authenticated.' }, 401, corsHeaders);
@@ -1233,6 +1247,13 @@ async function handleMagicRequest(request, env, corsHeaders) {
 }
 
 async function handleMagicVerify(request, env, corsHeaders) {
+  const rlKey = `magic-verify-rl:${request.headers.get('CF-Connecting-IP') || 'unknown'}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 10) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 600 });
+
   let token;
   try {
     const body = await request.json();

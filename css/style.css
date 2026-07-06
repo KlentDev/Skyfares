@@ -215,11 +215,39 @@ details .accordion-body > div {
   display: flex;
   width: 400%; /* 4 groups (2x the G1+G2 sequence) @ 25% viewport each */
   height: 100%;
-  animation: flyCarouselStep 9s linear infinite; /* 6 steps @ 1.5s each */
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
   will-change: transform;
 }
-.fly-carousel:hover .fly-carousel-track {
-  animation-play-state: paused;
+.fly-carousel-track.no-transition {
+  transition: none;
+}
+.fly-carousel-next,
+.fly-carousel-prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.fly-carousel-next { right: 16px; }
+.fly-carousel-prev { left: 16px; }
+.fly-carousel-next:hover,
+.fly-carousel-prev:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+.fly-carousel-next:active,
+.fly-carousel-prev:active {
+  transform: translateY(-50%) scale(0.92);
 }
 .fc-slot {
   height: 100%;
@@ -247,22 +275,6 @@ details .accordion-body > div {
 .fc-pair > div {
   height: calc(50% - 4px);
 }
-@keyframes flyCarouselStep {
-  0%      { transform: translateX(0%); }
-  10%     { transform: translateX(0%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
-  16.667% { transform: translateX(-11.111%); }
-  26.667% { transform: translateX(-11.111%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
-  33.333% { transform: translateX(-18.056%); }
-  43.333% { transform: translateX(-18.056%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
-  50%     { transform: translateX(-25%); }
-  60%     { transform: translateX(-25%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
-  66.667% { transform: translateX(-36.111%); }
-  76.667% { transform: translateX(-36.111%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
-  83.333% { transform: translateX(-43.056%); }
-  93.333% { transform: translateX(-43.056%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
-  100%    { transform: translateX(-50%); }
-}
-
 /* Hero Carousel — swipeable, slide-based (translateX), not a crossfade */
 #hero-carousel-track {
   cursor: grab;
