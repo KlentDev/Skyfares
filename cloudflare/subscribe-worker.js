@@ -1009,10 +1009,18 @@ const SEG_PRELAUNCH = 'seg_3b2edb32-94a4-43b8-af13-1668923ffa95'; // Pre-Launch 
 
 async function triggerSegmentRecalculation(env) {
   await Promise.all([SEG_PREMIUM, SEG_FREE, SEG_PRELAUNCH].map(async segId => {
+    // POST, not PUT -- this is the one place in the file that used PUT for a
+    // Beehiiv "trigger an action" endpoint (every other call here is POST/PATCH/
+    // GET/DELETE). PUT was silently accepted by Beehiiv (touches the segment's
+    // updated_at) without ever actually starting the recalculation job, which is
+    // why last_processed_at stopped advancing even though these calls looked
+    // like they were succeeding. Confirmed by triggering a recalculation
+    // directly via the Beehiiv API (equivalent to a POST) and seeing
+    // last_processed_at move immediately, unlike this PUT call.
     const res = await fetch(
       `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
       {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       }
