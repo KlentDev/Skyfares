@@ -40,11 +40,19 @@
   // hide it: it's expected to reappear on every page until one of those two
   // actions happens, even across separate page loads/navigations.
 
-  function hasSeen(id) {
-    try { return !!localStorage.getItem(STORE_PREFIX + id); } catch (e) { return false; }
+  function hasSeen(key) {
+    try { return !!localStorage.getItem(STORE_PREFIX + key); } catch (e) { return false; }
   }
-  function markSeen(id) {
-    try { localStorage.setItem(STORE_PREFIX + id, '1'); } catch (e) {}
+  function markSeen(key) {
+    try { localStorage.setItem(STORE_PREFIX + key, '1'); } catch (e) {}
+  }
+
+  // Keyed by id + free/premium status, not just id, so the banner reappears
+  // when an existing post's free/premium setting changes (an "update"), not
+  // just when a brand-new post is published (a "new entry") -- editing a
+  // post never changes its id, so id alone would keep it dismissed forever.
+  function postStateKey(post) {
+    return post.id + ':' + (post.is_premium ? 'premium' : 'free');
   }
 
   // Session-level suppression: once the user has closed or engaged with a
@@ -76,7 +84,7 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         var post = data && data.posts && data.posts[0];
-        if (post && post.id && !hasSeen(post.id)) {
+        if (post && post.id && !hasSeen(postStateKey(post))) {
           showBanner(post);
         } else if (!post) {
           tryFallback();
@@ -86,7 +94,7 @@
   }
 
   function tryFallback() {
-    if (!hasSeen(FALLBACK_POST.id)) showBanner(FALLBACK_POST);
+    if (!hasSeen(postStateKey(FALLBACK_POST))) showBanner(FALLBACK_POST);
   }
 
   // ─── Show / hide ──────────────────────────────────────────────────────────
@@ -107,7 +115,7 @@
     });
 
     function dismiss() {
-      markSeen(post.id);
+      markSeen(postStateKey(post));
       markDismissedThisSession();
       hideBanner(banner);
     }
@@ -148,8 +156,9 @@
       'top:' + headerH + 'px;',
       'left:0;right:0;',
       'z-index:49;',
-      'background:#071829;',
-      'border-bottom:1px solid rgba(255,255,255,0.07);',
+      'background:#ffffff;',
+      'border-bottom:1px solid rgba(15,23,42,0.08);',
+      'box-shadow:0 1px 6px rgba(15,23,42,0.06);',
       'transform:translateY(-100%);',
       'transition:transform 0.35s cubic-bezier(.22,.68,0,1.2);',
     ].join('');
@@ -158,14 +167,14 @@
 
     // ─── Badge — gold for premium, blue for free ──────────────────────────
     var badgeStyle = prem
-      ? 'background:rgba(201,162,39,0.2);border:1px solid rgba(201,162,39,0.4);color:#E8C547;'
-      : 'background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.35);color:#93c5fd;';
+      ? 'background:rgba(201,162,39,0.12);border:1px solid rgba(201,162,39,0.35);color:#9E7B0D;'
+      : 'background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);color:#1d4ed8;';
     var badgeIcon  = prem ? 'fa-crown' : 'fa-newspaper';
     var badgeText  = prem ? 'Altitude Exclusive' : 'Issue&nbsp;' + e(issueNum);
 
     // ─── "Already a member?" note — premium only ──────────────────────────
     var memberNote = prem
-      ? '<span style="color:rgba(255,255,255,.35);font-size:11px;white-space:nowrap;flex-shrink:0;">' +
+      ? '<span style="color:rgba(15,23,42,.4);font-size:11px;white-space:nowrap;flex-shrink:0;">' +
           '&nbsp;&middot;&nbsp;Already a member? Check your email.' +
         '</span>'
       : '';
@@ -193,8 +202,8 @@
 
         '<p style="flex:1;min-width:0;margin:0;font-size:13px;line-height:1.4;' +
               'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
-          '<strong style="color:#fff;font-weight:700;">' + e(post.title) + '</strong>' +
-          '<span style="color:rgba(255,255,255,.45);">' + metaSuffix + ' &mdash; just published.</span>' +
+          '<strong style="color:#0f172a;font-weight:700;">' + e(post.title) + '</strong>' +
+          '<span style="color:rgba(15,23,42,.5);">' + metaSuffix + ' &mdash; just published.</span>' +
         '</p>' +
 
         memberNote +
@@ -220,10 +229,10 @@
                   ' aria-label="Dismiss announcement"' +
                   ' style="display:inline-flex;align-items:center;justify-content:center;' +
                           'width:30px;height:30px;border-radius:7px;border:none;cursor:pointer;' +
-                          'background:rgba(255,255,255,.07);color:rgba(255,255,255,.45);' +
+                          'background:rgba(15,23,42,.06);color:rgba(15,23,42,.45);' +
                           'font-size:13px;transition:background .15s,color .15s;"' +
-                  ' onmouseover="this.style.background=\'rgba(255,255,255,.14)\';this.style.color=\'#fff\'"' +
-                  ' onmouseout="this.style.background=\'rgba(255,255,255,.07)\';this.style.color=\'rgba(255,255,255,.45)\'">' +
+                  ' onmouseover="this.style.background=\'rgba(15,23,42,.12)\';this.style.color=\'#0f172a\'"' +
+                  ' onmouseout="this.style.background=\'rgba(15,23,42,.06)\';this.style.color=\'rgba(15,23,42,.45)\'">' +
             '<i class="fa-solid fa-xmark"></i>' +
           '</button>' +
 
