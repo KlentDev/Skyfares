@@ -313,7 +313,7 @@
     var date     = formatDate(post.published_at);
     var type     = (post.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
     var delay    = (i * 0.05) + 's';
-    var href     = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
+    var href     = 'newsletter-detail?slug=' + encodeURIComponent(post.slug);
 
     var imgHtml = post.thumbnail_url
       ? '<img src="' + e(post.thumbnail_url) + '" alt="' + e(post.title) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">'

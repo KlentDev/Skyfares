@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
       <div class="container mx-auto flex items-center justify-between py-3 px-4 md:px-6">
         <!-- Logo -->
-        <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="inline-flex items-center gap-2.5 group">
+        <a href="/" class="inline-flex items-center gap-2.5 group">
           <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="header-logo h-9 w-auto object-contain transition-all duration-500 group-hover:scale-105 flex-shrink-0">
           <div class="header-wordmark flex flex-col leading-none select-none">
             <span class="skyfare-text text-[13px] font-black uppercase tracking-[0.14em] text-brand-900 transition-colors duration-300">SKYFARE</span>
@@ -68,19 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
                   <!-- Left: Our Services -->
                   <div>
                     <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2 px-3">Our Services</p>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-layer-group text-sm"></i>
                       </div>
                       <div class="text-sm font-semibold text-brand-950">Overview</div>
                     </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-plane-circle-check text-sm"></i>
                       </div>
                       <div class="text-sm font-semibold text-brand-950">KrisFlyer Miles</div>
                     </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-phone-volume text-sm"></i>
                       </div>
@@ -90,13 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
                   <!-- Right: Extra Services -->
                   <div class="border-l border-brand-100 pl-2">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2 px-3">Extra Services</p>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-car text-sm"></i>
                       </div>
                       <div class="text-sm font-semibold text-brand-950">Chauffeur</div>
                     </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-concierge-bell text-sm"></i>
                       </div>
@@ -108,29 +108,29 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works.html" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-wand-magic-sparkles text-[13px] opacity-60"></i> How It Works
           </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-ticket-simple text-[13px] opacity-60"></i> Our Flights
           </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight.html" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-paper-plane text-[13px] opacity-60"></i> Skyfare Flight
           </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter.html" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-envelope-open-text text-[13px] opacity-60"></i> Newsletter
           </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq.html" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-circle-question text-[13px] opacity-60"></i> FAQ
           </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact.html" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-envelope text-[13px] opacity-60"></i> Contact
           </a>
         </nav>
 
         <!-- Right side: Book a Flight button -->
         <div class="hidden lg:flex items-center gap-3 ml-auto">
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html"
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book"
             class="book-now-btn inline-flex items-center gap-2 rounded-full border border-brand-500 px-6 py-2.5 text-sm font-semibold text-brand-500 hover:bg-brand-50 hover:-translate-y-0.5 transition-all active:scale-95">
             <i class="fa-solid fa-calendar-check text-lg"></i>
             Book a Flight
@@ -164,13 +164,13 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
                 <i class="fa-solid fa-layer-group text-[10px]"></i> Our Services
               </span>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-layer-group text-brand-400 w-6 text-base"></i> Overview
               </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-plane-circle-check text-brand-400 w-6 text-base"></i> KrisFlyer Miles
               </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-phone-volume text-brand-400 w-6 text-base"></i> Assessment Call
               </a>
             </div>
@@ -178,35 +178,35 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
                 <i class="fa-solid fa-square-plus text-[10px]"></i> Extra Services
               </span>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-car text-brand-400 w-6 text-base"></i> Chauffeur
               </a>
-              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services.html" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-concierge-bell text-brand-400 w-6 text-base"></i> Concierge Services
               </a>
             </div>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-wand-magic-sparkles text-brand-500 w-7"></i> How It Works
             </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Our Flights
             </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-paper-plane text-brand-500 w-7"></i> Skyfare Flight
             </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-envelope-open-text text-brand-500 w-7"></i> Newsletter
             </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-circle-question text-brand-500 w-7"></i> FAQ
             </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact.html" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-envelope text-brand-500 w-7"></i> Contact
             </a>
           </nav>
           
           <div class="mt-auto pt-10">
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book.html" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
               <i class="fa-solid fa-calendar-check text-xl"></i>
               Book a Flight
             </a>
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })();
 
   // --- Logic for Active Links ---
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  const currentPath = (window.location.pathname.split('/').pop() || '').replace(/\.html$/, '') || 'index';
 
   // Desktop links
   const desktopLinks = document.querySelectorAll('#desktop-nav a');

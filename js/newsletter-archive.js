@@ -32,7 +32,7 @@
         //   '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
         // '</a>' +
         '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Altitude isn\'t open for purchase yet — join the waitlist and we\'ll email you the moment it is.</p>' +
-        '<a href="pre-signup-link.html" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+        '<a href="pre-signup-link" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
           '<i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist' +
         '</a>' +
         '<p class="text-xs text-neutral-400">Already a member? ' +
@@ -248,7 +248,7 @@
             'Read Issue ' + e(issueNum) + ' <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
     // Wrapper: clickable <a> for free (opens the issue), clickable <div> for premium (opens the access modal)
-    var href     = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
+    var href     = 'newsletter-detail?slug=' + encodeURIComponent(post.slug);
     var cardCls  = 'card-utility group flex h-52 max-w-5xl mx-auto overflow-hidden slide-up' +
       (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
 
@@ -327,7 +327,7 @@
       ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-lock text-gold-light text-[8px]"></i></div></div>'
       : '';
 
-    var href = 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug);
+    var href = 'newsletter-detail?slug=' + encodeURIComponent(post.slug);
 
     // DISABLED (temporarily) -- original label, restore when Premium launches:
     // 'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +

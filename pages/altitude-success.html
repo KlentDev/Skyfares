@@ -47,7 +47,7 @@
         <p class="text-neutral-500 text-sm leading-relaxed mb-8">
           Your membership is active. You now have full access to the Altitude archive, exclusive content, and premium newsletters delivered to your inbox.
         </p>
-        <a href="altitude.html" class="btn-pill btn-pill-primary">
+        <a href="altitude" class="btn-pill btn-pill-primary">
           Enter Altitude <i class="fa-solid fa-arrow-right text-xs"></i>
         </a>
         <p class="text-xs text-neutral-400 mt-4">Check your email for a welcome message from the Skyfare team.</p>
@@ -109,7 +109,7 @@
             try { localStorage.setItem('altitude_jwt', res.data.token); } catch (_) {}
             // Flag altitude.html to show the welcome message, then redirect there
             try { sessionStorage.setItem('altitude_welcome', '1'); } catch (_) {}
-            window.location.replace('altitude.html');
+            window.location.replace('altitude');
           } else {
             document.getElementById('error-msg').textContent =
               res.data.error || 'Could not activate your access. Please contact support.';

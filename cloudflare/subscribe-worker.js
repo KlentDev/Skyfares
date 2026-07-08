@@ -243,8 +243,8 @@ async function handleCheckout(request, env, corsHeaders) {
     mode: 'subscription',
     'line_items[0][price]': env.STRIPE_PRICE_ID,
     'line_items[0][quantity]': '1',
-    success_url: `${baseUrl}/pages/altitude-success.html?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${baseUrl}/pages/altitude.html`,
+    success_url: `${baseUrl}/pages/altitude-success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${baseUrl}/pages/altitude`,
     allow_promotion_codes: 'true',
   });
   if (email) params.set('customer_email', email);
@@ -605,7 +605,7 @@ async function handleManagePortal(request, env, corsHeaders) {
   const baseUrl = getBaseUrl(request.headers.get('Origin') || '');
   const params = new URLSearchParams({
     customer: member.stripe_customer_id,
-    return_url: `${baseUrl}/pages/altitude.html`,
+    return_url: `${baseUrl}/pages/altitude`,
   });
 
   const res = await fetch('https://api.stripe.com/v1/billing_portal/sessions', {
@@ -1211,7 +1211,7 @@ async function handleMagicRequest(request, env, corsHeaders) {
   // Generate token — use local origin so the link works during local dev
   const token    = generateMagicToken();
   const baseUrl  = getBaseUrl(request.headers.get('Origin') || '');
-  const magicUrl = `${baseUrl}/pages/altitude.html?magic=${token}`;
+  const magicUrl = `${baseUrl}/pages/altitude?magic=${token}`;
   await env.ALTITUDE_KV.put(
     `magic:${token}`,
     JSON.stringify({ email, exp: Date.now() + 3_600_000 }),

@@ -87,7 +87,7 @@
             '<p style="margin:0 0 2px;font-size:.8125rem;font-weight:700;color:#fff;">We use cookies</p>' +
             '<p style="margin:0;font-size:.75rem;color:rgba(255,255,255,.55);line-height:1.5;">' +
               'Essential cookies keep the site working. With your consent, we also use marketing cookies. ' +
-              '<a href="' + BASE + 'pages/privacy.html" style="color:rgba(255,255,255,.45);text-decoration:underline;">Privacy Policy</a>' +
+              '<a href="' + BASE + 'pages/privacy" style="color:rgba(255,255,255,.45);text-decoration:underline;">Privacy Policy</a>' +
             '</p>' +
           '</div>' +
         '</div>' +
@@ -200,9 +200,9 @@
         'cursor:pointer;font-family:inherit;">Save Preferences</button>' +
 
       '<p style="text-align:center;font-size:.6875rem;color:#cbd5e1;margin-top:1rem;">' +
-        '<a href="' + BASE + 'pages/privacy.html" style="color:#94a3b8;text-decoration:underline;">Privacy Policy</a>' +
+        '<a href="' + BASE + 'pages/privacy" style="color:#94a3b8;text-decoration:underline;">Privacy Policy</a>' +
         ' &nbsp;&middot;&nbsp; ' +
-        '<a href="' + BASE + 'pages/terms.html" style="color:#94a3b8;text-decoration:underline;">Terms &amp; Conditions</a>' +
+        '<a href="' + BASE + 'pages/terms" style="color:#94a3b8;text-decoration:underline;">Terms &amp; Conditions</a>' +
       '</p>';
 
     overlay.appendChild(card);
