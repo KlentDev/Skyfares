@@ -511,7 +511,7 @@
 
       var imgHtml = p.thumbnail_url
         ? '<img src="' + e(p.thumbnail_url) + '" alt="' + e(p.title) + '" class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
-        : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
+        : '<div class="w-full h-full flex items-center justify-center"><span class="text-[11px] font-bold uppercase tracking-widest text-white/25">No Thumbnail</span></div>';
 
       var cardCls = 'group card-utility overflow-hidden slide-up is-visible' +
         (prem ? ' border-gold/30 hover:border-gold/60' : '');

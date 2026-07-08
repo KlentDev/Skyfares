@@ -23,9 +23,9 @@
 // because it fires the segment_action trigger on the "Altitude Access — Welcome"
 // automation. REST API tag methods (PATCH/POST) apply the tag but do NOT fire
 // the internal event that updates segment membership — use them only as fallbacks.
-const ALTITUDE_TAG_AUTOMATION_ID = 'aut_94f6dbad-98e3-4025-aa82-c2eee487ea86';
-const WELCOME_AUTOMATION_ID      = 'aut_c64c648b-9020-4d8b-aa54-8bdfe88911e7';
-const MAGIC_LINK_AUTOMATION_ID   = 'aut_b14dc6cd-8c8f-4b2c-bace-c9324f934006';
+const ALTITUDE_TAG_AUTOMATION_ID = 'aut_da7df205-2189-4204-bf67-5e6727a29fcc';
+const WELCOME_AUTOMATION_ID      = 'aut_ed8a12c4-3661-4226-9c93-21e43ffa5e3e';
+const MAGIC_LINK_AUTOMATION_ID   = 'aut_765b1f46-64b1-48fb-be4c-ac75386a949a';
 const MAGIC_LINK_CF_NAME         = 'magic_link_url'; // custom field that holds the one-time URL
 
 // Renewal reminder automations — enrolled by the daily cron, not by user actions
@@ -818,7 +818,10 @@ async function handleGetPosts(env, corsHeaders) {
           subtitle:      p.subtitle || '',
           slug,
           url:           p.url || (slug ? `${PUB_BASE_URL}/p/${slug}` : ''),
-          thumbnail_url: p.thumbnail_url || '',
+          // Beehiiv auto-populates thumbnail_url even when the publisher never
+          // added a thumbnail; web_settings.display_thumbnail_on_web reflects
+          // the actual "Add Thumbnail" toggle, so gate on that instead.
+          thumbnail_url: (p.web_settings && p.web_settings.display_thumbnail_on_web) ? (p.thumbnail_url || '') : '',
           published_at:  p.publish_date
             ? new Date(p.publish_date * 1000).toISOString()
             : (p.scheduled_at || p.created_at || ''),
@@ -904,7 +907,8 @@ async function handleGetPost(slug, request, env, corsHeaders) {
     title:         postMeta.title || '',
     subtitle:      postMeta.subtitle || '',
     slug:          postMeta.slug || '',
-    thumbnail_url: postMeta.thumbnail_url || '',
+    // Same display_thumbnail_on_web gating as handleGetPosts — see comment there.
+    thumbnail_url: (postMeta.web_settings && postMeta.web_settings.display_thumbnail_on_web) ? (postMeta.thumbnail_url || '') : '',
     published_at:  postMeta.publish_date
       ? new Date(postMeta.publish_date * 1000).toISOString()
       : (postMeta.scheduled_at || postMeta.created_at || ''),
