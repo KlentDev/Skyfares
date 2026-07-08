@@ -818,10 +818,7 @@ async function handleGetPosts(env, corsHeaders) {
           subtitle:      p.subtitle || '',
           slug,
           url:           p.url || (slug ? `${PUB_BASE_URL}/p/${slug}` : ''),
-          // Beehiiv auto-populates thumbnail_url even when the publisher never
-          // added a thumbnail; web_settings.display_thumbnail_on_web reflects
-          // the actual "Add Thumbnail" toggle, so gate on that instead.
-          thumbnail_url: (p.web_settings && p.web_settings.display_thumbnail_on_web) ? (p.thumbnail_url || '') : '',
+          thumbnail_url: p.thumbnail_url || '',
           published_at:  p.publish_date
             ? new Date(p.publish_date * 1000).toISOString()
             : (p.scheduled_at || p.created_at || ''),
@@ -907,8 +904,7 @@ async function handleGetPost(slug, request, env, corsHeaders) {
     title:         postMeta.title || '',
     subtitle:      postMeta.subtitle || '',
     slug:          postMeta.slug || '',
-    // Same display_thumbnail_on_web gating as handleGetPosts — see comment there.
-    thumbnail_url: (postMeta.web_settings && postMeta.web_settings.display_thumbnail_on_web) ? (postMeta.thumbnail_url || '') : '',
+    thumbnail_url: postMeta.thumbnail_url || '',
     published_at:  postMeta.publish_date
       ? new Date(postMeta.publish_date * 1000).toISOString()
       : (postMeta.scheduled_at || postMeta.created_at || ''),
