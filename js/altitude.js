@@ -317,7 +317,7 @@
 
     var imgHtml = post.thumbnail_url
       ? '<img src="' + e(post.thumbnail_url) + '" alt="' + e(post.title) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">'
-      : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-plane text-white/15 text-4xl -rotate-12"></i></div>';
+      : '<div class="w-full h-full flex items-center justify-center"><span class="text-[11px] font-bold uppercase tracking-widest text-white/25">No Thumbnail</span></div>';
 
     var badge = prem
       ? '<span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span>'
