@@ -15,7 +15,7 @@
         return;
       }
     } catch (_) {}
-    window.location.href = 'newsletter.html';
+    window.location.href = 'newsletter';
   }
   window.goBack = goBack;
 
@@ -32,7 +32,7 @@
     var slug   = params.get('slug');
 
     if (!slug) {
-      window.location.replace('newsletter.html');
+      window.location.replace('newsletter');
       return;
     }
 
@@ -506,7 +506,7 @@
       var issueNum = getIssueNum(p);
       var date     = formatDate(p.published_at);
       var type     = (p.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
-      var href     = 'newsletter-detail.html?slug=' + encodeURIComponent(p.slug);
+      var href     = 'newsletter-detail?slug=' + encodeURIComponent(p.slug);
       var delay    = i * 0.05;
 
       var imgHtml = p.thumbnail_url
@@ -519,7 +519,7 @@
       // DISABLED (temporarily) -- original WhatsApp upgrade link, restore when Premium launches:
       // '<a href="' + PREMIUM_WA_URL + '" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Get Premium Access <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
       var ctaHtml = prem
-        ? '<a href="pre-signup-link.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Join the Waitlist <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
+        ? '<a href="pre-signup-link" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Join the Waitlist <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
         : '<a href="' + href + '" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
 
       var altitudeBadge = prem

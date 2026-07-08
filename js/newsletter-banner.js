@@ -193,9 +193,9 @@
     // Path is relative: pages/ prefix for root-level pages, none for /pages/ pages
     var detailBase = window.location.pathname.includes('/pages/') ? '' : 'pages/';
     // DISABLED (temporarily) -- original WhatsApp upgrade link + label, restore when Premium launches:
-    // var ctaHref = prem ? PREMIUM_WA_URL : (detailBase + 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug || ''));
+    // var ctaHref = prem ? PREMIUM_WA_URL : (detailBase + 'newsletter-detail?slug=' + encodeURIComponent(post.slug || ''));
     // var ctaText = prem ? 'Get Premium Access' : 'Read Issue&nbsp;' + e(issueNum);
-    var ctaHref  = prem ? (detailBase + 'pre-signup-link.html') : (detailBase + 'newsletter-detail.html?slug=' + encodeURIComponent(post.slug || ''));
+    var ctaHref  = prem ? (detailBase + 'pre-signup-link') : (detailBase + 'newsletter-detail?slug=' + encodeURIComponent(post.slug || ''));
     var ctaText  = prem ? 'Join the Waitlist' : 'Read Issue&nbsp;' + e(issueNum);
     var ctaBg    = prem ? '#C9A227' : '#1d4ed8';
     var ctaHover = prem ? '#9E7B0D'  : '#1e40af';

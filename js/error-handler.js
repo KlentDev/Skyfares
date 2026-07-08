@@ -10,7 +10,7 @@
   window._skyErrorHandler = true;
 
   var prefix = window.location.pathname.includes('/pages/') ? '../' : '';
-  var homeHref = prefix + 'index.html';
+  var homeHref = '/';
 
   var errorShown = false;
   var offlineOverlayEl = null;

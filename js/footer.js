@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="container mx-auto px-4 md:px-6">
         <div class="grid md:grid-cols-4 gap-12 mb-16">
           <div class="">
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html" class="inline-block group mb-6">
+            <a href="/" class="inline-block group mb-6">
               <img src="${window.location.pathname.includes('/pages/') ? '../' : ''}logos/logo.webp" alt="Skyfare Consulting Logo" class="h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-110 brightness-0 invert">
             </a>
             <p class="text-brand-100/50 text-sm max-w-sm leading-relaxed">
@@ -35,31 +35,31 @@ document.addEventListener('DOMContentLoaded', () => {
           <div>
             <h4 class="text-white font-bold mb-6">Services</h4>
             <ul class="space-y-4 text-sm">
-              <li><a href="pages/krisflyer.html" class="text-brand-100/50 hover:text-white transition-colors">KrisFlyer Miles</a></li>
-              <li><a href="pages/chauffeur.html" class="text-brand-100/50 hover:text-white transition-colors">Chauffeur Service</a></li>
-              <li><a href="pages/extra-services.html" class="text-brand-100/50 hover:text-white transition-colors">Extra Services</a></li>
+              <li><a href="/pages/krisflyer" class="text-brand-100/50 hover:text-white transition-colors">KrisFlyer Miles</a></li>
+              <li><a href="/pages/chauffeur" class="text-brand-100/50 hover:text-white transition-colors">Chauffeur Service</a></li>
+              <li><a href="/pages/extra-services" class="text-brand-100/50 hover:text-white transition-colors">Extra Services</a></li>
             </ul>
           </div>
-          
+
           <div>
             <h4 class="text-white font-bold mb-6">Company</h4>
             <ul class="space-y-4 text-sm">
-              <li><a href="/index.html" class="text-brand-100/50 hover:text-white transition-colors">Home</a></li>
-              <li><a href="pages/how-it-works.html" class="text-brand-100/50 hover:text-white transition-colors">How It Works</a></li>
-              <li><a href="pages/past-flight-deals.html" class="text-brand-100/50 hover:text-white transition-colors">Flights We've Arranged</a></li>
-              <li><a href="pages/newsletter.html" class="text-brand-100/50 hover:text-white transition-colors">Newsletter</a></li>
-              <li><a href="pages/book.html" class="text-brand-100/50 hover:text-white transition-colors">Book a Strategy Call</a></li>
-              <li><a href="pages/assessment.html" class="text-brand-100/50 hover:text-white transition-colors">Free Assessment</a></li>
+              <li><a href="/" class="text-brand-100/50 hover:text-white transition-colors">Home</a></li>
+              <li><a href="/pages/how-it-works" class="text-brand-100/50 hover:text-white transition-colors">How It Works</a></li>
+              <li><a href="/pages/past-flight-deals" class="text-brand-100/50 hover:text-white transition-colors">Flights We've Arranged</a></li>
+              <li><a href="/pages/newsletter" class="text-brand-100/50 hover:text-white transition-colors">Newsletter</a></li>
+              <li><a href="/pages/book" class="text-brand-100/50 hover:text-white transition-colors">Book a Strategy Call</a></li>
+              <li><a href="/pages/assessment" class="text-brand-100/50 hover:text-white transition-colors">Free Assessment</a></li>
             </ul>
           </div>
 
           <div>
             <h4 class="text-white font-bold mb-6">Support</h4>
             <ul class="space-y-4 text-sm">
-              <li><a href="pages/faq.html" class="text-brand-100/50 hover:text-white transition-colors">FAQ</a></li>
-              <li><a href="pages/contact.html" class="text-brand-100/50 hover:text-white transition-colors">Contact</a></li>
-              <li><a href="pages/terms.html" class="text-brand-100/50 hover:text-white transition-colors">Terms & Conditions</a></li>
-              <li><a href="pages/privacy.html" class="text-brand-100/50 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/pages/faq" class="text-brand-100/50 hover:text-white transition-colors">FAQ</a></li>
+              <li><a href="/pages/contact" class="text-brand-100/50 hover:text-white transition-colors">Contact</a></li>
+              <li><a href="/pages/terms" class="text-brand-100/50 hover:text-white transition-colors">Terms & Conditions</a></li>
+              <li><a href="/pages/privacy" class="text-brand-100/50 hover:text-white transition-colors">Privacy Policy</a></li>
               <li><a href="#" onclick="window.SkyConsent&&window.SkyConsent.openPreferences();return false;" class="text-brand-100/50 hover:text-white transition-colors">Cookie Preferences</a></li>
             </ul>
           </div>
