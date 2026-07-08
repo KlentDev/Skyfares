@@ -89,42 +89,34 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-8 slide-up" style="animation-delay:.05s;">
-            <div class="flex items-start gap-3">
-              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+          <div class="grid grid-cols-2 gap-4 slide-up" style="animation-delay:.05s;">
+            <div class="card-utility p-5">
+              <div class="icon-chip icon-chip-sm mb-3">
                 <i class="fa-solid fa-check-double"></i>
               </div>
-              <div>
-                <p class="text-sm font-semibold text-neutral-900 mb-0.5">Confirmed Tickets</p>
-                <p class="text-xs text-neutral-400 leading-relaxed">Confirmed seats only — no gambling on waitlists.</p>
-              </div>
+              <p class="text-sm font-semibold text-neutral-900 mb-0.5">Confirmed Tickets</p>
+              <p class="text-xs text-neutral-400 leading-relaxed">Confirmed seats only — no gambling on waitlists.</p>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+            <div class="card-utility p-5">
+              <div class="icon-chip icon-chip-sm mb-3">
                 <i class="fa-solid fa-shield-halved"></i>
               </div>
-              <div>
-                <p class="text-sm font-semibold text-neutral-900 mb-0.5">Secure &amp; Private</p>
-                <p class="text-xs text-neutral-400 leading-relaxed">Your data handled with the highest discretion.</p>
-              </div>
+              <p class="text-sm font-semibold text-neutral-900 mb-0.5">Secure &amp; Private</p>
+              <p class="text-xs text-neutral-400 leading-relaxed">Your data handled with the highest discretion.</p>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+            <div class="card-utility p-5">
+              <div class="icon-chip icon-chip-sm mb-3">
                 <i class="fa-solid fa-clock"></i>
               </div>
-              <div>
-                <p class="text-sm font-semibold text-neutral-900 mb-0.5">Rapid Response</p>
-                <p class="text-xs text-neutral-400 leading-relaxed">Quotes and route options within 24 hours.</p>
-              </div>
+              <p class="text-sm font-semibold text-neutral-900 mb-0.5">Rapid Response</p>
+              <p class="text-xs text-neutral-400 leading-relaxed">Quotes and route options within 24 hours.</p>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
+            <div class="card-utility p-5">
+              <div class="icon-chip icon-chip-sm mb-3">
                 <i class="fa-solid fa-hand-holding-dollar"></i>
               </div>
-              <div>
-                <p class="text-sm font-semibold text-neutral-900 mb-0.5">Transparent Pricing</p>
-                <p class="text-xs text-neutral-400 leading-relaxed">No hidden fees. Pay only when confirmed.</p>
-              </div>
+              <p class="text-sm font-semibold text-neutral-900 mb-0.5">Transparent Pricing</p>
+              <p class="text-xs text-neutral-400 leading-relaxed">No hidden fees. Pay only when confirmed.</p>
             </div>
           </div>
 
@@ -147,93 +139,109 @@
           </p>
         </div>
 
-        <div class="slide-up" style="animation-delay:.05s;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 slide-up" style="animation-delay:.05s;">
 
-          <!-- Row 1: New York · London · Melbourne -->
-          <div class="routes-row">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-card">
-              <div class="route-card-bg" style="background-image:url('../images/routes-images/new-york.jpg');"></div>
-              <div class="route-card-overlay"></div>
-              <div class="route-card-content">
-                <div class="route-card-left">
-                  <span class="route-code">SIN → JFK</span>
-                  <span class="route-city">New York City</span>
-                  <p class="route-miles">from 117,000 mi</p>
-                  <p class="route-cabin">Business Class</p>
-                </div>
-                <span class="route-enquire-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</span>
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-tile group">
+            <div class="route-tile-bg" style="background-image:url('../images/routes-images/new-york.jpg');"></div>
+            <div class="route-tile-overlay"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center justify-between mb-5">
+                <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → JFK</span>
+                <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
               </div>
-            </a>
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-card">
-              <div class="route-card-bg" style="background-image:url('../images/routes-images/london.jpg');"></div>
-              <div class="route-card-overlay"></div>
-              <div class="route-card-content">
-                <div class="route-card-left">
-                  <span class="route-code">SIN → LHR</span>
-                  <span class="route-city">London</span>
-                  <p class="route-miles">from 108,500 mi</p>
-                  <p class="route-cabin">Business Class</p>
-                </div>
-                <span class="route-enquire-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</span>
+              <h3 class="text-xl font-display font-bold text-white mb-1">New York City</h3>
+              <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">117,000</span> mi · Business Class</p>
+              <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+                <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+                <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
               </div>
-            </a>
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-card">
-              <div class="route-card-bg" style="background-image:url('../images/routes-images/melbourne.jpg');"></div>
-              <div class="route-card-overlay"></div>
-              <div class="route-card-content">
-                <div class="route-card-left">
-                  <span class="route-code">SIN → MEL</span>
-                  <span class="route-city">Melbourne</span>
-                  <p class="route-miles">from 72,000 mi</p>
-                  <p class="route-cabin">Business Class</p>
-                </div>
-                <span class="route-enquire-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</span>
-              </div>
-            </a>
-          </div>
+            </div>
+          </a>
 
-          <!-- Row 2: Dubai · Paris · Los Angeles -->
-          <div class="routes-row">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-card">
-              <div class="route-card-bg" style="background-image:url('../images/routes-images/dubai.jpg');"></div>
-              <div class="route-card-overlay"></div>
-              <div class="route-card-content">
-                <div class="route-card-left">
-                  <span class="route-code">SIN → DXB</span>
-                  <span class="route-city">Dubai</span>
-                  <p class="route-miles">from 68,000 mi</p>
-                  <p class="route-cabin">Business Class</p>
-                </div>
-                <span class="route-enquire-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</span>
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-tile group">
+            <div class="route-tile-bg" style="background-image:url('../images/routes-images/london.jpg');"></div>
+            <div class="route-tile-overlay"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center justify-between mb-5">
+                <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → LHR</span>
+                <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
               </div>
-            </a>
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-card">
-              <div class="route-card-bg" style="background-image:url('../images/routes-images/paris.jpg');"></div>
-              <div class="route-card-overlay"></div>
-              <div class="route-card-content">
-                <div class="route-card-left">
-                  <span class="route-code">SIN → CDG</span>
-                  <span class="route-city">Paris</span>
-                  <p class="route-miles">from 108,500 mi</p>
-                  <p class="route-cabin">Business Class</p>
-                </div>
-                <span class="route-enquire-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</span>
+              <h3 class="text-xl font-display font-bold text-white mb-1">London</h3>
+              <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">108,500</span> mi · Business Class</p>
+              <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+                <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+                <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
               </div>
-            </a>
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-card">
-              <div class="route-card-bg" style="background-image:url('../images/routes-images/los-angeles.jpg');"></div>
-              <div class="route-card-overlay"></div>
-              <div class="route-card-content">
-                <div class="route-card-left">
-                  <span class="route-code">SIN → LAX</span>
-                  <span class="route-city">Los Angeles</span>
-                  <p class="route-miles">from 112,500 mi</p>
-                  <p class="route-cabin">Business Class</p>
-                </div>
-                <span class="route-enquire-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</span>
+            </div>
+          </a>
+
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-tile group">
+            <div class="route-tile-bg" style="background-image:url('../images/routes-images/melbourne.jpg');"></div>
+            <div class="route-tile-overlay"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center justify-between mb-5">
+                <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → MEL</span>
+                <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
               </div>
-            </a>
-          </div>
+              <h3 class="text-xl font-display font-bold text-white mb-1">Melbourne</h3>
+              <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">72,000</span> mi · Business Class</p>
+              <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+                <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+                <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-tile group">
+            <div class="route-tile-bg" style="background-image:url('../images/routes-images/dubai.jpg');"></div>
+            <div class="route-tile-overlay"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center justify-between mb-5">
+                <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → DXB</span>
+                <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+              </div>
+              <h3 class="text-xl font-display font-bold text-white mb-1">Dubai</h3>
+              <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">68,000</span> mi · Business Class</p>
+              <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+                <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+                <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-tile group">
+            <div class="route-tile-bg" style="background-image:url('../images/routes-images/paris.jpg');"></div>
+            <div class="route-tile-overlay"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center justify-between mb-5">
+                <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → CDG</span>
+                <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+              </div>
+              <h3 class="text-xl font-display font-bold text-white mb-1">Paris</h3>
+              <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">108,500</span> mi · Business Class</p>
+              <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+                <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+                <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="route-tile group">
+            <div class="route-tile-bg" style="background-image:url('../images/routes-images/los-angeles.jpg');"></div>
+            <div class="route-tile-overlay"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center justify-between mb-5">
+                <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → LAX</span>
+                <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
+              </div>
+              <h3 class="text-xl font-display font-bold text-white mb-1">Los Angeles</h3>
+              <p class="text-sm text-white/70 font-medium mb-6">from <span class="text-white font-bold">112,500</span> mi · Business Class</p>
+              <div class="mt-auto flex items-center justify-between pt-4 border-t border-white/15">
+                <span class="pill-tag"><i class="fa-brands fa-whatsapp text-[10px]"></i> Enquire</span>
+                <i class="fa-solid fa-arrow-right text-white/40 text-xs group-hover:translate-x-1 group-hover:text-brand-400 transition-all"></i>
+              </div>
+            </div>
+          </a>
 
         </div>
 

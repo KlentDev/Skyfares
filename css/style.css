@@ -1838,13 +1838,23 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   white-space: nowrap;
 }
 
-/* Process step card modifier — additive on top of .card-dark.
-   Top accent wipes in on hover (same motif as .route-tile::before) instead
-   of sitting there statically, and the icon chip + watermark number react. */
-.card-dark.process-step {
-  border-top: 2px solid rgba(255, 255, 255, 0.10);
+/* Process step card — light surface (previously a dark .card-dark tile).
+   White card, hairline border, soft lift shadow; top accent wipes in on
+   hover (same motif as .route-tile::before) and the icon chip + watermark
+   number react. */
+.card-process {
+  background: #ffffff;
+  border: 1px solid rgba(0, 102, 204, 0.10);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.05);
+  transition: transform 0.3s ease-out, border-color 0.3s ease-out, box-shadow 0.3s ease-out;
 }
-.card-dark.process-step::after {
+.card-process:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 102, 204, 0.28);
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.09);
+}
+.card-process::after {
   content: '';
   position: absolute;
   top: -1px;
@@ -1856,37 +1866,89 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   transform-origin: left;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.card-dark.process-step:hover::after { transform: scaleX(1); }
-.card-dark.process-step .icon-chip {
+.card-process:hover::after { transform: scaleX(1); }
+.card-process .icon-chip {
   transition: background 0.3s ease-out, color 0.3s ease-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.card-dark.process-step:hover .icon-chip {
+.card-process:hover .icon-chip {
   background: #0066cc;
   color: #ffffff;
   transform: scale(1.08) rotate(-6deg);
 }
-.card-dark.process-step .step-number { transition: transform 0.3s ease-out, color 0.3s ease-out; }
-.card-dark.process-step:hover .step-number {
-  color: rgba(255, 255, 255, 0.14);
-  transform: scale(1.08);
-}
+.card-process .step-number { transition: transform 0.3s ease-out, color 0.3s ease-out; }
+.card-process:hover .step-number { transform: scale(1.08); }
 /* Alternating tilt for a touch of playfulness — subtle, not gimmicky */
-.card-dark.process-step:nth-child(odd):hover { transform: translateY(-4px) rotate(-0.75deg); }
-.card-dark.process-step:nth-child(even):hover { transform: translateY(-4px) rotate(0.75deg); }
+.card-process:nth-child(odd):hover { transform: translateY(-4px) rotate(-0.75deg); }
+.card-process:nth-child(even):hover { transform: translateY(-4px) rotate(0.75deg); }
+
+/* Real Bookings comparison cards — same light white-card language as
+   .card-process (hairline border, soft lift shadow, top accent wipe on
+   hover) for visual consistency; the case-bg.JPG engine/wing shot sits
+   behind a Sky Blue-tinted wash as a faint watermark rather than a full
+   photo background. */
+.card-booking {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(0, 102, 204, 0.10);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.05);
+  transition: transform 0.3s ease-out, border-color 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+.card-booking:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 102, 204, 0.28);
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.09);
+}
+.card-booking::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #0066cc, #38a1ff);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3;
+}
+.card-booking:hover::before { transform: scaleX(1); }
+.card-booking-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/page-images/case-bg.JPG');
+  background-size: cover;
+  background-position: center 70%;
+  opacity: 0.14;
+  transition: transform 0.6s ease-out, opacity 0.3s ease-out;
+}
+.card-booking-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.5) 0%, rgba(240, 247, 255, 0.88) 45%, rgba(255, 255, 255, 0.97) 100%);
+}
+.card-booking:hover .card-booking-bg { transform: scale(1.08); opacity: 0.2; }
 
 /* Real Bookings comparison cards — hover "spotlight": the old cash fare
    fades back while the Skyfare strategy row and savings pop forward */
 .card-dark .fare-standard,
 .card-dark .fare-strategy,
-.card-dark .savings-badge {
+.card-dark .savings-badge,
+.card-booking .fare-standard,
+.card-booking .fare-strategy,
+.card-booking .savings-badge {
   transition: opacity 0.3s ease-out, background 0.3s ease-out, border-color 0.3s ease-out, transform 0.3s ease-out;
 }
-.card-dark:hover .fare-standard { opacity: 0.55; }
-.card-dark:hover .fare-strategy {
+.card-dark:hover .fare-standard,
+.card-booking:hover .fare-standard { opacity: 0.55; }
+.card-dark:hover .fare-strategy,
+.card-booking:hover .fare-strategy {
   background: rgba(0, 102, 204, 0.18);
   border-color: rgba(0, 102, 204, 0.4);
 }
-.card-dark:hover .savings-badge { transform: scale(1.06); }
+.card-dark:hover .savings-badge,
+.card-booking:hover .savings-badge { transform: scale(1.06); }
 
 /* One-time playful pop when the savings badge scrolls into view */
 @media (prefers-reduced-motion: no-preference) {
