@@ -2,8 +2,8 @@
  * Skyfare Altitude — Newsletter Announcement Banner
  *
  * Slides down from beneath the header when a new newsletter is published.
- * Tries the Worker endpoint first; falls back to hardcoded Issue 01 data
- * so the banner works even before the Worker is deployed.
+ * Fetches the latest post live from the Worker; shows nothing if that
+ * fetch fails (no hardcoded fallback content — never show stale/deleted posts).
  *
  * Free posts  → blue badge, "Read Issue X" CTA → Beehiiv post.
  * Premium posts → amber badge, "Join the Waitlist" CTA → pre-launch sign-up page (Altitude isn't purchasable yet).
@@ -24,15 +24,23 @@
   // var PREMIUM_WA_URL = 'https://api.whatsapp.com/send?phone=6581575306&text=' +
   //   encodeURIComponent("Hi Skyfare, I'd like to upgrade to Altitude Premium.");
 
-  // Static fallback — used when Worker is unreachable (e.g. not yet deployed)
-  var FALLBACK_POST = {
-    id:           'post_e8512d1b-d2a9-45f9-bec9-db9e794022a5',
-    title:        'Emirates Business Class — Dubai to Athens',
-    subtitle:     'Boeing 777-300ER · Seat 9J · 29 May 2025 · 4.5 hrs',
-    url:          'https://skyfarealtitude.beehiiv.com/p/emirates-business-class-dubai-to-athens',
-    published_at: '2026-06-24T07:27:38Z',
-    content_tags: ['issue-01', 'cabin-review', 'emirates', 'business-class'],
-  };
+  // No hardcoded fallback post: the Worker is live, so if /newsletter/posts
+  // fails or is unreachable (CORS, network blip, Beehiiv hiccup) the correct
+  // behavior is to show nothing, not resurface old/possibly-deleted content
+  // that no longer matches what's actually published on Beehiiv.
+
+  // Set the instant the user clicks any same-tab, same-page link. Fetch to
+  // the Worker is async, so without this a banner can start sliding in for a
+  // split second right as the browser is mid-navigation to the next page --
+  // a jarring flash that isn't really "part of" the page the user landed on.
+  var leaving = false;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.target === '_blank') return;
+    var href = a.getAttribute('href') || '';
+    if (!href || href.charAt(0) === '#') return;
+    leaving = true;
+  }, true);
 
   // ─── localStorage helpers ─────────────────────────────────────────────────
   // Permanent dismissal only — set exclusively when the user explicitly closes
@@ -57,10 +65,9 @@
 
   // Session-level suppression: once the user has closed or engaged with a
   // banner on ANY page, don't show a banner again for the rest of that
-  // browsing session (tab), even if a subsequent page load resolves to a
-  // different post id (e.g. the live Worker fetch briefly falls back to the
-  // hardcoded FALLBACK_POST, which has its own separate id) — this is what
-  // stops "I already closed it" from reappearing while navigating the site.
+  // browsing session (tab), even if Beehiiv publishes a new post in the
+  // meantime — this is what stops "I already closed it" from reappearing
+  // while navigating the site.
   function dismissedThisSession() {
     try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch (e) { return false; }
   }
@@ -78,23 +85,18 @@
 
   function boot() {
     if (dismissedThisSession()) return;
-    if (typeof fetch === 'undefined') { tryFallback(); return; }
+    if (typeof fetch === 'undefined') return;
 
     fetch(WORKER_URL + '/newsletter/posts')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
+        if (leaving) return;
         var post = data && data.posts && data.posts[0];
         if (post && post.id && !hasSeen(postStateKey(post))) {
           showBanner(post);
-        } else if (!post) {
-          tryFallback();
         }
       })
-      .catch(tryFallback);
-  }
-
-  function tryFallback() {
-    if (!hasSeen(postStateKey(FALLBACK_POST))) showBanner(FALLBACK_POST);
+      .catch(function () {});
   }
 
   // ─── Show / hide ──────────────────────────────────────────────────────────
@@ -109,6 +111,14 @@
     document.body.insertBefore(banner, document.body.firstChild);
 
     requestAnimationFrame(function () {
+      // Re-check here, not just in boot(): the user can click a link during
+      // the one-frame gap between insertBefore() above and this callback,
+      // and that's the last moment we can bail before the slide-down is
+      // actually visible on the page they're navigating away from.
+      if (leaving) {
+        if (banner.parentNode) banner.parentNode.removeChild(banner);
+        return;
+      }
       var bannerH = banner.offsetHeight;
       pushContentDown(bannerH);
       banner.style.transform = 'translateY(0)';
