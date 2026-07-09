@@ -1,0 +1,33 @@
+name = "skyfares-reports-bot"
+main = "worker.js"
+compatibility_date = "2026-07-09"
+
+[triggers]
+# A SINGLE trigger, "5 0,8 * * *" — fires at :05 past hour 0 AND hour 8 Manila every day (one
+# registered cron expression, since Cloudflare accounts cap out at 5 total across every Worker
+# and there wasn't room for one trigger per report type). worker.js's scheduled() handler tells
+# the two firings apart by hour:
+#   00:05 Manila — daily report for the day that just ended (e.g. Monday's report sends
+#                  Tuesday 00:05); also the weekly report if that day was a Friday.
+#   08:05 Manila — monthly report, only acts on the 1st of the month.
+crons = ["5 0,8 * * *"]
+
+[[kv_namespaces]]
+binding = "REPORTS_KV"
+id = "0a916c2855a647a1889720823fe8e2a1"
+
+[vars]
+AIRTABLE_BASE_ID = "appA5rSlwgc57nswR"
+AIRTABLE_TABLE_FLIGHT_APPLICATIONS = "tblU1G8DRtIBCg2Xd"
+AIRTABLE_TABLE_CONTACT_INQUIRIES = "tblUs7duWvhQctspg"
+BEEHIIV_PUB_ID = "pub_0be395f6-cacb-4ba9-b8a5-04c69ea44bf1"
+# Not secret — a channel ID, not a credential. The private #reports channel created for this project.
+SLACK_CHANNEL_ID = "C0BG6A1GGD7"
+
+# Secrets (never in this file — set via `wrangler secret put NAME` from this directory):
+#   AIRTABLE_API_KEY - same PAT used by cloudflare/subscribe-worker.js
+#   BEEHIIV_API_KEY  - same key used by cloudflare/subscribe-worker.js
+#   SLACK_BOT_TOKEN  - xoxb-... token from the Slack App's chat:write bot scope (see setup runbook).
+#                      Real Block Kit tables require the Bot API — a Workflow Builder webhook
+#                      can't carry table blocks, only plain-text variable substitution.
+#   DEBUG_RUN_TOKEN  - random token gating the /debug/run route
