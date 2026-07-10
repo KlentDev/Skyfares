@@ -15,7 +15,7 @@ export function buildSystemHealthBlocks(ctx) {
   return [
     sectionBlock("*System Health*"),
     sectionBlock(
-      `🕒 *Last Updated:* ${formatManilaDateLong(ctx.runDate)} · ${formatManilaTimeShort(ctx.runDate)} (Asia/Manila)\n` +
+      `🕒 *Last Updated:* ${formatManilaDateLong(ctx.runDate)} · ${formatManilaTimeShort(ctx.runDate)} (UTC+8)\n` +
         `⏭️ *Next Report:* ${formatNextRunLabel(ctx.type, ctx.runDate)}`
     ),
     tableBlock(

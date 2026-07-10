@@ -3,14 +3,19 @@ main = "worker.js"
 compatibility_date = "2026-07-09"
 
 [triggers]
-# A SINGLE trigger, "5 0,8 * * *" — fires at :05 past hour 0 AND hour 8 Manila every day (one
-# registered cron expression, since Cloudflare accounts cap out at 5 total across every Worker
-# and there wasn't room for one trigger per report type). worker.js's scheduled() handler tells
-# the two firings apart by hour:
-#   00:05 Manila — daily report for the day that just ended (e.g. Monday's report sends
-#                  Tuesday 00:05); also the weekly report if that day was a Friday.
-#   08:05 Manila — monthly report, only acts on the 1st of the month.
-crons = ["5 0,8 * * *"]
+# Cloudflare cron triggers always fire in UTC — there is no timezone field. Manila is UTC+8,
+# so "00:05 Manila" and "08:05 Manila" convert to UTC hours 16 (previous UTC day) and 0:
+#   00:05 Manila = 16:05 UTC   08:05 Manila = 00:05 UTC
+# A SINGLE trigger, "5 0,16 * * *" — fires at :05 past UTC hour 0 AND UTC hour 16, which lands
+# on :05 past Manila hour 8 and Manila hour 0 respectively (one registered cron expression,
+# since Cloudflare accounts cap out at 5 total across every Worker and there wasn't room for
+# one trigger per report type). worker.js's scheduled() handler tells the two firings apart by
+# checking the actual MANILA hour at fire time (via getManilaHourAndDay), not the UTC hour:
+#   Manila hour 0  (fires at 16:05 UTC) — daily report for the day that just ended (e.g.
+#                  Monday's report sends Tuesday 00:05 Manila); also the weekly report if that
+#                  day was a Sunday.
+#   Manila hour 8  (fires at 00:05 UTC) — monthly report, only acts on the 1st of the month.
+crons = ["5 0,16 * * *"]
 
 [[kv_namespaces]]
 binding = "REPORTS_KV"

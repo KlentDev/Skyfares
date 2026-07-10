@@ -46,7 +46,6 @@ export function build(ctx) {
     dividerBlock(),
 
     sectionBlock(`*Conclusion*\n${buildConclusion(ctx)}`),
-    contextBlock("Generated automatically by Cloudflare Worker."),
   ];
 
   const fallbackText = `Skyfare Consulting — Monthly Business Summary (${monthLabel})`;

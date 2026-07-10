@@ -1,18 +1,23 @@
 // worker.js — entry point for the Skyfare Reports Bot Worker.
 //
-// scheduled(): a SINGLE cron trigger, "5 0,8 * * *" (see wrangler.toml) — fires at :05 past
-// hour 0 and hour 8, Manila time, every day. Cloudflare accounts cap out at 5 cron triggers
-// total across every Worker, and the existing production Worker already uses several, so this
-// Worker deliberately shares one trigger slot across all three report types instead of
-// registering one each:
-//   - hour 0 (00:05 Manila)  → always sends the daily report for the day that just ended
-//                              (e.g. Monday's report sends Tuesday 00:05); also sends the
-//                              weekly report if the day that just ended was a Sunday — a full
-//                              Monday-Sunday week (the site runs 24/7, so weekends count), sent
-//                              the following Monday alongside that day's daily report.
-//   - hour 8 on the 1st (08:05 Manila) → sends the monthly report, unchanged in cadence from
-//                              before (still the 1st of the month, ~8AM) aside from the 5-minute
-//                              shift needed to share this one cron expression.
+// scheduled(): a SINGLE cron trigger, "5 0,16 * * *" in UTC (see wrangler.toml) — Cloudflare
+// cron triggers always fire in UTC, so this is written as UTC hours even though the intent is
+// Manila-local times (00:05 UTC = 08:05 Manila; 16:05 UTC = 00:05 Manila the following day).
+// getManilaHourAndDay() below converts back to the actual Manila hour at fire time, which is
+// what the branching logic checks — never the raw UTC hour. Cloudflare accounts cap out at 5
+// cron triggers total across every Worker, and the existing production Worker already uses
+// several, so this Worker deliberately shares one trigger slot across all three report types
+// instead of registering one each:
+//   - Manila hour 0 (fires 16:05 UTC) → always sends the daily report for the day that just
+//                              ended (e.g. Monday's report sends Tuesday 00:05 Manila); also
+//                              sends the weekly report if the day that just ended was a
+//                              Sunday — a full Monday-Sunday week (the site runs 24/7, so
+//                              weekends count), sent the following Monday alongside that day's
+//                              daily report.
+//   - Manila hour 8 on the 1st (fires 00:05 UTC) → sends the monthly report, unchanged in
+//                              cadence from before (still the 1st of the month, ~8AM Manila)
+//                              aside from the 5-minute shift needed to share this one cron
+//                              expression.
 //
 // fetch(): the only HTTP route is a token-gated /debug/run, for manually testing report
 // output before trusting the cron. There is no other surface — this Worker never receives

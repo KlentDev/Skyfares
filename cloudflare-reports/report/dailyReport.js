@@ -20,8 +20,8 @@ export function build(ctx) {
 
   const blocks = [
     headerBlock(`📊 DAILY REPORT ${weekday}: ${reportDate}`),
-    contextBlock(`From ${reportDate} 12:00 AM to ${nextDate} 12:00 AM (Asia/Manila)`),
-    contextBlock(`Sent ${formatManilaDateLong(ctx.runDate)} · ${formatManilaTimeShort(ctx.runDate)} (Asia/Manila)`),
+    contextBlock(`From ${reportDate} 12:00 AM to ${nextDate} 12:00 AM (UTC+8)`),
+    contextBlock(`Sent ${formatManilaDateLong(ctx.runDate)} · ${formatManilaTimeShort(ctx.runDate)} (UTC+8)`),
     dividerBlock(),
 
     sectionBlock("*Summary*"),
@@ -57,7 +57,6 @@ export function build(ctx) {
     dividerBlock(),
 
     sectionBlock(`*Conclusion*\n${buildConclusion(ctx)}`),
-    contextBlock("Generated automatically by Cloudflare Worker."),
   ];
 
   const fallbackText = `DAILY REPORT ${weekday}: ${reportDate}`;

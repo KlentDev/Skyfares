@@ -224,7 +224,7 @@ export function getNextRunDate(type, runDate) {
 
 export function formatNextRunLabel(type, runDate) {
   const next = getNextRunDate(type, runDate);
-  return `${formatManilaDateLong(next)} · ${formatManilaTimeShort(next)} (Asia/Manila)`;
+  return `${formatManilaDateLong(next)} · ${formatManilaTimeShort(next)} (UTC+8)`;
 }
 
 export function formatManilaMonthLabel({ year, month }) {

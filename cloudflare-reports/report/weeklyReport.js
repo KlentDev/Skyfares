@@ -16,8 +16,8 @@ export function build(ctx) {
 
   const blocks = [
     headerBlock(`📈 WEEKLY REPORT: ${rangeLabel}`),
-    contextBlock(`Monday–Sunday, full week (Asia/Manila)`),
-    contextBlock(`Sent ${formatManilaDateLong(ctx.runDate)} · ${formatManilaTimeShort(ctx.runDate)} (Asia/Manila)`),
+    contextBlock(`Monday–Sunday, full week (UTC+8)`),
+    contextBlock(`Sent ${formatManilaDateLong(ctx.runDate)} · ${formatManilaTimeShort(ctx.runDate)} (UTC+8)`),
     dividerBlock(),
 
     sectionBlock("*This Week*"),
@@ -48,7 +48,6 @@ export function build(ctx) {
     dividerBlock(),
 
     sectionBlock(`*Conclusion*\n${buildConclusion(ctx)}`),
-    contextBlock("Generated automatically by Cloudflare Worker."),
   ];
 
   const fallbackText = `WEEKLY REPORT: ${rangeLabel}`;
