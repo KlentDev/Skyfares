@@ -90,8 +90,12 @@
         <!-- Subtitle / deck -->
         <p id="nsl-subtitle" class="text-base text-neutral-500 leading-relaxed mb-5 font-medium"></p>
 
-        <!-- Date · read time -->
+        <!-- Author · date · read time -->
         <div class="flex items-center gap-3 text-xs text-neutral-400">
+          <span id="nsl-author" class="hidden inline-flex items-center gap-1.5">
+            <i class="fa-regular fa-user text-[10px]"></i>
+          </span>
+          <span id="nsl-author-dot" class="hidden w-1 h-1 rounded-full bg-neutral-200"></span>
           <span id="nsl-date" class="inline-flex items-center gap-1.5">
             <i class="fa-regular fa-calendar text-[10px]"></i>
           </span>
@@ -161,10 +165,18 @@
              class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-green-400 hover:text-green-600 px-3 py-1.5 rounded-lg transition-colors">
             <i class="fa-brands fa-whatsapp text-[10px]"></i> WhatsApp
           </a>
-          <a id="nsl-share-x" href="#" target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-neutral-500 hover:text-neutral-700 px-3 py-1.5 rounded-lg transition-colors">
-            <i class="fa-brands fa-x-twitter text-[10px]"></i> Post
+          <a id="nsl-share-fb" href="#" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-blue-400 hover:text-blue-600 px-3 py-1.5 rounded-lg transition-colors">
+            <i class="fa-brands fa-facebook text-[10px]"></i> Facebook
           </a>
+          <button id="nsl-share-ig"
+             class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-pink-400 hover:text-pink-600 px-3 py-1.5 rounded-lg transition-colors">
+            <i class="fa-brands fa-instagram text-[10px]"></i> Instagram
+          </button>
+          <button id="nsl-share-tt"
+             class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 border border-neutral-200 hover:border-neutral-500 hover:text-neutral-700 px-3 py-1.5 rounded-lg transition-colors">
+            <i class="fa-brands fa-tiktok text-[10px]"></i> TikTok Story
+          </button>
         </div>
       </div>
 
