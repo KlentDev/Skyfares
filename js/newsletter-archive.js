@@ -228,10 +228,10 @@
           ' class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-[1.03] transition-transform duration-500') + '">'
       : '<div class="w-full h-full flex items-center justify-center"><span class="text-[11px] font-bold uppercase tracking-widest text-white/25">No Thumbnail</span></div>';
 
-    // Access badge (bottom-left of image)
+    // Access badge (top-left of image) — Free (blue) or Premium (gold)
     var accessBadge = prem
-      ? '<span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Altitude</span>'
-      : '<span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free</span>';
+      ? '<span class="text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2.5 py-1 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Premium</span>'
+      : '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/90 backdrop-blur-sm px-2.5 py-1 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free</span>';
 
     // Lock icon (top-right, premium only)
     var lockOverlay = prem
@@ -263,11 +263,8 @@
         '<div class="relative w-2/5 md:w-72 flex-shrink-0 bg-brand-950 overflow-hidden">' +
           imgHtml +
           '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.5) 0%,transparent 55%);"></div>' +
-          '<div class="absolute top-3 left-3">' +
-            '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/90 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + e(issueNum) + '</span>' +
-          '</div>' +
+          '<div class="absolute top-3 left-3">' + accessBadge + '</div>' +
           lockOverlay +
-          '<div class="absolute bottom-3 left-3">' + accessBadge + '</div>' +
         '</div>' +
 
         '<div class="flex-1 bg-white p-5 md:p-7 flex flex-col justify-center min-w-0">' +
@@ -306,7 +303,6 @@
 
   function buildArchiveCard(post, index) {
     var prem     = isPremium(post);
-    var issueNum = getIssueNum(post);
     var date     = formatDate(post.published_at);
     var delay    = index * 0.05;
 
@@ -319,9 +315,10 @@
           ' class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
       : '<div class="w-full h-full flex items-center justify-center"><span class="text-[11px] font-bold uppercase tracking-widest text-white/25">No Thumbnail</span></div>';
 
-    var altitudeBadge = prem
-      ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
-      : '';
+    // Access badge (top-left of image) — Free (blue) or Premium (gold)
+    var accessBadge = prem
+      ? '<span class="text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2.5 py-1 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Premium</span>'
+      : '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free</span>';
 
     var lockIcon = prem
       ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-lock text-gold-light text-[8px]"></i></div></div>'
@@ -351,13 +348,10 @@
       '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
         imgHtml +
         '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
-        '<div class="absolute top-3 left-3">' +
-          '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + e(issueNum) + '</span>' +
-        '</div>' +
+        '<div class="absolute top-3 left-3">' + accessBadge + '</div>' +
         '<div class="absolute bottom-3 right-3">' +
           '<span class="text-[10px] font-semibold text-white/80 bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">' + e(type) + '</span>' +
         '</div>' +
-        altitudeBadge +
         lockIcon +
       '</div>' +
       '<div class="p-5">' +

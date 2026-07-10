@@ -179,8 +179,8 @@
     var badgeStyle = prem
       ? 'background:rgba(201,162,39,0.12);border:1px solid rgba(201,162,39,0.35);color:#9E7B0D;'
       : 'background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);color:#1d4ed8;';
-    var badgeIcon  = prem ? 'fa-crown' : 'fa-newspaper';
-    var badgeText  = prem ? 'Altitude Exclusive' : 'Issue&nbsp;' + e(issueNum);
+    var badgeIcon  = prem ? 'fa-crown' : 'fa-unlock';
+    var badgeText  = prem ? 'Premium' : 'Free';
 
     // ─── "Already a member?" note — premium only ──────────────────────────
     var memberNote = prem

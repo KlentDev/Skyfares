@@ -1494,15 +1494,6 @@
       return !!post.is_premium;
     }
 
-    function getIssueNum(post) {
-      var tags = post.content_tags || [];
-      for (var i = 0; i < tags.length; i++) {
-        var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
-        if (m) return m[1].padStart(2, '0');
-      }
-      return '01';
-    }
-
     function formatDate(iso) {
       if (!iso) return '';
       try {
@@ -1518,7 +1509,6 @@
 
     function buildCard(post, index) {
       var prem     = isPremium(post);
-      var issueNum = getIssueNum(post);
       var date     = formatDate(post.published_at);
       var delay    = index * 0.05;
       var href     = 'pages/newsletter-detail?slug=' + encodeURIComponent(post.slug);
@@ -1528,9 +1518,10 @@
             ' class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
         : '<div class="w-full h-full flex items-center justify-center"><span class="text-[11px] font-bold uppercase tracking-widest text-white/25">No Thumbnail</span></div>';
 
-      var altitudeBadge = prem
-        ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
-        : '';
+      // Access badge (top-left of image) — Free (blue) or Premium (gold)
+      var accessBadge = prem
+        ? '<span class="text-[10px] font-bold uppercase tracking-widest text-amber-300 bg-black/50 backdrop-blur-sm border border-amber-500/40 px-2.5 py-1 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Premium</span>'
+        : '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free</span>';
 
       var lockIcon = prem
         ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-amber-500/30 flex items-center justify-center"><i class="fa-solid fa-lock text-amber-300 text-[8px]"></i></div></div>'
@@ -1562,10 +1553,7 @@
         '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
           imgHtml +
           '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
-          '<div class="absolute top-3 left-3">' +
-            '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + esc(issueNum) + '</span>' +
-          '</div>' +
-          altitudeBadge +
+          '<div class="absolute top-3 left-3">' + accessBadge + '</div>' +
           lockIcon +
         '</div>' +
         '<div class="p-5">' +
