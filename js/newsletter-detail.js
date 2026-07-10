@@ -81,17 +81,16 @@
       }
     }
 
-    // Issue number badge
-    var issueNum = getIssueNum(post);
+    // Access badge (top-left of hero image) — Free (blue) or Premium (gold)
     var issueBadge = document.getElementById('nsl-issue-badge');
-    if (issueBadge) issueBadge.textContent = 'Issue ' + issueNum;
-
-    // Free / Premium access badge (on hero image)
-    var accessBadge = document.getElementById('nsl-access-badge');
-    if (accessBadge) {
-      accessBadge.innerHTML = post.is_premium
-        ? '<span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2.5 py-1 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Altitude Exclusive</span>'
-        : '<span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free to read</span>';
+    if (issueBadge) {
+      if (post.is_premium) {
+        issueBadge.className = 'inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-3 py-1.5 rounded-full';
+        issueBadge.innerHTML = '<i class="fa-solid fa-crown text-[8px]"></i> Premium';
+      } else {
+        issueBadge.className = 'inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/90 backdrop-blur-sm px-3 py-1.5 rounded-full';
+        issueBadge.innerHTML = '<i class="fa-solid fa-unlock text-[8px]"></i> Free';
+      }
     }
 
     // Content tags
@@ -503,7 +502,6 @@
 
     grid.innerHTML = others.map(function (p, i) {
       var prem     = !!p.is_premium;
-      var issueNum = getIssueNum(p);
       var date     = formatDate(p.published_at);
       var type     = (p.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
       var href     = 'newsletter-detail?slug=' + encodeURIComponent(p.slug);
@@ -522,18 +520,18 @@
         ? '<a href="pre-signup-link" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:text-gold transition-colors">Join the Waitlist <i class="fa-solid fa-arrow-right text-[10px]"></i></a>'
         : '<a href="' + href + '" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
 
-      var altitudeBadge = prem
-        ? '<div class="absolute bottom-3 left-3"><span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-[7px]"></i> Altitude</span></div>'
-        : '';
+      // Access badge (top-left of image) — Free (blue) or Premium (gold)
+      var accessBadge = prem
+        ? '<span class="text-[10px] font-bold uppercase tracking-widest text-gold-light bg-black/50 backdrop-blur-sm border border-gold/40 px-2.5 py-1 rounded-full"><i class="fa-solid fa-crown text-[8px]"></i> Premium</span>'
+        : '<span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full"><i class="fa-solid fa-unlock text-[8px]"></i> Free</span>';
 
       return '<article class="' + cardCls + '" style="animation-delay:' + delay + 's;">' +
         '<a href="' + (prem ? '#' : href) + '" class="block">' +
         '<div class="relative h-40 bg-brand-950 overflow-hidden">' +
           imgHtml +
           '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
-          '<div class="absolute top-3 left-3"><span class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/80 backdrop-blur-sm px-2.5 py-1 rounded-full">Issue ' + e(issueNum) + '</span></div>' +
+          '<div class="absolute top-3 left-3">' + accessBadge + '</div>' +
           '<div class="absolute bottom-3 right-3"><span class="text-[10px] font-semibold text-white/80 bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">' + e(type) + '</span></div>' +
-          altitudeBadge +
         '</div>' +
         '</a>' +
         '<div class="p-5">' +
@@ -557,15 +555,6 @@
   }
 
   // ─── Utilities ────────────────────────────────────────────────────────────
-
-  function getIssueNum(post) {
-    var tags = post.content_tags || [];
-    for (var i = 0; i < tags.length; i++) {
-      var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
-      if (m) return m[1].padStart(2, '0');
-    }
-    return '??';
-  }
 
   function formatDate(iso) {
     if (!iso) return '';
