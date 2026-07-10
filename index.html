@@ -1510,6 +1510,8 @@
     function buildCard(post, index) {
       var prem     = isPremium(post);
       var date     = formatDate(post.published_at);
+      var author   = (post.authors || []).join(', ');
+      var metaLine = [author ? 'By ' + author : '', date].filter(Boolean).join(' · ');
       var delay    = index * 0.05;
       var href     = 'pages/newsletter-detail?slug=' + encodeURIComponent(post.slug);
 
@@ -1557,7 +1559,7 @@
           lockIcon +
         '</div>' +
         '<div class="p-5">' +
-          (date ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + esc(date) + '</p>' : '') +
+          (metaLine ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + esc(metaLine) + '</p>' : '') +
           '<h3 class="' + titleCls + '">' + esc(post.title) + '</h3>' +
           excerpt +
           ctaHtml +

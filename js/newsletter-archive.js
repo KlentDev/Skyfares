@@ -211,6 +211,7 @@
     var prem     = isPremium(post);
     var issueNum = getIssueNum(post);
     var date     = formatDate(post.published_at);
+    var author   = (post.authors || []).join(', ');
 
     var tags = (post.content_tags || []).filter(function (t) {
       return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/);
@@ -271,6 +272,7 @@
           (tagHtml ? '<div class="flex flex-wrap gap-1 mb-3">' + tagHtml + '</div>' : '') +
           '<h3 class="text-base md:text-lg font-display font-bold text-neutral-900 leading-snug mb-2 ' + (prem ? '' : 'group-hover:text-brand-700') + ' transition-colors">' + e(post.title) + '</h3>' +
           (post.subtitle ? '<p class="text-xs text-neutral-400 mb-3 font-medium truncate">' + e(post.subtitle) + '</p>' : '') +
+          (author ? '<div class="flex items-center gap-2 text-xs text-neutral-400 mb-1.5"><i class="fa-regular fa-user text-[10px]"></i><span>' + e(author) + '</span></div>' : '') +
           (date ? '<div class="flex items-center gap-2 text-xs text-neutral-400 mb-4"><i class="fa-regular fa-calendar text-[10px]"></i><span>' + e(date) + '</span></div>' : '') +
           ctaHtml +
         '</div>' +
@@ -304,6 +306,8 @@
   function buildArchiveCard(post, index) {
     var prem     = isPremium(post);
     var date     = formatDate(post.published_at);
+    var author   = (post.authors || []).join(', ');
+    var metaLine = [author ? 'By ' + author : '', date].filter(Boolean).join(' · ');
     var delay    = index * 0.05;
 
     var type = (post.content_tags || []).filter(function (t) {
@@ -355,7 +359,7 @@
         lockIcon +
       '</div>' +
       '<div class="p-5">' +
-        (date ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(date) + '</p>' : '') +
+        (metaLine ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(metaLine) + '</p>' : '') +
         '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' +
         ctaHtml +
       '</div>' +

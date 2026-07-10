@@ -740,6 +740,16 @@ async function handleWaitlist(request, env, corsHeaders) {
 //   - audience=premium OR altitude-premium tag OR content diff → premium
 //   - KV override:premium:{slug}=false → free  (manual escape hatch)
 //
+// Beehiiv's `authors` field shape isn't consistently documented (array of
+// name strings vs. array of {name} objects) — normalize either into a flat
+// array of display names so the frontend never has to guess.
+function normalizeAuthors(authors) {
+  if (!Array.isArray(authors)) return [];
+  return authors
+    .map(a => (typeof a === 'string' ? a : (a && (a.name || a.display_name)) || ''))
+    .filter(Boolean);
+}
+
 // Used identically by handleGetPosts (archive listing) and handleGetPost
 // (detail page) so the badge and the gate can never disagree.
 function isPostPremium(audience, freeHtml, premiumHtml, contentTags) {
@@ -823,6 +833,7 @@ async function handleGetPosts(env, corsHeaders) {
             ? new Date(p.publish_date * 1000).toISOString()
             : (p.scheduled_at || p.created_at || ''),
           content_tags:  contentTags,
+          authors: normalizeAuthors(p.authors),
           is_premium: override !== null ? override : computed,
         };
       })
@@ -909,6 +920,7 @@ async function handleGetPost(slug, request, env, corsHeaders) {
       ? new Date(postMeta.publish_date * 1000).toISOString()
       : (postMeta.scheduled_at || postMeta.created_at || ''),
     content_tags:  tags,
+    authors: normalizeAuthors(postMeta.authors),
     is_premium:    premium,
     // Members always get full content; non-members get preview for premium posts
     content_html:  (!premium || isMember) ? cleaned : null,

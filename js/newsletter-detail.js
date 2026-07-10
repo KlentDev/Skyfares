@@ -119,6 +119,21 @@
       subtitleEl.classList.add('hidden');
     }
 
+    // Author
+    var authorEl    = document.getElementById('nsl-author');
+    var authorDotEl = document.getElementById('nsl-author-dot');
+    if (authorEl && authorDotEl) {
+      var authorNames = (post.authors || []).join(', ');
+      if (authorNames) {
+        authorEl.innerHTML = '<i class="fa-regular fa-user text-[10px]"></i> ' + e(authorNames);
+        authorEl.classList.remove('hidden');
+        authorDotEl.classList.remove('hidden');
+      } else {
+        authorEl.classList.add('hidden');
+        authorDotEl.classList.add('hidden');
+      }
+    }
+
     // Date
     var dateEl = document.getElementById('nsl-date');
     if (dateEl) {
@@ -490,10 +505,35 @@
     }
 
     // X / Twitter share
-    var xBtn = document.getElementById('nsl-share-x');
-    if (xBtn) {
-      xBtn.href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(pageUrl);
+    // Facebook share
+    var fbBtn = document.getElementById('nsl-share-fb');
+    if (fbBtn) {
+      fbBtn.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl);
     }
+
+    // Instagram / TikTok Story — neither platform accepts an incoming share
+    // URL like Facebook/WhatsApp/X do, so copy the link and open the app,
+    // same pattern most publishers use for these two.
+    function wireCopyAndOpen(btnId, appUrl, appLabel) {
+      var btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var afterCopy = function () {
+          if (window.SkyUI && window.SkyUI.toast) {
+            window.SkyUI.toast('Link copied — paste it into your ' + appLabel + ' Story', { type: 'success' });
+          }
+          window.open(appUrl, '_blank', 'noopener,noreferrer');
+        };
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(pageUrl).then(afterCopy, afterCopy);
+        } else {
+          afterCopy();
+        }
+      });
+    }
+
+    wireCopyAndOpen('nsl-share-ig', 'https://www.instagram.com/', 'Instagram');
+    wireCopyAndOpen('nsl-share-tt', 'https://www.tiktok.com/', 'TikTok');
   }
 
   // ─── Related posts ────────────────────────────────────────────────────────
@@ -543,6 +583,8 @@
     grid.innerHTML = others.map(function (p, i) {
       var prem     = !!p.is_premium;
       var date     = formatDate(p.published_at);
+      var author   = (p.authors || []).join(', ');
+      var metaLine = [author ? 'By ' + author : '', date].filter(Boolean).join(' · ');
       var type     = (p.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
       var href     = 'newsletter-detail?slug=' + encodeURIComponent(p.slug);
       var delay    = i * 0.05;
@@ -575,7 +617,7 @@
         '</div>' +
         '</a>' +
         '<div class="p-5">' +
-          (date ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(date) + '</p>' : '') +
+          (metaLine ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(metaLine) + '</p>' : '') +
           '<h3 class="text-sm font-display font-bold text-neutral-900 mb-3 leading-snug">' + e(p.title) + '</h3>' +
           ctaHtml +
         '</div>' +
