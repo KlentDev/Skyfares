@@ -298,6 +298,23 @@
     container.querySelectorAll('.slide-up').forEach(function (el) {
       el.classList.add('is-visible');
     });
+
+    // 8. Strip inline color from structural elements. Beehiiv's email renderer
+    // bakes its own theme color into every heading/paragraph/link/cell's style
+    // attribute (e.g. style="color:#111827"), which beats our .nsl-article CSS
+    // on specificity. Only touch the tags our CSS already governs by selector —
+    // this leaves any deliberate inline color an author set on a span/highlight
+    // untouched, and only removes the systematic theme bleed.
+    container.querySelectorAll('h1, h2, h3, h4, h5, h6, p, li, a, blockquote, th, td, strong, b').forEach(function (el) {
+      var style = el.getAttribute('style');
+      if (!style) return;
+      var cleaned = style.split(';')
+        .map(function (d) { return d.trim(); })
+        .filter(function (d) { return d && !/^color\s*:/i.test(d); })
+        .join('; ');
+      if (cleaned) el.setAttribute('style', cleaned);
+      else el.removeAttribute('style');
+    });
   }
 
   // ─── Email HTML extraction ────────────────────────────────────────────────
