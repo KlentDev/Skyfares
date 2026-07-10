@@ -400,16 +400,39 @@
         }
 
         // ── Data tables (scorecards, comparison grids) ──────────────────────
-        if (tag === 'table' && node.querySelector('th')) {
-          parts.push(node.outerHTML);
-          return;
+        // Use .rows/.cells (scoped to this table's own rows) rather than
+        // querySelector('th') (searches the whole subtree) — Beehiiv nests a
+        // genuine data table many levels inside its outer layout wrapper
+        // table, so a deep search matches the wrapper too and dumps the
+        // entire raw email layout verbatim instead of just the real table.
+        if (tag === 'table') {
+          var ownRows = Array.prototype.slice.call(node.rows || []);
+          var hasOwnTh = ownRows.some(function (r) {
+            return Array.prototype.slice.call(r.cells).some(function (c) { return c.tagName === 'TH'; });
+          });
+          if (hasOwnTh) { parts.push(node.outerHTML); return; }
+
+          // ── Divider blocks ──────────────────────────────────────────────
+          // Beehiiv renders a "Divider" block in email HTML as a near-empty
+          // spacer table (no real <hr>), styled via a class that only exists
+          // in the email <head>, which we don't carry over. Detect by shape
+          // instead: no meaningful text and no image.
+          var textOnly = node.textContent.replace(/[\s ]+/g, '');
+          if (!textOnly && !node.querySelector('img')) { parts.push('<hr>'); return; }
         }
 
         // ── Styled callout divs (coloured section boxes) ────────────────────
         if (tag === 'div') {
           var st    = node.getAttribute('style') || '';
           var bgm   = st.match(/background(?:-color)?:\s*([^;,]+)/);
-          if (bgm && node.querySelector('p,h1,h2,h3,h4')) {
+          // Only match a heading/paragraph that's a direct child — a full
+          // subtree querySelector would have the same over-matching risk as
+          // the table bug above if a background div's real content sits
+          // behind another nested wrapper/table.
+          var hasDirectHeadingOrP = Array.prototype.slice.call(node.children).some(function (c) {
+            return /^(p|h[1-4])$/i.test(c.tagName);
+          });
+          if (bgm && hasDirectHeadingOrP) {
             var bg  = bgm[1].trim();
             var blm = st.match(/border-left:\s*([^;]+)/);
             var bdl = blm ? 'border-left:' + blm[1] + ';' : '';
