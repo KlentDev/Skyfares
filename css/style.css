@@ -1310,8 +1310,8 @@ button[class*="bg-emerald-"]:active {
 
 .nsl-article hr {
   border: none;
-  border-top: 1px solid #e5e5e5; /* neutral-200 */
-  margin: 2rem 0;
+  border-top: 3px solid #111827; /* bold section divider — matches Beehiiv's web rendering weight */
+  margin: 2.5rem 0;
 }
 
 /* Images */
