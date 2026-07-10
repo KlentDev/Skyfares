@@ -9,8 +9,9 @@ chatbot — it only ever sends one message per scheduled run.
 ## Architecture
 
 ```text
-Cron trigger "5 0,8 * * *" (Asia/Manila): daily 12:05 AM (reports the day that just ended) /
-weekly 12:05 AM Monday (reports the completed Mon-Sun 7-day week) / monthly 8:05 AM on the 1st
+Cron trigger "5 0,16 * * *" (UTC — Cloudflare triggers have no timezone; this is 08:05/00:05 UTC
+= 00:05/08:05 Manila): daily 12:05 AM (reports the day that just ended) / weekly 12:05 AM Monday
+(reports the completed Mon-Sun 7-day week) / monthly 8:05 AM on the 1st
   → services/beehiiv.js + services/airtable.js   (real reads)
   → services/stripe.js + calendly.js + ga4.js     (stubs — "Not Connected Yet")
   → report/reportRunner.js                        (Promise.allSettled, KV snapshot diffing)
@@ -90,7 +91,7 @@ npx wrangler dev --test-scheduled --config wrangler.toml
 then in another terminal:
 
 ```bash
-curl "http://localhost:8787/__scheduled?cron=5+0,8+*+*+*"
+curl "http://localhost:8787/__scheduled?cron=5+0,16+*+*+*"
 ```
 
 This simulates the one trigger; `worker.js` checks the real current Manila time inside the
@@ -119,7 +120,7 @@ to see exactly how it will render, including the tables, before trusting `post=t
 every Worker, and it's already at that cap without this Worker needing more than 1 slot
 (confirmed by hitting error code 10072 "exceeded the limit of 5" when a multi-trigger version
 was attempted). That's why daily/weekly/monthly all share one cron expression
-(`5 0,8 * * *`) instead of registering separate triggers (see `wrangler.toml` comment). If a
+(`5 0,16 * * *` in UTC) instead of registering separate triggers (see `wrangler.toml` comment). If a
 future change ever needs a real second trigger, the `subscribe-worker` deployment mentioned in
 project memory as orphaned/stale is worth revisiting first — it still holds its own cron
 triggers for no active purpose.

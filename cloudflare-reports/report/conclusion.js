@@ -8,6 +8,17 @@ function plural(n, singular, pluralForm = `${singular}s`) {
   return n === 1 ? singular : pluralForm;
 }
 
+/** States what the alert(s) actually are, instead of a vague "N alerts flagged above" pointer
+ * back up to a section the reader is already looking at. */
+function alertSummary(alerts) {
+  return alerts
+    .map((a) => {
+      const text = a.replace(/^🚨\s*/, "");
+      return text.endsWith(".") ? text : `${text}.`;
+    })
+    .join(" ");
+}
+
 function dailySummary(ctx) {
   const r = ctx.results;
   const apps = r.flightAppsWindow.status === "ok" ? r.flightAppsWindow.data : null;
@@ -51,7 +62,7 @@ export function buildConclusion(ctx) {
     return "Some systems need attention — check System Health above before trusting these numbers.";
   }
   if (ctx.alerts.length) {
-    return `${ctx.alerts.length} ${plural(ctx.alerts.length, "alert")} flagged above — worth a quick look.`;
+    return alertSummary(ctx.alerts);
   }
   if (ctx.type === "daily") return dailySummary(ctx);
   if (ctx.type === "weekly") return periodSummary(ctx, "week");
