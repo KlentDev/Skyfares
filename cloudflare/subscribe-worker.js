@@ -10,6 +10,10 @@
  *   POST /altitude/activate        — issue JWT for member access
  *   GET  /altitude/verify          — verify JWT
  *   POST /altitude/waitlist        — join the pre-launch Altitude waitlist
+ *   POST /airtable/testimonial     — submit a testimonial (Approved=false by default)
+ *   GET  /airtable/testimonials    — approved testimonials. ?scope=featured&limit=N (homepage, default 3,
+ *                                    no pagination) or default/?scope=all&limit=N&offset=... (archive,
+ *                                    default page size 9, paginated via the returned `offset` token)
  *
  * Required secrets (wrangler secret put):
  *   BEEHIIV_API_KEY   STRIPE_SECRET_KEY   STRIPE_WEBHOOK_SECRET
@@ -146,6 +150,14 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/airtable/contact') {
       return handleContactInquiry(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/airtable/testimonial') {
+      return handlePostTestimonial(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/airtable/testimonials') {
+      return handleGetTestimonials(request, env, corsHeaders);
     }
 
     // ── Subscribe ──────────────────────────────────────────────────────────
@@ -1506,4 +1518,108 @@ async function handleContactInquiry(request, env, corsHeaders) {
 
   await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
   return respond({ success: true }, 200, corsHeaders);
+}
+
+async function handlePostTestimonial(request, env, corsHeaders) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const rlKey = `airtable-testimonial-rl:${ip}`;
+  const rlCount = parseInt(await env.ALTITUDE_KV.get(rlKey) || '0');
+  if (rlCount >= 5) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+
+  let body;
+  try { body = await request.json(); }
+  catch { return respond({ error: 'invalid_body' }, 400, corsHeaders); }
+
+  if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
+
+  const name        = (body['name']        || '').trim().slice(0, 200);
+  const role        = (body['role']        || '').trim().slice(0, 100);
+  const rating      = parseInt(body['rating'], 10);
+  const testimonial = (body['testimonial'] || '').trim().slice(0, 2000);
+  const imageUrl    = (body['image_url']   || '').trim().slice(0, 2000);
+
+  if (!name || !role || !testimonial) {
+    return respond({ error: 'missing_fields' }, 400, corsHeaders);
+  }
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+    return respond({ error: 'invalid_rating' }, 400, corsHeaders);
+  }
+  if (imageUrl && !/^https:\/\/res\.cloudinary\.com\//.test(imageUrl)) {
+    return respond({ error: 'invalid_image_url' }, 400, corsHeaders);
+  }
+
+  try {
+    await writeToAirtable(env.AIRTABLE_TABLE_TESTIMONIALS, {
+      'Name': name,
+      'Role': role,
+      'Rating': rating,
+      'Testimonial': testimonial,
+      ...(imageUrl ? { 'Profile Image': [{ url: imageUrl }] } : {}),
+      'Approved': false,
+      'Featured': false,
+    }, env);
+  } catch (err) {
+    console.error('Airtable testimonial error:', err.message);
+    return respond({ error: 'submission_failed' }, 500, corsHeaders);
+  }
+
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+  return respond({ success: true }, 200, corsHeaders);
+}
+
+async function handleGetTestimonials(request, env, corsHeaders) {
+  const url = new URL(request.url);
+  const scope = url.searchParams.get('scope') || 'all';
+  const requestedLimit = parseInt(url.searchParams.get('limit'), 10);
+  const pageOffset = url.searchParams.get('offset') || '';
+
+  const isFeatured = scope === 'featured';
+  // Homepage (featured): hard-capped single fetch, no pagination.
+  // Archive (all): paginated — pageSize is per-page, offset continues from a prior response.
+  const limit = Math.min(
+    Number.isInteger(requestedLimit) && requestedLimit > 0 ? requestedLimit : (isFeatured ? 3 : 9),
+    isFeatured ? 12 : 100
+  );
+
+  const params = new URLSearchParams({
+    // Homepage: strictly Approved AND Featured — no backfill with non-featured
+    // approved testimonials. Archive: every Approved testimonial (Featured ones
+    // included, not excluded — Featured only curates the homepage, nothing more).
+    filterByFormula: isFeatured ? 'AND({Approved}=1,{Featured}=1)' : '{Approved}=1',
+  });
+  params.append(isFeatured ? 'maxRecords' : 'pageSize', String(limit));
+  if (!isFeatured && pageOffset) params.set('offset', pageOffset);
+  ['Name', 'Role', 'Rating', 'Testimonial', 'Profile Image'].forEach(f => params.append('fields[]', f));
+  params.append('sort[0][field]', 'Date Submitted');
+  params.append('sort[0][direction]', 'desc');
+
+  let res;
+  try {
+    res = await fetch(
+      `https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${env.AIRTABLE_TABLE_TESTIMONIALS}?${params.toString()}`,
+      { headers: { 'Authorization': `Bearer ${env.AIRTABLE_API_KEY}` } }
+    );
+  } catch {
+    return respond({ error: 'Gateway error' }, 502, corsHeaders);
+  }
+
+  if (!res.ok) return respond({ error: 'Airtable API error' }, res.status, corsHeaders);
+
+  const raw = await res.json();
+  const testimonials = (raw.records || []).map(rec => ({
+    id: rec.id,
+    name: rec.fields['Name'] || '',
+    role: rec.fields['Role'] || '',
+    rating: rec.fields['Rating'] || 0,
+    quote: rec.fields['Testimonial'] || '',
+    image: rec.fields['Profile Image']?.[0]?.url || '',
+  }));
+
+  return respond(
+    { testimonials, offset: raw.offset || null },
+    200,
+    { ...corsHeaders, 'Cache-Control': 'public, max-age=60' }
+  );
 }

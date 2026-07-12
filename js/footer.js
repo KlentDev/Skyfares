@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <li><a href="/pages/how-it-works" class="text-brand-100/50 hover:text-white transition-colors">How It Works</a></li>
               <li><a href="/pages/past-flight-deals" class="text-brand-100/50 hover:text-white transition-colors">Flights We've Arranged</a></li>
               <li><a href="/pages/newsletter" class="text-brand-100/50 hover:text-white transition-colors">Newsletter</a></li>
+              <li><a href="/pages/testimonials" class="text-brand-100/50 hover:text-white transition-colors">Testimonials</a></li>
               <li><a href="/pages/book" class="text-brand-100/50 hover:text-white transition-colors">Book a Strategy Call</a></li>
               <li><a href="/pages/assessment" class="text-brand-100/50 hover:text-white transition-colors">Free Assessment</a></li>
             </ul>
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <ul class="space-y-4 text-sm">
               <li><a href="/pages/faq" class="text-brand-100/50 hover:text-white transition-colors">FAQ</a></li>
               <li><a href="/pages/contact" class="text-brand-100/50 hover:text-white transition-colors">Contact</a></li>
+              <li><a href="/pages/rate-us" class="text-brand-100/50 hover:text-white transition-colors">Rate Us</a></li>
               <li><a href="/pages/terms" class="text-brand-100/50 hover:text-white transition-colors">Terms & Conditions</a></li>
               <li><a href="/pages/privacy" class="text-brand-100/50 hover:text-white transition-colors">Privacy Policy</a></li>
               <li><a href="#" onclick="window.SkyConsent&&window.SkyConsent.openPreferences();return false;" class="text-brand-100/50 hover:text-white transition-colors">Cookie Preferences</a></li>

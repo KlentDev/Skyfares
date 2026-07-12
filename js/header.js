@@ -120,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-envelope-open-text text-[13px] opacity-60"></i> Newsletter
           </a>
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-star text-[13px] opacity-60"></i> Testimonials
+          </a>
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-circle-question text-[13px] opacity-60"></i> FAQ
           </a>
@@ -196,6 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </a>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-envelope-open-text text-brand-500 w-7"></i> Newsletter
+            </a>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-star text-brand-500 w-7"></i> Testimonials
             </a>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-circle-question text-brand-500 w-7"></i> FAQ
