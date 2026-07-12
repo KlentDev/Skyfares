@@ -873,7 +873,7 @@
   </div>
 
   <!-- SOCIAL PROOF -->
-  <section class="py-20 tile-parch">
+  <section id="testimonials-section" class="py-20 tile-parch">
     <div class="container mx-auto px-4 md:px-6">
 
       <!-- Section header -->
@@ -890,89 +890,32 @@
         </span>
       </div>
 
-      <!-- Testimonial grid -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <!-- Ronit S. -->
-        <div class="card-utility group overflow-hidden flex flex-col slide-up reveal-pop" style="animation-delay:0.1s;">
-          <div class="h-56 flex-shrink-0 relative overflow-hidden">
-            <img src="images/testimonials/ronit.JPG" alt="Ronit S."
-                 class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
-            <div class="absolute bottom-3 left-3">
-              <span class="savings-callout text-[10px] py-1 px-3">
-                <i class="fa-solid fa-arrow-down text-[8px]"></i> Saved S$4,000+
-              </span>
-            </div>
-          </div>
-          <div class="flex-1 p-6 flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex gap-0.5 text-gold">
-                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-              </div>
-              <i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>
-            </div>
-            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
-              "Skyfare saved me over S$4,000 on my Business Class flight to London. The nominee process was seamless and the support was exceptional."
-            </blockquote>
-            <div class="pt-4 border-t border-neutral-100">
-              <p class="font-semibold text-neutral-900 text-sm">Ronit S.</p>
-              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Business Traveler</p>
-            </div>
+      <!-- Testimonial grid — populated dynamically from Airtable via js/testimonials.js -->
+      <div id="home-testimonials-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card-utility overflow-hidden flex flex-col animate-pulse">
+          <div class="h-56 bg-neutral-100"></div>
+          <div class="flex-1 p-6 space-y-3">
+            <div class="h-3 w-24 bg-neutral-100 rounded"></div>
+            <div class="h-3 w-full bg-neutral-100 rounded"></div>
+            <div class="h-3 w-2/3 bg-neutral-100 rounded"></div>
           </div>
         </div>
-
-        <!-- Amrita B. -->
-        <div class="card-utility group overflow-hidden flex flex-col slide-up" style="animation-delay:0.2s;">
-          <div class="h-56 flex-shrink-0 overflow-hidden">
-            <img src="images/testimonials/amrita.JPG" alt="Amrita B."
-                 class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
-          </div>
-          <div class="flex-1 p-6 flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex gap-0.5 text-gold">
-                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-              </div>
-              <i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>
-            </div>
-            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
-              "We booked Business Class for the whole family to Tokyo. Skyfare found confirmed space when everyone else said there was no hope."
-            </blockquote>
-            <div class="pt-4 border-t border-neutral-100">
-              <p class="font-semibold text-neutral-900 text-sm">Amrita B.</p>
-              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Frequent Traveler</p>
-            </div>
+        <div class="card-utility overflow-hidden flex flex-col animate-pulse">
+          <div class="h-56 bg-neutral-100"></div>
+          <div class="flex-1 p-6 space-y-3">
+            <div class="h-3 w-24 bg-neutral-100 rounded"></div>
+            <div class="h-3 w-full bg-neutral-100 rounded"></div>
+            <div class="h-3 w-2/3 bg-neutral-100 rounded"></div>
           </div>
         </div>
-
-        <!-- Leon L. -->
-        <div class="card-utility group overflow-hidden flex flex-col slide-up" style="animation-delay:0.3s;">
-          <div class="h-56 flex-shrink-0 overflow-hidden">
-            <img src="images/testimonials/leon.JPG" alt="Leon L."
-                 class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
-          </div>
-          <div class="flex-1 p-6 flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex gap-0.5 text-gold">
-                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i><i class="fa-solid fa-star text-xs"></i>
-                <i class="fa-solid fa-star text-xs"></i>
-              </div>
-              <i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>
-            </div>
-            <blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">
-              "They handled the entire booking process while I just sat back and waited for my e-ticket. Highly recommend."
-            </blockquote>
-            <div class="pt-4 border-t border-neutral-100">
-              <p class="font-semibold text-neutral-900 text-sm">Leon L.</p>
-              <p class="text-[10px] text-brand-500 font-bold uppercase tracking-widest mt-0.5">Executive</p>
-            </div>
+        <div class="card-utility overflow-hidden flex flex-col animate-pulse">
+          <div class="h-56 bg-neutral-100"></div>
+          <div class="flex-1 p-6 space-y-3">
+            <div class="h-3 w-24 bg-neutral-100 rounded"></div>
+            <div class="h-3 w-full bg-neutral-100 rounded"></div>
+            <div class="h-3 w-2/3 bg-neutral-100 rounded"></div>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -1835,6 +1778,7 @@
   <script src="js/marquee.js" defer></script>
   <script src="js/hero-bg-video.js" defer></script>
   <script src="js/newsletter.js" defer></script>
+  <script src="js/testimonials.js" defer></script>
 </body>
 
 </html>
