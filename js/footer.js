@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const L  = window.SKYFARE_LINKS || {};
   const WA = L.whatsapp || 'https://api.whatsapp.com/send?phone=6581575306';
   const IG = (L.instagram || {}).url || 'https://www.instagram.com/skyfareconsulting/';
+  const FB = (L.facebook || {}).url || 'https://www.facebook.com/profile.php?id=61581879043292';
   const TK = ((L.tiktok || {}).consulting || {}).url || 'https://www.tiktok.com/@skyfareconsulting';
 
   const footerHTML = `
@@ -26,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
               </a>
               <a href="${IG}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 hover:opacity-90 transition-all shadow-sm shadow-pink-500/30">
                 <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="${FB}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-sm shadow-blue-600/30">
+                <i class="fa-brands fa-facebook-f"></i>
               </a>
               <a href="${TK}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-black hover:bg-neutral-800 transition-all shadow-sm shadow-black/20">
                 <i class="fa-brands fa-tiktok"></i>
