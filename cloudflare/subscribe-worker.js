@@ -1535,6 +1535,7 @@ async function handlePostTestimonial(request, env, corsHeaders) {
   if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
 
   const name        = (body['name']        || '').trim().slice(0, 200);
+  const email       = (body['email']       || '').trim().toLowerCase().slice(0, 200);
   const role        = (body['role']        || '').trim().slice(0, 100);
   const rating      = parseInt(body['rating'], 10);
   const testimonial = (body['testimonial'] || '').trim().slice(0, 2000);
@@ -1546,6 +1547,9 @@ async function handlePostTestimonial(request, env, corsHeaders) {
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
     return respond({ error: 'invalid_rating' }, 400, corsHeaders);
   }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'invalid_email' }, 400, corsHeaders);
+  }
   if (imageUrl && !/^https:\/\/res\.cloudinary\.com\//.test(imageUrl)) {
     return respond({ error: 'invalid_image_url' }, 400, corsHeaders);
   }
@@ -1556,6 +1560,7 @@ async function handlePostTestimonial(request, env, corsHeaders) {
       'Role': role,
       'Rating': rating,
       'Testimonial': testimonial,
+      ...(email ? { 'Email': email } : {}),
       ...(imageUrl ? { 'Profile Image': [{ url: imageUrl }] } : {}),
       'Approved': false,
       'Featured': false,
