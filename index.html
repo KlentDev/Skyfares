@@ -123,6 +123,24 @@
                 </a>
               </div>
 
+              <!-- Social proof: real testimonial avatars + live rating, pulled from Airtable via js/testimonials.js -->
+              <!-- Skeleton shows immediately; JS clears it and swaps in real content once the fetch resolves (or hides the whole block on empty/error). -->
+              <a href="pages/testimonials" id="hero-social-proof" class="flex items-center justify-center gap-3 mt-5 group">
+                <div class="flex -space-x-3" id="hero-social-proof-avatars">
+                  <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
+                  <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
+                  <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
+                </div>
+                <div class="flex flex-col items-start gap-1.5">
+                  <div class="flex items-center gap-0.5 text-gold text-xs" id="hero-social-proof-stars">
+                    <div class="h-3 w-16 rounded-full bg-white/20 animate-pulse"></div>
+                  </div>
+                  <p class="text-white/70 text-xs font-semibold group-hover:text-white transition-colors" id="hero-social-proof-text">
+                    <span class="inline-block h-3 w-28 rounded-full bg-white/20 animate-pulse"></span>
+                  </p>
+                </div>
+              </a>
+
             </div>
 
             <!-- MIDDLE: search bar, then Skyfare at a Glance directly below it — both centered together below the vertical center -->

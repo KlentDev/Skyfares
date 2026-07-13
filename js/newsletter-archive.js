@@ -209,7 +209,6 @@
     if (!container) return;
 
     var prem     = isPremium(post);
-    var issueNum = getIssueNum(post);
     var date     = formatDate(post.published_at);
     var author   = (post.authors || []).join(', ');
 
@@ -246,7 +245,7 @@
       ? '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-gold-dark group-hover:text-gold transition-colors self-start">' +
             'Coming Soon <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
       : '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:text-brand-800 transition-colors self-start">' +
-            'Read Issue ' + e(issueNum) + ' <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
+            'Read Issue <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
     // Wrapper: clickable <a> for free (opens the issue), clickable <div> for premium (opens the access modal)
     var href     = 'newsletter-detail?slug=' + encodeURIComponent(post.slug);
@@ -370,15 +369,6 @@
 
   function isPremium(post) {
     return !!post.is_premium;
-  }
-
-  function getIssueNum(post) {
-    var tags = post.content_tags || [];
-    for (var i = 0; i < tags.length; i++) {
-      var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
-      if (m) return m[1].padStart(2, '0');
-    }
-    return '01';
   }
 
   function formatDate(iso) {
