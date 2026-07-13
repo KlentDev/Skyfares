@@ -19,6 +19,10 @@ window.SKYFARE_LINKS = {
     ],
   },
 
+  facebook: {
+    url: 'https://www.facebook.com/profile.php?id=61581879043292',
+  },
+
   tiktok: {
     consulting: {
       handle: '@skyfareconsulting',
@@ -121,17 +125,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ── Founder section social icons (index.html only) ────────────────────
   var founderIg = document.getElementById('founder-instagram-link');
+  var founderFb = document.getElementById('founder-facebook-link');
   var founderTt = document.getElementById('founder-tiktok-link');
   var founderWa = document.getElementById('founder-whatsapp-link');
   if (founderIg) founderIg.href = L.instagram.url;
+  if (founderFb) founderFb.href = L.facebook.url;
   if (founderTt) founderTt.href = L.tiktok.consulting.url;
   if (founderWa) founderWa.href = L.whatsapp;
 
   // ── Hero section social icons (index.html only) ────────────────────────
   var heroIg = document.getElementById('hero-instagram-link');
+  var heroFb = document.getElementById('hero-facebook-link');
   var heroTt = document.getElementById('hero-tiktok-link');
   var heroWa = document.getElementById('hero-whatsapp-link');
   if (heroIg) heroIg.href = L.instagram.url;
+  if (heroFb) heroFb.href = L.facebook.url;
   if (heroTt) heroTt.href = L.tiktok.consulting.url;
   if (heroWa) heroWa.href = L.whatsapp;
 });
