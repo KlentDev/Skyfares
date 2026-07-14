@@ -32,9 +32,11 @@
     // No .slide-up here: the page's scroll-reveal IntersectionObserver (js/header.js)
     // only observes elements present at initial page load, since these cards are
     // injected later via innerHTML after an async fetch, they'd never be observed
-    // and would stay permanently at .slide-up's opacity:0 — so render visible immediately.
+    // and would stay permanently at .slide-up's opacity:0.
+    // Instead use .reveal-stagger — a self-triggering CSS animation that fires when
+    // the element enters the DOM, with a per-card animation-delay for the cascade.
     return (
-      '<div class="card-utility group overflow-hidden flex flex-col">' +
+      '<div class="card-utility reveal-stagger group overflow-hidden flex flex-col" style="animation-delay:' + ((index || 0) * 0.08) + 's;">' +
         '<div class="h-56 flex-shrink-0 overflow-hidden">' + avatarHtml(t) + '</div>' +
         '<div class="flex-1 p-6 flex flex-col">' +
           '<div class="flex items-center justify-between mb-4">' +

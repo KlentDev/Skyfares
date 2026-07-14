@@ -73,6 +73,49 @@ body {
     from { opacity: 0; transform: translateY(28px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+
+  /* Hero load-in entrance — self-triggering on page load (no observer, no JS).
+     Stagger comes from per-element inline animation-delay in the markup. */
+  .hero-reveal {
+    animation: heroIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Injected-card stagger — reuses slideUp but fires when the element enters
+     the DOM (safe for async fetch content that the load-time observer never
+     sees). Cards carry their own inline animation-delay. */
+  .reveal-stagger {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+/* Nav-link underline — grows from center on hover. Left outside the
+   no-preference block on purpose: it's a transition (not a keyframe), and the
+   global reduced-motion override already zeroes transition-duration. */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background: #0066cc;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.header-transparent .nav-link::after {
+  background: #fff;
 }
 
 /* Common Components */

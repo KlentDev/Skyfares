@@ -73,28 +73,30 @@
             <!-- TOP: badge / h1 / description / CTAs -->
             <div class="w-full mx-auto text-center">
 
-              <!-- Badge -->
-              <div class="badge-shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-4"
-                   style="box-shadow:0 4px 20px rgba(201,162,39,0.55), 0 1px 0 rgba(255,255,255,0.25) inset;
-                          border:1px solid rgba(255,220,100,0.45);">
-                <i class="fa-solid fa-crown text-[10px]" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></i>
-                Luxury Travel Concierge
+              <!-- Badge (wrapped so .hero-reveal entrance doesn't override .badge-shine's own animation) -->
+              <div class="hero-reveal" style="animation-delay:0.35s;">
+                <div class="badge-shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-4"
+                     style="box-shadow:0 4px 20px rgba(201,162,39,0.55), 0 1px 0 rgba(255,255,255,0.25) inset;
+                            border:1px solid rgba(255,220,100,0.45);">
+                  <i class="fa-solid fa-crown text-[10px]" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></i>
+                  Luxury Travel Concierge
+                </div>
               </div>
 
               <!-- H1 -->
-              <h1 class="font-display font-bold leading-tight tracking-tight mb-4 whitespace-normal md:whitespace-nowrap" style="font-size:clamp(1.75rem,5.2vw,4.5rem);">
+              <h1 class="hero-reveal font-display font-bold leading-tight tracking-tight mb-4 whitespace-normal md:whitespace-nowrap" style="font-size:clamp(1.75rem,5.2vw,4.5rem);animation-delay:0.41s;">
                 <span class="text-white">Fly premium.</span> <span class="text-gold-light">Think smarter.</span>
               </h1>
 
               <!-- Description -->
-              <p class="text-base text-white/80 mb-2 leading-relaxed max-w-md mx-auto font-medium">
+              <p class="hero-reveal text-base text-white/80 mb-2 leading-relaxed max-w-md mx-auto font-medium" style="animation-delay:0.47s;">
                 Fly Business &amp; First Class for up to <span
                   class="text-white font-bold underline decoration-gold decoration-2 underline-offset-4">60%
                   less</span>. We arrange your award travel so you can focus on the journey.
               </p>
 
               <!-- Stats -->
-              <div class="flex justify-center items-start divide-x divide-white/20 mt-4">
+              <div class="hero-reveal flex justify-center items-start divide-x divide-white/20 mt-4" style="animation-delay:0.53s;">
                 <div class="text-center px-3 sm:px-5">
                   <div class="text-2xl font-black text-gold-light leading-none">60%</div>
                   <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Avg. Savings</div>
@@ -110,7 +112,7 @@
               </div>
 
               <!-- CTAs -->
-              <div class="flex flex-wrap items-center justify-center gap-3 mt-5">
+              <div class="hero-reveal flex flex-wrap items-center justify-center gap-3 mt-5" style="animation-delay:0.59s;">
                 <a href="pages/altitude"
                   class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-gold text-white font-bold text-sm whitespace-nowrap transition-all active:scale-95 hover:brightness-105">
                   <i class="fa-solid fa-crown text-xs text-white"></i>
@@ -125,7 +127,7 @@
 
               <!-- Social proof: real testimonial avatars + live rating, pulled from Airtable via js/testimonials.js -->
               <!-- Skeleton shows immediately; JS clears it and swaps in real content once the fetch resolves (or hides the whole block on empty/error). -->
-              <a href="pages/testimonials" id="hero-social-proof" class="flex items-center justify-center gap-3 mt-5 group">
+              <a href="pages/testimonials" id="hero-social-proof" class="hero-reveal flex items-center justify-center gap-3 mt-5 group" style="animation-delay:0.65s;">
                 <div class="flex -space-x-3" id="hero-social-proof-avatars">
                   <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
                   <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
@@ -145,7 +147,7 @@
 
             <!-- MIDDLE: search bar, then Skyfare at a Glance directly below it — both centered together below the vertical center -->
             <div class="flex-1 flex flex-col items-center justify-center gap-6 py-6" id="hero-search-wrap">
-              <div class="w-full max-w-xl rounded-2xl border border-white/30 bg-white/10 backdrop-blur-md shadow-2xl p-3 md:p-4">
+              <div class="hero-reveal w-full max-w-xl rounded-2xl border border-white/30 bg-white/10 backdrop-blur-md shadow-2xl p-3 md:p-4" style="animation-delay:0.71s;">
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
 
                   <div class="relative flex-1 min-w-0">
@@ -173,7 +175,7 @@
               </div>
 
               <!-- Monthly miles stat (horizontal bullets) — desktop only, directly below search, centered to match it -->
-              <div class="hidden lg:block w-full max-w-xl text-center">
+              <div class="hero-reveal hidden lg:block w-full max-w-xl text-center" style="animation-delay:0.77s;">
                 <h3 class="text-white text-xl md:text-2xl font-extrabold mb-3 leading-tight">
                   Monthly 1–5 Million Miles Utilised
                 </h3>
@@ -226,7 +228,7 @@
 
       <!-- Mobile-only: Skyfare at a Glance + stats (dark card, normal flow beneath the image) -->
       <div class="lg:hidden mt-6">
-        <div class="card-dark p-6">
+        <div class="card-dark p-6 hero-reveal" style="animation-delay:0.71s;">
           <h3 class="text-lg font-extrabold text-white mb-4 leading-snug">
             Monthly 1–5 Million Miles Utilised
           </h3>
@@ -254,7 +256,7 @@
 
   <section class="py-16 tile-sky">
     <div class="container mx-auto px-4 md:px-6">
-      <p class="text-center text-brand-600 font-bold uppercase tracking-[0.3em] text-xs mb-8">
+      <p class="slide-up text-center text-brand-600 font-bold uppercase tracking-[0.3em] text-xs mb-8">
         Trusted by travelers flying with
       </p>
       <div class="marquee-outer">
@@ -1178,17 +1180,17 @@
     <div class="absolute inset-0" style="background:linear-gradient(to top, #000000 0%, rgba(0,0,0,0.90) 30%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.15) 75%, transparent 100%);"></div>
     <div class="container mx-auto px-4 md:px-6 relative z-10">
       <div class="py-6 text-center">
-        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-5" style="background:#C9A227;">
+        <div class="slide-up reveal-pop inline-flex items-center gap-2 px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-widest mb-5" style="background:#C9A227;animation-delay:0.05s;">
           <i class="fa-solid fa-arrow-up text-[10px] text-white"></i>
           Your Upgrade Awaits
         </div>
-        <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+        <h2 class="slide-up reveal-pop text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight" style="animation-delay:0.12s;">
           Ready to Fly Premium?
         </h2>
-        <p class="text-white/60 text-base md:text-lg max-w-lg mx-auto mb-10 font-medium leading-relaxed">
+        <p class="slide-up text-white/60 text-base md:text-lg max-w-lg mx-auto mb-10 font-medium leading-relaxed" style="animation-delay:0.19s;">
           Book your next Business or First Class seat — or start with the insider knowledge to do it yourself.
         </p>
-        <div class="flex flex-wrap justify-center gap-4">
+        <div class="slide-up flex flex-wrap justify-center gap-4" style="animation-delay:0.26s;">
           <a href="https://api.whatsapp.com/send?phone=6581575306"
              class="btn-pill text-base active:scale-95"
              style="padding:0.875rem 2rem;background:#22c55e;color:#ffffff;">
@@ -1520,7 +1522,7 @@
 
       var clickAttr = prem ? ' onclick="window.openAltitudeAccessModal()"' : '';
 
-      return '<article class="' + cardCls + '"' + clickAttr + ' style="animation-delay:' + delay + 's;">' +
+      return '<article class="reveal-stagger ' + cardCls + '"' + clickAttr + ' style="animation-delay:' + delay + 's;">' +
         '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
           imgHtml +
           '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
@@ -1803,6 +1805,7 @@
   <script src="js/fly-carousel.js" defer></script>
   <script src="js/marquee.js" defer></script>
   <script src="js/hero-bg-video.js" defer></script>
+  <script src="js/hero-parallax.js" defer></script>
   <script src="js/newsletter.js" defer></script>
   <script src="js/testimonials.js" defer></script>
 </body>
