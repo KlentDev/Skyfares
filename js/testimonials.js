@@ -32,9 +32,11 @@
     // No .slide-up here: the page's scroll-reveal IntersectionObserver (js/header.js)
     // only observes elements present at initial page load, since these cards are
     // injected later via innerHTML after an async fetch, they'd never be observed
-    // and would stay permanently at .slide-up's opacity:0 — so render visible immediately.
+    // and would stay permanently at .slide-up's opacity:0.
+    // Instead use .reveal-stagger — a self-triggering CSS animation that fires when
+    // the element enters the DOM, with a per-card animation-delay for the cascade.
     return (
-      '<div class="card-utility group overflow-hidden flex flex-col">' +
+      '<div class="card-utility reveal-stagger group overflow-hidden flex flex-col" style="animation-delay:' + ((index || 0) * 0.08) + 's;">' +
         '<div class="h-56 flex-shrink-0 overflow-hidden">' + avatarHtml(t) + '</div>' +
         '<div class="flex-1 p-6 flex flex-col">' +
           '<div class="flex items-center justify-between mb-4">' +
@@ -89,6 +91,46 @@
       .catch(function () {
         if (section) section.style.display = 'none';
       });
+  }
+
+  function initHeroSocialProof() {
+    var wrap = document.getElementById('hero-social-proof');
+    if (!wrap) return;
+
+    function hideWrap() {
+      wrap.classList.add('hidden');
+      wrap.classList.remove('flex');
+    }
+
+    fetchTestimonials({ limit: 100 })
+      .then(function (result) {
+        var list = result.testimonials;
+        if (!list.length) return hideWrap();
+
+        var withRating = list.filter(function (t) { return parseInt(t.rating, 10) > 0; });
+        var avg = withRating.length
+          ? withRating.reduce(function (sum, t) { return sum + parseInt(t.rating, 10); }, 0) / withRating.length
+          : 5;
+        var avgRounded = (Math.round(avg * 10) / 10).toFixed(1);
+
+        // Clear skeleton placeholders before injecting the real avatars/stars/text.
+        var avatars = document.getElementById('hero-social-proof-avatars');
+        avatars.innerHTML = '';
+        list.slice(0, 5).forEach(function (t) {
+          var el = document.createElement('div');
+          el.className = 'w-9 h-9 rounded-full ring-2 ring-white/80 overflow-hidden bg-brand-50 flex-shrink-0';
+          el.innerHTML = avatarHtml(t);
+          avatars.appendChild(el);
+        });
+
+        var stars = document.getElementById('hero-social-proof-stars');
+        stars.innerHTML = starsHtml(Math.round(avg));
+
+        var count = list.length + (result.offset ? '+' : '');
+        var text = document.getElementById('hero-social-proof-text');
+        text.textContent = avgRounded + ' rating · ' + count + ' happy travelers';
+      })
+      .catch(hideWrap);
   }
 
   function showState(id, show) {
@@ -162,5 +204,6 @@
   document.addEventListener('DOMContentLoaded', function () {
     initHomepageGrid();
     initArchivePage();
+    initHeroSocialProof();
   });
 })();
