@@ -5,7 +5,7 @@
  * Fetches the latest post live from the Worker; shows nothing if that
  * fetch fails (no hardcoded fallback content — never show stale/deleted posts).
  *
- * Free posts  → blue badge, "Read Issue X" CTA → Beehiiv post.
+ * Free posts  → blue badge, "Read Issue" CTA → Beehiiv post.
  * Premium posts → amber badge, "Join the Waitlist" CTA → pre-launch sign-up page (Altitude isn't purchasable yet).
  *
  * localStorage tracks dismissed/read state per post ID so the banner
@@ -102,12 +102,11 @@
   // ─── Show / hide ──────────────────────────────────────────────────────────
 
   function showBanner(post) {
-    var issueNum = getIssueNum(post);
     var date     = formatDate(post.published_at);
     var header   = document.getElementById('main-header');
     var headerH  = header ? header.offsetHeight : 64;
 
-    var banner = buildBanner(post, issueNum, date, headerH);
+    var banner = buildBanner(post, date, headerH);
     document.body.insertBefore(banner, document.body.firstChild);
 
     requestAnimationFrame(function () {
@@ -154,7 +153,7 @@
 
   // ─── Build HTML ───────────────────────────────────────────────────────────
 
-  function buildBanner(post, issueNum, date, headerH) {
+  function buildBanner(post, date, headerH) {
     var prem = isPremium(post);
     var el   = document.createElement('div');
     el.id = 'skyfare-newsletter-banner';
@@ -194,9 +193,9 @@
     var detailBase = window.location.pathname.includes('/pages/') ? '' : 'pages/';
     // DISABLED (temporarily) -- original WhatsApp upgrade link + label, restore when Premium launches:
     // var ctaHref = prem ? PREMIUM_WA_URL : (detailBase + 'newsletter-detail?slug=' + encodeURIComponent(post.slug || ''));
-    // var ctaText = prem ? 'Get Premium Access' : 'Read Issue&nbsp;' + e(issueNum);
+    // var ctaText = prem ? 'Get Premium Access' : 'Read Issue';
     var ctaHref  = prem ? (detailBase + 'pre-signup-link') : (detailBase + 'newsletter-detail?slug=' + encodeURIComponent(post.slug || ''));
-    var ctaText  = prem ? 'Join the Waitlist' : 'Read Issue&nbsp;' + e(issueNum);
+    var ctaText  = prem ? 'Join the Waitlist' : 'Read Issue';
     var ctaBg    = prem ? '#C9A227' : '#1d4ed8';
     var ctaHover = prem ? '#9E7B0D'  : '#1e40af';
 
@@ -290,15 +289,6 @@
 
   function isPremium(post) {
     return !!post.is_premium;
-  }
-
-  function getIssueNum(post) {
-    var tags = post.content_tags || [];
-    for (var i = 0; i < tags.length; i++) {
-      var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
-      if (m) return m[1].padStart(2, '0');
-    }
-    return '01';
   }
 
   function formatDate(iso) {
