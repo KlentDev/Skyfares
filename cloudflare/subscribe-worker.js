@@ -160,6 +160,10 @@ export default {
       return handleGetTestimonials(request, env, corsHeaders);
     }
 
+    if (request.method === 'GET' && url.pathname === '/airtable/testimonial-scores') {
+      return handleGetTestimonialScores(request, env, corsHeaders);
+    }
+
     // ── Subscribe ──────────────────────────────────────────────────────────
 
     if (request.method !== 'POST') {
@@ -1540,6 +1544,20 @@ async function handlePostTestimonial(request, env, corsHeaders) {
   const rating      = parseInt(body['rating'], 10);
   const testimonial = (body['testimonial'] || '').trim().slice(0, 2000);
   const imageUrl    = (body['image_url']   || '').trim().slice(0, 2000);
+  const route       = (body['route']       || '').trim().slice(0, 100);
+  const airline     = (body['airline']     || '').trim().slice(0, 100);
+
+  // Optional 1-5 sub-ratings for the specific flight (Value/Comfort/Service).
+  // Unlike the required overall `rating`, these are skippable — an invalid or
+  // missing value is just treated as "not rated," never defaulted or guessed.
+  const parseOptionalRating = (v) => {
+    const n = parseInt(v, 10);
+    return Number.isInteger(n) && n >= 1 && n <= 5 ? n : null;
+  };
+  const valueRating   = parseOptionalRating(body['value_rating']);
+  const comfortRating = parseOptionalRating(body['comfort_rating']);
+  const serviceRating = parseOptionalRating(body['service_rating']);
+  const foodRating    = parseOptionalRating(body['food_rating']);
 
   if (!name || !role || !testimonial) {
     return respond({ error: 'missing_fields' }, 400, corsHeaders);
@@ -1562,6 +1580,19 @@ async function handlePostTestimonial(request, env, corsHeaders) {
       'Testimonial': testimonial,
       ...(email ? { 'Email': email } : {}),
       ...(imageUrl ? { 'Profile Image': [{ url: imageUrl }] } : {}),
+      // Route is a multipleSelects field in Airtable whose choices are full
+      // labels ("London (LHR)"), but the form submits just the IATA code
+      // ("LHR") — map through ROUTE_LABELS before writing, or Airtable
+      // rejects the value outright (no matching choice) and the whole
+      // submission 500s. Also multipleSelects, so wrap in a one-element
+      // array — multi-route tagging is done by staff directly in Airtable
+      // (see recYeN1EAZPwbDNom for a real example).
+      ...(route && ROUTE_LABELS[route.toUpperCase()] ? { 'Route': [ROUTE_LABELS[route.toUpperCase()]] } : {}),
+      ...(airline ? { 'Airline': airline } : {}),
+      ...(valueRating   ? { 'Value Rating':   valueRating   } : {}),
+      ...(comfortRating ? { 'Comfort Rating': comfortRating } : {}),
+      ...(serviceRating ? { 'Service Rating': serviceRating } : {}),
+      ...(foodRating    ? { 'Food Rating':    foodRating    } : {}),
       'Approved': false,
       'Featured': false,
     }, env);
@@ -1574,11 +1605,27 @@ async function handlePostTestimonial(request, env, corsHeaders) {
   return respond({ success: true }, 200, corsHeaders);
 }
 
+// Maps a Cabin Compare IATA route code to the exact Airtable "Route"
+// choice-name string, so ?route= lookups can filter by the same code
+// js/cabin-compare.js already keys its DATA object on.
+const ROUTE_LABELS = {
+  LHR: 'London (LHR)', CDG: 'Paris (CDG)', FRA: 'Frankfurt (FRA)', ZRH: 'Zurich (ZRH)',
+  AMS: 'Amsterdam (AMS)', FCO: 'Rome (FCO)', MXP: 'Milan (MXP)', IST: 'Istanbul (IST)', BCN: 'Barcelona (BCN)',
+  JFK: 'New York JFK (JFK)', EWR: 'New York Newark (EWR)', LAX: 'Los Angeles (LAX)', SFO: 'San Francisco (SFO)', SEA: 'Seattle (SEA)',
+  SYD: 'Sydney (SYD)', MEL: 'Melbourne (MEL)', BNE: 'Brisbane (BNE)', PER: 'Perth (PER)', AKL: 'Auckland (AKL)',
+  NRT: 'Tokyo Narita (NRT)', HND: 'Tokyo Haneda (HND)', ICN: 'Seoul (ICN)', HKG: 'Hong Kong (HKG)', TPE: 'Taipei (TPE)', PVG: 'Shanghai (PVG)', PEK: 'Beijing (PEK)',
+  DEL: 'Delhi (DEL)', BOM: 'Mumbai (BOM)', CMB: 'Colombo (CMB)',
+  BKK: 'Bangkok (BKK)', CGK: 'Jakarta (CGK)', DPS: 'Bali (DPS)', MNL: 'Manila (MNL)', SGN: 'Ho Chi Minh City (SGN)', HAN: 'Hanoi (HAN)', KUL: 'Kuala Lumpur (KUL)',
+  DXB: 'Dubai (DXB)', DOH: 'Doha (DOH)', JNB: 'Johannesburg (JNB)',
+};
+
 async function handleGetTestimonials(request, env, corsHeaders) {
   const url = new URL(request.url);
   const scope = url.searchParams.get('scope') || 'all';
   const requestedLimit = parseInt(url.searchParams.get('limit'), 10);
   const pageOffset = url.searchParams.get('offset') || '';
+  const routeCode = (url.searchParams.get('route') || '').trim().toUpperCase();
+  const airline = (url.searchParams.get('airline') || '').trim().slice(0, 100);
 
   const isFeatured = scope === 'featured';
   // Homepage (featured): hard-capped single fetch, no pagination.
@@ -1588,15 +1635,19 @@ async function handleGetTestimonials(request, env, corsHeaders) {
     isFeatured ? 12 : 100
   );
 
-  const params = new URLSearchParams({
-    // Homepage: strictly Approved AND Featured — no backfill with non-featured
-    // approved testimonials. Archive: every Approved testimonial (Featured ones
-    // included, not excluded — Featured only curates the homepage, nothing more).
-    filterByFormula: isFeatured ? 'AND({Approved}=1,{Featured}=1)' : '{Approved}=1',
-  });
+  // Homepage: strictly Approved AND Featured — no backfill with non-featured
+  // approved testimonials. Archive / Cabin Compare: every Approved testimonial,
+  // optionally narrowed further to a specific route and/or airline.
+  const formulaParts = [isFeatured ? 'AND({Approved}=1,{Featured}=1)' : '{Approved}=1'];
+  const routeLabel = ROUTE_LABELS[routeCode];
+  if (routeLabel) formulaParts.push(`FIND("${routeLabel.replace(/"/g, '\\"')}", ARRAYJOIN({Route}))`);
+  if (airline) formulaParts.push(`{Airline}="${airline.replace(/"/g, '\\"')}"`);
+  const filterByFormula = formulaParts.length > 1 ? `AND(${formulaParts.join(',')})` : formulaParts[0];
+
+  const params = new URLSearchParams({ filterByFormula });
   params.append(isFeatured ? 'maxRecords' : 'pageSize', String(limit));
   if (!isFeatured && pageOffset) params.set('offset', pageOffset);
-  ['Name', 'Role', 'Rating', 'Testimonial', 'Profile Image'].forEach(f => params.append('fields[]', f));
+  ['Name', 'Role', 'Rating', 'Testimonial', 'Profile Image', 'Route', 'Airline'].forEach(f => params.append('fields[]', f));
   params.append('sort[0][field]', 'Date Submitted');
   params.append('sort[0][direction]', 'desc');
 
@@ -1620,10 +1671,85 @@ async function handleGetTestimonials(request, env, corsHeaders) {
     rating: rec.fields['Rating'] || 0,
     quote: rec.fields['Testimonial'] || '',
     image: rec.fields['Profile Image']?.[0]?.url || '',
+    route: rec.fields['Route'] || [],
+    airline: rec.fields['Airline'] || '',
   }));
 
   return respond(
     { testimonials, offset: raw.offset || null },
+    200,
+    { ...corsHeaders, 'Cache-Control': 'public, max-age=60' }
+  );
+}
+
+// Cabin Compare's "Skyfare score" — a real average of customer-submitted
+// Value/Comfort/Service ratings for one route+airline, never a static or
+// editorially-typed number. Averages only over records that actually have
+// each field set (a reviewer may rate Comfort but skip Value, etc.), and
+// returns null for any dimension with zero data yet — the frontend leaves
+// that dimension out rather than showing a fabricated 0.
+async function handleGetTestimonialScores(request, env, corsHeaders) {
+  const url = new URL(request.url);
+  const routeCode = (url.searchParams.get('route') || '').trim().toUpperCase();
+  const airline = (url.searchParams.get('airline') || '').trim().slice(0, 100);
+  const routeLabel = ROUTE_LABELS[routeCode];
+
+  if (!routeLabel || !airline) {
+    return respond({ value: null, comfort: null, service: null, food: null, count: 0 }, 200, corsHeaders);
+  }
+
+  const filterByFormula = `AND({Approved}=1,FIND("${routeLabel.replace(/"/g, '\\"')}", ARRAYJOIN({Route})),{Airline}="${airline.replace(/"/g, '\\"')}")`;
+  const params = new URLSearchParams({ filterByFormula, pageSize: '100' });
+  ['Value Rating', 'Comfort Rating', 'Service Rating', 'Food Rating'].forEach(f => params.append('fields[]', f));
+
+  let res;
+  try {
+    res = await fetch(
+      `https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${env.AIRTABLE_TABLE_TESTIMONIALS}?${params.toString()}`,
+      { headers: { 'Authorization': `Bearer ${env.AIRTABLE_API_KEY}` } }
+    );
+  } catch {
+    return respond({ error: 'Gateway error' }, 502, corsHeaders);
+  }
+  if (!res.ok) return respond({ error: 'Airtable API error' }, res.status, corsHeaders);
+
+  const raw = await res.json();
+  const records = raw.records || [];
+
+  // Each dimension is averaged only from records that actually rated it — a
+  // testimonial can rate Comfort but skip Value, so the three dimensions can
+  // legitimately have different sample sizes. Returning one blanket "count"
+  // for all three (e.g. total matching records) would overstate how many
+  // people actually backed each individual number.
+  const rate = (fieldName) => {
+    const values = records
+      .map(rec => rec.fields[fieldName])
+      .filter(v => Number.isInteger(v) && v >= 1 && v <= 5);
+    return { avg: values.length ? values.reduce((a, b) => a + b, 0) / values.length : null, n: values.length };
+  };
+
+  const value = rate('Value Rating');
+  const comfort = rate('Comfort Rating');
+  const service = rate('Service Rating');
+  const food = rate('Food Rating');
+  // "count" = records that rated at least one dimension — an honest "how many
+  // flight ratings do we have" number, distinct from raw matching-record count
+  // (some matches may have left a testimonial without rating anything).
+  const ratedCount = records.filter(rec =>
+    Number.isInteger(rec.fields['Value Rating']) ||
+    Number.isInteger(rec.fields['Comfort Rating']) ||
+    Number.isInteger(rec.fields['Service Rating']) ||
+    Number.isInteger(rec.fields['Food Rating'])
+  ).length;
+
+  return respond(
+    {
+      value: value.avg, valueCount: value.n,
+      comfort: comfort.avg, comfortCount: comfort.n,
+      service: service.avg, serviceCount: service.n,
+      food: food.avg, foodCount: food.n,
+      count: ratedCount,
+    },
     200,
     { ...corsHeaders, 'Cache-Control': 'public, max-age=60' }
   );

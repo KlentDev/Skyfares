@@ -108,24 +108,70 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
+          <!-- Flights Dropdown (Our Flights / Skyfare Flight). Cabin Compare is
+               TEMPORARILY promoted to its own top-level item below (launch
+               visibility window, ~4-6 weeks from 2026-07-15) -- fold it back
+               in here as a third entry once that window closes. -->
+          <div class="relative group/dropdown">
+            <button class="flex items-center gap-1.5 px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+              <i class="fa-solid fa-plane text-[13px] opacity-60"></i> Flights <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
+            </button>
+            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:240px;">
+              <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-ticket-simple text-sm"></i>
+                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Our Flights</div>
+                </a>
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Skyfare Flight</div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cabin Compare -- temporary top-level placement for launch
+               visibility (see note above). Remove this link + the "New"
+               badge together once graduated back into the Flights dropdown. -->
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/cabin-compare" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-scale-balanced text-[13px] opacity-60"></i> Cabin Compare
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-brand-500 text-white text-[9px] font-bold uppercase tracking-wide leading-none">New</span>
+          </a>
+
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-wand-magic-sparkles text-[13px] opacity-60"></i> How It Works
           </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
-            <i class="fa-solid fa-ticket-simple text-[13px] opacity-60"></i> Our Flights
-          </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
-            <i class="fa-solid fa-paper-plane text-[13px] opacity-60"></i> Skyfare Flight
-          </a>
+
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-envelope-open-text text-[13px] opacity-60"></i> Newsletter
           </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
-            <i class="fa-solid fa-star text-[13px] opacity-60"></i> Testimonials
-          </a>
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
-            <i class="fa-solid fa-circle-question text-[13px] opacity-60"></i> FAQ
-          </a>
+          <!-- Resources Dropdown (Testimonials / FAQs) -->
+          <div class="relative group/dropdown">
+            <button class="flex items-center gap-1.5 px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+              <i class="fa-solid fa-book-open text-[13px] opacity-60"></i> Resources <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
+            </button>
+            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:240px;">
+              <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-star text-sm"></i>
+                  </div>
+                  <div class="text-sm font-semibold text-brand-950">Testimonials</div>
+                </a>
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-circle-question text-sm"></i>
+                  </div>
+                  <div class="text-sm font-semibold text-brand-950">FAQs</div>
+                </a>
+              </div>
+            </div>
+          </div>
+
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-envelope text-[13px] opacity-60"></i> Contact
           </a>
@@ -188,24 +234,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i class="fa-solid fa-concierge-bell text-brand-400 w-6 text-base"></i> Concierge Services
               </a>
             </div>
+            <div class="flex flex-col gap-4">
+              <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
+                <i class="fa-solid fa-plane text-[10px]"></i> Flights
+              </span>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-ticket-simple text-brand-400 w-6 text-base"></i> Our Flights
+              </a>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-paper-plane text-brand-400 w-6 text-base"></i> Skyfare Flight
+              </a>
+            </div>
+            <!-- Cabin Compare -- temporary top-level placement, see desktop nav comment above -->
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/cabin-compare" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
+              <i class="fa-solid fa-scale-balanced text-brand-500 w-7"></i> Cabin Compare
+              <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-brand-500 text-white text-[9px] font-bold uppercase tracking-wide leading-none">New</span>
+            </a>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-wand-magic-sparkles text-brand-500 w-7"></i> How It Works
-            </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-ticket-simple text-brand-500 w-7"></i> Our Flights
-            </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-paper-plane text-brand-500 w-7"></i> Skyfare Flight
             </a>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/newsletter" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-envelope-open-text text-brand-500 w-7"></i> Newsletter
             </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-star text-brand-500 w-7"></i> Testimonials
-            </a>
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
-              <i class="fa-solid fa-circle-question text-brand-500 w-7"></i> FAQ
-            </a>
+            <div class="flex flex-col gap-4">
+              <span class="text-xs uppercase tracking-widest text-brand-500 font-bold flex items-center gap-2">
+                <i class="fa-solid fa-book-open text-[10px]"></i> Resources
+              </span>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-star text-brand-400 w-6 text-base"></i> Testimonials
+              </a>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-circle-question text-brand-400 w-6 text-base"></i> FAQs
+              </a>
+            </div>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-envelope text-brand-500 w-7"></i> Contact
             </a>

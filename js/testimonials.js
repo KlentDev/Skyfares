@@ -114,12 +114,17 @@
         var avgRounded = (Math.round(avg * 10) / 10).toFixed(1);
 
         // Clear skeleton placeholders before injecting the real avatars/stars/text.
+        // Note: intentionally NOT reusing avatarHtml() here — it bakes in
+        // group-hover:scale-105 for the big testimonial cards, which would
+        // make these small stacked avatars jump in front of each other on hover.
         var avatars = document.getElementById('hero-social-proof-avatars');
         avatars.innerHTML = '';
         list.slice(0, 5).forEach(function (t) {
           var el = document.createElement('div');
           el.className = 'w-9 h-9 rounded-full ring-2 ring-white/80 overflow-hidden bg-brand-50 flex-shrink-0';
-          el.innerHTML = avatarHtml(t);
+          el.innerHTML = t.image
+            ? '<img src="' + esc(t.image) + '" alt="' + esc(t.name) + '" class="w-full h-full object-cover object-center">'
+            : '<div class="w-full h-full flex items-center justify-center bg-brand-50"><i class="fa-solid fa-user text-brand-200 text-sm"></i></div>';
           avatars.appendChild(el);
         });
 

@@ -127,8 +127,8 @@
 
               <!-- Social proof: real testimonial avatars + live rating, pulled from Airtable via js/testimonials.js -->
               <!-- Skeleton shows immediately; JS clears it and swaps in real content once the fetch resolves (or hides the whole block on empty/error). -->
-              <a href="pages/testimonials" id="hero-social-proof" class="hero-reveal flex items-center justify-center gap-3 mt-5 group" style="animation-delay:0.65s;">
-                <div class="flex -space-x-3" id="hero-social-proof-avatars">
+              <a href="pages/testimonials" id="hero-social-proof" class="hero-reveal relative z-10 flex items-center justify-center gap-3 mt-5 group cursor-pointer" style="animation-delay:0.65s;">
+                <div class="flex -space-x-3 pointer-events-none" id="hero-social-proof-avatars">
                   <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
                   <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
                   <div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/20 animate-pulse"></div>
@@ -153,7 +153,7 @@
                   <div class="relative flex-1 min-w-0">
                     <div class="flex items-center pl-4 pr-3 py-2.5 rounded-full border border-white/25 bg-white/5 focus-within:border-white/50 transition-all">
                       <i class="fa-solid fa-plane-departure text-white/60 text-xs flex-shrink-0"></i>
-                      <span class="text-sm font-black text-white flex-shrink-0 ml-2 mr-1">SIN</span>
+                      <span class="text-sm font-black text-white flex-shrink-0 ml-2 mr-1">SIN 🇸🇬</span>
                       <i class="fa-solid fa-arrow-right text-white/30 text-[10px] flex-shrink-0 mx-2"></i>
                       <input
                         id="hero-route-search"
@@ -459,7 +459,7 @@
               <div class="relative z-10">
                 <div class="flex items-center gap-2 mb-5">
                   <div class="icon-chip icon-chip-sm"><i class="fa-solid fa-plane text-xs"></i></div>
-                  <span class="text-sm font-semibold text-neutral-900">SIN → JFK &nbsp;·&nbsp; Business Class</span>
+                  <span class="text-sm font-semibold text-neutral-900">SIN 🇸🇬 → JFK 🇺🇸 &nbsp;·&nbsp; Business Class</span>
                 </div>
                 <div class="fare-standard flex items-center justify-between mb-2 bg-neutral-50 rounded-lg px-3 py-2">
                   <span class="text-xs text-neutral-400">Standard cash fare</span>
@@ -486,7 +486,7 @@
               <div class="relative z-10">
                 <div class="flex items-center gap-2 mb-5">
                   <div class="icon-chip icon-chip-sm"><i class="fa-solid fa-plane text-xs"></i></div>
-                  <span class="text-sm font-semibold text-neutral-900">LHR → SIN &nbsp;·&nbsp; Business Class</span>
+                  <span class="text-sm font-semibold text-neutral-900">LHR 🇬🇧 → SIN 🇸🇬 &nbsp;·&nbsp; Business Class</span>
                 </div>
                 <div class="fare-standard flex items-center justify-between mb-2 bg-neutral-50 rounded-lg px-3 py-2">
                   <span class="text-xs text-neutral-400">Standard cash fare</span>
@@ -768,7 +768,7 @@
           <div class="route-tile-overlay"></div>
           <div class="relative z-10 flex flex-col h-full">
             <div class="flex items-center justify-between mb-5">
-              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → JFK</span>
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN 🇸🇬 → JFK 🇺🇸</span>
               <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
             </div>
             <h3 class="text-xl font-display font-bold text-white mb-1">New York City</h3>
@@ -786,7 +786,7 @@
           <div class="route-tile-overlay"></div>
           <div class="relative z-10 flex flex-col h-full">
             <div class="flex items-center justify-between mb-5">
-              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → LHR</span>
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN 🇸🇬 → LHR 🇬🇧</span>
               <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
             </div>
             <h3 class="text-xl font-display font-bold text-white mb-1">London</h3>
@@ -804,7 +804,7 @@
           <div class="route-tile-overlay"></div>
           <div class="relative z-10 flex flex-col h-full">
             <div class="flex items-center justify-between mb-5">
-              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → MEL</span>
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN 🇸🇬 → MEL 🇦🇺</span>
               <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
             </div>
             <h3 class="text-xl font-display font-bold text-white mb-1">Melbourne</h3>
@@ -822,7 +822,7 @@
           <div class="route-tile-overlay"></div>
           <div class="relative z-10 flex flex-col h-full">
             <div class="flex items-center justify-between mb-5">
-              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → DXB</span>
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN 🇸🇬 → DXB 🇦🇪</span>
               <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
             </div>
             <h3 class="text-xl font-display font-bold text-white mb-1">Dubai</h3>
@@ -840,7 +840,7 @@
           <div class="route-tile-overlay"></div>
           <div class="relative z-10 flex flex-col h-full">
             <div class="flex items-center justify-between mb-5">
-              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → CDG</span>
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN 🇸🇬 → CDG 🇫🇷</span>
               <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
             </div>
             <h3 class="text-xl font-display font-bold text-white mb-1">Paris</h3>
@@ -858,7 +858,7 @@
           <div class="route-tile-overlay"></div>
           <div class="relative z-10 flex flex-col h-full">
             <div class="flex items-center justify-between mb-5">
-              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN → LAX</span>
+              <span class="font-display text-[11px] font-bold uppercase tracking-[0.25em] text-white/50">SIN 🇸🇬 → LAX 🇺🇸</span>
               <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-plane-departure text-sm"></i></div>
             </div>
             <h3 class="text-xl font-display font-bold text-white mb-1">Los Angeles</h3>
@@ -1685,6 +1685,26 @@
       { to:'New York (JFK)',           region:'N. America',        saver:117000, advantage:176000, img:'images/routes-images/new-york.jpg' },
     ];
 
+    var ROUTE_FLAGS = {
+      BWN:'🇧🇳', DPS:'🇮🇩', CGK:'🇮🇩', KUL:'🇲🇾', BKK:'🇹🇭', CEB:'🇵🇭', DAD:'🇻🇳',
+      HAN:'🇻🇳', SGN:'🇻🇳', MNL:'🇵🇭', PNH:'🇰🇭', HKT:'🇹🇭', RGN:'🇲🇲',
+      CTU:'🇨🇳', CKG:'🇨🇳', CAN:'🇨🇳', HKG:'🇭🇰', TPE:'🇹🇼', PEK:'🇨🇳', PVG:'🇨🇳',
+      AMD:'🇮🇳', BLR:'🇮🇳', MAA:'🇮🇳', COK:'🇮🇳', CMB:'🇱🇰', DEL:'🇮🇳', DAC:'🇧🇩',
+      HYD:'🇮🇳', KTM:'🇳🇵', CCU:'🇮🇳', MLE:'🇲🇻', BOM:'🇮🇳',
+      PUS:'🇰🇷', FUK:'🇯🇵', KIX:'🇯🇵', ICN:'🇰🇷', 'NRT/HND':'🇯🇵',
+      DRW:'🇦🇺', PER:'🇦🇺', ADL:'🇦🇺', AKL:'🇳🇿', BNE:'🇦🇺', CNS:'🇦🇺', CHC:'🇳🇿',
+      MEL:'🇦🇺', SYD:'🇦🇺',
+      CPT:'🇿🇦', DXB:'🇦🇪', IST:'🇹🇷', JNB:'🇿🇦',
+      AMS:'🇳🇱', BCN:'🇪🇸', BRU:'🇧🇪', CPH:'🇩🇰', FRA:'🇩🇪', LHR:'🇬🇧', MAN:'🇬🇧',
+      MXP:'🇮🇹', MUC:'🇩🇪', CDG:'🇫🇷', FCO:'🇮🇹', ZRH:'🇨🇭',
+      LAX:'🇺🇸', SFO:'🇺🇸', SEA:'🇺🇸', IAH:'🇺🇸', JFK:'🇺🇸'
+    };
+
+    function flagFor(to) {
+      var m = /\(([^)]+)\)/.exec(to);
+      return (m && ROUTE_FLAGS[m[1]]) || '';
+    }
+
     var input    = document.getElementById('hero-route-search');
     var dropdown = document.getElementById('hero-route-dropdown');
     var list     = document.getElementById('hero-route-list');
@@ -1727,7 +1747,7 @@
           li.className = 'flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-brand-50 transition-colors group';
           li.innerHTML =
             '<span class="text-sm font-semibold text-neutral-900 group-hover:text-brand-700 transition-colors">' +
-              'SIN → ' + r.to +
+              'SIN 🇸🇬 → ' + flagFor(r.to) + ' ' + r.to +
             '</span>' +
             '<span class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 ml-3 flex-shrink-0">' + r.region + '</span>';
           li.addEventListener('mousedown', function (e) {
@@ -1743,7 +1763,7 @@
     function selectRoute(r) {
       input.value = r.to;
       dropdown.classList.add('hidden');
-      if (modalRoute)  modalRoute.textContent  = 'SIN → ' + r.to;
+      if (modalRoute)  modalRoute.textContent  = 'SIN 🇸🇬 → ' + flagFor(r.to) + ' ' + r.to;
       if (modalRegion) modalRegion.textContent = r.region;
       if (modalSaver)  modalSaver.textContent  = fmt(r.saver);
       if (modalAdv)    modalAdv.textContent    = fmt(r.advantage);

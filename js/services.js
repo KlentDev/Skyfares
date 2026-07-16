@@ -417,6 +417,26 @@
       },
     ];
 
+    const ROUTE_FLAGS = {
+      BWN:'🇧🇳', DPS:'🇮🇩', CGK:'🇮🇩', KUL:'🇲🇾', BKK:'🇹🇭', CEB:'🇵🇭', DAD:'🇻🇳',
+      HAN:'🇻🇳', SGN:'🇻🇳', MNL:'🇵🇭', PNH:'🇰🇭', HKT:'🇹🇭', RGN:'🇲🇲',
+      CTU:'🇨🇳', CKG:'🇨🇳', CAN:'🇨🇳', HKG:'🇭🇰', TPE:'🇹🇼', PEK:'🇨🇳', PVG:'🇨🇳',
+      AMD:'🇮🇳', BLR:'🇮🇳', MAA:'🇮🇳', COK:'🇮🇳', CMB:'🇱🇰', DEL:'🇮🇳', DAC:'🇧🇩',
+      HYD:'🇮🇳', KTM:'🇳🇵', CCU:'🇮🇳', MLE:'🇲🇻', BOM:'🇮🇳',
+      PUS:'🇰🇷', FUK:'🇯🇵', KIX:'🇯🇵', ICN:'🇰🇷', 'NRT/HND':'🇯🇵',
+      DRW:'🇦🇺', PER:'🇦🇺', ADL:'🇦🇺', AKL:'🇳🇿', BNE:'🇦🇺', CNS:'🇦🇺', CHC:'🇳🇿',
+      MEL:'🇦🇺', SYD:'🇦🇺',
+      CPT:'🇿🇦', DXB:'🇦🇪', IST:'🇹🇷', JNB:'🇿🇦',
+      AMS:'🇳🇱', BCN:'🇪🇸', BRU:'🇧🇪', CPH:'🇩🇰', FRA:'🇩🇪', LHR:'🇬🇧', MAN:'🇬🇧',
+      MXP:'🇮🇹', MUC:'🇩🇪', CDG:'🇫🇷', FCO:'🇮🇹', ZRH:'🇨🇭',
+      LAX:'🇺🇸', SFO:'🇺🇸', SEA:'🇺🇸', IAH:'🇺🇸', JFK:'🇺🇸'
+    };
+
+    function flagFor(to) {
+      const m = /\(([^)]+)\)/.exec(to);
+      return (m && ROUTE_FLAGS[m[1]]) || '';
+    }
+
     const tbody = document.getElementById('awardBody');
     const filter = document.getElementById('regionFilter');
     const search = document.getElementById('searchRoute');
@@ -429,7 +449,7 @@
         tr.className = "hover:bg-brand-50/60 transition-colors";
         tr.innerHTML = `
             <td class="px-6 py-4 text-sm font-bold text-neutral-300 tabular-nums">${index + 1}</td>
-            <td class="px-6 py-4 text-sm font-semibold text-neutral-900">Singapore <span class="text-brand-400">&rarr;</span> ${r.to}</td>
+            <td class="px-6 py-4 text-sm font-semibold text-neutral-900">Singapore 🇸🇬 <span class="text-brand-400">&rarr;</span> ${flagFor(r.to)} ${r.to}</td>
             <td class="px-6 py-4 text-center"><span class="inline-block px-2.5 py-1 bg-brand-50 text-brand-600 rounded-full text-[10px] font-bold uppercase tracking-wider">${r.region}</span></td>
             <td class="px-6 py-4 text-right text-sm font-bold text-neutral-900 tabular-nums">${r.saver.toLocaleString()}<span class="text-neutral-400 font-medium"> mi</span></td>
             <td class="px-6 py-4 text-right text-sm font-semibold text-neutral-500 tabular-nums">${r.advantage.toLocaleString()}<span class="text-neutral-400 font-normal"> mi</span></td>

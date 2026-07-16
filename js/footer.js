@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h4 class="text-white font-bold mb-6">Services</h4>
             <ul class="space-y-4 text-sm">
               <li><a href="/pages/krisflyer" class="text-brand-100/50 hover:text-white transition-colors">KrisFlyer Miles</a></li>
+              <li><a href="/pages/cabin-compare" class="text-brand-100/50 hover:text-white transition-colors">Cabin Compare</a></li>
               <li><a href="/pages/chauffeur" class="text-brand-100/50 hover:text-white transition-colors">Chauffeur Service</a></li>
               <li><a href="/pages/extra-services" class="text-brand-100/50 hover:text-white transition-colors">Extra Services</a></li>
             </ul>

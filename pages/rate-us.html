@@ -118,6 +118,66 @@
             </div>
 
             <div>
+              <label for="route" class="block text-sm font-semibold text-neutral-700 mb-1.5">Choose Your Route <span class="text-neutral-400 font-normal normal-case">(optional)</span></label>
+              <select id="route" name="route" class="form-input">
+                <option value="">Not tied to a specific route</option>
+                <optgroup label="Europe">
+                  <option value="LHR">London (LHR)</option>
+                  <option value="CDG">Paris (CDG)</option>
+                  <option value="FRA">Frankfurt (FRA)</option>
+                  <option value="ZRH">Zurich (ZRH)</option>
+                  <option value="AMS">Amsterdam (AMS)</option>
+                  <option value="FCO">Rome (FCO)</option>
+                  <option value="MXP">Milan (MXP)</option>
+                  <option value="IST">Istanbul (IST)</option>
+                  <option value="BCN">Barcelona (BCN)</option>
+                </optgroup>
+                <optgroup label="North America">
+                  <option value="JFK">New York JFK (JFK)</option>
+                  <option value="EWR">New York Newark (EWR)</option>
+                  <option value="LAX">Los Angeles (LAX)</option>
+                  <option value="SFO">San Francisco (SFO)</option>
+                  <option value="SEA">Seattle (SEA)</option>
+                </optgroup>
+                <optgroup label="Australia & NZ">
+                  <option value="SYD">Sydney (SYD)</option>
+                  <option value="MEL">Melbourne (MEL)</option>
+                  <option value="BNE">Brisbane (BNE)</option>
+                  <option value="PER">Perth (PER)</option>
+                  <option value="AKL">Auckland (AKL)</option>
+                </optgroup>
+                <optgroup label="North Asia">
+                  <option value="NRT">Tokyo Narita (NRT)</option>
+                  <option value="HND">Tokyo Haneda (HND)</option>
+                  <option value="ICN">Seoul (ICN)</option>
+                  <option value="HKG">Hong Kong (HKG)</option>
+                  <option value="TPE">Taipei (TPE)</option>
+                  <option value="PVG">Shanghai (PVG)</option>
+                  <option value="PEK">Beijing (PEK)</option>
+                </optgroup>
+                <optgroup label="South Asia">
+                  <option value="DEL">Delhi (DEL)</option>
+                  <option value="BOM">Mumbai (BOM)</option>
+                  <option value="CMB">Colombo (CMB)</option>
+                </optgroup>
+                <optgroup label="Southeast Asia">
+                  <option value="BKK">Bangkok (BKK)</option>
+                  <option value="CGK">Jakarta (CGK)</option>
+                  <option value="DPS">Bali (DPS)</option>
+                  <option value="MNL">Manila (MNL)</option>
+                  <option value="SGN">Ho Chi Minh City (SGN)</option>
+                  <option value="HAN">Hanoi (HAN)</option>
+                  <option value="KUL">Kuala Lumpur (KUL)</option>
+                </optgroup>
+                <optgroup label="Middle East & Africa">
+                  <option value="DXB">Dubai (DXB)</option>
+                  <option value="DOH">Doha (DOH)</option>
+                  <option value="JNB">Johannesburg (JNB)</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div>
               <label class="block text-sm font-semibold text-neutral-700 mb-1.5">Your Rating</label>
               <div id="star-rating" class="flex gap-2" role="radiogroup" aria-label="Rating">
                 <button type="button" class="star-btn text-neutral-300 text-2xl transition-colors" data-star-value="1" role="radio" aria-checked="false" aria-label="1 star"><i class="fa-solid fa-star"></i></button>
@@ -127,6 +187,94 @@
                 <button type="button" class="star-btn text-neutral-300 text-2xl transition-colors" data-star-value="5" role="radio" aria-checked="false" aria-label="5 stars"><i class="fa-solid fa-star"></i></button>
               </div>
               <input type="hidden" id="rating-value" name="rating">
+            </div>
+
+            <div id="flight-details-wrapper" class="hidden space-y-5">
+            <div>
+              <label for="airline" class="block text-sm font-semibold text-neutral-700 mb-1.5">Which airline? <span class="text-neutral-400 font-normal normal-case">(optional)</span></label>
+              <select id="airline" name="airline" class="form-input">
+                <option value="">Not tied to a specific airline</option>
+                <option value="Singapore Airlines">Singapore Airlines</option>
+                <option value="British Airways">British Airways</option>
+                <option value="Qantas">Qantas</option>
+                <option value="Air France">Air France</option>
+                <option value="Thai Airways">Thai Airways</option>
+                <option value="Lufthansa">Lufthansa</option>
+                <option value="SWISS">SWISS</option>
+                <option value="KLM">KLM</option>
+                <option value="Turkish Airlines">Turkish Airlines</option>
+                <option value="Qatar Airways">Qatar Airways</option>
+                <option value="Cathay Pacific">Cathay Pacific</option>
+                <option value="ANA">ANA</option>
+                <option value="United">United</option>
+                <option value="Delta">Delta</option>
+                <option value="Emirates">Emirates</option>
+                <option value="Air New Zealand">Air New Zealand</option>
+                <option value="Korean Air">Korean Air</option>
+                <option value="Asiana">Asiana</option>
+                <option value="EVA Air">EVA Air</option>
+                <option value="China Airlines">China Airlines</option>
+                <option value="China Eastern">China Eastern</option>
+                <option value="Air China">Air China</option>
+                <option value="Air India">Air India</option>
+                <option value="SriLankan">SriLankan</option>
+                <option value="Garuda Indonesia">Garuda Indonesia</option>
+                <option value="Philippine Airlines">Philippine Airlines</option>
+                <option value="Vietnam Airlines">Vietnam Airlines</option>
+                <option value="Malaysia Airlines">Malaysia Airlines</option>
+                <option value="JAL">JAL</option>
+              </select>
+            </div>
+
+            <div>
+              <p class="block text-sm font-semibold text-neutral-700 mb-1.5">Rate the Flight Itself <span class="text-neutral-400 font-normal normal-case">(optional)</span></p>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-xs font-medium text-neutral-500 w-20 flex-shrink-0">Value</span>
+                  <div class="flex gap-1.5 sub-star-rating" data-rating-group="value_rating" role="radiogroup" aria-label="Value rating">
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="1" role="radio" aria-checked="false" aria-label="1 star"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="2" role="radio" aria-checked="false" aria-label="2 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="3" role="radio" aria-checked="false" aria-label="3 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="4" role="radio" aria-checked="false" aria-label="4 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="5" role="radio" aria-checked="false" aria-label="5 stars"><i class="fa-solid fa-star"></i></button>
+                  </div>
+                  <input type="hidden" name="value_rating">
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-xs font-medium text-neutral-500 w-20 flex-shrink-0">Comfort</span>
+                  <div class="flex gap-1.5 sub-star-rating" data-rating-group="comfort_rating" role="radiogroup" aria-label="Comfort rating">
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="1" role="radio" aria-checked="false" aria-label="1 star"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="2" role="radio" aria-checked="false" aria-label="2 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="3" role="radio" aria-checked="false" aria-label="3 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="4" role="radio" aria-checked="false" aria-label="4 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="5" role="radio" aria-checked="false" aria-label="5 stars"><i class="fa-solid fa-star"></i></button>
+                  </div>
+                  <input type="hidden" name="comfort_rating">
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-xs font-medium text-neutral-500 w-20 flex-shrink-0">Service</span>
+                  <div class="flex gap-1.5 sub-star-rating" data-rating-group="service_rating" role="radiogroup" aria-label="Service rating">
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="1" role="radio" aria-checked="false" aria-label="1 star"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="2" role="radio" aria-checked="false" aria-label="2 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="3" role="radio" aria-checked="false" aria-label="3 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="4" role="radio" aria-checked="false" aria-label="4 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="5" role="radio" aria-checked="false" aria-label="5 stars"><i class="fa-solid fa-star"></i></button>
+                  </div>
+                  <input type="hidden" name="service_rating">
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-xs font-medium text-neutral-500 w-20 flex-shrink-0">Food</span>
+                  <div class="flex gap-1.5 sub-star-rating" data-rating-group="food_rating" role="radiogroup" aria-label="Food rating">
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="1" role="radio" aria-checked="false" aria-label="1 star"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="2" role="radio" aria-checked="false" aria-label="2 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="3" role="radio" aria-checked="false" aria-label="3 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="4" role="radio" aria-checked="false" aria-label="4 stars"><i class="fa-solid fa-star"></i></button>
+                    <button type="button" class="sub-star-btn text-neutral-300 text-lg transition-colors" data-star-value="5" role="radio" aria-checked="false" aria-label="5 stars"><i class="fa-solid fa-star"></i></button>
+                  </div>
+                  <input type="hidden" name="food_rating">
+                </div>
+              </div>
+            </div>
             </div>
 
             <div>
