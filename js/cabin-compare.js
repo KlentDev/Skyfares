@@ -111,18 +111,23 @@ document.addEventListener('DOMContentLoaded', () => {
     return `<div class="w-11 h-11 rounded-full bg-brand-50 text-brand-600 flex-shrink-0 flex items-center justify-center text-xs font-bold tracking-tight">${code}</div>`;
   }
 
-  // Destination-country flag per route — emoji, not an image asset, so no new
-  // files are needed and it renders natively everywhere.
+  // Destination-country flag per route — self-hosted image files (not emoji;
+  // Windows Chrome/Edge falls back to plain two-letter codes for flag emoji,
+  // so images are the only way to get consistent rendering across all visitors).
   const ROUTE_FLAGS = {
-    LHR: '🇬🇧', CDG: '🇫🇷', FRA: '🇩🇪', ZRH: '🇨🇭', AMS: '🇳🇱', FCO: '🇮🇹',
-    MXP: '🇮🇹', IST: '🇹🇷', BCN: '🇪🇸',
-    JFK: '🇺🇸', EWR: '🇺🇸', LAX: '🇺🇸', SFO: '🇺🇸', SEA: '🇺🇸',
-    SYD: '🇦🇺', MEL: '🇦🇺', BNE: '🇦🇺', PER: '🇦🇺', AKL: '🇳🇿',
-    NRT: '🇯🇵', HND: '🇯🇵', ICN: '🇰🇷', HKG: '🇭🇰', TPE: '🇹🇼', PVG: '🇨🇳', PEK: '🇨🇳',
-    DEL: '🇮🇳', BOM: '🇮🇳', CMB: '🇱🇰',
-    BKK: '🇹🇭', CGK: '🇮🇩', DPS: '🇮🇩', MNL: '🇵🇭', SGN: '🇻🇳', HAN: '🇻🇳', KUL: '🇲🇾',
-    DXB: '🇦🇪', DOH: '🇶🇦', JNB: '🇿🇦',
+    LHR: 'united-kingdom.png', CDG: 'france.png', FRA: 'germany.png', ZRH: 'switzerland.png', AMS: 'netherlands.png', FCO: 'italy.png',
+    MXP: 'italy.png', IST: 'turkey.png', BCN: 'spain.png',
+    JFK: 'united-states.png', EWR: 'united-states.png', LAX: 'united-states.png', SFO: 'united-states.png', SEA: 'united-states.png',
+    SYD: 'australia.png', MEL: 'australia.png', BNE: 'australia.png', PER: 'australia.png', AKL: 'new-zealand.png',
+    NRT: 'japan.png', HND: 'japan.png', ICN: 'south-korea.png', HKG: 'hong-kong.png', TPE: 'taiwan.png', PVG: 'china.png', PEK: 'china.png',
+    DEL: 'india.png', BOM: 'india.png', CMB: 'sri-lanka.png',
+    BKK: 'thailand.png', CGK: 'indonesia.png', DPS: 'indonesia.png', MNL: 'philippines.png', SGN: 'vietnam.png', HAN: 'vietnam.png', KUL: 'malaysia.png',
+    DXB: 'united-arab-emirates.png', DOH: 'qatar.png', JNB: 'south-africa.png',
   };
+
+  function flagImg(file, cls) {
+    return file ? `<img src="../logos/flags/${file}" alt="" class="${cls || 'inline-block w-5 h-5 rounded-full object-cover align-[-5px]'}">` : '';
+  }
 
   // Attaches the Skyfare-editorial highlight tags onto an airline entry (e.g.
   // "Best for sleep"). Kept as a separate enrich step, not baked into A(),
@@ -338,8 +343,9 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.entries(DATA).filter(([, d]) => d.region === region).forEach(([code, d]) => {
       const opt = document.createElement('option');
       opt.value = code;
-      const flag = ROUTE_FLAGS[code] ? ROUTE_FLAGS[code] + ' ' : '';
-      opt.textContent = flag + d.name + ' (' + code + ')';
+      // Native <option> elements can't render <img> tags, so no flag icon
+      // here — the destination flag still shows in the flight-strip header.
+      opt.textContent = d.name + ' (' + code + ')';
       og.appendChild(opt);
     });
     routeSel.appendChild(og);
@@ -359,8 +365,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const d = DATA[dest];
     if (!d) return;
 
-    const flag = ROUTE_FLAGS[dest] ? ' ' + ROUTE_FLAGS[dest] : '';
-    document.getElementById('cc-dest-code').textContent = dest + flag;
+    const flag = flagImg(ROUTE_FLAGS[dest]);
+    document.getElementById('cc-dest-code').innerHTML = dest + (flag ? ' ' + flag : '');
     document.getElementById('cc-route-meta').textContent = d.meta;
 
     const rows = {
