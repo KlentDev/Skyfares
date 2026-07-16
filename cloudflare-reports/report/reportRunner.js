@@ -147,8 +147,17 @@ export async function runReport(type, env, { runDate = new Date(), post = true }
   const snapshot = buildSnapshot(type, window, results, newPremiumInWindow, previousSnapshot);
 
   if (post) {
-    // Save before sending: a Slack delivery failure shouldn't cost the next period's comparison data.
-    await saveSnapshot(snapshot, env);
+    // Save before sending: a Slack delivery failure shouldn't cost the next period's comparison
+    // data. But a SAVE failure must never block the send either — that gap (a KV write error
+    // silently killing the entire report before it ever reached Slack, with nothing logged
+    // anywhere durable) caused a real missed daily report on 2026-07-15. Losing one day's
+    // snapshot (shows up as "no prior data" in the next delta comparison) is a far smaller,
+    // self-healing problem than losing the report outright.
+    try {
+      await saveSnapshot(snapshot, env);
+    } catch (err) {
+      console.error(`[reportRunner] saveSnapshot failed, continuing to send the report anyway: ${err.message}`);
+    }
     await postReport(blocks, fallbackText, env);
   }
 

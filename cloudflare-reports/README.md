@@ -142,3 +142,12 @@ triggers for no active purpose.
 - Stripe/Calendly/GA4 are intentionally not wired up (see `services/stripe.js` etc. for what
   each would need). No secrets for them are declared in `wrangler.toml` at all, so there's no
   accidental path to using stale/wrong credentials for these later.
+
+**If a report doesn't show up:** `GET /debug/heartbeat?token=<DEBUG_RUN_TOKEN>` returns the
+last time the cron trigger fired, and the last attempt/success/failure per report type — all
+recorded independently of the report itself, specifically so a missed report is diagnosable
+after the fact. This exists because Cloudflare doesn't retain queryable historical Worker logs
+without Logpush configured (which isn't set up here), and a real incident on 2026-07-15 showed
+that without this, a missed report leaves genuinely zero trace to investigate. If `lastFire` is
+recent but `daily:lastSuccess` isn't, check `daily:lastFailure` for the error; if `lastFire`
+itself is stale, the cron trigger isn't firing at all (check the Cloudflare dashboard directly).

@@ -86,6 +86,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ── Sub-ratings (Value / Comfort / Service) — same widget, scoped per group
+  // so three independent star pickers can coexist without colliding with each
+  // other or with the main "Your Rating" widget above. All optional; the
+  // hidden input simply stays empty if a visitor skips one.
+  function initSubStarRatings() {
+    document.querySelectorAll('.sub-star-rating').forEach((group) => {
+      const input = group.parentElement.querySelector('input[type="hidden"]');
+      const buttons = Array.from(group.querySelectorAll('.sub-star-btn'));
+      if (!input || !buttons.length) return;
+
+      function paint(value) {
+        buttons.forEach((btn) => {
+          const starValue = parseInt(btn.dataset.starValue, 10);
+          const filled = starValue <= value;
+          btn.classList.toggle('text-gold', filled);
+          btn.classList.toggle('text-neutral-300', !filled);
+          btn.setAttribute('aria-checked', String(starValue === value));
+        });
+      }
+
+      buttons.forEach((btn) => {
+        const starValue = parseInt(btn.dataset.starValue, 10);
+        btn.addEventListener('mouseenter', () => paint(starValue));
+        btn.addEventListener('focus', () => paint(starValue));
+        btn.addEventListener('click', () => {
+          input.value = String(starValue);
+          paint(starValue);
+        });
+      });
+
+      group.addEventListener('mouseleave', () => paint(parseInt(input.value, 10) || 0));
+    });
+  }
+
+  // ── Route-dependent fields (Airline + flight ratings) ───────────────────
+  // Only relevant if the reviewer is rating a specific flight — hidden until
+  // a real route is picked, and reset (not just hidden) if they clear the
+  // route back to "Not tied to a specific route" so no stale airline/rating
+  // silently rides along with an unrelated testimonial.
+  function initRouteDependentFields() {
+    const routeSelect = document.getElementById('route');
+    const wrapper = document.getElementById('flight-details-wrapper');
+    if (!routeSelect || !wrapper) return;
+
+    function resetFlightDetails() {
+      const airlineSelect = document.getElementById('airline');
+      if (airlineSelect) airlineSelect.value = '';
+      wrapper.querySelectorAll('.sub-star-rating').forEach((group) => {
+        const input = group.parentElement.querySelector('input[type="hidden"]');
+        if (input) input.value = '';
+        group.querySelectorAll('.sub-star-btn').forEach((btn) => {
+          btn.classList.remove('text-gold');
+          btn.classList.add('text-neutral-300');
+          btn.setAttribute('aria-checked', 'false');
+        });
+      });
+    }
+
+    function syncVisibility() {
+      if (routeSelect.value) {
+        wrapper.classList.remove('hidden');
+      } else {
+        wrapper.classList.add('hidden');
+        resetFlightDetails();
+      }
+    }
+
+    routeSelect.addEventListener('change', syncVisibility);
+    syncVisibility(); // handles a browser restoring a prior selection (bfcache/back button)
+  }
+
   // ── Role "Others" free-text field ──────────────────────────────────────
   function initRoleOther() {
     if (!roleSelect || !roleOtherWrapper || !roleOtherInput) return;
@@ -231,6 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   initStarRating();
+  initSubStarRatings();
+  initRouteDependentFields();
   initRoleOther();
   initImageUpload();
   initFormSubmit();
