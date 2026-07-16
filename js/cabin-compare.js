@@ -142,16 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
   ---------------------------------------------------------------- */
   const DATA = {
     /* ---------- EUROPE ---------- */
-    // DRAFT tags below — Klent's starting point derived from the specs already
-    // in this file (widest seat, longest bed, free Wi-Fi, cheapest cash fare),
-    // not Sahej's final editorial call. Needs his review before treated as final.
+    // Highlight tags pulled for now — pending Sahej's actual editorial call.
+    // Re-wrap the relevant A(...) entries with E(entry, [tags]) once he sends them.
     LHR: { name: 'London', region: 'Europe', meta: '13h 45m nonstop · 10,873 km', airlines: [
-      E(A('Singapore Airlines', 'SQ 306 / SQ 322', 'A380-800', 'SQ2013', 'SGD 9,800–15,000', 'return, J Saver up', 'from 108,500 Saver each way', true),
-        ['Best Wi-Fi', 'Widest seat']),
-      E(A('British Airways', 'BA 12 / BA 16', 'B777-300ER', 'BAclub', 'SGD 7,200–10,500', 'return', 'from 90,000 Avios each way'),
-        ['Best for sleep']),
-      E(A('Qantas', 'QF 1', 'A380-800', 'QFsuite', 'SGD 7,000–9,800', 'return', 'from 108,400 Qantas Points each way'),
-        ['Best value'])
+      A('Singapore Airlines', 'SQ 306 / SQ 322', 'A380-800', 'SQ2013', 'SGD 9,800–15,000', 'return, J Saver up', 'from 108,500 Saver each way', true),
+      A('British Airways', 'BA 12 / BA 16', 'B777-300ER', 'BAclub', 'SGD 7,200–10,500', 'return', 'from 90,000 Avios each way'),
+      A('Qantas', 'QF 1', 'A380-800', 'QFsuite', 'SGD 7,000–9,800', 'return', 'from 108,400 Qantas Points each way')
     ]},
     CDG: { name: 'Paris', region: 'Europe', meta: '13h 30m nonstop · 10,732 km', airlines: [
       A('Singapore Airlines', 'SQ 336 / SQ 334', 'B777-300ER', 'SQ2013', 'SGD 9,500–15,000', 'return', 'from 108,500 Saver each way', true),
