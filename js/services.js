@@ -418,24 +418,30 @@
     ];
 
     const ROUTE_FLAGS = {
-      BWN:'🇧🇳', DPS:'🇮🇩', CGK:'🇮🇩', KUL:'🇲🇾', BKK:'🇹🇭', CEB:'🇵🇭', DAD:'🇻🇳',
-      HAN:'🇻🇳', SGN:'🇻🇳', MNL:'🇵🇭', PNH:'🇰🇭', HKT:'🇹🇭', RGN:'🇲🇲',
-      CTU:'🇨🇳', CKG:'🇨🇳', CAN:'🇨🇳', HKG:'🇭🇰', TPE:'🇹🇼', PEK:'🇨🇳', PVG:'🇨🇳',
-      AMD:'🇮🇳', BLR:'🇮🇳', MAA:'🇮🇳', COK:'🇮🇳', CMB:'🇱🇰', DEL:'🇮🇳', DAC:'🇧🇩',
-      HYD:'🇮🇳', KTM:'🇳🇵', CCU:'🇮🇳', MLE:'🇲🇻', BOM:'🇮🇳',
-      PUS:'🇰🇷', FUK:'🇯🇵', KIX:'🇯🇵', ICN:'🇰🇷', 'NRT/HND':'🇯🇵',
-      DRW:'🇦🇺', PER:'🇦🇺', ADL:'🇦🇺', AKL:'🇳🇿', BNE:'🇦🇺', CNS:'🇦🇺', CHC:'🇳🇿',
-      MEL:'🇦🇺', SYD:'🇦🇺',
-      CPT:'🇿🇦', DXB:'🇦🇪', IST:'🇹🇷', JNB:'🇿🇦',
-      AMS:'🇳🇱', BCN:'🇪🇸', BRU:'🇧🇪', CPH:'🇩🇰', FRA:'🇩🇪', LHR:'🇬🇧', MAN:'🇬🇧',
-      MXP:'🇮🇹', MUC:'🇩🇪', CDG:'🇫🇷', FCO:'🇮🇹', ZRH:'🇨🇭',
-      LAX:'🇺🇸', SFO:'🇺🇸', SEA:'🇺🇸', IAH:'🇺🇸', JFK:'🇺🇸'
+      BWN:'cambodia.png', DPS:'indonesia.png', CGK:'indonesia.png', KUL:'malaysia.png', BKK:'thailand.png', CEB:'philippines.png', DAD:'vietnam.png',
+      HAN:'vietnam.png', SGN:'vietnam.png', MNL:'philippines.png', PNH:'cambodia.png', HKT:'thailand.png', RGN:'myanmar.png',
+      CTU:'china.png', CKG:'china.png', CAN:'china.png', HKG:'hong-kong.png', TPE:'taiwan.png', PEK:'china.png', PVG:'china.png',
+      AMD:'india.png', BLR:'india.png', MAA:'india.png', COK:'india.png', CMB:'sri-lanka.png', DEL:'india.png', DAC:'bangladesh.png',
+      HYD:'india.png', KTM:'nepal.png', CCU:'india.png', MLE:'maldives.png', BOM:'india.png',
+      PUS:'south-korea.png', FUK:'japan.png', KIX:'japan.png', ICN:'south-korea.png', 'NRT/HND':'japan.png',
+      DRW:'australia.png', PER:'australia.png', ADL:'australia.png', AKL:'new-zealand.png', BNE:'australia.png', CNS:'australia.png', CHC:'new-zealand.png',
+      MEL:'australia.png', SYD:'australia.png',
+      CPT:'south-africa.png', DXB:'united-arab-emirates.png', IST:'turkey.png', JNB:'south-africa.png',
+      AMS:'netherlands.png', BCN:'spain.png', BRU:'belgium.png', CPH:'denmark.png', FRA:'germany.png', LHR:'united-kingdom.png', MAN:'united-kingdom.png',
+      MXP:'italy.png', MUC:'germany.png', CDG:'france.png', FCO:'italy.png', ZRH:'switzerland.png',
+      LAX:'united-states.png', SFO:'united-states.png', SEA:'united-states.png', IAH:'united-states.png', JFK:'united-states.png'
     };
+
+    function flagImg(file) {
+      return file ? `<img src="../logos/flags/${file}" alt="" class="inline-block w-4 h-4 rounded-full object-cover align-[-3px] mx-0.5">` : '';
+    }
 
     function flagFor(to) {
       const m = /\(([^)]+)\)/.exec(to);
-      return (m && ROUTE_FLAGS[m[1]]) || '';
+      return flagImg(m && ROUTE_FLAGS[m[1]]);
     }
+
+    const SIN_FLAG = flagImg('singapore.png');
 
     const tbody = document.getElementById('awardBody');
     const filter = document.getElementById('regionFilter');
@@ -449,7 +455,7 @@
         tr.className = "hover:bg-brand-50/60 transition-colors";
         tr.innerHTML = `
             <td class="px-6 py-4 text-sm font-bold text-neutral-300 tabular-nums">${index + 1}</td>
-            <td class="px-6 py-4 text-sm font-semibold text-neutral-900">Singapore 🇸🇬 <span class="text-brand-400">&rarr;</span> ${flagFor(r.to)} ${r.to}</td>
+            <td class="px-6 py-4 text-sm font-semibold text-neutral-900">Singapore ${SIN_FLAG} <span class="text-brand-400">&rarr;</span> ${flagFor(r.to)} ${r.to}</td>
             <td class="px-6 py-4 text-center"><span class="inline-block px-2.5 py-1 bg-brand-50 text-brand-600 rounded-full text-[10px] font-bold uppercase tracking-wider">${r.region}</span></td>
             <td class="px-6 py-4 text-right text-sm font-bold text-neutral-900 tabular-nums">${r.saver.toLocaleString()}<span class="text-neutral-400 font-medium"> mi</span></td>
             <td class="px-6 py-4 text-right text-sm font-semibold text-neutral-500 tabular-nums">${r.advantage.toLocaleString()}<span class="text-neutral-400 font-normal"> mi</span></td>
