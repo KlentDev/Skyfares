@@ -91,22 +91,31 @@ stale, expired, or contradictory.
 
 ## Recommended Architecture
 
-Add a dedicated entitlement endpoint:
+`GET /altitude/verify` already checks both `member:{email}` and `guide:{email}`
+KV in one call (`handleVerify` in `cloudflare/orchestration/session.js`) and
+already reconciles against Beehiiv via `checkBeehiivPremium`
+(`cloudflare/services/beehiiv.js`). Rather than adding a parallel
+`/entitlements/verify` endpoint that duplicates that KV/Beehiiv reconciliation
+logic, extend the existing route with an optional `target` selector:
 
 ```text
-POST /entitlements/verify
+GET /altitude/verify?target=guide|altitude
 Authorization: Bearer <jwt>
-Content-Type: application/json
-
-{ "target": "guide" | "altitude" }
 ```
+
+`target` is optional. Omitted, the response shape is unchanged from today
+(back-compat with the existing callers in `js/altitude-portal.js` and
+`js/kf-guide-portal.js`, which only need plain validity). When `target` is
+present, the response additionally includes `granted`, `reason`, `message`,
+and `purchase_options`, computed from the same KV-then-Beehiiv reconciliation
+`handleVerify` already performs internally — not a second implementation.
 
 High-level flow:
 
 ```text
 Private portal click
 -> verification modal opens
--> modal calls POST /entitlements/verify
+-> modal calls GET /altitude/verify?target=<guide|altitude>
 -> Worker verifies JWT
 -> Worker checks KV canonical entitlement
 -> if KV is valid, return granted
@@ -115,7 +124,7 @@ Private portal click
 -> return granted or denied with a clear reason
 ```
 
-Example response:
+Example response (with `target` set):
 
 ```json
 {
@@ -185,6 +194,20 @@ If KV is missing or stale:
 - A Beehiiv bundle tag alone must not grant Altitude access unless the Worker
   can safely reconstruct or find valid activation and expiration dates.
 
+## Known Implementation Notes
+
+- `components/modal-verify-access.html` already exists as a file but is
+  currently a 0-byte empty stub, not a partially-built component. The modal
+  markup needs to be authored from scratch, not just wired up.
+- The JWT payload's `guide` claim is inconsistent across login paths:
+  `/altitude/magic-verify` sets `guide: guideActive`, but `/altitude/activate`'s
+  direct-issue path does not include a `guide` claim at all
+  (`cloudflare/orchestration/session.js`). This is harmless as long as the
+  Security Notes rule below is followed (Worker always re-checks KV rather
+  than trusting the JWT for entitlement) — but don't take a shortcut and read
+  `guide` off the JWT anywhere in this feature, since it won't be present for
+  every session.
+
 ## Frontend Behavior
 
 Add shared modal behavior using:
@@ -199,7 +222,7 @@ Header behavior:
 - Cross-portal protected destinations appear locked or verification-required.
 - Clicking a protected cross-portal destination does not navigate immediately.
 - The click opens the verification modal.
-- The modal calls `POST /entitlements/verify`.
+- The modal calls `GET /altitude/verify?target=<destination>`.
 - If access is granted, the modal closes and navigates to the destination.
 - If access is denied, the modal remains open and shows the reason plus purchase
   options.
@@ -299,8 +322,8 @@ Each destination page must still verify entitlement on load:
 
 The Guide portal must not depend on `/altitude/verify` returning HTTP 200,
 because a permanent Guide owner can have no active Altitude membership after a
-bundle expires. The new entitlement endpoint should be used by both direct page
-load and cross-portal modal verification where possible.
+bundle expires. The `target`-aware `/altitude/verify` response should be used
+by both direct page load and cross-portal modal verification where possible.
 
 ## Edge Cases
 
