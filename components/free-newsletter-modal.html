@@ -1,0 +1,51 @@
+  <!-- ALTITUDE NEWSLETTER POPUP -->
+  <div id="altitude-popup" data-popup-enabled class="fixed inset-0 z-[200] hidden items-center justify-center p-4" aria-modal="true" role="dialog" aria-labelledby="altitude-popup-heading">
+    <div id="altitude-popup-backdrop" class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm"></div>
+    <div class="newsletter-modal-v2-card relative z-10 w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-[2.5rem] overflow-hidden">
+      <button id="altitude-popup-close" class="absolute top-5 right-5 z-20 w-9 h-9 flex items-center justify-center text-red-500 hover:text-red-600 transition-all" aria-label="Close">
+        <i class="fa-solid fa-xmark text-base"></i>
+      </button>
+
+      <!-- Logo band -- fills the full top width of the card (image's native
+           3:1 aspect ratio drives the height, so it never crops or letterboxes). -->
+      <div class="newsletter-modal-v2-hero relative w-full overflow-hidden" style="aspect-ratio: 3 / 1;">
+        <img src="images/banner.png" alt="Skyfare Altitude" class="w-full h-full object-cover">
+      </div>
+
+      <div class="relative z-10 p-8 md:p-10">
+        <h3 id="altitude-popup-heading" class="text-lg sm:text-2xl font-display font-black text-brand-950 mb-2 leading-snug text-center whitespace-nowrap">Business Class intel, every <span data-newsletter-day>Tuesday</span>.</h3>
+        <p class="flex items-center justify-center gap-1.5 text-[11px] font-bold text-brand-500 uppercase tracking-wider mb-5 text-center">
+          <i class="fa-solid fa-circle-check"></i>Trusted by 133 readers in Singapore.
+        </p>
+
+        <ul class="space-y-2.5 mb-6 text-sm text-neutral-600 text-left">
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Live award space alerts before seats disappear</li>
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Routing strategies that stretch your miles further</li>
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Honest cabin &amp; lounge reviews, no fluff</li>
+        </ul>
+
+        <div data-newsletter-form class="space-y-3 mb-4">
+          <input data-newsletter-name type="text" autocomplete="given-name" placeholder="First name (optional)"
+                 class="form-input-v2">
+          <input data-newsletter-email type="email" autocomplete="email" placeholder="Your email address"
+                 class="form-input-v2">
+          <button data-newsletter-btn
+                  class="btn-pill btn-pill-primary btn-glow-v2 w-full justify-center text-sm">
+            <i class="fa-solid fa-paper-plane text-xs"></i><span>Send Me the <span data-newsletter-day>Tuesday</span> Brief</span>
+          </button>
+          <p data-newsletter-status class="hidden text-xs text-center font-medium" aria-live="polite"></p>
+        </div>
+        <div data-newsletter-success class="hidden text-center py-2">
+          <div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
+          </div>
+          <h3 class="text-xl font-black text-brand-950 mb-2 leading-snug">You're in!</h3>
+          <p class="text-sm text-neutral-500 leading-relaxed">Welcome to Skyfare Altitude — your weekly insider edge. Check your inbox for your welcome email and see you next Monday.</p>
+        </div>
+        <p class="text-center text-[11px] text-neutral-400 mb-2">Free forever. Unsubscribe anytime. No credit card required.</p>
+        <button id="altitude-popup-dismiss" class="w-full text-center text-xs text-neutral-400 hover:text-neutral-600 transition-colors py-1">
+          Not now
+        </button>
+      </div>
+    </div>
+  </div>

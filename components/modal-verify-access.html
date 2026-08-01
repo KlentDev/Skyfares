@@ -1,0 +1,57 @@
+<div id="verify-access-modal" class="fixed inset-0 z-[320] items-center justify-center p-4" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="verify-access-title">
+  <div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm" data-verify-access-close></div>
+  <div class="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+    <button type="button" data-verify-access-close class="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-colors hover:bg-neutral-200 hover:text-neutral-700" aria-label="Close verification modal">
+      <i class="fa-solid fa-xmark text-xs" aria-hidden="true"></i>
+    </button>
+
+    <div class="p-7 md:p-8">
+      <div id="verify-access-kicker" class="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-brand-600">
+        <i class="fa-solid fa-lock text-[9px]" aria-hidden="true"></i>
+        Verify Access
+      </div>
+
+      <h2 id="verify-access-title" class="mb-2 font-display text-xl font-bold tracking-tight text-neutral-900">Verify your access</h2>
+      <p id="verify-access-description" class="mb-5 text-sm leading-relaxed text-neutral-500">We will check your account before opening this member area.</p>
+
+      <div class="mb-5 rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+        <p class="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Logged in as</p>
+        <p id="verify-access-email" class="break-words text-sm font-semibold text-neutral-900">Signed in</p>
+      </div>
+
+      <div id="verify-access-status" class="mb-5 hidden rounded-xl border px-4 py-3 text-sm leading-relaxed"></div>
+
+      <div class="space-y-3">
+        <button id="verify-access-check-btn" type="button" class="btn-pill btn-pill-primary w-full justify-center">
+          <i class="fa-solid fa-shield-halved text-[10px]" aria-hidden="true"></i>
+          Verify Access
+        </button>
+
+        <div id="verify-access-guide-purchase" class="hidden">
+          <button id="verify-access-guide-btn" type="button" class="btn-pill btn-pill-outline w-full justify-center">
+            <i class="fa-solid fa-book-open text-[10px]" aria-hidden="true"></i>
+            Purchase KrisFlyer Guide
+          </button>
+          <p class="mt-2 text-center text-[11px] font-semibold text-neutral-400">$49.99 one-time · permanent access</p>
+        </div>
+
+        <div id="verify-access-altitude-purchase" class="hidden grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div>
+            <button id="verify-access-monthly-btn" type="button" class="btn-pill btn-pill-outline w-full justify-center">
+              <i class="fa-solid fa-calendar-days text-[10px]" aria-hidden="true"></i>
+              Monthly
+            </button>
+            <p class="mt-2 text-center text-[11px] font-semibold text-neutral-400">$4.99/mo</p>
+          </div>
+          <div>
+            <button id="verify-access-annual-btn" type="button" class="btn-pill btn-pill-outline w-full justify-center">
+              <i class="fa-solid fa-calendar-check text-[10px]" aria-hidden="true"></i>
+              Annual
+            </button>
+            <p class="mt-2 text-center text-[11px] font-semibold text-neutral-400">$39.99/yr · save $19.89</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

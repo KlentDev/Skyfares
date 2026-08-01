@@ -35,22 +35,21 @@
         <p class="text-neutral-500 text-sm">Confirming your payment and setting up Altitude Access. This only takes a moment.</p>
       </div>
 
-      <!-- Success state -->
+      <!-- Success state -- kept deliberately minimal: the magic-modal
+           (opened on top, see script below) carries the "check your email"
+           message. No "Enter Altitude" CTA here since access now requires
+           clicking the emailed link first, not immediate on this page. -->
       <div id="state-success" class="hidden">
         <div class="w-16 h-16 rounded-full bg-gold-50 border-2 border-gold/30 flex items-center justify-center mx-auto mb-6">
           <i class="fa-solid fa-crown text-gold text-xl"></i>
         </div>
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
-          <i class="fa-solid fa-check text-[9px]"></i> Access Granted
+          <i class="fa-solid fa-check text-[9px]"></i> Payment Confirmed
         </div>
-        <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3 tracking-tight">Welcome to Altitude.</h1>
-        <p class="text-neutral-500 text-sm leading-relaxed mb-8">
-          Your membership is active. You now have full access to the Altitude archive, exclusive content, and premium newsletters delivered to your inbox.
+        <h1 class="text-2xl font-display font-bold text-neutral-900 mb-3 tracking-tight">You're subscribed to Altitude.</h1>
+        <p class="text-neutral-500 text-sm leading-relaxed">
+          Check your email for a one-time login link to access your membership.
         </p>
-        <a href="altitude" class="btn-pill btn-pill-primary">
-          Enter Altitude <i class="fa-solid fa-arrow-right text-xs"></i>
-        </a>
-        <p class="text-xs text-neutral-400 mt-4">Check your email for a welcome message from the Skyfare team.</p>
       </div>
 
       <!-- Error state -->
@@ -105,11 +104,13 @@
       })
         .then(function (r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
         .then(function (res) {
-          if (res.ok && res.data.token) {
-            try { localStorage.setItem('altitude_jwt', res.data.token); } catch (_) {}
-            // Flag altitude.html to show the welcome message, then redirect there
-            try { sessionStorage.setItem('altitude_welcome', '1'); } catch (_) {}
-            window.location.replace('altitude');
+          if (res.ok && res.data.magic_link_sent) {
+            // No auto-login -- a magic link was just emailed instead (see
+            // subscribe-worker.js handleActivate/sendStarterMagicLink). Show
+            // the minimal confirmation state and open the same shared modal
+            // used everywhere else, with the "Successful!" copy.
+            show('state-success');
+            window.openStarterSuccessModal && window.openStarterSuccessModal(res.data.email || '');
           } else {
             document.getElementById('error-msg').textContent =
               res.data.error || 'Could not activate your access. Please contact support.';

@@ -19,7 +19,7 @@
 //     membership is checked directly per-subscriber during that same walk, rather than through
 //     the broken segment_id filter.
 import { fetchWithRetry } from "../utils/retry.js";
-import { SEG_PREMIUM, SEG_FREE, SEG_PRELAUNCH } from "../config/constants.js";
+import { SEG_MONTHLY, SEG_ANNUAL, SEG_FREE, SEG_PRELAUNCH } from "../config/constants.js";
 
 const BASE = "https://api.beehiiv.com/v2";
 const PRELAUNCH_UTM_CAMPAIGN = "altitude_prelaunch";
@@ -28,7 +28,9 @@ function authHeaders(env) {
   return { Authorization: `Bearer ${env.BEEHIIV_API_KEY}` };
 }
 
-/** Cumulative segment member counts — one call covers all three known segments. */
+/** Cumulative segment member counts — one call covers all four known segments.
+ *  premiumCount is Monthly + Annual summed directly (see constants.js — the old
+ *  combined "Altitude Premium Subscribers" rollup segment is being retired). */
 export async function fetchSegmentCounts(env) {
   const res = await fetchWithRetry(
     `${BASE}/publications/${env.BEEHIIV_PUB_ID}/segments?limit=100`,
@@ -39,7 +41,7 @@ export async function fetchSegmentCounts(env) {
   const segments = json.data || [];
   const byId = Object.fromEntries(segments.map((s) => [s.id, s]));
   return {
-    premiumCount: byId[SEG_PREMIUM]?.total_results ?? 0,
+    premiumCount: (byId[SEG_MONTHLY]?.total_results ?? 0) + (byId[SEG_ANNUAL]?.total_results ?? 0),
     freeCount: byId[SEG_FREE]?.total_results ?? 0,
     prelaunchCount: byId[SEG_PRELAUNCH]?.total_results ?? 0,
   };

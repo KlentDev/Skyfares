@@ -344,3 +344,60 @@ The structural breakpoints that matter for agents: 1440px (content lock), 1068px
 - Dark-mode counterparts for destination and utility cards were not surfaced on the analyzed pages; the system documented is the daytime/light-dominant variant Skyfare ships by default.
 - Atmospheric photography (destinations page landmark vista) is a content asset, not a design token; the documented `{component.destination-quote-card}` describes the structural surface only.
 - The exact backdrop-filter blur radius on `{component.sub-nav-frosted}` and `{component.floating-sticky-bar}` is platform-dependent; production CSS uses `saturate(180%) blur(20px)` as a typical baseline but the value isn't formalized as a token.
+
+---
+
+## Redesign v2 Addendum — Homepage (`index.html`)
+
+This section records the 2026-07 homepage redesign: what it corrects in the document above, the new token/component layer it introduces, and how it relates to the rest of the site. Everything above this line describes the document as originally analyzed; where it conflicts with what's below, **this addendum is ground truth for `index.html`**, verified directly against the shipped code rather than inferred.
+
+### Ground-truth corrections
+
+The sections above were written from an abstracted token analysis and drifted from the actual shipped CSS in a few places:
+
+- **Dark tile is `#1A2437`, not `#272729`.** `.tile-dark1`/`.tile-dark2` (css/style.css) both resolve to `#1A2437`. `#272729` only exists as an unused Tailwind token (`surface.dark1` in `js/tailwind-config.js`) and an unused `.btn-pill-dark` class — neither is applied anywhere in the current site.
+- **Typography is Lexend (display) + Manrope (body/UI), not SF Pro.** Loaded via Google Fonts at weights 500/600/700 (Lexend) and 400/500/600 (Manrope) — there is no 300 or 700-Manrope weight loaded, so the "300/400/600/700" ladder in the Typography section above does not apply to this codebase.
+- **`.tile-parch` is `#f5f5f7`** (a second, later definition in css/style.css overrides an earlier dead `#ffffff` declaration for the same class). `.tile-sky` is plain `#ffffff`. The two are deliberately distinct off-whites, not duplicates.
+- **The real token source is `js/tailwind-config.js`**, not CSS custom properties — the `brand` scale (rooted at `#0066cc`), `gold` (`#C9A227`), and font families are defined there and consumed via Tailwind utility classes; only two small, mostly-unrelated `:root` blocks exist directly in `css/style.css`.
+
+### Scope and strategy
+
+- **Brand palette is locked.** Sky Blue `#0066cc` and Gold `#C9A227` are unchanged — every new rule below reuses them as literals, never redefines them.
+- **Non-destructive, additive only.** Every new class/token below is newly named (`-v2` suffix or a wholly new name) and appended at the end of `css/style.css`. No existing shared class, token, or keyframe used by any page under `/pages/` was renamed, edited, or removed.
+- **Dual-class pattern.** Most new card/eyebrow classes are designed to be added *alongside* an existing shared class on the same element (e.g. `class="card-process card-process-v2"`), not in place of it. The shared class keeps supplying structure and interaction (icon-chip hover swap, step-number tilt, accordion open/close, etc.) completely unedited; the `-v2` class, appended later in the cascade at equal specificity, only overrides the specific visual properties it names (radius, shadow, background). This is why `.card-process`, `.card-booking`, `.authority-card`, `.route-tile`, `.card-utility`, and `.faq-item` were never touched even though their homepage instances now look different.
+- **Deliberately out of scope for this pass:** the duplicate Google Fonts `@import` at the top of `css/style.css` looked like dead weight (index.html already loads the same fonts via `<link>`), but `pages/privacy.html`, `pages/terms.html`, and `pages/itinerary.html` have no font `<link>` of their own and depend on that `@import` as their only font source — removing it would silently break their typography. Left in place; a real fix means adding the `<link>` to those three pages first, which is outside this task's scope.
+
+### New token layer (`css/style.css`, appended after the existing `revealPop` keyframe block)
+
+| Category | Tokens | Notes |
+|---|---|---|
+| Elevation | `--shadow-v2-xs/sm/md/lg`, `--shadow-v2-dark-sm/dark-md`, `--shadow-v2-brand-glow`, `--shadow-v2-gold-glow` | Every value carries a real offset + soft blur. This is the deliberate, `-v2`-scoped relaxation of "exactly one drop-shadow in the entire system" (see Key Characteristics above) — the legacy rule still governs every non-`-v2` component. |
+| Radius | `--radius-v2-xs/sm/md/lg/xl/pill` (10/14/20/28/36px/9999px) | New namespace. The pre-existing `--r-*` scale (css/style.css, "Design System Enhancements") remains defined and still unused/deprecated — untouched by this work. |
+| Spacing | `--space-v2-3xs` through `--space-v2-2xl`, plus `--space-v2-section` (7rem) / `--space-v2-section-tight` (4.5rem) | 8px-rooted. |
+| Glass | `--glass-v2-dark-bg` (`rgba(255,255,255,.06)`), `--glass-v2-dark-border`, `--glass-v2-blur` (20px) | Used sparingly: dark-tile cards, the Hero search bar, FAQ items. Never a whole light-surface card default — Pricing cards stay opaque so numbers stay legible. |
+| Motion | `--ease-v2-out` (`cubic-bezier(.16,1,.3,1)`), `--ease-v2-spring` (`cubic-bezier(.34,1.56,.64,1)`) | Names curves already informally in use (`slideUp`/`heroIn`, `revealPop`). |
+| Type | `--font-display-hero-v2-size`, `--font-display-h2-v2-size`, `--font-eyebrow-v2-size`, `--font-stat-v2-size` | Fluid `clamp()` values, Lexend/Manrope only, no new font weights requested. |
+
+### New components (all additive; ★ = designed for the dual-class pattern above)
+
+- `.section-shell-v2` — section vertical-rhythm wrapper (`--space-v2-section`, tightens at 1068px/640px).
+- `.eyebrow-chip-v2` (+ `--dark`, `--gold` modifiers) — icon + label pill eyebrow, replacing bare tracked-uppercase text. Used once per section eyebrow, not layered onto every sub-heading, to avoid becoming ungoverned "eyebrow-everywhere" grammar.
+- `.card-elevate-v2` / `.card-glass-v2` — generic light/dark card primitives (standalone, used by the Newsletter Preview and Altitude signup cards, which had no prior shared base class).
+- ★ `.card-process-v2`, `.card-booking-v2` — pair with `.card-process`/`.card-booking` (How It Works, Real Bookings).
+- ★ `.authority-card-v2` (+ `--featured`) — pairs with `.authority-card` (Choose Your Path); first real use of `.card-glass-v2`'s backdrop-filter treatment.
+- ★ `.route-card-v2` — pairs with `.route-tile` (Popular Routes); adds a real shadow, a richer 3-stop scrim, and a blue→gold accent wipe (was blue→blue).
+- ★ `.card-pricing-v2` (+ `--featured`) — pairs with `.card-utility` (Pricing). Annual is the `--featured` tier (brand-glow + "Best Value" chip), matching the pricing copy's own "Save $15.01 vs. paying monthly" claim.
+- ★ `.testimonial-card-v2` — pairs with `.card-utility` inside `js/testimonials.js`'s card builder (see below).
+- ★ `.faq-item-v2` — pairs with `.faq-item`; the accordion's open/close color-swap (`.faq-indicator`) is untouched since its selector never references the parent's class name.
+- `.newsletter-card-v2`, `.social-col-v2` — standalone (no shared base existed for these; they replace raw Tailwind utilities like bare `bg-white`).
+- `.btn-glow-v2` (+ `--gold`), `.btn-pill-v2--lg` — stack onto the existing `.btn-pill` family. The button *grammar* itself (pill shape, colors) is unchanged; these only add depth/size.
+- `.icon-chip-glass-v2`, `.form-input-v2` — small glass/form primitives, used where a section had no existing icon-chip or input treatment to reuse.
+- `.cta-band-v2` (+ `__art`/`__veil`/`__content`) — a new, homegrown art/veil/content layering for the homepage's Final CTA, which has always deliberately used a different (photo bookend) treatment from the shared `.cta-band` used by 18 interior pages. `.cta-band` itself is untouched.
+
+### The one shared-JS change: `js/testimonials.js`
+
+`buildTestimonialCard(t, index, variantClass)` and `renderInto(containerId, testimonials, variantClass)` gained an optional third parameter, defaulting to `'card-utility'` — the exact class the function always used before, so `pages/testimonials.html` (which calls both with no third argument) renders byte-identical output to before. Only `initHomepageGrid()` passes the new `'card-utility testimonial-card-v2'` variant. (The archive page's own `.map(buildTestimonialCard)` call was also updated to bind explicitly, since `Array.map` passes `(element, index, array)` to its callback — the array would otherwise have been silently passed in as `variantClass` once the parameter existed.)
+
+### Rollout note
+
+Homepage sections stayed as inline markup in `index.html` rather than being extracted into the `components/` fetch-and-inject pattern (currently used only for the two login/purchase modals) — above-the-fold and near-fold homepage content doesn't benefit from an added network round-trip and CLS risk, and none of these sections are reused verbatim elsewhere. When this system is rolled out to an interior page, prefer extending the dual-class pattern (add `-v2` alongside the page's existing shared classes) over a wholesale rewrite.

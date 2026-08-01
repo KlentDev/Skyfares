@@ -11,6 +11,7 @@
   <script src="../lib/tailwind/tailwind.min.js"></script>
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
+  <script src="../js/coming-soon.js" defer></script>
   <script src="../js/cookie-consent.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,7 +106,7 @@
          than the other sections (max-w-7xl vs max-w-5xl elsewhere) — this is
          the page's primary content, so it gets more room than the hero or
          verdict on either side. ────────────── -->
-    <section class="py-24 tile-parch">
+    <section id="cc-compare-section" class="py-24 tile-parch">
       <div class="container mx-auto px-4 md:px-6 max-w-7xl">
 
         <div class="flex items-center gap-4 mb-4 slide-up">
@@ -234,30 +235,23 @@
 
 
     <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
-    <section class="cta-band">
-      <div class="cta-band__art"></div>
-      <div class="cta-band__veil"></div>
-      <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="max-w-xl mx-auto text-center slide-up">
-          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Get Started</span>
-          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
-            Ready to arrange your seat?
-          </h2>
-          <p class="section-lead-dark mb-9 max-w-md mx-auto">
-            Once you've picked your route, we'll find the best path to book it — reach us on WhatsApp or start your arrangement direct.
-          </p>
-          <div class="flex flex-wrap justify-center gap-3">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
-              class="btn-pill btn-pill-whatsapp text-base" style="padding:0.875rem 1.75rem;">
-              <i class="fa-brands fa-whatsapp"></i> Book via WhatsApp
-            </a>
-            <a href="book?service=krisflyer&option=nominee" class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
-              Start Your Arrangement
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div data-cta-mount style="min-height:420px"
+      data-cta-eyebrow-icon="fa-solid fa-arrow-up"
+      data-cta-eyebrow-text="Get Started"
+      data-cta-heading="Ready to arrange your seat?"
+      data-cta-description="Once you've picked your route, we'll find the best path to book it — reach us on WhatsApp or start your arrangement direct."
+      data-cta-art-image="../images/page-images/bg-3.JPG"
+      data-cta-primary-variant="whatsapp"
+      data-cta-primary-icon="fa-brands fa-whatsapp"
+      data-cta-primary-label="Book via WhatsApp"
+      data-cta-primary-href="https://api.whatsapp.com/send?phone=6581575306"
+      data-cta-primary-target="_blank"
+      data-cta-secondary-variant="outline"
+      data-cta-secondary-label="Start Your Arrangement"
+      data-cta-secondary-href="assessment?service=krisflyer&option=nominee"
+      data-cta-secondary-locked-feature="assessment"
+    ></div>
+    <script src="../js/cta-section.js" defer></script>
 
   </main>
 

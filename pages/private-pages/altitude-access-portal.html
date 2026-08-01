@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Altitude Dashboard — Skyfare</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Your Altitude member dashboard — membership status, billing actions, and private issue archive." />
+  <link rel="icon" href="../../logos/logo.webp" />
+
+  <script src="../../js/links.js"></script>
+  <link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
+  <script src="../../lib/tailwind/tailwind.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script src="../../js/tailwind-config.js" defer></script>
+  <script src="../../js/ui.js" defer></script>
+  <script src="../../js/private-layout.js" defer></script>
+  <script src="../../js/modal-verify-access.js" defer></script>
+</head>
+
+<body class="private-body" data-private-page="altitude" data-private-product="Altitude" data-private-subtitle="Member dashboard">
+  <div id="page-loader">
+    <img src="../../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="private-header-slot"></div>
+
+  <main id="main-content" class="private-main">
+    <div id="alt-member">
+      <section class="private-hero" aria-labelledby="alt-dashboard-title">
+        <div class="private-container">
+          <div class="private-hero__grid">
+            <div class="private-panel private-hero__intro slide-up is-visible">
+              <div>
+                <span class="private-kicker private-kicker--gold">
+                  <i class="fa-solid fa-crown" aria-hidden="true"></i>
+                  Altitude Access
+                </span>
+                <h1 id="alt-dashboard-title">Your premium travel intelligence dashboard.</h1>
+                <p>
+                  Manage your Altitude membership, browse the private issue archive, and keep your routing research in one focused member workspace.
+                </p>
+              </div>
+              <div class="private-hero__meta">
+                <span class="private-stat"><i class="fa-solid fa-circle-check text-brand-500" aria-hidden="true"></i><strong>Active access</strong></span>
+                <span class="private-stat"><i class="fa-solid fa-envelope" aria-hidden="true"></i><span id="alt-member-email">Signed in</span></span>
+                <span class="private-stat"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span id="alt-post-count">Loading issues</span></span>
+              </div>
+            </div>
+
+            <aside id="alt-membership-card" class="private-panel private-summary slide-up is-visible" aria-label="Current membership">
+              <div class="flex items-center justify-between gap-4">
+                <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-crown" aria-hidden="true"></i></div>
+                <span class="private-badge private-badge--gold">Member</span>
+              </div>
+              <div>
+                <p class="private-summary__label">Current membership</p>
+                <p id="alt-membership-plan" class="private-summary__title">Altitude</p>
+              </div>
+              <div>
+                <p id="alt-membership-days" class="private-summary__value">Checking renewal status</p>
+                <p id="alt-membership-renew-note" class="hidden private-summary__note">Auto-renews · Cancel anytime</p>
+              </div>
+              <div class="private-summary__mini-list" aria-label="Membership benefits">
+                <span><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Premium archive access</span>
+                <span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Stripe-verified member status</span>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="alt-upgrade-section" class="hidden private-section" aria-label="Annual upgrade">
+        <div class="private-container">
+          <div id="alt-upgrade-cta-card" class="private-panel private-upgrade slide-up">
+            <div class="private-section-heading">
+              <div>
+                <span class="private-kicker"><i class="fa-solid fa-arrow-up-right-dots" aria-hidden="true"></i> Billing option</span>
+                <h2>Switch to Annual when this billing period ends.</h2>
+                <p>Keep the same full Altitude access with one annual charge instead of twelve monthly payments.</p>
+              </div>
+              <span class="private-badge">Save $15.01/year</span>
+            </div>
+            <p class="private-upgrade__price">$39.99 <span class="text-lg text-neutral-400 line-through">$55</span> <span class="text-sm text-neutral-500">/year</span></p>
+            <ul class="private-check-list">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i><span>Same full Altitude access; only billing changes.</span></li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i><span>Your current Monthly access continues until it naturally ends.</span></li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i><span>Annual starts and charges after the current period expires.</span></li>
+            </ul>
+            <button id="alt-upgrade-btn" type="button" onclick="window.handleUpgradeToAnnual && window.handleUpgradeToAnnual()" class="private-action private-action--primary">
+              <i class="fa-solid fa-arrow-up-right-dots" aria-hidden="true"></i>
+              Upgrade to Annual
+            </button>
+          </div>
+
+          <div id="alt-upgrade-pending-card" class="hidden private-panel private-upgrade slide-up">
+            <div class="flex items-start gap-4">
+              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-clock" aria-hidden="true"></i></div>
+              <div>
+                <p class="private-summary__label">Upgrade scheduled</p>
+                <p id="alt-upgrade-pending-text" class="private-summary__value">Annual Subscription will automatically take effect after your current period expires.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="alt-upgrade-unavailable-card" class="hidden private-panel slide-up">
+            <div class="flex items-start gap-4">
+              <div class="icon-chip icon-chip-lg opacity-60"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></div>
+              <div>
+                <p class="private-summary__label">Billing status</p>
+                <p class="private-summary__value">Upgrade not available yet</p>
+                <p class="private-summary__note mt-1">We are still confirming your billing details with Stripe. Refresh in a few minutes, or contact support if it remains unavailable.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="private-section" aria-labelledby="alt-archive-title">
+        <div class="private-container">
+          <div class="private-section-heading slide-up">
+            <div>
+              <span class="private-kicker"><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Member archive</span>
+              <h2 id="alt-archive-title">Issue library</h2>
+              <p>Filter the archive by free and premium issues. Premium articles open directly when your member token is active.</p>
+            </div>
+            <div class="private-toolbar" id="alt-filters" aria-label="Archive filters">
+              <button type="button" data-filter="all" class="alt-filter-btn active">All</button>
+              <button type="button" data-filter="free" class="alt-filter-btn">Free</button>
+              <button type="button" data-filter="premium" class="alt-filter-btn">Premium</button>
+            </div>
+          </div>
+
+          <div id="alt-archive-grid" class="private-grid">
+            <div class="private-skeleton">
+              <span class="private-skeleton__dot" aria-hidden="true"></span>
+              <p>Loading your issue archive</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="private-footer-slot"></div>
+
+  <script src="../../js/altitude-portal.js" defer></script>
+</body>
+</html>

@@ -1,6 +1,11 @@
 name = "skyfares-altitude"
-main = "subscribe-worker.js"
+main = "worker.js"
 compatibility_date = "2024-01-01"
+# Required by @cloudflare/puppeteer (guide PDF generation — see
+# services/guidePdf.js), which imports Node's `Buffer` built-in internally.
+# Without this flag, PDF generation throws at runtime the first time it runs —
+# `wrangler deploy` doesn't catch it, only `--dry-run`'s bundler warning does.
+compatibility_flags = ["nodejs_compat"]
 
 [triggers]
 crons = ["* * * * *", "0 1 * * *"]
@@ -11,7 +16,42 @@ AIRTABLE_BASE_ID = "appA5rSlwgc57nswR"
 AIRTABLE_TABLE_FLIGHT_APPLICATIONS = "tblU1G8DRtIBCg2Xd"
 AIRTABLE_TABLE_CONTACT_INQUIRIES = "tblUs7duWvhQctspg"
 AIRTABLE_TABLE_TESTIMONIALS = "tbl2LuRuQ0DE27HVZ"
+AIRTABLE_TABLE_GUIDE_CHAPTERS = "tblj7m9IMjMgESeah"
 
 [[kv_namespaces]]
 binding = "ALTITUDE_KV"
 id = "a283ddfad0f44429b1d72e7759c68ad5"
+
+# ── KrisFlyer Guide: secure PDF delivery ──────────────────────────────────────
+# New for this feature (2026-07-30) — see cloudflare/services/guidePdf.js.
+# Puppeteer render for the guide PDF.
+[browser]
+binding = "BROWSER"
+
+# Temporary PDF storage for the "Send to My Email" flow only (never used by
+# the direct-download flow, which streams fully in-memory). NOT delete-on-
+# first-fetch (see orchestration/guidePdfHandlers.js's handleGuidePdfFetch for
+# why — email security scanners pre-fetch links) — cleanup relies entirely on
+# this bucket having an object-lifecycle expiration rule configured (24h).
+# wrangler.toml has no lifecycle config section of its own — set it up via
+# the R2 dashboard (bucket → Settings → Object Lifecycle Rules → Add rule) or
+# `wrangler r2 bucket lifecycle add skyfares-guide-pdf-temp` (see
+# https://developers.cloudflare.com/r2/buckets/object-lifecycles/ for exact flags).
+# Provision with: wrangler r2 bucket create skyfares-guide-pdf-temp
+[[r2_buckets]]
+binding = "GUIDE_PDF_BUCKET"
+bucket_name = "skyfares-guide-pdf-temp"
+
+# Provision with: wrangler d1 create skyfares-guide-audit
+# then fill in database_id below, and apply migrations/0001_guide_pdf_audit_log.sql
+[[d1_databases]]
+binding = "AUDIT_DB"
+database_name = "skyfares-guide-audit"
+database_id = "9ba791c3-5397-447e-9263-b635fcdbe9fd"
+
+# Imports templates/*.html as a raw text module (see services/guidePdf.js's
+# `import templateHtml from '../templates/pdf-kf-guide-template.html'`).
+[[rules]]
+type = "Text"
+globs = ["templates/*.html"]
+fallthrough = true

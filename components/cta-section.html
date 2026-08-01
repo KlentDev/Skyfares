@@ -1,0 +1,72 @@
+<!--
+  Shared "closing" CTA band -- fetched once per page and injected in place
+  by js/cta-section.js. Ports index.html's original .cta-band-v2 design
+  (art/veil/content layers + gold eyebrow badge + heading + description +
+  up to two buttons) into one reusable component.
+
+  This markup is static and carries no page copy -- every value below is
+  set by js/cta-section.js immediately after injection, reading its config
+  from the page's [data-cta-mount] element. See that file for the full
+  data-cta-* attribute contract.
+
+  Two content modes, chosen by the mount's data-cta-mode:
+  - "buttons" (default): #cta-section-buttons is shown, one or two buttons.
+  - "newsletter-form": #cta-section-newsletter is shown instead, reusing the
+    exact data-newsletter-form contract js/newsletter.js already binds.
+
+  Injected once per page (this component is never mounted twice on the same
+  page), so the fixed ids below never collide.
+-->
+<section class="py-14 md:py-20 cta-band-v2" id="cta-section">
+  <div class="cta-band-v2__art" id="cta-section-art"></div>
+  <div class="cta-band-v2__veil"></div>
+  <div class="container mx-auto px-4 md:px-6 cta-band-v2__content">
+    <div class="py-6 text-center">
+      <span class="eyebrow-chip-v2 cta-upgrade-badge-v5 slide-up reveal-pop mb-5" id="cta-section-eyebrow" style="animation-delay:0.05s;">
+        <i id="cta-section-eyebrow-icon" aria-hidden="true"></i><span id="cta-section-eyebrow-text"></span>
+      </span>
+
+      <h2 class="slide-up reveal-pop font-display font-bold text-white mb-5 leading-tight tracking-tight" id="cta-section-heading"
+        style="animation-delay:0.12s;font-size:clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem);"></h2>
+
+      <p class="slide-up text-white/60 text-base md:text-lg max-w-lg mx-auto mb-10 font-medium leading-relaxed" id="cta-section-description"
+        style="animation-delay:0.19s;"></p>
+
+      <div class="slide-up flex flex-wrap justify-center gap-4" id="cta-section-buttons" style="animation-delay:0.26s;">
+        <a class="btn-pill cta-action-v5 active:scale-95" id="cta-section-primary">
+          <i aria-hidden="true"></i><span></span>
+        </a>
+        <a class="btn-pill cta-action-v5 active:scale-95" id="cta-section-secondary">
+          <i aria-hidden="true"></i><span></span>
+        </a>
+      </div>
+
+      <p class="slide-up hidden mt-7 text-xs text-white/35" id="cta-section-footnote" style="animation-delay:0.32s;">
+        <span id="cta-section-footnote-text"></span> <a id="cta-section-footnote-link" class="text-white/60 underline underline-offset-2 hover:text-white/90 transition-colors"></a>
+      </p>
+
+      <div class="slide-up hidden" id="cta-section-newsletter" style="animation-delay:0.26s;">
+        <div class="max-w-md mx-auto">
+          <div data-newsletter-form>
+            <label for="cta-section-newsletter-name" class="sr-only">First name (optional)</label>
+            <input id="cta-section-newsletter-name" data-newsletter-name type="text" autocomplete="given-name"
+              placeholder="First name (optional)" class="form-input mb-3">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <label for="cta-section-newsletter-email" class="sr-only">Email address</label>
+              <input id="cta-section-newsletter-email" data-newsletter-email type="email" autocomplete="email"
+                placeholder="Your email address" class="form-input flex-1">
+              <button data-newsletter-btn type="button" class="btn-pill btn-pill-primary whitespace-nowrap">
+                Subscribe
+              </button>
+            </div>
+            <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
+          </div>
+          <div data-newsletter-success class="hidden text-center py-2">
+            <p class="text-base font-bold text-white mb-1">You're on the list.</p>
+            <p class="text-sm text-white/60 leading-relaxed">Check your inbox for a confirmation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

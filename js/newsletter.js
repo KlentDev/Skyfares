@@ -193,29 +193,37 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[data-newsletter-form]').forEach(function (wrapper) {
-      var input  = wrapper.querySelector('[data-newsletter-email]');
-      var nameEl = wrapper.querySelector('[data-newsletter-name]');
-      var btn    = wrapper.querySelector('[data-newsletter-btn]');
-      var status = wrapper.querySelector('[data-newsletter-status]');
+  function bindForm(wrapper) {
+    var input  = wrapper.querySelector('[data-newsletter-email]');
+    var nameEl = wrapper.querySelector('[data-newsletter-name]');
+    var btn    = wrapper.querySelector('[data-newsletter-btn]');
+    var status = wrapper.querySelector('[data-newsletter-status]');
 
-      if (!input || !btn) return;
+    if (!input || !btn) return;
 
-      function submit() {
-        var email = input.value;
-        if (!validateEmail(email)) {
-          setStatus(status, 'Please enter a valid email address.', 'error');
-          input.focus();
-          return;
-        }
-        subscribeEmail(email, nameEl ? nameEl.value : '', status, btn, wrapper);
+    function submit() {
+      var email = input.value;
+      if (!validateEmail(email)) {
+        setStatus(status, 'Please enter a valid email address.', 'error');
+        input.focus();
+        return;
       }
+      subscribeEmail(email, nameEl ? nameEl.value : '', status, btn, wrapper);
+    }
 
-      btn.addEventListener('click', submit);
-      [input, nameEl].forEach(function (el) {
-        if (el) el.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
-      });
+    btn.addEventListener('click', submit);
+    [input, nameEl].forEach(function (el) {
+      if (el) el.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
     });
+  }
+
+  // Exposed so components fetched/injected after DOMContentLoaded (e.g.
+  // components/free-newsletter-modal.html via js/newsletter-modal.js) can
+  // bind their own [data-newsletter-form] wrapper without duplicating the
+  // submit/validation logic above.
+  window.SkyNewsletter = { bind: bindForm };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-newsletter-form]').forEach(bindForm);
   });
 })();

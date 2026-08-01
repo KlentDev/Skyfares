@@ -28,7 +28,16 @@
       '<i class="fa-solid fa-user text-brand-200 text-3xl"></i></div>';
   }
 
-  function buildTestimonialCard(t, index) {
+  // variantClass defaults to the original 'card-utility' look so
+  // pages/testimonials.html (which calls this with no 3rd argument) renders
+  // byte-identical output to before. The homepage grid is the only caller
+  // that passes a variant ('card-utility testimonial-card-v2') — see
+  // initHomepageGrid() below.
+  function buildTestimonialCard(t, index, variantClass) {
+    variantClass = variantClass || 'card-utility';
+    var quoteMark = variantClass.indexOf('testimonial-card-v2') !== -1
+      ? '<span class="tquote-mark-v2">&ldquo;</span>'
+      : '<i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>';
     // No .slide-up here: the page's scroll-reveal IntersectionObserver (js/header.js)
     // only observes elements present at initial page load, since these cards are
     // injected later via innerHTML after an async fetch, they'd never be observed
@@ -36,12 +45,12 @@
     // Instead use .reveal-stagger — a self-triggering CSS animation that fires when
     // the element enters the DOM, with a per-card animation-delay for the cascade.
     return (
-      '<div class="card-utility reveal-stagger group overflow-hidden flex flex-col" style="animation-delay:' + ((index || 0) * 0.08) + 's;">' +
+      '<div class="' + variantClass + ' reveal-stagger group overflow-hidden flex flex-col" style="animation-delay:' + ((index || 0) * 0.08) + 's;">' +
         '<div class="h-56 flex-shrink-0 overflow-hidden">' + avatarHtml(t) + '</div>' +
         '<div class="flex-1 p-6 flex flex-col">' +
           '<div class="flex items-center justify-between mb-4">' +
             '<div class="flex gap-0.5 text-gold">' + starsHtml(t.rating) + '</div>' +
-            '<i class="fa-solid fa-quote-left text-brand-500/15 text-2xl"></i>' +
+            quoteMark +
           '</div>' +
           '<blockquote class="text-neutral-600 text-sm leading-relaxed italic flex-1 mb-5">&quot;' + esc(t.quote) + '&quot;</blockquote>' +
           '<div class="pt-4 border-t border-neutral-100">' +
@@ -53,10 +62,14 @@
     );
   }
 
-  function renderInto(containerId, testimonials) {
+  // Explicit closures around .map (not `testimonials.map(buildTestimonialCard)`)
+  // on purpose: Array.map calls its callback with (element, index, array), so
+  // passing buildTestimonialCard directly would silently pass the whole array
+  // in as variantClass.
+  function renderInto(containerId, testimonials, variantClass) {
     var el = document.getElementById(containerId);
     if (!el) return;
-    el.innerHTML = testimonials.map(buildTestimonialCard).join('');
+    el.innerHTML = testimonials.map(function (t, i) { return buildTestimonialCard(t, i, variantClass); }).join('');
   }
 
   // Resolves { testimonials, offset } — offset is Airtable's opaque pagination
@@ -86,7 +99,7 @@
           if (section) section.style.display = 'none';
           return;
         }
-        renderInto('home-testimonials-grid', result.testimonials);
+        renderInto('home-testimonials-grid', result.testimonials, 'card-utility testimonial-card-v2');
       })
       .catch(function () {
         if (section) section.style.display = 'none';
@@ -168,7 +181,7 @@
           }
 
           if (append) {
-            grid.insertAdjacentHTML('beforeend', result.testimonials.map(buildTestimonialCard).join(''));
+            grid.insertAdjacentHTML('beforeend', result.testimonials.map(function (t, i) { return buildTestimonialCard(t, i); }).join(''));
           } else {
             renderInto('testimonials-archive-grid', result.testimonials);
             showState('testimonials-archive-grid', true);

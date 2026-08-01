@@ -40,16 +40,16 @@
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-xl mx-auto text-center slide-up">
 
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+          <div id="psl-eyebrow" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
             <i class="fa-solid fa-crown text-[10px]"></i>
             Altitude Access &middot; Launching <span class="text-gold-pulse">Soon</span>
           </div>
 
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
+          <h1 id="psl-h1" class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
             Be first when<br>Altitude goes live.
           </h1>
 
-          <p class="text-base md:text-lg text-white/65 leading-relaxed mb-10 font-medium">
+          <p id="psl-lead" class="text-base md:text-lg text-white/65 leading-relaxed mb-10 font-medium">
             Skyfare Altitude — our premium travel intelligence membership — is getting ready for a proper public launch. Join the waitlist and you'll be the first to know the moment early access opens.
           </p>
 
@@ -267,7 +267,7 @@
             </div>
           </details>
 
-          <details class="faq-item-light group">
+          <details id="psl-faq-member" class="faq-item-light group">
             <summary class="flex items-center justify-between p-5">
               <span class="text-sm font-semibold text-neutral-900 leading-snug pr-4">I'm already an Altitude Premium member — do I need to join?</span>
               <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
@@ -291,10 +291,10 @@
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-xl mx-auto text-center slide-up">
           <span class="cta-eyebrow mb-6"><i class="fa-solid fa-envelope-open-text text-[10px]"></i> Early Access</span>
-          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+          <h2 id="psl-cta-h2" class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
             Don't miss launch day.
           </h2>
-          <p class="section-lead-dark mb-8">
+          <p id="psl-cta-lead" class="section-lead-dark mb-8">
             Join the Skyfare Altitude waitlist now — it takes ten seconds and one email is all you'll get, right when it's real.
           </p>
           <a href="#altitude-early-access-hero" onclick="document.getElementById('altitude-early-access-hero').scrollIntoView({behavior:'smooth'});return false;"
@@ -306,6 +306,55 @@
     </section>
 
   </main>
+
+  <!-- This page is the one shared waitlist destination for every locked
+       "Coming Soon" feature (js/coming-soon.js links here with
+       ?utm_content=assessment|guide|altitude). The copy below defaults to
+       Altitude (the page's original scope); this swaps the hero/CTA copy
+       and hides the Altitude-specific FAQ item when a different feature is
+       tagged, so the page stays accurate without needing a separate page
+       per feature. The newsletter form itself is untouched -- utm_content
+       is already forwarded from the URL by js/newsletter.js. -->
+  <script>
+    (function () {
+      var COPY = {
+        assessment: {
+          title: 'Travel Strategy Call — Early Access — Skyfare Consulting',
+          eyebrowHtml: '<i class="fa-solid fa-phone-volume text-[10px]"></i> Travel Strategy Call &middot; Launching <span class="text-gold-pulse">Soon</span>',
+          h1: 'Be first when<br>booking reopens.',
+          lead: "The Travel Strategy Call — direct 1-on-1 planning with Sahej — is being rebuilt. Join the waitlist and you'll be the first to know the moment booking reopens.",
+          ctaH2: "Don't miss the reopening.",
+          ctaLead: "Join the Travel Strategy Call waitlist now — it takes ten seconds and one email is all you'll get, right when it's back.",
+        },
+        guide: {
+          title: 'The KrisFlyer Guide — Early Access — Skyfare Consulting',
+          eyebrowHtml: '<i class="fa-solid fa-book text-[10px]"></i> KrisFlyer Guide &middot; Launching <span class="text-gold-pulse">Soon</span>',
+          h1: 'Be first when<br>the guide launches.',
+          lead: "The KrisFlyer Guide is still being written. Join the waitlist and you'll be the first to know the moment it's ready.",
+          ctaH2: "Don't miss launch day.",
+          ctaLead: "Join the KrisFlyer Guide waitlist now — it takes ten seconds and one email is all you'll get, right when it's real.",
+        },
+      };
+
+      var key = new URLSearchParams(window.location.search).get('utm_content');
+      var copy = COPY[key];
+      if (!copy) return; // no param, or "altitude" -- keep the page's default Altitude copy
+
+      document.title = copy.title;
+      var eyebrow = document.getElementById('psl-eyebrow');
+      var h1 = document.getElementById('psl-h1');
+      var lead = document.getElementById('psl-lead');
+      var ctaH2 = document.getElementById('psl-cta-h2');
+      var ctaLead = document.getElementById('psl-cta-lead');
+      var faqMember = document.getElementById('psl-faq-member');
+      if (eyebrow) eyebrow.innerHTML = copy.eyebrowHtml;
+      if (h1) h1.innerHTML = copy.h1;
+      if (lead) lead.textContent = copy.lead;
+      if (ctaH2) ctaH2.textContent = copy.ctaH2;
+      if (ctaLead) ctaLead.textContent = copy.ctaLead;
+      if (faqMember) faqMember.remove();
+    })();
+  </script>
 
 </body>
 </html>

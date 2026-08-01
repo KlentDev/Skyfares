@@ -1,0 +1,61 @@
+<!--
+  Shared magic-link modal, fetched once and injected by js/magic-modal.js
+  (loaded globally by js/header.js on every page). Two panels sharing one
+  overlay/card shell:
+
+  - #magic-modal-panel-default — "Member Access": existing members request
+    a login link via email (form -> /altitude/magic-request -> "check your
+    inbox" state). Opened via window.openLoginModal().
+
+  - #magic-modal-panel-starter — post-purchase confirmation for a brand
+    new Altitude Monthly/Annual subscriber: no form, just confirms a login
+    link was already emailed automatically. Opened via
+    window.openStarterSuccessModal(email).
+-->
+<div id="magic-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
+  <div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" data-magic-modal-close></div>
+  <div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl">
+    <button data-magic-modal-close class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
+      <i class="fa-solid fa-xmark text-xs"></i>
+    </button>
+
+    <!-- Default: Member Access request panel -->
+    <div id="magic-modal-panel-default">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-100 bg-brand-50 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5">
+        <i class="fa-solid fa-key text-[9px]"></i> Member Access
+      </div>
+      <h2 class="text-xl font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Access your membership</h2>
+      <p class="text-sm text-neutral-400 mb-6 leading-relaxed">Enter your member email and we'll send you a secure login link.</p>
+      <form id="alt-login-form">
+        <input id="alt-login-email" type="email" autocomplete="email" placeholder="member@email.com" class="w-full mb-2 px-5 py-3.5 rounded-full border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+        <p class="text-[11px] text-neutral-400 mb-4 px-1 leading-relaxed"><i class="fa-solid fa-circle-info text-[9px] mr-1"></i>One link gets you in and lets you manage your billing too.</p>
+        <button id="alt-login-btn" type="submit" class="w-full btn-pill btn-pill-primary">Send Login Link</button>
+        <p id="alt-login-status" class="text-xs mt-3 text-center min-h-[1.25rem]"></p>
+      </form>
+      <div id="alt-login-sent" style="display:none;">
+        <div class="flex flex-col items-center text-center gap-3 py-2">
+          <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center"><i class="fa-solid fa-envelope-circle-check text-brand-600 text-lg"></i></div>
+          <div>
+            <p class="text-sm font-semibold text-neutral-900 mb-1">Check your inbox</p>
+            <p class="text-xs text-neutral-400 leading-relaxed">We sent a login link to <strong id="alt-login-sent-email" class="text-neutral-700"></strong>. It's valid for 1 hour and you can use it as many times as you need during that window.</p>
+          </div>
+          <button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="text-xs text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors mt-1">Use a different email</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Starter: post-purchase success panel (no form -- the link is already sent) -->
+    <div id="magic-modal-panel-starter" class="hidden">
+      <div class="flex flex-col items-center text-center gap-3 py-2">
+        <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center"><i class="fa-solid fa-circle-check text-brand-600 text-lg"></i></div>
+        <div>
+          <p class="text-lg font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Successful!</p>
+          <p class="text-sm text-neutral-500 leading-relaxed">We sent you a magic link. Please check your email to access your account.</p>
+          <p class="text-xs text-neutral-400 leading-relaxed mt-3">Sent to <strong id="magic-modal-starter-email" class="text-neutral-700"></strong> — valid for 1 hour.</p>
+        </div>
+        <button type="button" onclick="window.closeLoginModal && window.closeLoginModal();" class="btn-pill btn-pill-primary w-full justify-center mt-2">Got it</button>
+      </div>
+    </div>
+
+  </div>
+</div>
