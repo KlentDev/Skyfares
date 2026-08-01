@@ -272,52 +272,16 @@
 
 
     <!-- =============================================
-         5. FOOTER CTA BAND — single minimal subscribe form
+         5. FOOTER CTA BAND — reusable component, newsletter-form mode
          ============================================= -->
-    <section class="cta-band">
-      <div class="cta-band__art"></div>
-      <div class="cta-band__veil"></div>
-      <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="max-w-md mx-auto text-center slide-up">
-
-          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-envelope-open-text text-[10px]"></i> Subscribe Free</span>
-          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
-            Get it in your inbox.
-          </h2>
-          <p class="section-lead-dark mb-9">
-            Weekly. Free. No spam.
-          </p>
-
-          <div data-newsletter-form>
-            <label for="cta-name" class="sr-only">First name (optional)</label>
-            <input
-              id="cta-name"
-              data-newsletter-name
-              type="text"
-              autocomplete="given-name"
-              placeholder="First name (optional)"
-              class="form-input mb-3"
-            >
-            <div class="flex flex-col sm:flex-row gap-3">
-              <label for="cta-email" class="sr-only">Email address</label>
-              <input
-                id="cta-email"
-                data-newsletter-email
-                type="email"
-                autocomplete="email"
-                placeholder="Your email address"
-                class="form-input flex-1"
-              >
-              <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">
-                Subscribe
-              </button>
-            </div>
-            <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
-          </div>
-
-        </div>
-      </div>
-    </section>
+    <div data-cta-mount data-cta-mode="newsletter-form" style="min-height:420px"
+      data-cta-eyebrow-icon="fa-solid fa-envelope-open-text"
+      data-cta-eyebrow-text="Subscribe Free"
+      data-cta-heading="Get it in your inbox."
+      data-cta-description="Weekly. Free. No spam."
+      data-cta-art-image="../images/page-images/bg-3.JPG"
+    ></div>
+    <script src="../js/cta-section.js" defer></script>
 
   </main>
 

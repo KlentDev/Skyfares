@@ -11,6 +11,7 @@
   <script src="../lib/tailwind/tailwind.min.js"></script>
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
+  <script src="../js/coming-soon.js" defer></script>
   <script src="../js/cookie-consent.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,8 +48,9 @@
               class="btn-pill btn-pill-whatsapp">
               <i class="fa-brands fa-whatsapp text-sm"></i> Start on WhatsApp
             </a>
-            <a href="assessment" class="btn-pill btn-pill-ghost">
-              Book Assessment Call
+            <a href="assessment" class="btn-pill btn-pill-ghost"
+              data-coming-soon data-coming-soon-mode="button" data-coming-soon-feature="assessment">
+              Book Travel Strategy Call
             </a>
           </div>
         </div>
@@ -199,30 +201,24 @@
 
 
     <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
-    <section class="cta-band">
-      <div class="cta-band__art"></div>
-      <div class="cta-band__veil"></div>
-      <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="max-w-xl mx-auto text-center slide-up">
-          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Ready to Fly</span>
-          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
-            Your Business Class seat awaits.
-          </h2>
-          <p class="section-lead-dark mb-9 max-w-md mx-auto">
-            Let us handle the strategy so you can focus on the journey.
-          </p>
-          <div class="flex flex-wrap justify-center gap-3">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
-              class="btn-pill btn-pill-whatsapp text-base" style="padding:0.875rem 1.75rem;">
-              <i class="fa-brands fa-whatsapp"></i> Book via WhatsApp
-            </a>
-            <a href="services" class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
-              See the Services <i class="fa-solid fa-arrow-right text-xs"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div data-cta-mount style="min-height:420px"
+      data-cta-eyebrow-icon="fa-solid fa-arrow-up"
+      data-cta-eyebrow-text="Ready to Fly"
+      data-cta-heading="Your Business Class seat awaits."
+      data-cta-description="Now that you know how it works, the next step is a quick call to map out your route."
+      data-cta-art-image="../images/page-images/bg-3.JPG"
+      data-cta-primary-variant="whatsapp"
+      data-cta-primary-icon="fa-brands fa-whatsapp"
+      data-cta-primary-label="Book via WhatsApp"
+      data-cta-primary-href="https://api.whatsapp.com/send?phone=6581575306"
+      data-cta-primary-target="_blank"
+      data-cta-secondary-variant="outline"
+      data-cta-secondary-icon="fa-solid fa-phone-volume"
+      data-cta-secondary-label="Book Your Travel Strategy Call"
+      data-cta-secondary-href="assessment"
+      data-cta-secondary-locked-feature="assessment"
+    ></div>
+    <script src="../js/cta-section.js" defer></script>
 
   </main>
 

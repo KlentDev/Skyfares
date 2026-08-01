@@ -3,20 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The KrisFlyer Guide — Skyfare Consulting</title>
-  <meta name="description" content="The complete playbook for Singapore Airlines KrisFlyer miles — award types, sweet spots, and the 355-day strategy. Launching soon — join the waitlist to be first in line." />
+  <title>The KrisFlyer Guide — Coming Soon — Skyfare Consulting</title>
+  <meta name="description" content="The KrisFlyer Guide is still being written. Join the waitlist and we'll email you the moment it's ready." />
   <link rel="icon" href="../logos/logo.webp" />
   <script src="../js/links.js"></script>
   <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
   <script src="../lib/tailwind/tailwind.min.js"></script>
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
+  <script src="../js/coming-soon.js" defer></script>
   <script src="../js/cookie-consent.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
+  <!-- Original page-specific scripts + gated-table styling — kept inline
+       (not deleted), commented out. Restore alongside the commented <main>
+       below when the guide is ready to launch for real.
   <script src="../js/utils.js" defer></script>
   <script src="../js/krisflyer-guide.js" defer></script>
   <style>
@@ -52,6 +56,7 @@
       animation: kf-pulse-outline 2s ease-in-out infinite;
     }
   </style>
+  -->
 </head>
 
 <body class="min-h-screen flex flex-col bg-white">
@@ -61,9 +66,14 @@
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
+  <!-- Original page content — kept inline (not deleted), commented out rather
+       than archived to a separate file. Delete this comment block (and the
+       Coming Soon <main> below it) to restore the full marketing page once the
+       guide is ready to launch for real.
+
   <main class="flex-1">
 
-    <!-- ─── HERO ─────────────────────────────────────────────────── -->
+    <!-- ─── HERO ─────────────────────────────────────────────────── --&gt;
     <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/krisflyer-miles.png');">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-2xl mx-auto text-center slide-up">
@@ -110,7 +120,7 @@
          real access control). Goal is anticipation/coming-soon marketing --
          nothing about the launch discount or bundle mechanics is legible
          before launch, but the actual card only needs its blur class
-         removed later to go live, no content to restore from scratch. -->
+         removed later to go live, no content to restore from scratch. --&gt;
     <section class="py-24 tile-parch">
       <div class="container mx-auto px-4 md:px-6 max-w-5xl">
 
@@ -225,7 +235,7 @@
          blurred chapter list, which would otherwise imply finished content
          is just hidden behind a paywall. Replace with the real chapter list
          (kf-blur-gated, matching the pricing card and redemption table)
-         once actual chapters exist. -->
+         once actual chapters exist. --&gt;
     <section class="py-24 tile-dark1">
       <div class="container mx-auto px-4 md:px-6 max-w-3xl">
 
@@ -245,7 +255,7 @@
              it" placeholder instead of a blurred/locked chapter list that
              would imply finished content is just hidden behind a paywall.
              Not gated behind kf-blur/magic-link access: there's nothing to
-             unlock yet regardless of purchase status. -->
+             unlock yet regardless of purchase status. --&gt;
         <div class="max-w-lg mx-auto text-center py-16 px-8 slide-up authority-card">
           <div class="icon-chip icon-chip-dark mx-auto mb-5">
             <i class="fa-solid fa-pen-nib"></i>
@@ -266,7 +276,7 @@
          Short teaser (not the full chapter -- that's paid content) plus the
          redemption-conditions table, combined into one section at max-w-6xl
          so the 5-column table gets real room instead of a separate,
-         narrower band. -->
+         narrower band. --&gt;
     <section id="preview" class="py-24 tile-parch">
       <div class="container mx-auto px-4 md:px-6 max-w-6xl">
 
@@ -297,7 +307,7 @@
     </section>
 
 
-    <!-- ─── WHY SKYFARE ───────────────────────────────────────────── -->
+    <!-- ─── WHY SKYFARE ───────────────────────────────────────────── --&gt;
     <section class="py-24 tile-sky">
       <div class="container mx-auto px-4 md:px-6 max-w-3xl">
 
@@ -332,7 +342,7 @@
     </section>
 
 
-    <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
+    <!-- ─── CTA BAND ──────────────────────────────────────────────── --&gt;
     <section class="cta-band">
       <div class="cta-band__art"></div>
       <div class="cta-band__veil"></div>
@@ -361,6 +371,39 @@
       </div>
     </section>
 
+  </main>
+
+  -->
+
+  <!-- Dedicated full-page Coming Soon screen (js/coming-soon.js system),
+       same treatment as pages/assessment.html. The full marketing page
+       this replaced (hero, pricing, free Chapter 1 preview, Why This
+       Guide) is commented out above, not deleted -- restore it (and remove
+       this block) when the guide is ready to launch for real. -->
+  <main class="flex-1 flex items-center justify-center page-hero-bg relative overflow-hidden py-16 px-4"
+    style="--hero-img:url('../images/page-images/krisflyer-miles.png');">
+    <div class="container mx-auto px-4 md:px-6 relative z-10">
+      <div class="card-glass-v2 max-w-lg mx-auto text-center px-8 py-12 md:px-12 md:py-14 slide-up">
+        <div class="icon-chip-glass-v2 mx-auto mb-5" style="width:3rem;height:3rem;font-size:1.15rem;">
+          <i class="fa-solid fa-book" aria-hidden="true"></i>
+        </div>
+        <span class="cs-badge mb-5">Coming Soon</span>
+        <h1 class="text-3xl md:text-4xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
+          The KrisFlyer Guide
+        </h1>
+        <p class="text-base text-white/70 leading-relaxed mb-8 font-medium max-w-md mx-auto">
+          The KrisFlyer Guide is still being written. Join the waitlist and we'll email you the moment it's ready.
+        </p>
+
+        <a href="pre-signup-link?utm_content=guide" class="btn-pill btn-pill-primary">
+          <i class="fa-solid fa-bell text-xs" aria-hidden="true"></i>Join Our Waitlist
+        </a>
+
+        <p class="mt-8 text-xs text-white/40">
+          <a href="../" class="text-white/60 underline underline-offset-2 hover:text-white/90 transition-colors">&larr; Back to Skyfare Consulting</a>
+        </p>
+      </div>
+    </div>
   </main>
 
 </body>

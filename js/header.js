@@ -133,6 +133,26 @@ document.addEventListener('DOMContentLoaded', () => {
     @media (prefers-reduced-motion: reduce) {
       .header-cta-altitude { transform: none !important; }
     }
+    /* Book a Flight becomes the sole header CTA once Altitude Access is
+       hidden (Coming Soon) -- give it an always-visible label instead of
+       the icon-only/hover-reveal treatment, so the header doesn't read as
+       empty with only a bare icon on the right. */
+    .header-cta-solo {
+      min-width: 0;
+      padding: 0 1.15rem 0 0.9rem;
+    }
+    .header-cta-solo .cta-label {
+      position: static;
+      transform: none;
+      pointer-events: auto;
+      opacity: 1;
+      margin-left: 0.5rem;
+    }
+    .header-cta-solo:hover .cta-label,
+    .header-cta-solo:focus-visible .cta-label {
+      transform: none;
+    }
+
     /* Dark-photo heroes (.header-transparent): flip the outline CTA to white
        so it stays legible before the header goes solid on scroll -- same
        treatment the old .book-now-btn had. The gold CTA needs no override,
@@ -194,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-phone-volume text-sm"></i>
                       </div>
-                      <div class="text-sm font-semibold text-brand-950">Assessment Call</div>
+                      <div class="text-sm font-semibold text-brand-950">Travel Strategy Call</div>
                     </a>
                   </div>
                   <!-- Right: Extra Services -->
@@ -264,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="flex items-center gap-1.5 px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
               <i class="fa-solid fa-book-open text-[13px] opacity-60"></i> Resources <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
-            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:240px;">
+            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:280px;">
               <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
                 <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
@@ -283,7 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fa-solid fa-book text-sm"></i>
                   </div>
                   <div class="text-sm font-semibold text-brand-950">KrisFlyer Guide</div>
-                  <span class="ml-auto text-[9px] font-bold uppercase tracking-wide text-brand-600 bg-brand-50 border border-brand-100 px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">Coming Soon</span>
                 </a>
               </div>
             </div>
@@ -294,18 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </nav>
 
-        <!-- Right side: Altitude Access (always-visible label, playful gold
-             gradient + pulse -- see .header-cta-altitude) + Book a Flight
-             (stays icon-only, expands with a label on hover only). -->
+        <!-- Right side: Book a Flight. Altitude Access is hidden site-wide
+             while Skyfare Altitude is in its Coming Soon state -- the
+             magic-link login modal it opened (js/magic-modal.js) is left
+             wired for pages/altitude.html and pages/altitude-success.html,
+             only this entry point to it is removed. -->
         <div class="hidden lg:flex items-center gap-2.5 ml-auto">
-          <button id="header-altitude-btn" type="button"
-            onclick="window.openLoginModal && window.openLoginModal();"
-            class="header-cta-icon header-cta-gold header-cta-altitude" aria-label="Altitude Access — member login">
-            <i class="fa-solid fa-crown text-base flex-shrink-0"></i>
-            <span class="cta-label">Altitude Access</span>
-          </button>
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment"
-            class="header-cta-icon header-cta-outline" aria-label="Book a Flight">
+            class="header-cta-icon header-cta-outline header-cta-solo" aria-label="Book a Flight">
             <i class="fa-solid fa-calendar-check text-base flex-shrink-0"></i>
             <span class="cta-label">Book a Flight</span>
           </a>
@@ -345,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i class="fa-solid fa-plane-circle-check text-brand-400 w-6 text-base"></i> KrisFlyer Miles
               </a>
               <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
-                <i class="fa-solid fa-phone-volume text-brand-400 w-6 text-base"></i> Assessment Call
+                <i class="fa-solid fa-phone-volume text-brand-400 w-6 text-base"></i> Travel Strategy Call
               </a>
             </div>
             <div class="flex flex-col gap-4">
@@ -401,11 +416,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </nav>
           
           <div class="mt-auto pt-10 flex flex-col gap-3">
-            <button id="mobile-altitude-btn" type="button"
-              class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white font-semibold shadow-lg" style="background:#C9A227;">
-              <i class="fa-solid fa-crown text-xl"></i>
-              Altitude Access
-            </button>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
               <i class="fa-solid fa-calendar-check text-xl"></i>
               Book a Flight
@@ -520,15 +530,6 @@ document.addEventListener('DOMContentLoaded', () => {
   mobileMenuBtn.addEventListener('click', openMenu);
   closeMobileMenu.addEventListener('click', closeMenu);
   mobileMenuBackdrop.addEventListener('click', closeMenu);
-
-  const mobileAltitudeBtn = document.getElementById('mobile-altitude-btn');
-  if (mobileAltitudeBtn) {
-    mobileAltitudeBtn.addEventListener('click', () => {
-      closeMenu();
-      window.openLoginModal && window.openLoginModal();
-    });
-  }
-
 
   // --- Global UI components (SkyUI: toast / modal / alert) ---
   (function () {

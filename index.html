@@ -30,6 +30,7 @@
   <!-- Injectable Header & Footer -->
   <script src="js/header.js" defer></script>
   <script src="js/footer.js" defer></script>
+  <script src="js/coming-soon.js" defer></script>
   <script src="js/cookie-consent.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -129,7 +130,8 @@
                   <i class="fa-solid fa-crown text-xs"></i>
                   Explore Altitude
                 </a>
-                <a href="pages/assessment" class="btn-pill btn-pill-secondary btn-glow-v2">
+                <a href="pages/assessment" class="btn-pill btn-pill-secondary btn-glow-v2"
+                   data-coming-soon data-coming-soon-mode="button" data-coming-soon-feature="assessment" data-coming-soon-hide-note="true">
                   <i class="fa-solid fa-calendar-check text-xs"></i>
                   Book a Call
                 </a>
@@ -582,12 +584,13 @@
           </a>
         </article>
 
-        <article class="path-card-v5 path-card-v5--recommended slide-up reveal-pop" style="animation-delay:0.14s;">
+        <article class="path-card-v5 path-card-v5--recommended slide-up reveal-pop" style="animation-delay:0.14s;"
+          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="assessment">
           <div class="path-card-v5__top">
             <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-phone-volume"></i></div>
             <span>Recommended</span>
           </div>
-          <h3>Assessment Call</h3>
+          <h3>Travel Strategy Call</h3>
           <p>$99, direct access to Sahej — book a slot, get a real plan, and the fee becomes a credit if you book with us.</p>
           <ul>
             <li><i class="fa-solid fa-circle-check"></i>Personal call with the founder, booked on his calendar</li>
@@ -595,11 +598,12 @@
             <li><i class="fa-solid fa-circle-check"></i>$99 credited back when you book with us</li>
           </ul>
           <a href="pages/assessment#priority" class="btn-pill btn-pill-primary path-cta-v5">
-            <i class="fa-solid fa-phone-volume"></i>Book Your Assessment Call
+            <i class="fa-solid fa-phone-volume"></i>Book Your Travel Strategy Call
           </a>
         </article>
 
-        <article class="path-card-v5 slide-up reveal-pop" style="animation-delay:0.2s;">
+        <article class="path-card-v5 slide-up reveal-pop" style="animation-delay:0.2s;"
+          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="altitude">
           <div class="path-card-v5__top">
             <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-crown"></i></div>
             <span>Coming Soon</span>
@@ -616,7 +620,8 @@
           </a>
         </article>
 
-        <article class="path-card-v5 slide-up reveal-pop" style="animation-delay:0.26s;">
+        <article class="path-card-v5 slide-up reveal-pop" style="animation-delay:0.26s;"
+          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="guide">
           <div class="path-card-v5__top">
             <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-book-open"></i></div>
             <span>Coming Soon</span>
@@ -941,12 +946,13 @@
         </div>
 
         <!-- ASSESSMENT CALL -->
-        <div class="card-utility card-pricing-v2 p-8 flex flex-col">
-          <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Assessment Call</h3>
+        <div class="card-utility card-pricing-v2 p-8 flex flex-col"
+          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="assessment">
+          <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Travel Strategy Call</h3>
           <p class="text-sm text-neutral-500 leading-relaxed mb-6">Direct, personal access to Sahej — book a slot, get a real plan, no waiting.</p>
           <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$99</span></p>
           <p class="text-xs text-neutral-400 font-semibold mb-6">Credited back if you book with us</p>
-          <a href="pages/assessment#priority" class="btn-pill btn-pill-primary w-full justify-center mb-6">Book Assessment Call</a>
+          <a href="pages/assessment#priority" class="btn-pill btn-pill-primary w-full justify-center mb-6">Book Travel Strategy Call</a>
           <div class="border-t border-neutral-100 pt-6 mt-auto">
             <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">Features</p>
             <ul class="space-y-2.5 text-sm text-neutral-600">
@@ -958,7 +964,8 @@
         </div>
 
         <!-- ALTITUDE ACCESS (monthly / annual) -->
-        <div class="card-utility card-pricing-v2 card-pricing-v2--featured pricing-altitude-card-v5 relative p-8 flex flex-col">
+        <div class="card-utility card-pricing-v2 card-pricing-v2--featured pricing-altitude-card-v5 relative p-8 flex flex-col"
+          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="altitude">
           <span class="pricing-value-chip-v5">Save 33%</span>
           <div class="flex flex-col flex-1">
             <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Altitude Access</h3>
@@ -992,11 +999,10 @@
           </div>
         </div>
 
-        <!-- GUIDE (The KrisFlyer Guide, one-time purchase) -- gated -->
-        <div class="card-utility card-pricing-v2 relative overflow-hidden p-8 flex flex-col">
-          <!-- pricing-blur removed for testing 2026-07-22 -- add back
-               class="pricing-blur" and aria-hidden="true" (and un-comment
-               the lock overlay below) before this goes live for real. -->
+        <!-- GUIDE (The KrisFlyer Guide, one-time purchase) -- gated via the
+             shared Coming Soon system, js/coming-soon.js -->
+        <div class="card-utility card-pricing-v2 relative overflow-hidden p-8 flex flex-col"
+          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="guide">
           <div class="flex flex-col flex-1">
             <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">KrisFlyer Guide</h3>
             <p class="text-sm text-neutral-500 leading-relaxed mb-6">The KrisFlyer Guide, one-time purchase.</p>
@@ -1012,17 +1018,6 @@
               </ul>
             </div>
           </div>
-          <!-- Lock overlay commented out for testing -- un-comment together
-               with restoring class="pricing-blur" above before this goes live.
-          <div class="absolute inset-0 flex flex-col items-center justify-center text-center gap-3 px-6"
-               style="background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.97)); border-radius:18px;">
-            <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-lock"></i></div>
-            <p class="font-display font-bold text-neutral-900 text-base uppercase tracking-widest">Coming Soon</p>
-            <a href="pages/pre-signup-link" class="btn-pill btn-pill-primary" style="padding:0.6rem 1.25rem;font-size:0.8rem;">
-              <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
-            </a>
-          </div>
-          -->
         </div>
 
       </div>
@@ -1147,7 +1142,7 @@
             </h2>
           </div>
           <p class="section-split-v5__copy">
-            Straight answers about nominee redemption, timing, and fees — before you reach out.
+            Straight answers about nominee redemption, timing, and fees, before you reach out.
           </p>
         </div>
 
@@ -1163,7 +1158,7 @@
               <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
             </summary>
             <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-white/55 leading-relaxed">
-              Yes. KrisFlyer's programme rules allow members to redeem miles for nominated individuals. We operate fully within the programme's terms — we handle the search, strategy, and booking on your behalf.
+              Yes. KrisFlyer's programme rules allow members to redeem miles for nominated individuals. We operate fully within the programme's terms, handling the search, strategy, and booking on your behalf.
             </div></div>
           </details>
 
@@ -1176,7 +1171,7 @@
               <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
             </summary>
             <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-white/55 leading-relaxed">
-              We propose 1–2 alternates (date or route) and use nominee redemption paths that avoid waitlists. Our experts find hidden availability that doesn't appear on standard search engines.
+              We propose 1-2 alternates (date or route) and use nominee redemption paths that avoid waitlists. Our experts find hidden availability that doesn't appear on standard search engines.
             </div></div>
           </details>
 
@@ -1202,7 +1197,7 @@
               <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
             </summary>
             <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-white/55 leading-relaxed">
-              Assessment Calls (S$99) determine feasibility. Itinerary Design (from S$240) handles deep strategy. Nominee redemptions follow a clear tiered rate. No hidden mark-ups.
+              Travel Strategy Calls (S$99) determine feasibility. Itinerary Design (from S$240) handles deep strategy. Nominee redemptions follow a clear tiered rate. No hidden mark-ups.
             </div></div>
           </details>
 
@@ -1221,7 +1216,7 @@
   </section>
 
   <!-- FREE NEWSLETTER -->
-  <section class="py-20 tile-sky" id="skyfare-altitude">
+  <section class="py-20 tile-sky newsletter-polish-v6" id="skyfare-altitude">
     <div class="container mx-auto px-4 md:px-6">
       <div>
         <div class="altitude-newsletter-heading-v5 slide-up">
@@ -1250,7 +1245,7 @@
               <i class="fa-solid fa-check text-xl text-emerald-500"></i>
             </div>
             <p class="text-base font-bold text-neutral-900 mb-1">You're on the list.</p>
-            <p class="text-sm text-neutral-500">Welcome to Skyfare Altitude. Your welcome email is on its way — see you next Monday.</p>
+            <p class="text-sm text-neutral-500">Welcome to Skyfare Altitude. Your welcome email is on its way, see you next Monday.</p>
           </div>
           <p class="text-xs text-neutral-500 mt-4">Free forever. Unsubscribe anytime. No credit card required.</p>
         </div>
@@ -1260,35 +1255,24 @@
     </div>
   </section>
 
-  <!-- FINAL CTA SECTION -->
-  <section class="py-14 md:py-20 cta-band-v2">
-    <div class="cta-band-v2__art" style="background-image:url('images/page-images/bg-3.JPG');"></div>
-    <div class="cta-band-v2__veil"></div>
-    <div class="container mx-auto px-4 md:px-6 cta-band-v2__content">
-      <div class="py-6 text-center">
-        <span class="eyebrow-chip-v2 cta-upgrade-badge-v5 slide-up reveal-pop mb-5" style="animation-delay:0.05s;">
-          <i class="fa-solid fa-arrow-up"></i>Your Upgrade Awaits
-        </span>
-        <h2 class="slide-up reveal-pop font-display font-bold text-white mb-5 leading-tight tracking-tight" style="animation-delay:0.12s;font-size:clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem);">
-          Ready to Fly Premium?
-        </h2>
-        <p class="slide-up text-white/60 text-base md:text-lg max-w-lg mx-auto mb-10 font-medium leading-relaxed" style="animation-delay:0.19s;">
-          Book your next Business or First Class seat — or start with the insider knowledge to do it yourself.
-        </p>
-        <div class="slide-up flex flex-wrap justify-center gap-4" style="animation-delay:0.26s;">
-          <a href="https://api.whatsapp.com/send?phone=6581575306"
-             class="btn-pill cta-action-v5 active:scale-95"
-             style="background:#22c55e;color:#ffffff;">
-            <i class="fa-brands fa-whatsapp"></i> Book via WhatsApp
-          </a>
-          <a href="pages/altitude"
-             class="btn-pill cta-action-v5 inline-flex items-center gap-2 font-semibold text-white border border-white/25 hover:bg-white/10 transition-all active:scale-95">
-            <i class="fa-solid fa-crown text-amber-300"></i> Explore Altitude
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- FINAL CTA SECTION — reusable component, see components/cta-section.html -->
+  <div data-cta-mount style="min-height:420px"
+    data-cta-eyebrow-icon="fa-solid fa-arrow-up"
+    data-cta-eyebrow-text="Your Upgrade Awaits"
+    data-cta-heading="Ready to Fly Premium?"
+    data-cta-description="Book your next Business or First Class seat — or start with the insider knowledge to do it yourself."
+    data-cta-art-image="images/page-images/bg-3.JPG"
+    data-cta-primary-variant="whatsapp"
+    data-cta-primary-icon="fa-brands fa-whatsapp"
+    data-cta-primary-label="Book via WhatsApp"
+    data-cta-primary-href="https://api.whatsapp.com/send?phone=6581575306"
+    data-cta-primary-target="_blank"
+    data-cta-secondary-variant="outline"
+    data-cta-secondary-icon="fa-solid fa-crown"
+    data-cta-secondary-label="Explore Altitude"
+    data-cta-secondary-href="pages/altitude"
+  ></div>
+  <script src="js/cta-section.js" defer></script>
 
   <!-- FOOTER -->
 

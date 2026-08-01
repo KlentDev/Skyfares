@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <li><a href="/pages/past-flight-deals" class="text-brand-100/50 hover:text-white transition-colors">Flights We've Arranged</a></li>
               <li><a href="/pages/newsletter" class="text-brand-100/50 hover:text-white transition-colors">Newsletter</a></li>
               <li><a href="/pages/testimonials" class="text-brand-100/50 hover:text-white transition-colors">Testimonials</a></li>
-              <li><a href="/pages/assessment" class="text-brand-100/50 hover:text-white transition-colors">Assessment Call</a></li>
+              <li><a href="/pages/assessment" class="text-brand-100/50 hover:text-white transition-colors">Travel Strategy Call</a></li>
             </ul>
           </div>
 

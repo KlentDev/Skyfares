@@ -3325,6 +3325,29 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   text-wrap: pretty;
 }
 
+/* Free Newsletter — gives the section its own identity (tile-sky was flat
+   white, indistinguishable from surrounding sections) via a soft radial
+   wash behind the content; content itself stays free in the section,
+   no card container. */
+.newsletter-polish-v6 {
+  position: relative;
+  overflow: hidden;
+}
+
+.newsletter-polish-v6::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, rgba(0, 102, 204, 0.07), transparent 55%);
+}
+
+.newsletter-polish-v6 .container {
+  position: relative;
+  z-index: 1;
+}
+
 .cta-upgrade-badge-v5 {
   background: #C9A227;
   border-color: rgba(255, 255, 255, 0.24);
@@ -3466,18 +3489,13 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 .faq-more-v5 a {
-  min-height: 2.75rem;
-  padding: 0.68rem 1.05rem;
-  border-radius: var(--radius-v2-pill);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.055);
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
   font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s var(--ease-v2-out);
 }
 
 .faq-more-v5 a:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.24);
   color: #ffffff;
 }
 
@@ -5495,3 +5513,115 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
     transform: none !important;
   }
 }
+
+/* ===== COMING SOON SYSTEM (cs-*) ==========================================
+   Reusable lock/blur/badge/waitlist system for not-yet-launched features.
+   Consumes existing -v2 tokens (glass/shadow/radius/ease) per DESIGN.md's
+   append-only convention -- nothing above this block is edited. Markup is
+   injected at runtime by js/coming-soon.js from [data-coming-soon] elements;
+   see that file for the authoring contract (data-coming-soon-mode etc). */
+
+.cs-blur {
+  filter: blur(14px);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Lock overlay -- absolutely positioned over a .cs-blur'd sibling. Entrance
+   is self-triggering (.is-visible toggled by JS via requestAnimationFrame
+   right after injection) -- deliberately NOT .slide-up, since the sitewide
+   IntersectionObserver (js/header.js) only ever scans .slide-up once at
+   DOMContentLoaded and would never see anything injected afterward. */
+.cs-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: inherit;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.5s var(--ease-v2-out), transform 0.5s var(--ease-v2-out);
+}
+.cs-overlay.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cs-overlay--light {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.99) 45%);
+}
+.cs-overlay--dark {
+  background: rgba(10, 16, 30, 0.74);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-v2-dark-border);
+}
+
+/* "Coming Soon" badge -- brand-blue shimmer sweep, reuses the existing
+   badgeShimmer keyframe. Gold/.badge-shine stays reserved for premium-tier
+   signals per DESIGN.md, so this uses a blue gradient instead. */
+.cs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-v2-pill);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  background: linear-gradient(105deg, #0052a3 0%, #0066cc 22%, #5fb2ff 42%, #eaf4ff 50%, #5fb2ff 58%, #0066cc 78%, #0052a3 100%);
+  background-size: 250% 100%;
+  animation: badgeShimmer 3s ease-in-out infinite;
+}
+
+/* Disabled CTA -- dual-class modifier, stacks onto .btn-pill-primary /
+   .btn-pill-ghost / .btn-pill-secondary / .btn-pill-gold without touching
+   the button grammar itself (shape/sizing unchanged). Click/keyboard
+   activation is blocked in js/coming-soon.js via aria-disabled, not by
+   removing the element from the tab order. */
+.btn-pill-disabled,
+.btn-pill-disabled:hover,
+.btn-pill-disabled:active {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.btn-pill-primary.btn-pill-disabled:hover { background: #0066cc; }
+.btn-pill-ghost.btn-pill-disabled:hover { background: transparent; }
+.btn-pill-secondary.btn-pill-disabled:hover { background: #ffffff; }
+.btn-pill-gold.btn-pill-disabled:hover { background: #C9A227; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-badge { animation: none; }
+  .cs-overlay { transition: opacity 0.01ms linear; }
+}
+
+/* ===== CTA SECTION (components/cta-section.html) ==========================
+   Named .cta-action-v5 color variants -- replaces the inline
+   style="background:#22c55e;..." hacks index.html's old one-off CTA used
+   per-button. Sizing/shadow/hover stay on the existing
+   `.cta-band-v2 .cta-action-v5` rule (css/style.css ~3339); these only add
+   color, so every button in the shared component is styled the same way
+   regardless of which page supplies it. */
+.cta-action-v5--whatsapp { background: #22c55e; color: #ffffff; border: none; }
+.cta-action-v5--whatsapp:hover { background: #16a34a; }
+.cta-action-v5--primary { background: #0066cc; color: #ffffff; border: none; }
+.cta-action-v5--primary:hover { background: #0052a3; }
+.cta-action-v5--gold { background: #C9A227; color: #ffffff; border: none; }
+.cta-action-v5--gold:hover { background: #9E7B0D; }
+.cta-action-v5--outline {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-weight: 600;
+}
+.cta-action-v5--outline:hover { background: rgba(255, 255, 255, 0.10); }
+/* Crown icon reads as a premium/Altitude signal sitewide -- gold accent
+   carries through automatically wherever it appears in an outline CTA. */
+.cta-action-v5--outline .fa-crown { color: #C9A227; }
