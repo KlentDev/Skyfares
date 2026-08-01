@@ -524,6 +524,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   routeSel.addEventListener('change', (e) => render(e.target.value));
-  routeSel.value = 'LHR';
-  render('LHR');
+
+  // Deep-link support: ?route=CODE (e.g. from the homepage hero search modal's
+  // "Compare cabins on this route" link) selects that route on load and
+  // scrolls the comparison card into view. Falls back to LHR otherwise.
+  const requestedRoute = new URLSearchParams(location.search).get('route');
+  const initialRoute = requestedRoute && DATA[requestedRoute.toUpperCase()] ? requestedRoute.toUpperCase() : 'LHR';
+  routeSel.value = initialRoute;
+  render(initialRoute);
+  if (initialRoute !== 'LHR') {
+    document.getElementById('cc-compare-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 });

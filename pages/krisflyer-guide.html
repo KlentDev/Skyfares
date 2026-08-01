@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The KrisFlyer Guide — Skyfare Consulting</title>
+  <meta name="description" content="The complete playbook for Singapore Airlines KrisFlyer miles — award types, sweet spots, and the 355-day strategy. Launching soon — join the waitlist to be first in line." />
+  <link rel="icon" href="../logos/logo.webp" />
+  <script src="../js/links.js"></script>
+  <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
+  <script src="../lib/tailwind/tailwind.min.js"></script>
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+  <script src="../js/cookie-consent.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/tailwind-config.js" defer></script>
+  <script src="../js/utils.js" defer></script>
+  <script src="../js/krisflyer-guide.js" defer></script>
+  <style>
+    /* Redemption-conditions table — page-scoped, matching the established
+       convention (see pages/cabin-compare.html's .cc-table): no shared
+       comparison-table component exists in the design system yet, so each
+       page that needs one builds its own on card-utility/hairline-border
+       conventions rather than inventing a new grammar. */
+    .kf-table th, .kf-table td { white-space: nowrap; }
+    .kf-table thead th:first-child, .kf-table tbody td:first-child { white-space: normal; }
+    .kf-table tbody tr:hover { background: #fafafc; }
+    .kf-num { font-variant-numeric: tabular-nums; }
+
+    /* Gated-table blur -- CSS-only visual placeholder matching the pattern
+       already used in pages/cabin-compare.html's .cc-verdict-copy: not real
+       access control, just the visual tease. */
+    .kf-blur {
+      filter: blur(6px);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* "Coming soon" pulse for highlighted CTAs -- a contained border-color/
+       opacity oscillation, matching the identical .kf-pulse-outline used on
+       pages/krisflyer.html's cross-sell card. No scale, no box-shadow --
+       stays hugging the element's actual boundary (Tailwind's animate-ping
+       would balloon a box/pill this size well past its own edges). */
+    @keyframes kf-pulse-outline {
+      0%, 100% { border-color: rgba(56, 161, 255, 0.15); }
+      50% { border-color: rgba(56, 161, 255, 0.9); }
+    }
+    .kf-pulse-outline {
+      animation: kf-pulse-outline 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-white">
+
+  <div id="page-loader">
+    <img src="../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <main class="flex-1">
+
+    <!-- ─── HERO ─────────────────────────────────────────────────── -->
+    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/krisflyer-miles.png');">
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-2xl mx-auto text-center slide-up">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-book text-[10px]"></i>
+            The KrisFlyer Guide &middot; Skyfare Edition
+          </div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
+            The complete playbook<br>for KrisFlyer miles.
+          </h1>
+          <p class="text-base md:text-lg text-white/65 leading-relaxed mb-8 font-medium max-w-xl mx-auto">
+            Seven chapters on earning, protecting, and redeeming Singapore Airlines miles for Business and First Class — written by the same team that books these seats every week.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <a href="pre-signup-link" class="btn-pill btn-pill-primary">
+              <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+            </a>
+            <a href="#preview" class="btn-pill btn-pill-ghost">
+              See What's Inside
+            </a>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 text-[11px] text-white/50">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-brand-400 text-[10px]"></i> 7 Chapters
+            </span>
+            <span class="w-px h-3 bg-white/15"></span>
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-tag text-brand-400 text-[10px]"></i> Own It Forever
+            </span>
+            <span class="w-px h-3 bg-white/15"></span>
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-crown text-brand-400 text-[10px]"></i> Launching Soon
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─── OFFER / PRICING ─────────────────────────────────────────
+         Pricing details stay in the DOM (not deleted, not commented out)
+         but are visually gated behind the same blur+lock treatment as the
+         redemption-conditions table below (.kf-blur -- CSS-only tease, not
+         real access control). Goal is anticipation/coming-soon marketing --
+         nothing about the launch discount or bundle mechanics is legible
+         before launch, but the actual card only needs its blur class
+         removed later to go live, no content to restore from scratch. -->
+    <section class="py-24 tile-parch">
+      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+
+        <div class="flex items-center gap-4 mb-4 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Coming Soon</p>
+          <div class="flex-1 h-px bg-neutral-200"></div>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight slide-up">
+          Launching soon.
+        </h2>
+        <p class="section-lead max-w-2xl mb-14 slide-up">
+          A complete starter kit for mastering your own miles, plus bonus Altitude Premium access — details drop soon. Join the waitlist to be first in line.
+        </p>
+
+        <div class="max-w-xl mx-auto">
+
+          <div class="card-utility relative overflow-hidden slide-up">
+            <div class="p-8 md:p-10 flex flex-col kf-blur" aria-hidden="true">
+              <div class="mb-8 pb-8 border-b border-neutral-100 text-center">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border border-brand-100 px-3 py-1 rounded-full inline-block mb-4">
+                  One-Time Purchase
+                </span>
+                <div class="icon-chip icon-chip-lg mx-auto mb-4">
+                  <i class="fa-solid fa-book"></i>
+                </div>
+                <h3 class="text-2xl font-display font-bold text-neutral-900 tracking-tight mb-4">The KrisFlyer Guide</h3>
+                <p class="text-4xl font-display font-bold text-neutral-900 tracking-tight kf-num">
+                  $39.99 <span class="text-xl font-semibold text-neutral-400 line-through">$49.99</span> <span class="text-sm font-semibold text-neutral-400">USD</span>
+                </p>
+                <p class="inline-flex items-center gap-2 mt-3 text-xs font-bold text-red-600">
+                  <i class="fa-solid fa-clock text-[10px]"></i>
+                  Launch price — 24 hours only, then $49.99
+                </p>
+                <p class="inline-flex items-center gap-2 mt-2 text-xs font-bold text-brand-600">
+                  <i class="fa-solid fa-gift text-[10px]"></i>
+                  90 days of Altitude included — a $14.97 value, on us
+                </p>
+              </div>
+
+              <ul class="space-y-3">
+                <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+                  <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
+                  <strong class="text-neutral-900">All 7 chapters, plus checklists, cheat sheets, and planning templates</strong> — yours forever
+                </li>
+                <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+                  <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
+                  Free updates whenever the guide is revised
+                </li>
+                <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+                  <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
+                  90 days of Altitude Premium included, free — weekly award alerts, cabin reviews, full archive
+                </li>
+                <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+                  <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
+                  After 90 days: continue Altitude for $4.99/month, or cancel anytime — one click, no calls
+                </li>
+              </ul>
+
+              <a href="#" id="kf-purchase-btn" class="btn-pill btn-pill-primary w-full justify-center mt-8">
+                <i class="fa-solid fa-cart-shopping text-[10px]"></i> Purchase
+              </a>
+            </div>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center gap-4 px-6"
+                 style="background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.95));">
+              <div class="icon-chip icon-chip-lg">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <p class="font-display font-bold text-neutral-900 text-xl uppercase tracking-widest">
+                Coming Soon
+              </p>
+              <div class="relative">
+                <div class="absolute inset-0 border-2 kf-pulse-outline pointer-events-none" style="border-radius:9999px;" aria-hidden="true"></div>
+                <a href="pre-signup-link" class="btn-pill btn-pill-primary relative" style="padding:0.875rem 1.75rem;">
+                  <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="flex items-start gap-2 text-xs text-neutral-400 mt-6 max-w-xl mx-auto slide-up">
+          <i class="fa-solid fa-circle-info mt-0.5 flex-shrink-0"></i>
+          Not open for purchase yet. Join the waitlist and we'll email you the moment it's live.
+        </p>
+
+        <div class="max-w-xl mx-auto mt-6 slide-up">
+          <button type="button"
+            onclick="window.openGuideLoginModal && window.openGuideLoginModal();"
+            class="w-full group flex items-center gap-4 px-5 py-4 rounded-2xl border border-neutral-200 bg-white hover:border-brand-200 hover:bg-brand-50/40 transition-all text-left">
+            <div class="w-9 h-9 rounded-full border border-neutral-200 bg-neutral-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-key text-neutral-400 text-xs"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-bold text-neutral-900 leading-none mb-1">KrisFlyer Guide Access</p>
+              <p class="text-[11px] text-neutral-400 leading-none">Already purchased? Log in to unlock your guide</p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-neutral-300 text-xs group-hover:text-neutral-500 group-hover:translate-x-0.5 transition-all"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─── WHAT'S INSIDE ────────────────────────────────────────────────
+         Sits on tile-dark1 with .authority-card (the system's existing
+         "card on a dark tile" component, see index.html's 3-option grid) so
+         the page gets real dark/light alternation instead of a run of flat
+         light sections. No chapter content has been written yet (2026-07-22)
+         -- shows an honest "No content yet" placeholder instead of a
+         blurred chapter list, which would otherwise imply finished content
+         is just hidden behind a paywall. Replace with the real chapter list
+         (kf-blur-gated, matching the pricing card and redemption table)
+         once actual chapters exist. -->
+    <section class="py-24 tile-dark1">
+      <div class="container mx-auto px-4 md:px-6 max-w-3xl">
+
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-10 slide-up">
+          <div>
+            <p class="section-eyebrow-dark mb-2">What's Inside</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
+              Seven chapters, one playbook.
+            </h2>
+          </div>
+          <span class="pill-tag flex-shrink-0">
+            <i class="fa-solid fa-crown text-[9px]"></i> Launching Soon
+          </span>
+        </div>
+
+        <!-- No real chapter content exists yet -- an honest "still writing
+             it" placeholder instead of a blurred/locked chapter list that
+             would imply finished content is just hidden behind a paywall.
+             Not gated behind kf-blur/magic-link access: there's nothing to
+             unlock yet regardless of purchase status. -->
+        <div class="max-w-lg mx-auto text-center py-16 px-8 slide-up authority-card">
+          <div class="icon-chip icon-chip-dark mx-auto mb-5">
+            <i class="fa-solid fa-pen-nib"></i>
+          </div>
+          <p class="font-display font-bold text-white text-xl mb-2">No content yet</p>
+          <p class="text-sm text-white/55 leading-relaxed max-w-sm mx-auto mb-6">
+            We're still writing the guide. Chapters will appear here as they're finished.
+          </p>
+          <a href="pre-signup-link" class="btn-pill btn-pill-primary" style="padding:0.6rem 1.25rem;font-size:0.8rem;">
+            <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─── FREE PREVIEW: CHAPTER 1 + REDEMPTION CONDITIONS ─────────
+         Short teaser (not the full chapter -- that's paid content) plus the
+         redemption-conditions table, combined into one section at max-w-6xl
+         so the 5-column table gets real room instead of a separate,
+         narrower band. -->
+    <section id="preview" class="py-24 tile-parch">
+      <div class="container mx-auto px-4 md:px-6 max-w-6xl">
+
+        <div class="flex items-center gap-4 mb-4 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Free Preview &middot; Chapter 1</p>
+          <div class="flex-1 h-px bg-neutral-200"></div>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-6 tracking-tight slide-up">
+          How KrisFlyer actually works.
+        </h2>
+
+        <div class="slide-up text-neutral-600 leading-relaxed space-y-5 max-w-3xl">
+          <p>Singapore Airlines' KrisFlyer is widely regarded as one of the most powerful and aspirational frequent flyer programmes in the world. For the savvy Singapore-based traveller, it is the only mainstream programme that can consistently unlock a flat bed to Europe or a private suite above the clouds, all booked directly with miles.</p>
+          <p>This is a guide on the mechanics that separate a good redemption from a spectacular one. Chapter 1 alone covers four distinct award types — Promo, Saver, Advantage, and Access — and how to tell which one you're actually looking at before you book.</p>
+        </div>
+
+        <div class="card-utility p-8 mt-10 flex flex-col sm:flex-row sm:items-center gap-5 slide-up">
+          <div class="icon-chip icon-chip-lg flex-shrink-0"><i class="fa-solid fa-table-list"></i></div>
+          <div class="flex-1 min-w-0">
+            <p class="font-display font-bold text-neutral-900 mb-1">Full redemption conditions table</p>
+            <p class="text-sm text-neutral-500 leading-relaxed">Baggage, changes, cancellation, and more — broken down by award type. Available to Guide owners after purchase.</p>
+          </div>
+          <a href="pre-signup-link" class="btn-pill btn-pill-primary flex-shrink-0" style="padding:0.6rem 1.25rem;font-size:0.8rem;">
+            <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─── WHY SKYFARE ───────────────────────────────────────────── -->
+    <section class="py-24 tile-sky">
+      <div class="container mx-auto px-4 md:px-6 max-w-3xl">
+
+        <div class="flex items-center gap-4 mb-4 slide-up">
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Why This Guide</p>
+          <div class="flex-1 h-px bg-neutral-100"></div>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-14 tracking-tight slide-up">
+          Written from the booking desk, not a forum.
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-5 slide-up" style="animation-delay:.05s;">
+
+          <div class="card-process p-8 relative overflow-hidden">
+            <div class="icon-chip icon-chip-lg mb-5">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">From Real Bookings</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">Every rule and sweet spot in this guide reflects redemptions our team has actually booked for clients — not theory.</p>
+          </div>
+
+          <div class="card-process p-8 relative overflow-hidden">
+            <div class="icon-chip icon-chip-lg mb-5">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Kept Current</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">KrisFlyer devalues every few years. This guide gets revised whenever the charts or rules change materially.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
+    <section class="cta-band">
+      <div class="cta-band__art"></div>
+      <div class="cta-band__veil"></div>
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="max-w-xl mx-auto text-center slide-up">
+          <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Get Started</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
+            Ready to master your miles?
+          </h2>
+          <p class="section-lead-dark mb-9 max-w-md mx-auto">
+            Be first to know when The KrisFlyer Guide goes live.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <a href="pre-signup-link" class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
+              <i class="fa-solid fa-bell"></i> Join the Waitlist
+            </a>
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+              class="btn-pill btn-pill-whatsapp text-base" style="padding:0.875rem 1.75rem;">
+              <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp
+            </a>
+          </div>
+          <p class="mt-7 text-xs text-white/35">
+            Prefer a booked-for-you seat instead? <a href="krisflyer" class="text-white/60 underline underline-offset-2 hover:text-white/90 transition-colors">See KrisFlyer Nominee Redemption →</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

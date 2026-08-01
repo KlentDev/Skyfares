@@ -1,0 +1,789 @@
+// services/beehiiv.js — everything that talks to the Beehiiv API and nothing
+// else (never writes/reasons about the Stripe-shaped member: record itself —
+// that lifecycle logic stays in orchestration/, see orchestration/guideBundle.js
+// for why grantGuideAltitudeBundle/activateDeferredGuideBundle live there
+// instead of here). Tags, segments, automations, subscriber lookups, and the
+// two plain-newsletter-subscribe routes (handleWaitlist, handleSubscribe).
+import { respond, getBaseUrl } from '../utils/http.js';
+import { generateMagicToken } from '../utils/jwt.js';
+import {
+  MAGIC_LINK_AUTOMATION_ID, MAGIC_LINK_CF_NAME, GUIDE_MAGIC_LINK_AUTOMATION_ID,
+  WELCOME_AUTOMATION_ID, WELCOME_MONTHLY_AUTOMATION_ID, WELCOME_ANNUAL_AUTOMATION_ID,
+  GUIDE_TAG_NAME, INTERVAL_TAG_IDS, GUIDE_BUNDLE_TAG_NAME, GUIDE_BUNDLE_TAG_ID,
+  SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL,
+  KV_PREFIX,
+  GUIDE_PDF_EMAIL_AUTOMATION_ID, GUIDE_PDF_DOWNLOAD_URL_CF_NAME, GUIDE_PDF_PASSWORD_CF_NAME,
+} from '../config/constants.js';
+
+// ── Beehiiv premium check (source of truth) ───────────────────────────────────
+
+// "Premium" means holding a real paid interval tag (altitude monthly /
+// altitude annual) or the Guide's temporary 90-day bundle tag — the old
+// universal "altitude premium" tag has been retired (see config/constants.js).
+export async function checkBeehiivPremium(email, env) {
+  const entitlements = await getBeehiivEntitlements(email, env);
+  if (!entitlements.found || !entitlements.subscriber_active) return false;
+  const tags = entitlements.tags;
+  return (
+    tags.includes('altitude monthly') || tags.includes(INTERVAL_TAG_IDS.monthly.toLowerCase()) ||
+    tags.includes('altitude annual')  || tags.includes(INTERVAL_TAG_IDS.annual.toLowerCase())  ||
+    tags.includes(GUIDE_BUNDLE_TAG_NAME) || tags.includes(GUIDE_BUNDLE_TAG_ID.toLowerCase())
+  );
+}
+
+export async function getBeehiivEntitlements(email, env) {
+  if (!email) {
+    return {
+      found: false,
+      subscriber_active: false,
+      tags: [],
+      guide: false,
+      altitude_monthly: false,
+      altitude_annual: false,
+      guide_bundle: false,
+    };
+  }
+
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
+      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  );
+  if (!res.ok) throw new Error('beehiiv lookup failed');
+
+  const data = await res.json();
+  const sub  = (data.data || data.subscriptions || [])[0];
+  if (!sub) {
+    return {
+      found: false,
+      subscriber_active: false,
+      tags: [],
+      guide: false,
+      altitude_monthly: false,
+      altitude_annual: false,
+      guide_bundle: false,
+    };
+  }
+
+  const subscriberActive = !sub.status || sub.status === 'active' || sub.status === 'validating';
+  const tags = (sub.tags || []).map(t =>
+    (typeof t === 'string' ? t : (t.name || t.id || '')).toString().toLowerCase()
+  );
+
+  return {
+    found: true,
+    subscriber_active: subscriberActive,
+    tags,
+    guide: subscriberActive && tags.includes(GUIDE_TAG_NAME),
+    altitude_monthly: subscriberActive && (
+      tags.includes('altitude monthly') || tags.includes(INTERVAL_TAG_IDS.monthly.toLowerCase())
+    ),
+    altitude_annual: subscriberActive && (
+      tags.includes('altitude annual') || tags.includes(INTERVAL_TAG_IDS.annual.toLowerCase())
+    ),
+    guide_bundle: subscriberActive && (
+      tags.includes(GUIDE_BUNDLE_TAG_NAME) || tags.includes(GUIDE_BUNDLE_TAG_ID.toLowerCase())
+    ),
+  };
+}
+
+// ── Altitude: Pre-Launch Waitlist ──────────────────────────────────────────────
+
+// Deliberately NOT a parallel of setupBeehiivMember's tag cascade — a pre-launch
+// signup is a plain Free subscriber, nothing more. There is no "waitlist" tag,
+// segment, or automation to enroll into here; the only thing that marks someone
+// as a pre-launch signup is utm_campaign, a native Beehiiv attribute captured
+// automatically on subscribe. The "Pre-Launch Subscribers" segment (Beehiiv UI)
+// filters on utm_campaign = 'altitude_prelaunch' — no subscriber-side plumbing
+// needed here beyond setting that default.
+export async function handleWaitlist(request, env, corsHeaders) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const rlKey = `${KV_PREFIX.RL_WAITLIST}${ip}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 10) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+
+  let body;
+  try { body = await request.json(); }
+  catch { return respond({ error: 'Invalid request.' }, 400, corsHeaders); }
+
+  // Honeypot — silently accept so bots get no signal. Worth having here
+  // (unlike the plain subscribe route below) since this route is specifically
+  // the one advertised on Instagram/TikTok bio links.
+  if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
+
+  const email     = (body.email || '').trim().toLowerCase();
+  const firstName = (body.first_name || '').toString().trim().slice(0, 80);
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'Please enter a valid email address.' }, 400, corsHeaders);
+  }
+
+  // Already a paying member — don't re-subscribe, just tell the frontend so it
+  // can show "you already have access" instead of the generic success state.
+  const isPremium = await checkBeehiivPremium(email, env).catch(() => null);
+  if (isPremium === true) {
+    await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+    return respond({ success: true, already_premium: true }, 200, corsHeaders);
+  }
+
+  // Same plain Beehiiv subscribe the newsletter route uses below — utm_source/
+  // medium stay visitor-supplied (or fall back to generic defaults) for
+  // channel-level analytics, but utm_campaign always defaults to
+  // 'altitude_prelaunch' so every signup through this endpoint is captured by
+  // the segment regardless of which platform (if any) the visitor arrived from.
+  // Note: on a 409 (existing subscriber), Beehiiv does not retroactively update
+  // utm_campaign on the existing record — an existing free subscriber clicking
+  // this form again simply won't newly match the segment, which is fine, they
+  // already receive the newsletter and will hear about launch through it.
+  const beehiivPayload = {
+    email,
+    reactivate_existing: true,
+    send_welcome_email: false,
+    double_opt_override: 'disabled',
+    utm_source:   (body.utm_source   || 'website').toString().trim().slice(0, 100),
+    utm_medium:   (body.utm_medium   || 'organic').toString().trim().slice(0, 100),
+    utm_campaign: (body.utm_campaign || 'altitude_prelaunch').toString().trim().slice(0, 100),
+  };
+  if (firstName) {
+    beehiivPayload.custom_fields = [{ name: 'first_name', value: firstName }];
+  }
+
+  let beehiivRes;
+  try {
+    beehiivRes = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+        body: JSON.stringify(beehiivPayload),
+      }
+    );
+  } catch {
+    return respond({ error: 'Could not reach Beehiiv. Please try again.' }, 502, corsHeaders);
+  }
+
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+
+  if (beehiivRes.status === 201 || beehiivRes.status === 200) {
+    // Kick off segment sync so the new subscriber lands in Free + Pre-Launch
+    // Subscribers promptly, which is what lets the pre-launch welcome
+    // automation (segment_action trigger) fire without a long delay.
+    triggerSegmentRecalculation(env).catch(() => {});
+    return respond({ success: true }, 200, corsHeaders);
+  }
+  // 409 (already subscribed to the newsletter) is expected here, not an error.
+  if (beehiivRes.status === 409) {
+    return respond({ success: true }, 200, corsHeaders);
+  }
+  return respond({ error: 'Something went wrong. Please try again.' }, 500, corsHeaders);
+}
+
+// ── Newsletter: plain subscribe (root POST /) ─────────────────────────────────
+// Extracted from the router's fetch() body during the 2026-07-24 module split
+// (it used to be inlined directly there, the one route with no named handler
+// function) — functionally a near-duplicate of handleWaitlist above, just
+// without the waitlist-specific utm_campaign default or premium-member check.
+
+export async function handleSubscribe(request, env, corsHeaders) {
+  if (request.method !== 'POST') {
+    return respond({ error: 'Method Not Allowed' }, 405, corsHeaders);
+  }
+
+  const subRlKey = `${KV_PREFIX.RL_SUBSCRIBE}${request.headers.get('CF-Connecting-IP') || 'unknown'}`;
+  const subRlCount = parseInt((await env.ALTITUDE_KV.get(subRlKey)) || '0', 10);
+  if (subRlCount >= 15) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+
+  let email, firstName;
+  try {
+    const body = await request.json();
+    // Honeypot — silently accept so bots get no signal. No-op today since no
+    // form on the site sends bot-field to this route yet; matches the same
+    // convention already used by handleWaitlist and the Airtable routes.
+    if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
+    email = (body.email || '').trim().toLowerCase();
+    firstName = (body.first_name || '').toString().trim().slice(0, 80);
+  } catch {
+    return respond({ error: 'Invalid request.' }, 400, corsHeaders);
+  }
+
+  // Count every real (non-honeypot) attempt once here, regardless of outcome.
+  await env.ALTITUDE_KV.put(subRlKey, String(subRlCount + 1), { expirationTtl: 3600 });
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'Please enter a valid email address.' }, 400, corsHeaders);
+  }
+
+  const beehiivPayload = {
+    email,
+    reactivate_existing: true,
+    send_welcome_email: false,
+    double_opt_override: 'disabled',
+    utm_source: 'website',
+    utm_medium: 'organic',
+  };
+  if (firstName) {
+    beehiivPayload.custom_fields = [{ name: 'first_name', value: firstName }];
+  }
+
+  let beehiivRes;
+  try {
+    beehiivRes = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+        body: JSON.stringify(beehiivPayload),
+      }
+    );
+  } catch {
+    return respond({ error: 'Could not reach Beehiiv. Please try again.' }, 502, corsHeaders);
+  }
+
+  if (beehiivRes.status === 201 || beehiivRes.status === 200) {
+    // Kick off segment sync in background so new subscriber appears in Free segment immediately
+    triggerSegmentRecalculation(env).catch(() => {});
+    return respond({ success: true }, 200, corsHeaders);
+  }
+  if (beehiivRes.status === 409) {
+    return respond({ error: 'already_subscribed' }, 409, corsHeaders);
+  }
+  return respond({ error: 'Something went wrong. Please try again.' }, 500, corsHeaders);
+}
+
+// ── Beehiiv helpers ───────────────────────────────────────────────────────────
+
+// Applies the plan-specific altitude-monthly/altitude-annual tag — the sole
+// gating signal for a paying Altitude member (see checkBeehiivPremium).
+// planTag ('monthly' | 'annual') is required: every real caller
+// (orchestration/stripeWebhook.js's handleCheckoutComplete,
+// orchestration/session.js's handleActivate session_id fallback) always
+// derives one via services/stripe.js's derivePlanFromSubscription. There is
+// no more universal "premium" tag to fall back to applying when planTag is
+// omitted, so a caller without a real billed plan must NOT call this
+// function — the Guide's 90-day bundle grant applies GUIDE_BUNDLE_TAG_NAME
+// directly instead (see orchestration/guideBundle.js / tagGuideBundle below).
+export async function setupBeehiivMember(email, env, planTag) {
+  const tagName = planTag === 'annual' ? 'altitude annual' : planTag === 'monthly' ? 'altitude monthly' : null;
+  if (!tagName) {
+    console.error(`[setupBeehiivMember] called without a valid planTag ('monthly'|'annual') for ${email}`);
+    return false;
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${env.BEEHIIV_API_KEY}`,
+  };
+
+  // ── Step 1: Subscribe (or reactivate) ──────────────────────────────────────
+  const subRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        utm_source: 'altitude_payment',
+        utm_medium: 'stripe',
+      }),
+    }
+  );
+
+  if (!subRes.ok) {
+    const errText = await subRes.text().catch(() => '');
+    console.error(`[setupBeehiivMember] subscribe failed status=${subRes.status} body=${errText}`);
+    return false;
+  }
+  const subData = await subRes.json();
+  const subId   = subData.data?.id;
+  if (!subId) {
+    console.error(`[setupBeehiivMember] subscribe returned no id — data=${JSON.stringify(subData).slice(0, 200)}`);
+    return false;
+  }
+
+  // ── Step 2: Idempotency check — already tagged with this interval? ─────────
+  // Lets a caller safely retry after a partial earlier failure (see
+  // handleActivate's beehiiv_tagged === false retry) without double-applying
+  // the tag or re-sending the plan-specific Welcome email. A Guide-bundle
+  // recipient buying a real plan for the first time naturally falls through
+  // here — they hold krisflyer-bundle, not an interval tag, yet.
+  const tagCheckRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
+      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => null);
+  if (tagCheckRes && tagCheckRes.ok) {
+    const tagData = await tagCheckRes.json();
+    const existingSub = (tagData.data || tagData.subscriptions || [])[0];
+    const currentTags = (existingSub?.tags || []).map(t =>
+      (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
+    );
+    if (currentTags.includes(tagName)) return true;
+  }
+
+  // ── Step 3: Apply the interval tag directly — the same proven REST call
+  // applyIntervalTag/tagGuideBuyer already use. No automation-enrollment
+  // indirection needed now that there's no universal tag left to apply. ──────
+  await applyIntervalTag(subId, planTag, headers, env);
+
+  // ── Step 4: Verify, then recalc segments + enroll in the plan-specific
+  // Welcome automation. ──────────────────────────────────────────────────────
+  if (await verifyIntervalTag(email, planTag, env)) {
+    await triggerSegmentRecalculation(env);
+    enrollWelcomeAutomation(email, env, planTag).catch(() => {});
+    return true;
+  }
+
+  console.error(`[setupBeehiivMember] tag verification failed for ${email} (${tagName})`);
+  return false;
+}
+
+// Applies the altitude-monthly/altitude-annual tag — the primary tagging
+// mechanism now that there's no universal premium tag layered underneath it
+// (see setupBeehiivMember). Success/failure is judged by the caller's
+// subsequent verifyIntervalTag check, not by this function's own return
+// value (it still has none).
+export async function applyIntervalTag(subId, planTag, headers, env) {
+  const tagName = planTag === 'annual' ? 'altitude annual' : 'altitude monthly';
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
+    { method: 'POST', headers, body: JSON.stringify({ tags: [tagName] }) }
+  ).catch(() => null);
+  if (!res || !res.ok) {
+    const errText = res ? await res.text().catch(() => '') : '';
+    console.error(`[applyIntervalTag] failed status=${res ? res.status : 'network'} body=${errText.slice(0, 200)}`);
+  }
+}
+
+// Beehiiv's recalculate endpoint silently no-ops if the request includes a
+// body or a Content-Type header (returns 204 but never advances the
+// segment's last_processed_at). Confirmed 2026-07-06 via a live A/B test:
+// a bare PUT with only the Authorization header genuinely triggers
+// recalculation (last_processed_at advances within seconds, reproduced
+// across all 3 segments). Do not add a body or Content-Type back here.
+export async function triggerSegmentRecalculation(env) {
+  await Promise.all([SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL].map(async segId => {
+    const res = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
+      {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+      }
+    ).catch(err => { console.error(`[seg-resync:${segId}] network error: ${err.message}`); return null; });
+
+    if (!res) return;
+    if (res.ok) {
+      console.log(`[seg-resync:${segId}] recalculation triggered`);
+    } else {
+      const txt = await res.text().catch(() => '');
+      console.error(`[seg-resync:${segId}] failed status=${res.status} body=${txt.slice(0, 200)}`);
+    }
+  }));
+}
+
+// Re-queries the subscription and confirms the specific plan tag just
+// applied by applyIntervalTag is actually present — guards against a false
+// "200 OK" that didn't actually apply the tag (mirrors verifyGuideTag's
+// same pattern for the krisflyer tag).
+export async function verifyIntervalTag(email, planTag, env) {
+  const tagName = planTag === 'annual' ? 'altitude annual' : 'altitude monthly';
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
+      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => null);
+  if (!res || !res.ok) return false;
+  const data = await res.json();
+  const sub  = (data.data || data.subscriptions || [])[0];
+  const tags = (sub?.tags || []).map(t =>
+    (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
+  );
+  return tags.includes(tagName);
+}
+
+export async function enrollInAutomation(automationId, email, env) {
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${automationId}/journeys`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+      body: JSON.stringify({ email }),
+    }
+  ).catch(() => null);
+  return !!(res && res.ok);
+}
+
+// planTag ('monthly' | 'annual' | undefined) additively selects the
+// plan-specific Welcome automation instead of the generic one. Omitting it
+// (every caller before this) keeps the exact prior behavior — used as-is by
+// orchestration/guideBundle.js's grantGuideAltitudeBundle, since a bundled
+// 90-day grant isn't billed monthly or annually and shouldn't claim to be
+// in either welcome email.
+export async function enrollWelcomeAutomation(email, env, planTag) {
+  const automationId = planTag === 'monthly' ? WELCOME_MONTHLY_AUTOMATION_ID
+    : planTag === 'annual' ? WELCOME_ANNUAL_AUTOMATION_ID
+    : WELCOME_AUTOMATION_ID;
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${automationId}/journeys`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` },
+      body: JSON.stringify({ email }),
+    }
+  ).catch(() => null);
+  if (res && res.ok) console.log(`[welcome] enrolled ${email}${planTag ? ` (${planTag})` : ''}`);
+}
+
+// Removes whichever plan tag (altitude-monthly / altitude-annual /
+// krisflyer-bundle) matches `plan`. Called on cancellation (a former
+// subscriber who later resubscribes on a *different* interval shouldn't end
+// up tagged with both at once — that would put them in both the Monthly and
+// Annual segments simultaneously) and on Guide-bundle expiry.
+export async function removePlanTag(email, plan, env) {
+  const tagId = plan === 'guide_bundle' ? GUIDE_BUNDLE_TAG_ID : INTERVAL_TAG_IDS[plan];
+  if (!tagId) return; // unset/unknown plan — nothing to remove
+
+  const findRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions?email=${encodeURIComponent(email)}&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => null);
+  if (!findRes || !findRes.ok) return;
+  const findData = await findRes.json();
+  const sub = (findData.data || [])[0];
+  if (!sub?.id) return;
+
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${sub.id}/tags/${tagId}`,
+    { method: 'DELETE', headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => {});
+}
+
+// Swaps the altitude-monthly/altitude-annual tag when an existing member's
+// plan changes (the Upgrade-to-Annual flow, or
+// orchestration/stripeWebhook.js's handleSubscriptionUpdated safety net).
+// Deliberately does NOT enroll in any Welcome automation — this is an
+// existing member changing plans, not a first-time signup, so "You're in!
+// Welcome to Altitude" would be the wrong email to send.
+export async function swapIntervalTag(email, oldPlan, newPlan, env) {
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+  const findRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions?email=${encodeURIComponent(email)}&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => null);
+  if (findRes && findRes.ok) {
+    const findData = await findRes.json();
+    const sub = (findData.data || [])[0];
+    if (sub?.id) {
+      await applyIntervalTag(sub.id, newPlan, headers, env).catch(() => {});
+    }
+  }
+  await removePlanTag(email, oldPlan, env).catch(() => {});
+  await triggerSegmentRecalculation(env).catch(() => {});
+}
+
+// ── KrisFlyer Guide: Beehiiv tagging ──────────────────────────────────────────
+
+// Mirrors tagGuideBundle but applies GUIDE_TAG_NAME instead of
+// GUIDE_BUNDLE_TAG_NAME — the permanent "bought the Guide" tag.
+export async function tagGuideBuyer(email, env) {
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+
+  const subRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        utm_source: 'guide_payment',
+        utm_medium: 'stripe',
+      }),
+    }
+  );
+  if (!subRes.ok) return false;
+  const subData = await subRes.json();
+  const subId = subData.data?.id;
+  if (!subId) return false;
+
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
+    { method: 'POST', headers, body: JSON.stringify({ tags: [GUIDE_TAG_NAME] }) }
+  ).catch(() => null);
+
+  // Re-query and trigger a segment recalc on success — same verify-then-recalc
+  // pattern setupBeehiivMember uses for the Altitude tag, so the "KrisFlyer
+  // Guide Subscribers" segment (seg_fd7d552b…) updates promptly instead of
+  // waiting for Beehiiv's own periodic pass, and a false "200 OK" that didn't
+  // actually apply the tag isn't reported as success.
+  if (await verifyGuideTag(email, env)) {
+    await triggerSegmentRecalculation(env);
+    return true;
+  }
+  return false;
+}
+
+// Mirrors verifyIntervalTag but checks for the `krisflyer` tag — kept as a
+// separate function (not a shared/parametrized one) so the existing,
+// live Altitude tag-verification path is never touched.
+export async function verifyGuideTag(email, env) {
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
+      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => null);
+  if (!res || !res.ok) return false;
+  const data = await res.json();
+  const sub  = (data.data || data.subscriptions || [])[0];
+  const tags = (sub?.tags || []).map(t =>
+    (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
+  );
+  return tags.includes(GUIDE_TAG_NAME);
+}
+
+// Mirrors tagGuideBuyer but applies GUIDE_BUNDLE_TAG_NAME instead of
+// GUIDE_TAG_NAME. `activationAutomationId` is additive: omitted (the
+// standalone-grant path, orchestration/guideBundle.js's
+// grantGuideAltitudeBundle) keeps sending the generic Welcome email exactly
+// as before; passed (the deferred-activation path, activateDeferredGuideBundle)
+// sends that dedicated automation instead, since "Welcome to Altitude" would
+// read oddly to someone reactivating after their real membership just ended.
+export async function tagGuideBundle(email, env, activationAutomationId) {
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+
+  const subRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        utm_source: 'altitude_payment',
+        utm_medium: 'stripe',
+      }),
+    }
+  );
+  if (!subRes.ok) return false;
+  const subData = await subRes.json();
+  const subId = subData.data?.id;
+  if (!subId) return false;
+
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
+    { method: 'POST', headers, body: JSON.stringify({ tags: [GUIDE_BUNDLE_TAG_NAME] }) }
+  ).catch(() => null);
+
+  if (await verifyGuideBundleTag(email, env)) {
+    await triggerSegmentRecalculation(env);
+    if (activationAutomationId) {
+      await enrollInAutomation(activationAutomationId, email, env).catch(() => {});
+    } else {
+      await enrollWelcomeAutomation(email, env).catch(() => {});
+    }
+    return true;
+  }
+  return false;
+}
+
+// Mirrors verifyGuideTag but checks for the krisflyer-bundle tag.
+export async function verifyGuideBundleTag(email, env) {
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
+      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => null);
+  if (!res || !res.ok) return false;
+  const data = await res.json();
+  const sub  = (data.data || data.subscriptions || [])[0];
+  const tags = (sub?.tags || []).map(t =>
+    (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
+  );
+  return tags.includes(GUIDE_BUNDLE_TAG_NAME);
+}
+
+// ── Magic link (Guide + on-demand Member Access) ──────────────────────────────
+// Note: sendStarterMagicLink (the fresh-Altitude-checkout variant) lives in
+// orchestration/session.js instead of here, tightly coupled to
+// handleActivate's request/Origin handling — see that file's header comment.
+
+// Sends the magic link for a fresh KrisFlyer Guide purchase — called from
+// orchestration/stripeWebhook.js's handleGuideCheckoutComplete. Same KV
+// magic:{token} + MAGIC_LINK_CF_NAME mechanism handleMagicRequest uses,
+// duplicated (not refactored out) so the existing Altitude magic-request
+// path is left completely untouched. No request Origin header exists here
+// (this runs from the Stripe webhook, not a browser) — `origin` is instead
+// the browser Origin captured at checkout-creation time and threaded through
+// via the Stripe session's metadata (see handleGuideCheckout/
+// handleGuideCheckoutComplete), so local test purchases still get a
+// localhost link while real purchases fall through getBaseUrl's default to
+// the production site. Enrolls in GUIDE_MAGIC_LINK_AUTOMATION_ID (its own
+// dedicated automation) rather than MAGIC_LINK_AUTOMATION_ID — the token/CF
+// mechanism is shared/automation-agnostic, only the notification email differs.
+export async function sendGuideMagicLink(email, env, origin) {
+  const token    = generateMagicToken();
+  const baseUrl  = getBaseUrl(origin || '');
+  const magicUrl = `${baseUrl}/pages/private-pages/kf-guide-access-portal.html?magic=${token}`;
+  await env.ALTITUDE_KV.put(
+    `${KV_PREFIX.MAGIC}${token}`,
+    JSON.stringify({ email, exp: Date.now() + 3_600_000 }),
+    { expirationTtl: 3600 }
+  );
+
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        custom_fields: [{ name: MAGIC_LINK_CF_NAME, value: magicUrl }],
+      }),
+    }
+  ).catch(() => {});
+
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${GUIDE_MAGIC_LINK_AUTOMATION_ID}/journeys`,
+    { method: 'POST', headers, body: JSON.stringify({ email }) }
+  ).catch(() => {});
+}
+
+// Guide PDF delivery ("Send to My Email") — same two-call shape as
+// sendGuideMagicLink (write a custom field, then trigger the automation that
+// emails it), just two custom fields instead of one: the signed R2 download
+// link and the derived password, so the automation's template can place them
+// separately in the email body (per the confirmed design — no attachment,
+// since Beehiiv can't send one). GUIDE_PDF_EMAIL_AUTOMATION_ID must be filled
+// in (config/constants.js) after that automation is created in the Beehiiv
+// dashboard — this is a no-op until then, matching the documented pattern for
+// still-draft automations elsewhere in this file (see WELCOME_MONTHLY/ANNUAL).
+export async function sendGuidePdfDeliveryEmail(email, downloadUrl, password, env) {
+  if (!GUIDE_PDF_EMAIL_AUTOMATION_ID) {
+    console.error('[guide-pdf-email] GUIDE_PDF_EMAIL_AUTOMATION_ID not configured — skipping send');
+    return false;
+  }
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+
+  const subRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        custom_fields: [
+          { name: GUIDE_PDF_DOWNLOAD_URL_CF_NAME, value: downloadUrl },
+          { name: GUIDE_PDF_PASSWORD_CF_NAME, value: password },
+        ],
+      }),
+    }
+  ).catch(() => null);
+  if (!subRes || !subRes.ok) return false;
+
+  const journeyRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${GUIDE_PDF_EMAIL_AUTOMATION_ID}/journeys`,
+    { method: 'POST', headers, body: JSON.stringify({ email }) }
+  ).catch(() => null);
+  return !!(journeyRes && journeyRes.ok);
+}
+
+export async function handleMagicRequest(request, env, corsHeaders) {
+  let email, product;
+  try {
+    const body = await request.json();
+    email   = (body.email || '').trim().toLowerCase();
+    product = body.product === 'guide' ? 'guide' : 'altitude';
+  } catch { return respond({ error: 'Invalid request.' }, 400, corsHeaders); }
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return respond({ error: 'Please enter a valid email address.' }, 400, corsHeaders);
+  }
+
+  // Rate limit: max 3 magic link requests per email per 10 minutes
+  const rlKey = `${KV_PREFIX.RL_MAGIC}${email}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 3) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+
+  // Two independent, strictly-scoped checks — deliberately NOT an either/or
+  // (that was tried, then reverted: a Guide-only owner requesting through the
+  // Altitude modal or vice versa is a confusing product-copy mismatch, and an
+  // Altitude member with no Guide purchase has no legitimate reason to read
+  // the Guide). `product` comes from which modal the request originated from
+  // — components/magic-modal.html sends 'altitude', components/magic-modal-
+  // krisflyer.html sends 'guide'.
+  let granted = false;
+  if (product === 'guide') {
+    granted = !!(await env.ALTITUDE_KV.get(`${KV_PREFIX.GUIDE}${email}`));
+    if (!granted) {
+      return respond({ error: 'No KrisFlyer Guide access found for this email.' }, 404, corsHeaders);
+    }
+  } else {
+    const isPremium = await checkBeehiivPremium(email, env).catch(() => null);
+    granted = isPremium === true;
+    if (!granted) {
+      const kvRaw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+      if (kvRaw) granted = JSON.parse(kvRaw).status === 'active';
+    }
+    if (!granted) {
+      return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);
+    }
+  }
+
+  const destPage     = product === 'guide' ? 'private-pages/kf-guide-access-portal.html' : 'private-pages/altitude-access-portal.html';
+  const automationId = product === 'guide' ? GUIDE_MAGIC_LINK_AUTOMATION_ID : MAGIC_LINK_AUTOMATION_ID;
+
+  // Generate token — use local origin so the link works during local dev
+  const token    = generateMagicToken();
+  const baseUrl  = getBaseUrl(request.headers.get('Origin') || '');
+  const magicUrl = `${baseUrl}/pages/${destPage}?magic=${token}`;
+  await env.ALTITUDE_KV.put(
+    `${KV_PREFIX.MAGIC}${token}`,
+    JSON.stringify({ email, exp: Date.now() + 3_600_000 }),
+    { expirationTtl: 3600 }
+  );
+
+  // Write magic link URL into the subscriber's custom field then enroll in automation
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        custom_fields: [{ name: MAGIC_LINK_CF_NAME, value: magicUrl }],
+      }),
+    }
+  ).catch(() => {});
+
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${automationId}/journeys`,
+    { method: 'POST', headers, body: JSON.stringify({ email }) }
+  ).catch(() => {});
+
+  // Increment rate-limit counter
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 600 });
+
+  return respond({ sent: true }, 200, corsHeaders);
+}

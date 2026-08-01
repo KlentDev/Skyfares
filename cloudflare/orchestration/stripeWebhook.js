@@ -1,0 +1,281 @@
+// orchestration/stripeWebhook.js — the Stripe webhook dispatcher plus every
+// handler that reacts to a webhook event by calling into BOTH Stripe-shaped
+// data and Beehiiv state in the same function body. These can't live in a
+// single services/*.js module — see krisflyer.md for the module-split design.
+import { verifyStripeSignature, derivePlanFromSubscription, getSubscriptionPeriodEnd } from '../services/stripe.js';
+import {
+  setupBeehiivMember, removePlanTag, tagGuideBuyer, swapIntervalTag,
+  enrollInAutomation, sendGuideMagicLink,
+} from '../services/beehiiv.js';
+import { grantGuideAltitudeBundle, activateDeferredGuideBundle } from './guideBundle.js';
+import {
+  KV_PREFIX, UPGRADED_ANNUAL_AUTOMATION_ID,
+  RENEWED_MONTHLY_AUTOMATION_ID, RENEWED_ANNUAL_AUTOMATION_ID,
+} from '../config/constants.js';
+
+// ── Altitude: Stripe Webhook ──────────────────────────────────────────────────
+
+export async function handleStripeWebhook(request, env, corsHeaders) {
+  if (!env.STRIPE_WEBHOOK_SECRET) {
+    return new Response('Webhook not configured', { status: 503 });
+  }
+
+  const body      = await request.text();
+  const signature = request.headers.get('Stripe-Signature') || '';
+
+  const valid = await verifyStripeSignature(body, signature, env.STRIPE_WEBHOOK_SECRET);
+  if (!valid) return new Response('Invalid signature', { status: 400 });
+
+  let event;
+  try { event = JSON.parse(body); } catch { return new Response('Invalid JSON', { status: 400 }); }
+
+  switch (event.type) {
+    case 'checkout.session.completed':
+      // Guide purchases are one-time (mode: 'payment'); Altitude stays 'subscription'.
+      // Branching here keeps the existing Altitude path completely untouched.
+      if (event.data.object.mode === 'payment') {
+        await handleGuideCheckoutComplete(event.data.object, env);
+      } else {
+        await handleCheckoutComplete(event.data.object, env);
+      }
+      break;
+    case 'customer.subscription.deleted':
+      await handleSubscriptionDeleted(event.data.object, env);
+      break;
+    case 'customer.subscription.updated':
+      await handleSubscriptionUpdated(event.data.object, env);
+      break;
+    case 'invoice.payment_succeeded':
+      await handleInvoicePaymentSucceeded(event.data.object, env);
+      break;
+  }
+
+  return new Response('ok', { status: 200 });
+}
+
+async function handleCheckoutComplete(session, env) {
+  // Fetch full session to get subscription details
+  const res = await fetch(
+    `https://api.stripe.com/v1/checkout/sessions/${session.id}` +
+      `?expand[]=subscription&expand[]=customer&expand[]=subscription.items.data.price`,
+    { headers: { 'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}` } }
+  );
+  if (!res.ok) return;
+
+  const full = await res.json();
+  const email  = (full.customer_details?.email || full.customer_email || '').toLowerCase();
+  const sub    = full.subscription;
+  const custId = typeof full.customer === 'string' ? full.customer : full.customer?.id;
+
+  if (!email) return;
+
+  const { plan, amount_cents } = derivePlanFromSubscription(sub);
+
+  // Captured before the record below overwrites it — used after tagging
+  // succeeds to clean up a stale krisflyer-bundle tag (see below).
+  const priorRaw  = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+  const priorPlan = priorRaw ? JSON.parse(priorRaw).plan : null;
+
+  const record = {
+    email,
+    stripe_customer_id:    custId || '',
+    stripe_subscription_id: typeof sub === 'string' ? sub : sub?.id || '',
+    stripe_session_id:     session.id,
+    status:                'active',
+    plan,
+    amount_cents,
+    currency:              'usd',
+    joined_at:             new Date().toISOString(),
+    current_period_end:    getSubscriptionPeriodEnd(sub)
+      ? new Date(getSubscriptionPeriodEnd(sub) * 1000).toISOString()
+      : '',
+  };
+
+  await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(record));
+  if (custId) await env.ALTITUDE_KV.put(`${KV_PREFIX.CUSTOMER}${custId}`, email);
+
+  // Setup in Beehiiv; record whether the tag was applied so we can retry later.
+  const tagged = await setupBeehiivMember(email, env, plan).catch(() => false);
+  if (!tagged) {
+    const raw2 = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+    if (raw2) {
+      const rec2 = JSON.parse(raw2);
+      rec2.beehiiv_tagged = false;
+      await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(rec2));
+    }
+  } else {
+    const raw2 = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+    if (raw2) {
+      const rec2 = JSON.parse(raw2);
+      rec2.beehiiv_tagged = true;
+      await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(rec2));
+    }
+    // A former Guide-bundle recipient buying a real plan for the first time
+    // now holds a real interval tag — the temporary krisflyer-bundle tag
+    // (applied by orchestration/guideBundle.js's grantGuideAltitudeBundle) is
+    // obsolete and would otherwise persist forever, misrepresenting them as
+    // still on a free grant.
+    if (priorPlan === 'guide_bundle') {
+      await removePlanTag(email, 'guide_bundle', env).catch(() => {});
+    }
+  }
+}
+
+// ── KrisFlyer Guide: purchase fulfillment ─────────────────────────────────────
+// Per krisflyer.md: Stripe is payment-only here — on completion this writes a
+// KV access record, applies the `krisflyer` Beehiiv tag, grants the bundled
+// 90-day Altitude Premium access the pricing card promises (see
+// orchestration/guideBundle.js's grantGuideAltitudeBundle), and sends the
+// buyer their magic-link access email (same mechanism handleMagicRequest
+// uses). Deliberately does NOT touch orchestration/session.js's
+// handleActivate — Guide buyers log in via the emailed magic link, not an
+// instant activate-on-success-page step like Altitude has.
+
+async function handleGuideCheckoutComplete(session, env) {
+  const res = await fetch(
+    `https://api.stripe.com/v1/checkout/sessions/${session.id}?expand[]=customer`,
+    { headers: { 'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}` } }
+  );
+  if (!res.ok) return;
+
+  const full  = await res.json();
+  const email = (full.customer_details?.email || full.customer_email || '').toLowerCase();
+  const custId = typeof full.customer === 'string' ? full.customer : full.customer?.id;
+
+  if (!email) return;
+
+  const record = {
+    email,
+    stripe_customer_id: custId || '',
+    stripe_session_id:  session.id,
+    status:              'active',
+    amount_cents:        full.amount_total ?? 3999,
+    currency:            full.currency || 'usd',
+    purchased_at:        new Date().toISOString(),
+  };
+
+  await env.ALTITUDE_KV.put(`${KV_PREFIX.GUIDE}${email}`, JSON.stringify(record));
+
+  await tagGuideBuyer(email, env).catch(() => {});
+  await grantGuideAltitudeBundle(email, session.id, env).catch(() => {});
+
+  // Stripe can redeliver the same webhook event (network blip, timeout,
+  // etc.). The KV/tag writes above are naturally idempotent — tagGuideBuyer
+  // just re-applies the same tag, and grantGuideAltitudeBundle short-circuits
+  // once the premium tag already exists — but sending an email is not.
+  // Guarded per-session (not per-email) so a genuinely separate second
+  // purchase later still sends its own link.
+  const magicSentKey = `${KV_PREFIX.GUIDE_MAGIC_SENT}${session.id}`;
+  if (!(await env.ALTITUDE_KV.get(magicSentKey))) {
+    await sendGuideMagicLink(email, env, full.metadata?.origin).catch(() => {});
+    await env.ALTITUDE_KV.put(magicSentKey, '1', { expirationTtl: 604800 }); // 7 days — comfortably past Stripe's webhook retry window
+  }
+}
+
+async function handleSubscriptionDeleted(sub, env) {
+  const custId = typeof sub.customer === 'string' ? sub.customer : sub.customer?.id;
+  if (!custId) return;
+
+  const email = await env.ALTITUDE_KV.get(`${KV_PREFIX.CUSTOMER}${custId}`);
+  if (!email) return;
+
+  const raw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+  if (!raw) return;
+
+  const record = JSON.parse(raw);
+  const plan = record.plan;
+  // Guards activateDeferredGuideBundle below: if this email has two Stripe
+  // subscriptions (the pre-existing, known "no protection against a second
+  // subscription" gap — see krisflyer.md), member:{email} only ever tracks
+  // whichever one is "current". Cancelling the OTHER (non-current) one must
+  // not activate a deferred bundle or touch the still-active real record.
+  const wasCurrentSubscription = record.stripe_subscription_id === sub.id;
+  record.status = 'cancelled';
+  record.cancelled_at = new Date().toISOString();
+  await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(record));
+
+  // Remove whichever plan tag they held (altitude-monthly / altitude-annual)
+  // so a former subscriber who later resubscribes on a different interval
+  // doesn't end up tagged with both at once.
+  await removePlanTag(email, plan, env).catch(() => {});
+
+  if (wasCurrentSubscription) {
+    // If this member bought the KrisFlyer Guide while still on a real paid
+    // plan, their 90-day bundle was deferred (see grantGuideAltitudeBundle) —
+    // activate it now that their real membership has ended.
+    await activateDeferredGuideBundle(email, env).catch(() => {});
+  }
+}
+
+async function handleSubscriptionUpdated(sub, env) {
+  const custId = typeof sub.customer === 'string' ? sub.customer : sub.customer?.id;
+  if (!custId) return;
+
+  const email = await env.ALTITUDE_KV.get(`${KV_PREFIX.CUSTOMER}${custId}`);
+  if (!email) return;
+
+  const raw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+  if (!raw) return;
+
+  const record = JSON.parse(raw);
+  record.status = sub.status === 'active' ? 'active' : sub.status;
+  const periodEnd = getSubscriptionPeriodEnd(sub);
+  if (periodEnd) {
+    record.current_period_end = new Date(periodEnd * 1000).toISOString();
+  }
+
+  // Detects a plan change on this subscription (its price no longer matches
+  // what we had on file) and swaps the tag/plan to match. This covers two
+  // cases identically:
+  //  1. The deferred Monthly→Annual upgrade (services/stripe.js's
+  //     handleUpgradeToAnnual) actually taking effect — Stripe applies the
+  //     schedule's second phase at current_period_end and fires this same
+  //     event. This IS that flow's primary completion path, not a safety net.
+  //  2. Any other out-of-band price swap on the subscription.
+  // Only monthly<->annual is a real "plan" in this system.
+  if (record.plan === 'monthly' || record.plan === 'annual') {
+    const { plan: newPlan, amount_cents: newAmount } = derivePlanFromSubscription(sub);
+    if (newPlan !== record.plan) {
+      const oldPlan = record.plan;
+      const wasScheduledUpgrade = record.pending_plan === newPlan;
+      record.plan = newPlan;
+      record.amount_cents = newAmount;
+      delete record.pending_plan;
+      delete record.upgrade_effective_at;
+      await swapIntervalTag(email, oldPlan, newPlan, env).catch(() => {});
+      if (wasScheduledUpgrade && newPlan === 'annual') {
+        await enrollInAutomation(UPGRADED_ANNUAL_AUTOMATION_ID, email, env).catch(() => {});
+      }
+    }
+  }
+
+  await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(record));
+}
+
+// Fires on every successful invoice payment, including the very first one at
+// checkout (billing_reason: 'subscription_create') — only react to actual
+// renewals (billing_reason: 'subscription_cycle') so a brand-new signup
+// doesn't also get a "your membership renewed" email on day one. current_
+// period_end itself is already kept fresh by handleSubscriptionUpdated above
+// (Stripe fires customer.subscription.updated around the same renewal
+// event); this only handles the plan-specific Renewed email.
+async function handleInvoicePaymentSucceeded(invoice, env) {
+  if (invoice.billing_reason !== 'subscription_cycle') return;
+
+  const custId = typeof invoice.customer === 'string' ? invoice.customer : invoice.customer?.id;
+  if (!custId) return;
+
+  const email = await env.ALTITUDE_KV.get(`${KV_PREFIX.CUSTOMER}${custId}`);
+  if (!email) return;
+
+  const raw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+  if (!raw) return;
+  const member = JSON.parse(raw);
+
+  const automationId = member.plan === 'annual' ? RENEWED_ANNUAL_AUTOMATION_ID
+    : member.plan === 'monthly' ? RENEWED_MONTHLY_AUTOMATION_ID
+    : null;
+  if (!automationId) return; // e.g. guide_bundle records never renew via Stripe
+
+  await enrollInAutomation(automationId, email, env);
+}

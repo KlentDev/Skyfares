@@ -48,7 +48,7 @@
               class="btn-pill btn-pill-whatsapp">
               <i class="fa-brands fa-whatsapp text-sm"></i> Book via WhatsApp
             </a>
-            <a href="book?service=krisflyer&option=nominee" class="btn-pill btn-pill-ghost">
+            <a href="assessment?service=krisflyer&option=nominee" class="btn-pill btn-pill-ghost">
               Book Nominee Redemption
             </a>
           </div>
@@ -133,7 +133,7 @@
             </div>
 
             <div class="flex flex-wrap gap-3 mt-auto">
-              <a href="book?service=krisflyer&option=nominee" class="btn-pill btn-pill-primary">
+              <a href="assessment?service=krisflyer&option=nominee" class="btn-pill btn-pill-primary">
                 Book Nominee Redemption
               </a>
               <a href="contact" class="btn-pill btn-pill-outline">
@@ -168,13 +168,58 @@
                 No restrictions on partner airlines
               </li>
             </ul>
-            <a href="book?service=krisflyer&option=direct-3to4w"
+            <a href="assessment?service=krisflyer&option=direct-3to4w"
               class="btn-pill btn-pill-outline w-full justify-center mt-auto">
               Enquire Now
             </a>
           </div>
 
         </div>
+      </div>
+    </section>
+
+
+    <!-- ─── GUIDE CROSS-SELL ────────────────────────────────────────
+         Links to the new pages/krisflyer-guide.html sales/preview page --
+         a separate, standalone product (learn-it-yourself playbook) rather
+         than a placement for the Nominee Redemption service above.
+         Uses card-dark (the site's existing "make this stand out on a light
+         section" component, see index.html's step cards / newsletter-archive
+         cards) instead of card-utility so it visually pops against a page
+         that's otherwise all-white cards. The whole card is one <a> (not just
+         a small button inside it) so its clickability is obvious -- hovering
+         anywhere on it triggers card-dark's existing lift + brand-border
+         hover state. A corner "New" ribbon (solid brand fill, no gradient/
+         shadow, just an overlapping badge -- a much more universally
+         recognized "just added" signal than the pulsing border this
+         replaced) marks it as newly added to the page, separate from the
+         inline "Coming Soon" badge below, which is about the product's
+         launch status, not the card's novelty. -->
+    <section class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+        <a href="krisflyer-guide" class="card-dark relative block p-8 md:p-10 slide-up group">
+          <span class="absolute -top-3 -right-3 bg-brand-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+            New
+          </span>
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="icon-chip icon-chip-dark flex-shrink-0">
+              <i class="fa-solid fa-book"></i>
+            </div>
+            <div class="flex-1 text-center md:text-left">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-white bg-white/10 border border-white/20 px-3 py-1 rounded-full inline-block mb-3">
+                Prefer to Do It Yourself?
+              </span>
+              <h3 class="text-xl md:text-2xl font-display font-bold text-white tracking-tight mb-2 flex items-center justify-center md:justify-start gap-2">
+                The KrisFlyer Guide
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-brand-500 text-white text-[9px] font-bold uppercase tracking-wide leading-none">Coming Soon</span>
+              </h3>
+              <p class="text-sm text-white/70 leading-relaxed max-w-lg">Seven chapters, checklists, and planning templates for mastering your own miles — launching soon. Join the waitlist to be first in line.</p>
+            </div>
+            <span class="btn-pill btn-pill-primary flex-shrink-0 whitespace-nowrap inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+              Learn More <i class="fa-solid fa-arrow-right text-xs"></i>
+            </span>
+          </div>
+        </a>
       </div>
     </section>
 
@@ -240,7 +285,7 @@
               class="btn-pill btn-pill-whatsapp text-base" style="padding:0.875rem 1.75rem;">
               <i class="fa-brands fa-whatsapp"></i> Book via WhatsApp
             </a>
-            <a href="book?service=krisflyer&option=nominee" class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
+            <a href="assessment?service=krisflyer&option=nominee" class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
               Book Nominee Redemption
             </a>
           </div>

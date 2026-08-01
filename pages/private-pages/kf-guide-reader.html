@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reading — KrisFlyer Guide — Skyfare</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Read your KrisFlyer Guide chapters." />
+  <link rel="icon" href="../../logos/logo.webp" />
+
+  <script src="../../js/links.js"></script>
+  <link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
+  <script src="../../lib/tailwind/tailwind.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script src="../../js/tailwind-config.js" defer></script>
+  <script src="../../js/ui.js" defer></script>
+  <script src="../../js/private-layout.js" defer></script>
+</head>
+
+<body class="private-body" data-private-page="guide" data-private-product="KrisFlyer Guide" data-private-subtitle="Guide reader">
+  <div id="page-loader">
+    <img src="../../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="private-header-slot"></div>
+
+  <main id="main-content">
+    <div class="kf-read-topbar">
+      <div class="kf-read-topbar__inner">
+        <div class="kf-read-titles">
+          <span class="kf-read-guide-title">The KrisFlyer Guide</span>
+          <span class="kf-read-chapter-title" data-read-chapter-title>Loading…</span>
+        </div>
+        <div class="kf-read-meta">
+          <span data-read-position></span>
+          <span data-read-time></span>
+          <button type="button" class="kf-read-toc-toggle" data-read-toc-toggle aria-label="Table of contents">
+            <i class="fa-solid fa-list" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="kf-read-progressbar"><div class="kf-read-progressbar__fill" data-read-progress-fill></div></div>
+    </div>
+
+    <div class="kf-read-body">
+      <aside class="kf-read-rail">
+        <a class="kf-read-back kf-read-back--rail" href="kf-guide-access-portal.html">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          Back to Library
+        </a>
+        <nav class="kf-read-toc" data-read-toc aria-label="Table of contents">
+          <div class="kf-read-toc__head">
+            <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+            <span>Contents</span>
+          </div>
+          <div class="kf-read-toc__list" data-read-toc-list></div>
+        </nav>
+      </aside>
+      <div class="kf-read-toc-backdrop" data-read-toc-close></div>
+
+      <article class="kf-read-column">
+        <header class="kf-read-article-head">
+          <span class="kf-read-article-kicker" data-read-chapter-label>Loading chapter</span>
+          <h1 data-read-chapter-heading-title>Loading…</h1>
+          <div class="kf-read-article-meta" data-read-meta-row></div>
+        </header>
+        <div class="kf-read-content" data-read-content>
+          <p>Loading chapter…</p>
+        </div>
+        <div class="kf-read-nav-row">
+          <button type="button" class="kf-read-nav-btn" data-read-prev><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Previous</button>
+          <button type="button" class="kf-read-nav-btn kf-read-nav-btn--primary" data-read-next>Next <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <div id="private-footer-slot"></div>
+
+  <script src="../../js/kf-guide-auth.js" defer></script>
+  <script src="../../js/kf-guide-reader.js" defer></script>
+</body>
+</html>

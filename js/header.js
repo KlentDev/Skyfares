@@ -38,6 +38,115 @@ document.addEventListener('DOMContentLoaded', () => {
     #main-header.header-transparent .header-wordmark .altitude-text { color: rgba(255,255,255,0.65); }
     #main-header.header-scrolled   .header-wordmark .skyfare-text  { color: #0C4A6E; }
     #main-header.header-scrolled   .header-wordmark .altitude-text { color: #94a3b8; }
+
+    /* Header CTAs (Altitude Access / Book a Flight) */
+    .header-cta-icon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 2.75rem;
+      min-width: 2.75rem;
+      border-radius: 9999px;
+      overflow: visible;
+      white-space: nowrap;
+      padding: 0 0.6875rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      transition:
+        transform .16s var(--ease-v2-out, ease),
+        background-color .22s var(--ease-v2-out, ease),
+        border-color .22s var(--ease-v2-out, ease),
+        box-shadow .22s var(--ease-v2-out, ease);
+    }
+    .header-cta-icon:active { transform: scale(0.95); }
+    /* Label floats outside the button's own box (position: absolute) so it can
+       fade/slide into view via transform+opacity only -- the button's box
+       itself never resizes, so hovering never triggers layout, only paint. */
+    .header-cta-icon .cta-label {
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      margin-left: 0.5rem;
+      display: inline-block;
+      white-space: nowrap;
+      pointer-events: none;
+      transform: translateY(-50%) translateX(-6px);
+      opacity: 0;
+      transition: transform .22s var(--ease-v2-out, ease), opacity .18s var(--ease-v2-out, ease);
+    }
+    .header-cta-icon:hover .cta-label,
+    .header-cta-icon:focus-visible .cta-label {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+    }
+    .header-cta-gold { background: #C9A227; color: #ffffff; }
+    .header-cta-outline { background: transparent; color: #1b70ef; border-color: #1b70ef; }
+    @media (hover: hover) and (pointer: fine) {
+      .header-cta-gold:hover { background: #B58D1D; }
+      .header-cta-outline:hover { background: rgba(27,112,239,0.08); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .header-cta-icon, .header-cta-icon .cta-label {
+        transition: none !important;
+      }
+    }
+
+    /* Altitude Access -- always-visible label, calm premium treatment. */
+    .header-cta-altitude {
+      min-width: 0;
+      padding: 0 1.15rem 0 0.9rem;
+      gap: 0.1rem;
+      background: #C9A227;
+      box-shadow: 0 8px 20px rgba(201, 162, 39, 0.24);
+    }
+    .header-cta-altitude:hover {
+      box-shadow: 0 12px 26px rgba(201, 162, 39, 0.30);
+      transform: translateY(-1px);
+    }
+    .header-cta-altitude:active { transform: scale(0.95); }
+    .header-cta-altitude .cta-label {
+      position: static;
+      transform: none;
+      pointer-events: auto;
+      max-width: 200px;
+      opacity: 1;
+      margin-left: 0.5rem;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    /* The generic .header-cta-icon:hover .cta-label rule (higher specificity
+       via :hover) would otherwise re-apply its translateY(-50%) to this
+       always-visible, in-flow label, making the text drift upward on hover.
+       Pin it back to no transform at matching specificity. */
+    .header-cta-altitude:hover .cta-label,
+    .header-cta-altitude:focus-visible .cta-label {
+      transform: none;
+    }
+    .header-cta-altitude i {
+      font-size: 1.05rem;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .header-cta-altitude { transform: none !important; }
+    }
+    /* Dark-photo heroes (.header-transparent): flip the outline CTA to white
+       so it stays legible before the header goes solid on scroll -- same
+       treatment the old .book-now-btn had. The gold CTA needs no override,
+       its fill/white-text contrast already works on both dark and light. */
+    #main-header.header-transparent .header-cta-outline {
+      border-color: rgba(255, 255, 255, 0.7);
+      color: #ffffff;
+      background: transparent;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      #main-header.header-transparent .header-cta-outline:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
   `;
   /* Loader + mobile-menu CSS now live in css/style.css (loads synchronously). */
   document.head.appendChild(style);
@@ -60,7 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <!-- Services Dropdown (merged) -->
           <div class="relative group/dropdown">
             <button class="flex items-center gap-1.5 px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
-              <i class="fa-solid fa-layer-group text-[13px] opacity-60"></i> Services <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
+              <i class="fa-solid fa-layer-group text-[13px] opacity-60"></i> Services
+              <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
             <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:460px;">
               <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
@@ -135,11 +245,11 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <!-- Cabin Compare -- temporary top-level placement for launch
-               visibility (see note above). Remove this link + the "New"
-               badge together once graduated back into the Flights dropdown. -->
+               visibility (see note above). Remove this link once graduated
+               back into the Flights dropdown. The "New" badge that used to
+               sit here moved to Services / KrisFlyer Miles instead. -->
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/cabin-compare" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
             <i class="fa-solid fa-scale-balanced text-[13px] opacity-60"></i> Cabin Compare
-            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-brand-500 text-white text-[9px] font-bold uppercase tracking-wide leading-none">New</span>
           </a>
 
           <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works" class="nav-link px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
@@ -168,6 +278,13 @@ document.addEventListener('DOMContentLoaded', () => {
                   </div>
                   <div class="text-sm font-semibold text-brand-950">FAQs</div>
                 </a>
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer-guide" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-book text-sm"></i>
+                  </div>
+                  <div class="text-sm font-semibold text-brand-950">KrisFlyer Guide</div>
+                  <span class="ml-auto text-[9px] font-bold uppercase tracking-wide text-brand-600 bg-brand-50 border border-brand-100 px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">Coming Soon</span>
+                </a>
               </div>
             </div>
           </div>
@@ -177,12 +294,20 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </nav>
 
-        <!-- Right side: Book a Flight button -->
-        <div class="hidden lg:flex items-center gap-3 ml-auto">
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book"
-            class="book-now-btn inline-flex items-center gap-2 rounded-full border border-brand-500 px-6 py-2.5 text-sm font-semibold text-brand-500 hover:bg-brand-50 hover:-translate-y-0.5 transition-all active:scale-95">
-            <i class="fa-solid fa-calendar-check text-lg"></i>
-            Book a Flight
+        <!-- Right side: Altitude Access (always-visible label, playful gold
+             gradient + pulse -- see .header-cta-altitude) + Book a Flight
+             (stays icon-only, expands with a label on hover only). -->
+        <div class="hidden lg:flex items-center gap-2.5 ml-auto">
+          <button id="header-altitude-btn" type="button"
+            onclick="window.openLoginModal && window.openLoginModal();"
+            class="header-cta-icon header-cta-gold header-cta-altitude" aria-label="Altitude Access — member login">
+            <i class="fa-solid fa-crown text-base flex-shrink-0"></i>
+            <span class="cta-label">Altitude Access</span>
+          </button>
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment"
+            class="header-cta-icon header-cta-outline" aria-label="Book a Flight">
+            <i class="fa-solid fa-calendar-check text-base flex-shrink-0"></i>
+            <span class="cta-label">Book a Flight</span>
           </a>
         </div>
 
@@ -248,7 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- Cabin Compare -- temporary top-level placement, see desktop nav comment above -->
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/cabin-compare" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-scale-balanced text-brand-500 w-7"></i> Cabin Compare
-              <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-brand-500 text-white text-[9px] font-bold uppercase tracking-wide leading-none">New</span>
             </a>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/how-it-works" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-wand-magic-sparkles text-brand-500 w-7"></i> How It Works
@@ -266,14 +390,23 @@ document.addEventListener('DOMContentLoaded', () => {
               <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
                 <i class="fa-solid fa-circle-question text-brand-400 w-6 text-base"></i> FAQs
               </a>
+              <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer-guide" class="pl-2 border-l-2 border-brand-100 text-neutral-600 hover:text-brand-600 transition-colors text-lg flex items-center gap-3">
+                <i class="fa-solid fa-book text-brand-400 w-6 text-base"></i> KrisFlyer Guide
+                <span class="text-[9px] font-bold uppercase tracking-wide text-brand-600 bg-brand-50 border border-brand-100 px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">Coming Soon</span>
+              </a>
             </div>
             <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact" class="text-neutral-600 hover:text-brand-600 transition-colors flex items-center gap-3">
               <i class="fa-solid fa-envelope text-brand-500 w-7"></i> Contact
             </a>
           </nav>
           
-          <div class="mt-auto pt-10">
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/book" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
+          <div class="mt-auto pt-10 flex flex-col gap-3">
+            <button id="mobile-altitude-btn" type="button"
+              class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white font-semibold shadow-lg" style="background:#C9A227;">
+              <i class="fa-solid fa-crown text-xl"></i>
+              Altitude Access
+            </button>
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
               <i class="fa-solid fa-calendar-check text-xl"></i>
               Book a Flight
             </a>
@@ -388,11 +521,31 @@ document.addEventListener('DOMContentLoaded', () => {
   closeMobileMenu.addEventListener('click', closeMenu);
   mobileMenuBackdrop.addEventListener('click', closeMenu);
 
+  const mobileAltitudeBtn = document.getElementById('mobile-altitude-btn');
+  if (mobileAltitudeBtn) {
+    mobileAltitudeBtn.addEventListener('click', () => {
+      closeMenu();
+      window.openLoginModal && window.openLoginModal();
+    });
+  }
+
 
   // --- Global UI components (SkyUI: toast / modal / alert) ---
   (function () {
     var s = document.createElement('script');
     s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/ui.js';
+    s.defer = true;
+    document.head.appendChild(s);
+  })();
+
+  // --- Global magic-link modal (shared by the header's "Altitude Access"
+  //     button, pages/altitude.html's "Already a Member?" trigger, and
+  //     pages/altitude-success.html's post-checkout confirmation -- one
+  //     modal, not a per-page copy). Markup lives in
+  //     components/magic-modal.html, fetched/injected by js/magic-modal.js. ---
+  (function () {
+    var s = document.createElement('script');
+    s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/magic-modal.js';
     s.defer = true;
     document.head.appendChild(s);
   })();

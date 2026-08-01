@@ -21,17 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
               Your private flight strategist for Business and First Class travel. We specialize in high-value miles redemptions and luxury concierge services.
             </p>
 
-            <div class="flex gap-4 mt-8">
-              <a href="${WA}" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-green-500 hover:bg-green-600 transition-all shadow-sm shadow-green-500/30">
+            <div class="flex gap-2 mt-8">
+              <a href="${WA}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+                 class="hero-social-chip-v4 w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
                 <i class="fa-brands fa-whatsapp"></i>
               </a>
-              <a href="${IG}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 hover:opacity-90 transition-all shadow-sm shadow-pink-500/30">
+              <a href="${IG}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                 class="hero-social-chip-v4 w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
                 <i class="fa-brands fa-instagram"></i>
               </a>
-              <a href="${FB}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-sm shadow-blue-600/30">
+              <a href="${FB}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+                 class="hero-social-chip-v4 w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
                 <i class="fa-brands fa-facebook-f"></i>
               </a>
-              <a href="${TK}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-black hover:bg-neutral-800 transition-all shadow-sm shadow-black/20">
+              <a href="${TK}" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+                 class="hero-social-chip-v4 w-11 h-11 rounded-full flex items-center justify-center border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all active:scale-95">
                 <i class="fa-brands fa-tiktok"></i>
               </a>
             </div>
@@ -54,8 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <li><a href="/pages/past-flight-deals" class="text-brand-100/50 hover:text-white transition-colors">Flights We've Arranged</a></li>
               <li><a href="/pages/newsletter" class="text-brand-100/50 hover:text-white transition-colors">Newsletter</a></li>
               <li><a href="/pages/testimonials" class="text-brand-100/50 hover:text-white transition-colors">Testimonials</a></li>
-              <li><a href="/pages/book" class="text-brand-100/50 hover:text-white transition-colors">Book a Strategy Call</a></li>
-              <li><a href="/pages/assessment" class="text-brand-100/50 hover:text-white transition-colors">Free Assessment</a></li>
+              <li><a href="/pages/assessment" class="text-brand-100/50 hover:text-white transition-colors">Assessment Call</a></li>
             </ul>
           </div>
 
@@ -102,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // the visitor's intent immediately. Runs after the footer/FAB is injected
   // so it also covers the floating button. footer.js loads on every page,
   // making this the single source of truth. Override an individual link by
-  // adding  data-wa-message="…"  to its anchor (see book.html).
+  // adding  data-wa-message="…"  to its anchor (see pages/assessment.html).
   const WA_DEFAULT = "Hi Skyfare, I'd like to speak to a travel consultant.";
   document.querySelectorAll('a[href*="api.whatsapp.com/send"], a[href*="wa.me/"]').forEach((a) => {
     const href = a.getAttribute('href') || '';

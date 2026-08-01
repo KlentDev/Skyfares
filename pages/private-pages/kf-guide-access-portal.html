@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KrisFlyer Guide Dashboard — Skyfare</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Your KrisFlyer Guide dashboard — chapter library, redemption conditions, send and download options." />
+  <link rel="icon" href="../../logos/logo.webp" />
+
+  <script src="../../js/links.js"></script>
+  <link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
+  <script src="../../lib/tailwind/tailwind.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script src="../../js/tailwind-config.js" defer></script>
+  <script src="../../js/ui.js" defer></script>
+  <script src="../../js/private-layout.js" defer></script>
+  <script src="../../js/modal-verify-access.js" defer></script>
+</head>
+
+<body class="private-body" data-private-page="guide" data-private-product="KrisFlyer Guide" data-private-subtitle="Guide dashboard">
+  <div id="page-loader">
+    <img src="../../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="private-header-slot"></div>
+
+  <main id="main-content" class="private-main">
+    <section class="private-hero" aria-labelledby="kf-dashboard-title">
+      <div class="private-container">
+        <div class="private-hero__grid">
+          <div class="private-panel private-hero__intro slide-up is-visible">
+            <div>
+              <span class="private-kicker">
+                <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+                KrisFlyer Guide
+              </span>
+              <h1 id="kf-dashboard-title">Your private KrisFlyer reference library.</h1>
+              <p>
+                Access the chapter library, review award-rule conditions, and use member actions from a dedicated workspace rather than the public guide page.
+              </p>
+            </div>
+            <div class="private-hero__meta">
+              <span class="private-stat"><i class="fa-solid fa-circle-check text-brand-500" aria-hidden="true"></i><strong>Guide unlocked</strong></span>
+              <span class="private-stat"><i class="fa-solid fa-envelope" aria-hidden="true"></i><span id="kf-member-email">Signed in</span></span>
+              <span class="private-stat"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><strong>7 chapters</strong></span>
+            </div>
+          </div>
+
+          <aside class="private-panel private-summary slide-up is-visible" aria-label="Guide status">
+            <div class="flex items-center justify-between gap-4">
+              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-book" aria-hidden="true"></i></div>
+              <span class="private-badge">Purchased</span>
+            </div>
+            <div>
+              <p class="private-summary__label">Access status</p>
+              <p class="private-summary__title">KrisFlyer Guide</p>
+            </div>
+            <p class="private-summary__note">
+              The redemption table is available now. Chapter files will appear here as they are published.
+            </p>
+            <div class="private-summary__mini-list" aria-label="Guide availability">
+              <span><i class="fa-solid fa-table-list" aria-hidden="true"></i> Redemption table unlocked</span>
+              <span><i class="fa-solid fa-clock" aria-hidden="true"></i> Chapters publish here when ready</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="private-section" aria-labelledby="kf-library-title">
+      <div class="private-container">
+        <div class="private-section-heading slide-up">
+          <div>
+            <span class="private-kicker"><i class="fa-solid fa-book-bookmark" aria-hidden="true"></i> Your library</span>
+            <h2 id="kf-library-title">Chapter workspace</h2>
+            <p>Chapter cards show publication status honestly. Send and download actions are ready in the interface and will activate once chapter files exist.</p>
+          </div>
+
+          <div class="private-toolbar" aria-label="Guide actions">
+            <button type="button" id="kf-send-email-btn" class="private-action">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              Send to My Email
+            </button>
+          </div>
+        </div>
+
+        <div id="kf-library-grid" class="private-grid">
+          <div class="private-skeleton">
+            <span class="private-skeleton__dot" aria-hidden="true"></span>
+            <p>Loading your guide library</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="private-section" aria-labelledby="kf-redemption-title">
+      <div class="private-container">
+        <div class="private-section-heading slide-up">
+          <div>
+            <span class="private-kicker"><i class="fa-solid fa-table-list" aria-hidden="true"></i> Redemption conditions</span>
+            <h2 id="kf-redemption-title">Award rules by redemption type</h2>
+            <p>Compare how each award behaves after booking, including baggage, stopovers, cancellations, and change fees.</p>
+          </div>
+        </div>
+
+        <div class="private-table-panel relative slide-up">
+          <div id="kf-redemption-content" class="kf-blur private-table-wrap" aria-hidden="true">
+            <table class="private-table kf-table">
+              <thead>
+                <tr>
+                  <th>Redemption condition</th>
+                  <th>Business Promo</th>
+                  <th>Business Saver</th>
+                  <th>Business Advantage</th>
+                  <th>Business Access</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th><i class="fa-solid fa-suitcase text-brand-500 text-xs mr-2" aria-hidden="true"></i>Checked Baggage</th>
+                  <td class="kf-num">40kg</td>
+                  <td class="kf-num">40kg</td>
+                  <td class="kf-num">40kg</td>
+                  <td class="kf-num">40kg</td>
+                </tr>
+                <tr>
+                  <th><i class="fa-solid fa-chair text-brand-500 text-xs mr-2" aria-hidden="true"></i>Seat Selection</th>
+                  <td>Complimentary</td>
+                  <td>Complimentary</td>
+                  <td>Complimentary</td>
+                  <td>Complimentary</td>
+                </tr>
+                <tr>
+                  <th><i class="fa-solid fa-location-dot text-brand-500 text-xs mr-2" aria-hidden="true"></i>Complimentary Stopovers</th>
+                  <td class="text-neutral-400">Not Allowed</td>
+                  <td>Round-trip: 1<br>One-way: 0</td>
+                  <td>Round-trip: 2<br>One-way: 1</td>
+                  <td>Round-trip: 2<br>One-way: 1</td>
+                </tr>
+                <tr>
+                  <th><i class="fa-solid fa-arrow-up text-brand-500 text-xs mr-2" aria-hidden="true"></i>Upgrade with Miles</th>
+                  <td class="text-neutral-400">Not Allowed</td>
+                  <td class="text-neutral-400">Not Allowed</td>
+                  <td class="text-neutral-400">Not Allowed</td>
+                  <td class="text-neutral-400">Not Allowed</td>
+                </tr>
+                <tr>
+                  <th><i class="fa-solid fa-xmark text-brand-500 text-xs mr-2" aria-hidden="true"></i>Cancellation</th>
+                  <td class="text-neutral-400">Not Allowed</td>
+                  <td class="kf-num">USD 75</td>
+                  <td class="kf-num">USD 50</td>
+                  <td class="kf-num">USD 50</td>
+                </tr>
+                <tr>
+                  <th><i class="fa-solid fa-calendar-days text-brand-500 text-xs mr-2" aria-hidden="true"></i>Date Changes on SQ Flights</th>
+                  <td class="text-neutral-400">Not Allowed</td>
+                  <td class="kf-num">USD 25</td>
+                  <td>Complimentary</td>
+                  <td>Complimentary</td>
+                </tr>
+                <tr>
+                  <th><i class="fa-solid fa-arrows-rotate text-brand-500 text-xs mr-2" aria-hidden="true"></i>Route/Cabin/Award Type Changes on SQ Flights</th>
+                  <td class="text-neutral-400">Not Allowed</td>
+                  <td class="kf-num">USD 25</td>
+                  <td class="kf-num">USD 25</td>
+                  <td class="kf-num">USD 25</td>
+                </tr>
+                <tr>
+                  <th><i class="fa-solid fa-ban text-brand-500 text-xs mr-2" aria-hidden="true"></i>No Show</th>
+                  <td class="kf-num">USD 300</td>
+                  <td class="kf-num">USD 300</td>
+                  <td class="kf-num">USD 300</td>
+                  <td class="kf-num">USD 300</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="kf-redemption-lock" class="private-lock">
+            <div class="private-lock__inner">
+              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-lock" aria-hidden="true"></i></div>
+              <p>Verifying access</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="private-note slide-up">
+          <i class="fa-solid fa-circle-info mt-0.5 flex-shrink-0" aria-hidden="true"></i>
+          <span>Redemption conditions shown reflect Singapore Airlines' published fare rules at time of writing and are subject to change without notice. Skyfare Consulting is an independent travel consultancy and is not affiliated with, endorsed by, or sponsored by Singapore Airlines Limited. KrisFlyer&reg; is a registered trademark of Singapore Airlines Limited.</span>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <div id="private-footer-slot"></div>
+
+  <script src="../../js/kf-guide-auth.js" defer></script>
+  <script src="../../js/kf-guide-portal.js" defer></script>
+</body>
+</html>

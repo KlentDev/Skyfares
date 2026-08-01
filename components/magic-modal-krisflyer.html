@@ -1,0 +1,68 @@
+<!--
+  KrisFlyer Guide modal, fetched once and injected by js/krisflyer-guide.js.
+  Page-local (not loaded via header.js like the shared Altitude modal) since
+  pages/krisflyer-guide.html is its only consumer. Two panels sharing one
+  overlay/card shell, deliberately separate from components/magic-modal.html
+  so a Guide-only visitor never sees Altitude-branded copy ("Member Access",
+  "Access your membership") when they're here for the Guide:
+
+  - #magic-modal-krisflyer-panel-request — "Guide Access": existing Guide
+    owners request a login link via email (form -> /altitude/magic-request
+    with product:'guide' -> "check your inbox" state). Opened via
+    window.openGuideLoginModal().
+
+  - #magic-modal-krisflyer-panel-purchase — post-purchase confirmation for a
+    brand new Guide buyer: no form, just confirms a login link was already
+    emailed automatically. Opened via window.openGuidePurchaseModal().
+
+  Element ids are prefixed magic-modal-krisflyer-* so there is no collision
+  with the globally-injected #magic-modal (from js/magic-modal.js, loaded on
+  every page including this one via header.js).
+-->
+<div id="magic-modal-krisflyer" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
+  <div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" data-magic-modal-krisflyer-close></div>
+  <div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl">
+    <button data-magic-modal-krisflyer-close class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
+      <i class="fa-solid fa-xmark text-xs"></i>
+    </button>
+
+    <!-- Request: Guide Access login-link form -->
+    <div id="magic-modal-krisflyer-panel-request">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-100 bg-brand-50 text-brand-600 text-[10px] font-bold uppercase tracking-widest mb-5">
+        <i class="fa-solid fa-book text-[9px]"></i> KrisFlyer Guide Access
+      </div>
+      <h2 class="text-xl font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Access your guide</h2>
+      <p class="text-sm text-neutral-400 mb-6 leading-relaxed">Enter the email you purchased with and we'll send you a secure login link.</p>
+      <form id="kf-login-form">
+        <input id="kf-login-email" type="email" autocomplete="email" placeholder="you@email.com" class="w-full mb-2 px-5 py-3.5 rounded-full border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all bg-white">
+        <p class="text-[11px] text-neutral-400 mb-4 px-1 leading-relaxed"><i class="fa-solid fa-circle-info text-[9px] mr-1"></i>One link gets you straight into your guide.</p>
+        <button id="kf-login-btn" type="submit" class="w-full btn-pill btn-pill-primary">Send Login Link</button>
+        <p id="kf-login-status" class="text-xs mt-3 text-center min-h-[1.25rem]"></p>
+      </form>
+      <div id="kf-login-sent" style="display:none;">
+        <div class="flex flex-col items-center text-center gap-3 py-2">
+          <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center"><i class="fa-solid fa-envelope-circle-check text-brand-600 text-lg"></i></div>
+          <div>
+            <p class="text-sm font-semibold text-neutral-900 mb-1">Check your inbox</p>
+            <p class="text-xs text-neutral-400 leading-relaxed">We sent a login link to <strong id="kf-login-sent-email" class="text-neutral-700"></strong>. It's valid for 1 hour.</p>
+          </div>
+          <button type="button" onclick="window.openGuideLoginModal && window.openGuideLoginModal();" class="text-xs text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors mt-1">Use a different email</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Purchase: post-purchase success panel (no form -- the link is already sent) -->
+    <div id="magic-modal-krisflyer-panel-purchase" class="hidden">
+      <div class="flex flex-col items-center text-center gap-3 py-2">
+        <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center"><i class="fa-solid fa-circle-check text-brand-600 text-lg"></i></div>
+        <div>
+          <p class="text-lg font-display font-bold text-neutral-900 mb-1.5 tracking-tight">Purchase Successful!</p>
+          <p class="text-sm text-neutral-500 leading-relaxed">We sent you a magic link. Please check your email to access your KrisFlyer Guide.</p>
+          <p class="text-xs text-neutral-400 leading-relaxed mt-3">Valid for 1 hour from when it was sent.</p>
+        </div>
+        <button type="button" data-magic-modal-krisflyer-close class="btn-pill btn-pill-primary w-full justify-center mt-2">Got it</button>
+      </div>
+    </div>
+
+  </div>
+</div>
