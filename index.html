@@ -842,22 +842,6 @@
   </section>
 
 
-  <!-- Modal (shared, one per page) — must stay in DOM for TikTok JS -->
-  <div id="tiktok-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" role="dialog" aria-modal="true">
-    <div id="tiktok-modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer"></div>
-    <div class="relative z-10 flex flex-col items-center">
-      <button id="tiktok-modal-close"
-        class="mb-4 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white text-lg hover:bg-white/20 transition-all self-end"
-        aria-label="Close">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <div id="tiktok-modal-frame"
-        class="rounded-2xl overflow-hidden bg-black w-[min(360px,90vw)]"
-        style="height:min(739px,80vh);">
-      </div>
-    </div>
-  </div>
-
   <!-- SOCIAL PROOF -->
   <section id="testimonials-section" class="py-20 tile-parch">
     <div class="container mx-auto px-4 md:px-6">
@@ -1023,111 +1007,6 @@
       </div>
     </div>
   </section>
-
-  <!-- SOCIAL FEEDS (TikTok + Instagram) -->
-  <section class="py-16 tile-sky">
-    <div class="container mx-auto px-4 md:px-6">
-
-      <div class="grid lg:grid-cols-2 gap-6 items-start slide-up">
-
-        <!-- LEFT: TikTok column -->
-        <div class="social-col social-col-v2">
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-2">
-              <i class="fa-brands fa-tiktok text-sm text-neutral-400"></i>
-              <span id="tiktok-handle" class="text-xs font-bold text-neutral-500 uppercase tracking-widest">@skyfareconsulting</span>
-            </div>
-            <a id="tiktok-follow-link" href="https://www.tiktok.com/@skyfareconsulting" target="_blank" rel="noopener noreferrer"
-               class="btn-pill btn-pill-primary btn-glow-v2" style="padding:0.4rem 1rem;font-size:0.75rem;">
-              Follow <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-            </a>
-          </div>
-          <div class="grid grid-cols-2 gap-3 social-col-embed">
-            <div id="tiktok-card-1" class="tiktok-card relative overflow-hidden cursor-pointer bg-black rounded-xl" data-video-id="">
-              <div style="height:739px;">
-                <iframe id="tiktok-iframe-1" src="" style="width:100%;height:100%;border:none;display:block;" allow="encrypted-media; fullscreen" loading="lazy" title=""></iframe>
-              </div>
-            </div>
-            <div id="tiktok-card-2" class="tiktok-card relative overflow-hidden cursor-pointer bg-black rounded-xl" data-video-id="">
-              <div style="height:739px;">
-                <iframe id="tiktok-iframe-2" src="" style="width:100%;height:100%;border:none;display:block;" allow="encrypted-media; fullscreen" loading="lazy" title=""></iframe>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: Instagram column -->
-        <div class="social-col social-col-v2">
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-2">
-              <i class="fa-brands fa-instagram text-sm text-pink-500"></i>
-              <span id="instagram-handle" class="text-xs font-bold text-neutral-500 uppercase tracking-widest">@skyfareconsulting</span>
-            </div>
-            <a id="instagram-follow-link" href="https://www.instagram.com/skyfareconsulting/" target="_blank" rel="noopener noreferrer"
-               class="btn-pill btn-pill-primary btn-glow-v2" style="padding:0.4rem 1rem;font-size:0.75rem;">
-              Follow <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-            </a>
-          </div>
-          <div class="grid grid-cols-2 gap-3 social-col-embed">
-            <div id="instagram-embed-1" class="relative rounded-xl overflow-hidden" style="height:739px;"></div>
-            <div id="instagram-embed-2" class="relative rounded-xl overflow-hidden" style="height:739px;"></div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <script>
-  (function () {
-    var modal        = document.getElementById('tiktok-modal');
-    var modalFrame   = document.getElementById('tiktok-modal-frame');
-    var modalClose   = document.getElementById('tiktok-modal-close');
-    var modalBackdrop = document.getElementById('tiktok-modal-backdrop');
-
-    function openModal(embedUrl) {
-      var iframe = document.createElement('iframe');
-      iframe.src = embedUrl;
-      iframe.setAttribute('allowfullscreen', '');
-      iframe.setAttribute('allow', 'encrypted-media; autoplay; fullscreen');
-      iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
-      modalFrame.appendChild(iframe);
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      modalFrame.innerHTML = '';
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      document.body.style.overflow = '';
-    }
-
-    /* TikTok card clicks */
-    document.querySelectorAll('.tiktok-card').forEach(function (card) {
-      card.addEventListener('click', function () {
-        openModal('https://www.tiktok.com/embed/v2/' + this.dataset.videoId + '?autoplay=1');
-      });
-    });
-
-    /* Instagram card clicks */
-    document.querySelectorAll('.instagram-card').forEach(function (card) {
-      card.addEventListener('click', function () {
-        openModal(this.dataset.embedUrl);
-      });
-    });
-
-    /* Close handlers */
-    modalClose.addEventListener('click', closeModal);
-    modalBackdrop.addEventListener('click', closeModal);
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeModal();
-    });
-
-  })();
-  </script>
 
   <!-- FAQ -->
   <section class="py-20 tile-dark1 faq-polish-v5">
