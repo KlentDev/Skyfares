@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Travel Strategy Call — Coming Soon — Skyfare Consulting</title>
-  <meta name="description" content="The Travel Strategy Call booking flow is being rebuilt. Join the waitlist and we'll email you the moment it reopens." />
+  <title>Travel Strategy Call — Skyfare Consulting</title>
+  <meta name="description" content="Pay $99 for direct 1-on-1 access to Sahej. Book a confirmed slot on our calendar, get a clear travel plan, and message us on WhatsApp for quick follow-ups. Credited back if you book with us within 30 days." />
   <link rel="icon" href="../logos/logo.webp" />
   <script src="../js/links.js"></script>
   <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
   <script src="../lib/tailwind/tailwind.min.js"></script>
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
-  <script src="../js/coming-soon.js" defer></script>
   <script src="../js/cookie-consent.js" defer></script>
+  <script src="../js/assessment-checkout.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
@@ -27,14 +27,9 @@
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
-  <!-- Original page content — kept inline (not deleted), commented out rather
-       than archived to a separate file. Delete this comment block (and the
-       Coming Soon <main> below it) to restore the full marketing page once the
-       Travel Strategy Call flow is ready to launch for real.
-
   <main class="flex-1">
 
-    <!-- ─── HERO ─────────────────────────────────────────────────── --&gt;
+    <!-- ─── HERO ─────────────────────────────────────────────────── -->
     <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/assessment-call.png');">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-2xl mx-auto text-center slide-up">
@@ -43,7 +38,7 @@
             Direct Access &middot; $99
           </div>
           <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
-            Assessment Call.
+            Travel Strategy Call.
           </h1>
           <p class="text-base md:text-lg text-white/65 leading-relaxed mb-8 font-medium max-w-xl mx-auto">
             Pay once, get direct personal access to Sahej. Ask anything about your miles, cards, or travel plans — get a clear, honest plan back. Book with us within 30 days and your $99 is credited in full.
@@ -65,10 +60,9 @@
           </div>
 
           <div class="flex flex-wrap justify-center gap-3">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
-               data-wa-message="Hi Skyfare, I'd like to book my Assessment Call ($99)."
+            <a href="#" data-assessment-checkout
                class="btn-pill btn-pill-primary btn-glow-v2">
-              <i class="fa-solid fa-phone-volume text-sm"></i> Book Your Assessment Call — $99
+              <i class="fa-solid fa-phone-volume text-sm"></i> Book Your Travel Strategy Call — $99
             </a>
             <a href="services" class="btn-pill btn-pill-ghost">
               See All Services
@@ -80,7 +74,11 @@
 
     <div id="priority" class="sr-only" aria-hidden="true"></div>
 
-    <!-- ─── WHAT'S INCLUDED ───────────────────────────────────────── --&gt;
+    <!-- Post-payment success is now a modal (components/travel-strat-modal.html,
+         opened by js/assessment-checkout.js) instead of an inline section --
+         the booking link only ever lives in the confirmation email now. -->
+
+    <!-- ─── WHAT'S INCLUDED ───────────────────────────────────────── -->
     <section class="py-24 bg-white overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
 
@@ -156,7 +154,7 @@
     </section>
 
 
-    <!-- ─── HOW IT WORKS ───────────────────────────────────────────── --&gt;
+    <!-- ─── HOW IT WORKS ───────────────────────────────────────────── -->
     <section class="py-24 bg-white overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
 
@@ -186,12 +184,12 @@
           <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.12s;">
             <div class="process-topline-v5">
               <span class="process-index-v5">02</span>
-              <span class="icon-chip"><i class="fa-solid fa-comments"></i></span>
+              <span class="icon-chip"><i class="fa-solid fa-calendar-check"></i></span>
             </div>
-            <p class="process-label-v5">Talk directly</p>
-            <h3>Direct Session</h3>
-            <p>Get direct access to book a call or message Sahej yourself — no waiting, no queue.</p>
-            <span class="process-note-v5">No queue</span>
+            <p class="process-label-v5">Book instantly</p>
+            <h3>Confirmed Slot</h3>
+            <p>Pick a time that works for you on our calendar — WhatsApp is there too for quick questions.</p>
+            <span class="process-note-v5">Instant booking</span>
           </article>
 
           <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.18s;">
@@ -211,7 +209,7 @@
     </section>
 
 
-    <!-- ─── BEFORE YOU BOOK (FAQ) ──────────────────────────────────── --&gt;
+    <!-- ─── BEFORE YOU BOOK (FAQ) ──────────────────────────────────── -->
     <section class="py-24 bg-white overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
 
@@ -290,7 +288,7 @@
               <span class="faq-indicator flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span>
             </summary>
             <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-neutral-500 leading-relaxed border-t border-neutral-100 pt-4">
-              Once you've paid, you get direct access immediately — no queue, no waiting for a slot to open up.
+              Once you've paid, you'll get a link to book a confirmed slot on our calendar right away — no queue, no back-and-forth.
             </div></div>
           </details>
 
@@ -300,7 +298,7 @@
     </section>
 
 
-    <!-- ─── CTA BAND ──────────────────────────────────────────────── --&gt;
+    <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
     <section class="cta-band">
       <div class="cta-band__art"></div>
       <div class="cta-band__veil"></div>
@@ -311,13 +309,12 @@
             Direct access, one time.
           </h2>
           <p class="section-lead-dark mb-9 max-w-md mx-auto">
-            Not sure if Business Class on miles is right for you? A $99 Assessment Call gets you a clear, honest answer — credited back if you book with us.
+            Not sure if Business Class on miles is right for you? A $99 Travel Strategy Call gets you a clear, honest answer — credited back if you book with us.
           </p>
           <div class="flex flex-wrap justify-center gap-3">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
-              data-wa-message="Hi Skyfare, I'd like to book my Assessment Call ($99)."
-              class="btn-pill btn-pill-whatsapp btn-glow-v2 btn-pill-v2--lg">
-              <i class="fa-brands fa-whatsapp"></i> Message on WhatsApp
+            <a href="#" data-assessment-checkout
+              class="btn-pill btn-pill-primary btn-glow-v2 btn-pill-v2--lg">
+              <i class="fa-solid fa-phone-volume"></i> Book Your Travel Strategy Call — $99
             </a>
             <a href="services" class="btn-pill btn-pill-ghost btn-glow-v2 btn-pill-v2--lg">
               See All Services
@@ -327,38 +324,6 @@
       </div>
     </section>
 
-  </main>
-
-  -->
-
-  <!-- Dedicated full-page Coming Soon screen (js/coming-soon.js system). The
-       full marketing page this replaced is commented out above, not deleted
-       -- restore it (and remove this block) when the Travel Strategy Call
-       booking flow is ready to launch for real. -->
-  <main class="flex-1 flex items-center justify-center page-hero-bg relative overflow-hidden py-16 px-4"
-    style="--hero-img:url('../images/page-images/assessment-call.png');">
-    <div class="container mx-auto px-4 md:px-6 relative z-10">
-      <div class="card-glass-v2 max-w-lg mx-auto text-center px-8 py-12 md:px-12 md:py-14 slide-up">
-        <div class="icon-chip-glass-v2 mx-auto mb-5" style="width:3rem;height:3rem;font-size:1.15rem;">
-          <i class="fa-solid fa-phone-volume" aria-hidden="true"></i>
-        </div>
-        <span class="cs-badge mb-5">Coming Soon</span>
-        <h1 class="text-3xl md:text-4xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
-          Travel Strategy Call
-        </h1>
-        <p class="text-base text-white/70 leading-relaxed mb-8 font-medium max-w-md mx-auto">
-          Direct 1-on-1 planning calls are being rebuilt. Join the waitlist and we'll email you the moment booking reopens.
-        </p>
-
-        <a href="pre-signup-link?utm_content=assessment" class="btn-pill btn-pill-primary">
-          <i class="fa-solid fa-bell text-xs" aria-hidden="true"></i>Join Our Waitlist
-        </a>
-
-        <p class="mt-8 text-xs text-white/40">
-          <a href="../" class="text-white/60 underline underline-offset-2 hover:text-white/90 transition-colors">&larr; Back to Skyfare Consulting</a>
-        </p>
-      </div>
-    </div>
   </main>
 
 </body>

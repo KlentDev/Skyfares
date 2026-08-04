@@ -5,6 +5,7 @@
 import { respond, getBaseUrl } from '../utils/http.js';
 import { getBearer, verifyJwt } from '../utils/jwt.js';
 import { getHmacKey } from '../utils/crypto.js';
+import { buildAssessmentBookingUrl } from '../utils/signedLink.js';
 import { KV_PREFIX } from '../config/constants.js';
 
 // ── Altitude: Stripe Checkout ─────────────────────────────────────────────────
@@ -131,6 +132,117 @@ export async function handleGuideCheckout(request, env, corsHeaders) {
 
   const session = await res.json();
   return respond({ url: session.url }, 200, corsHeaders);
+}
+
+// ── Travel Strategy Call: Stripe Checkout ─────────────────────────────────────
+// One-time $99 purchase, same mode:'payment' shape as the Guide checkout above.
+// metadata[product]='assessment' is how orchestration/stripeWebhook.js tells
+// this apart from a Guide purchase once both land in the same
+// checkout.session.completed / mode:'payment' branch.
+//
+// Uses its own STRIPE_ASSESSMENT_SECRET_KEY, NOT the shared STRIPE_SECRET_KEY
+// -- this product is currently live under the "Klent sandbox" Stripe account
+// (acct_1Tl1nJB9NfKSwBnU), a genuinely different account from whichever one
+// issues STRIPE_SECRET_KEY for Altitude/Guide, not just a different mode on
+// the same account. A Price ID from one account is invisible to another
+// account's key, so this can't share STRIPE_SECRET_KEY. Swap this whole
+// product over to the real account (new STRIPE_ASSESSMENT_PRICE_ID under
+// that account, then point this back at STRIPE_SECRET_KEY) once out of testing.
+
+export async function handleAssessmentCheckout(request, env, corsHeaders) {
+  if (!env.STRIPE_ASSESSMENT_SECRET_KEY || !env.STRIPE_ASSESSMENT_PRICE_ID) {
+    return respond({ error: 'Stripe not configured.' }, 503, corsHeaders);
+  }
+
+  const rlKey = `${KV_PREFIX.RL_ASSESSMENT_CHECKOUT}${request.headers.get('CF-Connecting-IP') || 'unknown'}`;
+  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+  if (rlCount >= 10) {
+    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  }
+  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
+
+  let email = '';
+  try {
+    const body = await request.json();
+    email = (body.email || '').trim().toLowerCase();
+  } catch {}
+
+  const origin  = request.headers.get('Origin') || '';
+  const baseUrl = getBaseUrl(origin);
+  const params = new URLSearchParams({
+    mode: 'payment',
+    'line_items[0][price]': env.STRIPE_ASSESSMENT_PRICE_ID,
+    'line_items[0][quantity]': '1',
+    success_url: `${baseUrl}/pages/assessment.html?purchased=1&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${baseUrl}/pages/assessment.html#priority`,
+    'metadata[product]': 'assessment',
+  });
+  if (email) params.set('customer_email', email);
+
+  let res;
+  try {
+    res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.STRIPE_ASSESSMENT_SECRET_KEY}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    });
+  } catch {
+    return respond({ error: 'Could not reach Stripe.' }, 502, corsHeaders);
+  }
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    return respond({ error: err.error?.message || 'Stripe error.' }, res.status, corsHeaders);
+  }
+
+  const session = await res.json();
+  return respond({ url: session.url }, 200, corsHeaders);
+}
+
+// Called by the success-page JS before it reveals the Cal.com/WhatsApp
+// buttons -- the bare ?purchased=1 redirect flag is not proof of payment on
+// its own (assessment-call-page.md §7.3), so this re-checks the session with
+// Stripe directly rather than trusting the client.
+export async function handleAssessmentVerify(request, env, corsHeaders) {
+  if (!env.STRIPE_ASSESSMENT_SECRET_KEY) {
+    return respond({ error: 'Stripe not configured.' }, 503, corsHeaders);
+  }
+
+  const url = new URL(request.url);
+  const sessionId = url.searchParams.get('session_id') || '';
+  if (!sessionId) {
+    return respond({ error: 'missing_session_id' }, 400, corsHeaders);
+  }
+
+  let res;
+  try {
+    res = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
+      headers: { 'Authorization': `Bearer ${env.STRIPE_ASSESSMENT_SECRET_KEY}` },
+    });
+  } catch {
+    return respond({ error: 'Could not reach Stripe.' }, 502, corsHeaders);
+  }
+
+  if (!res.ok) {
+    return respond({ paid: false }, 200, corsHeaders);
+  }
+
+  const session = await res.json();
+  const paid = session.payment_status === 'paid' && session.metadata?.product === 'assessment';
+  if (!paid) {
+    return respond({ paid: false }, 200, corsHeaders);
+  }
+
+  // Same signed link the confirmation email gets (see
+  // orchestration/stripeWebhook.js's handleAssessmentCheckoutComplete) --
+  // built fresh here too so the success page never has to know the real
+  // Cal.com URL, only this verified, expiring redirect.
+  const email = (session.customer_details?.email || session.customer_email || '').toLowerCase();
+  const bookingUrl = email ? await buildAssessmentBookingUrl(email, env) : null;
+  return respond({ paid: true, bookingUrl }, 200, corsHeaders);
 }
 
 // ── Stripe signature verification ─────────────────────────────────────────────

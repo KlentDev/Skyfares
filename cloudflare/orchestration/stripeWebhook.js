@@ -5,9 +5,11 @@
 import { verifyStripeSignature, derivePlanFromSubscription, getSubscriptionPeriodEnd } from '../services/stripe.js';
 import {
   setupBeehiivMember, removePlanTag, tagGuideBuyer, swapIntervalTag,
-  enrollInAutomation, sendGuideMagicLink,
+  enrollInAutomation, sendGuideMagicLink, tagTravelStrategyCallBuyer,
+  sendAssessmentBookingEmail,
 } from '../services/beehiiv.js';
 import { grantGuideAltitudeBundle, activateDeferredGuideBundle } from './guideBundle.js';
+import { buildAssessmentBookingUrl } from '../utils/signedLink.js';
 import {
   KV_PREFIX, UPGRADED_ANNUAL_AUTOMATION_ID,
   RENEWED_MONTHLY_AUTOMATION_ID, RENEWED_ANNUAL_AUTOMATION_ID,
@@ -23,7 +25,17 @@ export async function handleStripeWebhook(request, env, corsHeaders) {
   const body      = await request.text();
   const signature = request.headers.get('Stripe-Signature') || '';
 
-  const valid = await verifyStripeSignature(body, signature, env.STRIPE_WEBHOOK_SECRET);
+  // Two possible signing secrets: STRIPE_WEBHOOK_SECRET (Altitude/Guide, the
+  // real live Stripe account) and STRIPE_WEBHOOK_SECRET_ASSESSMENT (the
+  // "Klent sandbox" account's own webhook endpoint, we_1U0DUnB9NfKSwBnU...,
+  // used only while the Travel Strategy Call product is being tested there —
+  // see services/stripe.js's handleAssessmentCheckout). Checking both here,
+  // rather than a separate route, keeps this one webhook URL the single
+  // source of truth both Stripe accounts already point at.
+  let valid = await verifyStripeSignature(body, signature, env.STRIPE_WEBHOOK_SECRET);
+  if (!valid && env.STRIPE_WEBHOOK_SECRET_ASSESSMENT) {
+    valid = await verifyStripeSignature(body, signature, env.STRIPE_WEBHOOK_SECRET_ASSESSMENT);
+  }
   if (!valid) return new Response('Invalid signature', { status: 400 });
 
   let event;
@@ -31,10 +43,17 @@ export async function handleStripeWebhook(request, env, corsHeaders) {
 
   switch (event.type) {
     case 'checkout.session.completed':
-      // Guide purchases are one-time (mode: 'payment'); Altitude stays 'subscription'.
-      // Branching here keeps the existing Altitude path completely untouched.
+      // Guide and Travel Strategy Call purchases are both one-time (mode:
+      // 'payment'); Altitude stays 'subscription'. metadata.product tells the
+      // two 'payment' products apart (set at session creation in
+      // services/stripe.js's handleGuideCheckout / handleAssessmentCheckout).
+      // Branching here keeps the existing Altitude/Guide paths untouched.
       if (event.data.object.mode === 'payment') {
-        await handleGuideCheckoutComplete(event.data.object, env);
+        if (event.data.object.metadata?.product === 'assessment') {
+          await handleAssessmentCheckoutComplete(event.data.object, env);
+        } else {
+          await handleGuideCheckoutComplete(event.data.object, env);
+        }
       } else {
         await handleCheckoutComplete(event.data.object, env);
       }
@@ -169,6 +188,42 @@ async function handleGuideCheckoutComplete(session, env) {
   if (!(await env.ALTITUDE_KV.get(magicSentKey))) {
     await sendGuideMagicLink(email, env, full.metadata?.origin).catch(() => {});
     await env.ALTITUDE_KV.put(magicSentKey, '1', { expirationTtl: 604800 }); // 7 days — comfortably past Stripe's webhook retry window
+  }
+}
+
+// ── Travel Strategy Call: purchase fulfillment ────────────────────────────────
+// Payment-only fulfillment: tags the buyer in Beehiiv and sends the
+// confirmation email (with their signed booking link) via direct automation
+// enrollment. Deliberately NO Airtable write here -- per the required flow,
+// Airtable only gets a record once the buyer actually books a slot on
+// Cal.com (see orchestration/calcomWebhook.js's handleBookingCreated, the
+// only place that writes to the Assessment Call Bookings table now).
+
+async function handleAssessmentCheckoutComplete(session, env) {
+  // Uses STRIPE_ASSESSMENT_SECRET_KEY, not the shared STRIPE_SECRET_KEY --
+  // this session belongs to the "Klent sandbox" Stripe account, a different
+  // account from whichever one issues STRIPE_SECRET_KEY (see
+  // services/stripe.js's handleAssessmentCheckout).
+  const res = await fetch(
+    `https://api.stripe.com/v1/checkout/sessions/${session.id}?expand[]=customer`,
+    { headers: { 'Authorization': `Bearer ${env.STRIPE_ASSESSMENT_SECRET_KEY}` } }
+  );
+  if (!res.ok) return;
+
+  const full  = await res.json();
+  const email = (full.customer_details?.email || full.customer_email || '').toLowerCase();
+  if (!email) return;
+
+  // Tag for CRM/segmentation, then send the confirmation email (with the
+  // signed booking link) via direct automation enrollment -- reliable and
+  // immediate, not dependent on segment recalculation timing.
+  await tagTravelStrategyCallBuyer(email, env)
+    .catch(err => console.error('[assessment-checkout-complete] Beehiiv tagging failed:', String(err).slice(0, 200)));
+
+  const bookingUrl = await buildAssessmentBookingUrl(email, env).catch(() => null);
+  if (bookingUrl) {
+    await sendAssessmentBookingEmail(email, bookingUrl, env)
+      .catch(err => console.error('[assessment-checkout-complete] Beehiiv confirmation email failed:', String(err).slice(0, 200)));
   }
 }
 

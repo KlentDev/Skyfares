@@ -72,6 +72,14 @@ export const INTERVAL_TAG_IDS = { monthly: 'eab046f1-f103-4e7a-8568-63c5f036e13f
 export const GUIDE_BUNDLE_TAG_NAME = 'krisflyer bundle'; // temporary tag for the Guide's 90-day free Altitude bundle (see orchestration/guideBundle.js) — distinct from GUIDE_TAG_NAME, which is permanent
 export const GUIDE_BUNDLE_TAG_ID   = 'e1e9ccfe-bee9-4786-bf7f-2e20bb94a2da';
 
+// Permanent "paid for a Travel Strategy Call" tag, applied in
+// handleAssessmentCheckoutComplete (orchestration/stripeWebhook.js) — never
+// removed, mirrors GUIDE_TAG_NAME's pattern. Feeds SEG_TRAVEL_STRAT_CALL below,
+// which triggers TRAVEL_STRAT_CALL_AUTOMATION_ID (still draft in Beehiiv as of
+// this writing — needs a manual publish before it actually sends).
+export const TRAVEL_STRAT_CALL_TAG_NAME = 'travel-strat-call';
+export const TRAVEL_STRAT_CALL_TAG_ID   = 'e1da42a0-f5fc-4fb0-b742-b83249c350cb';
+
 // "Altitude Premium Subscribers" (formerly SEG_PREMIUM, seg_6b2bf91a...) is retired — it was
 // always just the union of Monthly + Annual, both of which are already recalculated below.
 export const SEG_FREE      = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
@@ -79,6 +87,7 @@ export const SEG_PRELAUNCH = 'seg_3b2edb32-94a4-43b8-af13-1668923ffa95'; // Pre-
 export const SEG_GUIDE      = 'seg_fd7d552b-eb91-4536-a7f7-ca7665c95782'; // KrisFlyer Guide Subscribers (where: subscriber_tag = krisflyer)
 export const SEG_MONTHLY    = 'seg_66838dd3-207a-41f0-a93b-94743e005dc1'; // Altitude Monthly Subscribers (where: altitude-monthly)
 export const SEG_ANNUAL     = 'seg_56c30f35-abc9-44bd-9c29-f40a9dbc1491'; // Altitude Annual Subscribers (where: altitude-annual)
+export const SEG_TRAVEL_STRAT_CALL = 'seg_bd786e3e-07a3-420f-95c1-8360b912dd9d'; // Travel Strategy Call Buyers (where: subscriber_tag = travel-strat-call)
 
 // ── Cross-concern URLs ────────────────────────────────────────────────────────
 
@@ -92,6 +101,8 @@ export const ALLOWED_ORIGINS = [
 
 export const PUB_BASE_URL = 'https://skyfarealtitude.beehiiv.com';
 export const SITE_URL     = 'https://skyfareconsulting.com';
+export const WORKER_BASE_URL = 'https://skyfares-altitude.klent-5fa.workers.dev'; // this Worker's own public URL -- needed for links embedded in emails, which have no request Origin to derive a base URL from (see utils/http.js's getBaseUrl)
+export const CALCOM_BOOKING_URL = 'https://cal.com/klentmicko/travel-strategy-call'; // real destination /assessment/book redirects to after verifying a signed booking link (orchestration/assessmentBooking.js)
 
 // ── Airtable ───────────────────────────────────────────────────────────────────
 
@@ -124,9 +135,18 @@ export const KV_PREFIX = {
   GUIDE_BUNDLE_PENDING: 'guide-bundle-pending:',
   OVERRIDE_PREMIUM: 'override:premium:',
   GUIDE_MAGIC_SENT: 'guide-magic-sent:',
+  // Set once a Cal.com booking is confirmed for this email (see
+  // orchestration/calcomWebhook.js); checked by
+  // orchestration/assessmentBooking.js's handleAssessmentBookingRedirect to
+  // stop the same emailed booking link from being reused for a second
+  // booking -- gated on a real confirmed booking, not on the link being
+  // merely clicked/pre-fetched (see that file's own comment on why).
+  ASSESSMENT_BOOKED: 'assessment-booked:',
   RL_SUBSCRIBE: 'subscribe-rl:',
   RL_CHECKOUT: 'checkout-rl:',
   RL_GUIDE_CHECKOUT: 'guide-checkout-rl:',
+  RL_ASSESSMENT_CHECKOUT: 'assessment-checkout-rl:',
+  RL_CALCOM_WEBHOOK: 'calcom-webhook-rl:',
   RL_ACTIVATE: 'rl:',
   RL_PORTAL: 'portal-rl:',
   RL_UPGRADE: 'upgrade-rl:',
@@ -164,3 +184,19 @@ export const GUIDE_ID = 'krisflyer-guide';
 export const GUIDE_PDF_EMAIL_AUTOMATION_ID = 'aut_40014528-4e1f-4a2e-9056-9ad9ea81cfbd'; // "KrisFlyer Guide — PDF Delivery" — still draft in Beehiiv, needs publishing (see krisflyer.md)
 export const GUIDE_PDF_DOWNLOAD_URL_CF_NAME = 'guide_pdf_download_url';
 export const GUIDE_PDF_PASSWORD_CF_NAME = 'guide_pdf_password';
+
+// Travel Strategy Call: same custom-field + direct-journeys-enrollment
+// pattern as the Guide PDF delivery above (see services/beehiiv.js's
+// sendAssessmentBookingEmail) -- reliable, immediate send, not dependent on
+// segment recalculation timing. Automation still `draft` in Beehiiv as of
+// this writing, needs review + a manual publish before it actually sends
+// (same documented pattern as every other still-draft automation here).
+export const TRAVEL_STRAT_CALL_AUTOMATION_ID = 'aut_14deb6a2-ecd5-4215-be91-5dbed471c971'; // "Travel Strategy Call - Booking Confirmation" (payment received) -- replaces the earlier "Travel Strategy Call — Confirmation" automation (aut_6e0d402d...), deleted manually in Beehiiv
+export const TRAVEL_STRAT_CALL_BOOKING_URL_CF_NAME = 'travel_strategy_call_booking_url';
+
+// Booking-confirmed notifications (customer + admin) are handled from
+// Airtable now, not a second Beehiiv automation -- see trav-start-call.md.
+// The "Travel Strategy Call — Booking Confirmed" automation and its
+// travel_strategy_call_slot_time custom field this repo briefly wired up
+// still exist in Beehiiv (no delete API for either) but are unreferenced
+// here and should be deleted manually in the dashboard.

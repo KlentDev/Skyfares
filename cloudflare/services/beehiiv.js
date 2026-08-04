@@ -10,9 +10,11 @@ import {
   MAGIC_LINK_AUTOMATION_ID, MAGIC_LINK_CF_NAME, GUIDE_MAGIC_LINK_AUTOMATION_ID,
   WELCOME_AUTOMATION_ID, WELCOME_MONTHLY_AUTOMATION_ID, WELCOME_ANNUAL_AUTOMATION_ID,
   GUIDE_TAG_NAME, INTERVAL_TAG_IDS, GUIDE_BUNDLE_TAG_NAME, GUIDE_BUNDLE_TAG_ID,
-  SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL,
+  TRAVEL_STRAT_CALL_TAG_NAME,
+  SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL, SEG_TRAVEL_STRAT_CALL,
   KV_PREFIX,
   GUIDE_PDF_EMAIL_AUTOMATION_ID, GUIDE_PDF_DOWNLOAD_URL_CF_NAME, GUIDE_PDF_PASSWORD_CF_NAME,
+  TRAVEL_STRAT_CALL_AUTOMATION_ID, TRAVEL_STRAT_CALL_BOOKING_URL_CF_NAME,
 } from '../config/constants.js';
 
 // ── Beehiiv premium check (source of truth) ───────────────────────────────────
@@ -367,7 +369,7 @@ export async function applyIntervalTag(subId, planTag, headers, env) {
 // recalculation (last_processed_at advances within seconds, reproduced
 // across all 3 segments). Do not add a body or Content-Type back here.
 export async function triggerSegmentRecalculation(env) {
-  await Promise.all([SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL].map(async segId => {
+  await Promise.all([SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL, SEG_TRAVEL_STRAT_CALL].map(async segId => {
     const res = await fetch(
       `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
       {
@@ -548,6 +550,64 @@ export async function verifyGuideTag(email, env) {
   return tags.includes(GUIDE_TAG_NAME);
 }
 
+// ── Travel Strategy Call: Beehiiv tagging ─────────────────────────────────────
+
+// Mirrors tagGuideBuyer but applies TRAVEL_STRAT_CALL_TAG_NAME -- called from
+// orchestration/stripeWebhook.js's handleAssessmentCheckoutComplete once the
+// $99 Stripe session is confirmed paid. Feeds the "Travel Strategy Call
+// Buyers" segment (seg_bd786e3e…), which triggers the (currently draft)
+// confirmation-email automation once published.
+export async function tagTravelStrategyCallBuyer(email, env) {
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+
+  const subRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        utm_source: 'assessment_payment',
+        utm_medium: 'stripe',
+      }),
+    }
+  );
+  if (!subRes.ok) return false;
+  const subData = await subRes.json();
+  const subId = subData.data?.id;
+  if (!subId) return false;
+
+  await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions/${subId}/tags`,
+    { method: 'POST', headers, body: JSON.stringify({ tags: [TRAVEL_STRAT_CALL_TAG_NAME] }) }
+  ).catch(() => null);
+
+  if (await verifyTravelStratCallTag(email, env)) {
+    await triggerSegmentRecalculation(env);
+    return true;
+  }
+  return false;
+}
+
+// Mirrors verifyGuideTag but checks for the `travel-strat-call` tag.
+export async function verifyTravelStratCallTag(email, env) {
+  const res = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions` +
+      `?email=${encodeURIComponent(email)}&expand[]=tags&limit=1`,
+    { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+  ).catch(() => null);
+  if (!res || !res.ok) return false;
+  const data = await res.json();
+  const sub  = (data.data || data.subscriptions || [])[0];
+  const tags = (sub?.tags || []).map(t =>
+    (typeof t === 'string' ? t : (t.name || '')).toLowerCase()
+  );
+  return tags.includes(TRAVEL_STRAT_CALL_TAG_NAME);
+}
+
 // Mirrors tagGuideBuyer but applies GUIDE_BUNDLE_TAG_NAME instead of
 // GUIDE_TAG_NAME. `activationAutomationId` is additive: omitted (the
 // standalone-grant path, orchestration/guideBundle.js's
@@ -698,6 +758,44 @@ export async function sendGuidePdfDeliveryEmail(email, downloadUrl, password, en
 
   const journeyRes = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${GUIDE_PDF_EMAIL_AUTOMATION_ID}/journeys`,
+    { method: 'POST', headers, body: JSON.stringify({ email }) }
+  ).catch(() => null);
+  return !!(journeyRes && journeyRes.ok);
+}
+
+// Travel Strategy Call confirmation email -- same two-call shape as
+// sendGuidePdfDeliveryEmail directly above (write the signed booking-link
+// custom field, then POST the automation's /journeys endpoint to enroll and
+// send immediately). Deliberately NOT left to fire purely off the
+// travel-strat-call tag's segment_action trigger (see tagTravelStrategyCallBuyer)
+// -- segment recalculation has its own latency (up to the next cron pass, see
+// orchestration/cron.js), and this confirmation email is time-sensitive.
+// The tag+segment still exist for CRM/reporting; this is the reliable send path.
+export async function sendAssessmentBookingEmail(email, bookingUrl, env) {
+  if (!TRAVEL_STRAT_CALL_AUTOMATION_ID) {
+    console.error('[assessment-booking-email] TRAVEL_STRAT_CALL_AUTOMATION_ID not configured — skipping send');
+    return false;
+  }
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
+
+  const subRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/subscriptions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email,
+        reactivate_existing: true,
+        send_welcome_email: false,
+        double_opt_override: 'disabled',
+        custom_fields: [{ name: TRAVEL_STRAT_CALL_BOOKING_URL_CF_NAME, value: bookingUrl }],
+      }),
+    }
+  ).catch(() => null);
+  if (!subRes || !subRes.ok) return false;
+
+  const journeyRes = await fetch(
+    `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${TRAVEL_STRAT_CALL_AUTOMATION_ID}/journeys`,
     { method: 'POST', headers, body: JSON.stringify({ email }) }
   ).catch(() => null);
   return !!(journeyRes && journeyRes.ok);

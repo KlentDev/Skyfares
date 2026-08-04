@@ -38,6 +38,7 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="js/tailwind-config.js" defer></script>
   <script src="js/index-pricing.js" defer></script>
+  <script src="js/assessment-checkout.js" defer></script>
   <style>
     /* Pricing-card gate -- CSS-only visual placeholder matching the pattern
        already used on pages/krisflyer-guide.html (.kf-blur): not real
@@ -130,8 +131,7 @@
                   <i class="fa-solid fa-crown text-xs"></i>
                   Explore Altitude
                 </a>
-                <a href="pages/assessment" class="btn-pill btn-pill-secondary btn-glow-v2"
-                   data-coming-soon data-coming-soon-mode="button" data-coming-soon-feature="assessment" data-coming-soon-hide-note="true">
+                <a href="pages/assessment" class="btn-pill btn-pill-secondary btn-glow-v2">
                   <i class="fa-solid fa-calendar-check text-xs"></i>
                   Book a Call
                 </a>
@@ -584,8 +584,7 @@
           </a>
         </article>
 
-        <article class="path-card-v5 path-card-v5--recommended slide-up reveal-pop" style="animation-delay:0.14s;"
-          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="assessment">
+        <article class="path-card-v5 path-card-v5--recommended slide-up reveal-pop" style="animation-delay:0.14s;">
           <div class="path-card-v5__top">
             <div class="icon-chip icon-chip-dark"><i class="fa-solid fa-phone-volume"></i></div>
             <span>Recommended</span>
@@ -930,13 +929,12 @@
         </div>
 
         <!-- ASSESSMENT CALL -->
-        <div class="card-utility card-pricing-v2 p-8 flex flex-col"
-          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="assessment">
+        <div class="card-utility card-pricing-v2 p-8 flex flex-col">
           <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Travel Strategy Call</h3>
           <p class="text-sm text-neutral-500 leading-relaxed mb-6">Direct, personal access to Sahej — book a slot, get a real plan, no waiting.</p>
           <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$99</span></p>
           <p class="text-xs text-neutral-400 font-semibold mb-6">Credited back if you book with us</p>
-          <a href="pages/assessment#priority" class="btn-pill btn-pill-primary w-full justify-center mb-6">Book Travel Strategy Call</a>
+          <a href="#" data-assessment-checkout class="btn-pill btn-pill-primary w-full justify-center mb-6">Book Travel Strategy Call</a>
           <div class="border-t border-neutral-100 pt-6 mt-auto">
             <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">Features</p>
             <ul class="space-y-2.5 text-sm text-neutral-600">
@@ -948,8 +946,7 @@
         </div>
 
         <!-- ALTITUDE ACCESS (monthly / annual) -->
-        <div class="card-utility card-pricing-v2 card-pricing-v2--featured pricing-altitude-card-v5 relative p-8 flex flex-col"
-          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="altitude">
+        <div class="card-utility card-pricing-v2 card-pricing-v2--featured pricing-altitude-card-v5 relative p-8 flex flex-col">
           <span class="pricing-value-chip-v5">Save 33%</span>
           <div class="flex flex-col flex-1">
             <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Altitude Access</h3>
@@ -983,10 +980,10 @@
           </div>
         </div>
 
-        <!-- GUIDE (The KrisFlyer Guide, one-time purchase) -- gated via the
-             shared Coming Soon system, js/coming-soon.js -->
-        <div class="card-utility card-pricing-v2 relative overflow-hidden p-8 flex flex-col"
-          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="guide">
+        <!-- GUIDE (The KrisFlyer Guide, one-time purchase) -- temporarily
+             ungated for testing alongside the Assessment/Altitude cards
+             (data-coming-soon can be restored later via js/coming-soon.js) -->
+        <div class="card-utility card-pricing-v2 relative overflow-hidden p-8 flex flex-col">
           <div class="flex flex-col flex-1">
             <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">KrisFlyer Guide</h3>
             <p class="text-sm text-neutral-500 leading-relaxed mb-6">The KrisFlyer Guide, one-time purchase.</p>
