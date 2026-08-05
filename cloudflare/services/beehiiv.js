@@ -368,8 +368,20 @@ export async function applyIntervalTag(subId, planTag, headers, env) {
 // a bare PUT with only the Authorization header genuinely triggers
 // recalculation (last_processed_at advances within seconds, reproduced
 // across all 3 segments). Do not add a body or Content-Type back here.
-export async function triggerSegmentRecalculation(env) {
-  await Promise.all([SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL, SEG_TRAVEL_STRAT_CALL].map(async segId => {
+// `all: true` (daily cron only, see worker.js's scheduled()) recalculates
+// every segment, including SEG_GUIDE/SEG_MONTHLY/SEG_ANNUAL -- those three
+// no longer get the real-time recalculation every other call site here
+// triggers inline (signup, tagging, etc.), so the daily sweep is now their
+// only path to staying fresh. Every other caller keeps the default
+// active-only set, since those events already recalculate the segment that
+// actually changed the moment it happens -- no need to also touch the three
+// paused ones on every signup/tag.
+export async function triggerSegmentRecalculation(env, { all = false } = {}) {
+  const activeSegments = [SEG_FREE, SEG_PRELAUNCH, SEG_TRAVEL_STRAT_CALL];
+  const pausedSegments = [SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL];
+  const segments = all ? [...activeSegments, ...pausedSegments] : activeSegments;
+
+  await Promise.all(segments.map(async segId => {
     const res = await fetch(
       `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/segments/${segId}/recalculate`,
       {

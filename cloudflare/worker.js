@@ -113,19 +113,21 @@ import { handleGetGuideChapters } from './orchestration/guideChaptersHandler.js'
 import { runRenewalReminders, expireGuideBundles } from './orchestration/cron.js';
 
 export default {
-  // Two cron schedules:
-  //   * * * * *  — every minute: segment recalculation safety net
-  //   0 1 * * *  — daily 01:00 UTC (09:00 SGT): recalculation + renewal reminders
+  // Single daily cron: 0 1 * * * (01:00 UTC / 09:00 SGT) -- recalculation +
+  // renewal reminders. The old every-minute-then-every-5-minutes cron was
+  // dropped entirely on 2026-08-04: every event that actually changes a
+  // segment (signup, tagging) already triggers its own real-time
+  // recalculation inline (see services/beehiiv.js's call sites), so a
+  // separate frequent sweep was pure redundant Beehiiv API traffic. This
+  // daily run is now the only periodic one, and passes `{ all: true }` so it
+  // also covers SEG_GUIDE/SEG_MONTHLY/SEG_ANNUAL, which no longer get
+  // real-time recalculation (see triggerSegmentRecalculation's own comment).
   async scheduled(event, env, ctx) {
-    if (event.cron === '0 1 * * *') {
-      ctx.waitUntil(Promise.all([
-        triggerSegmentRecalculation(env),
-        runRenewalReminders(env),
-        expireGuideBundles(env),
-      ]));
-    } else {
-      ctx.waitUntil(triggerSegmentRecalculation(env));
-    }
+    ctx.waitUntil(Promise.all([
+      triggerSegmentRecalculation(env, { all: true }),
+      runRenewalReminders(env),
+      expireGuideBundles(env),
+    ]));
   },
 
   async fetch(request, env) {

@@ -8,7 +8,15 @@ compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
 [triggers]
-crons = ["* * * * *", "0 1 * * *"]
+# The frequent segment-recalculation cron (originally every minute, then
+# every 5 min) was dropped entirely on 2026-08-04 -- every event that
+# actually changes a segment already triggers its own real-time
+# recalculation inline (see services/beehiiv.js), so a separate periodic
+# sweep was pure redundant Beehiiv API traffic. The one remaining cron is
+# just the daily safety net (also covers the segments that no longer get
+# real-time recalculation -- see worker.js's scheduled() and
+# triggerSegmentRecalculation's own comments).
+crons = ["0 1 * * *"]
 
 [vars]
 BEEHIIV_PUB_ID = "pub_0be395f6-cacb-4ba9-b8a5-04c69ea44bf1"
