@@ -8,7 +8,7 @@ import { respond, getBaseUrl } from '../utils/http.js';
 import { generateMagicToken } from '../utils/jwt.js';
 import {
   MAGIC_LINK_AUTOMATION_ID, MAGIC_LINK_CF_NAME, GUIDE_MAGIC_LINK_AUTOMATION_ID,
-  WELCOME_AUTOMATION_ID, WELCOME_MONTHLY_AUTOMATION_ID, WELCOME_ANNUAL_AUTOMATION_ID,
+  WELCOME_MONTHLY_AUTOMATION_ID, WELCOME_ANNUAL_AUTOMATION_ID, GUIDE_CONFIRMATION_AUTOMATION_ID,
   GUIDE_TAG_NAME, INTERVAL_TAG_IDS, GUIDE_BUNDLE_TAG_NAME, GUIDE_BUNDLE_TAG_ID,
   TRAVEL_STRAT_CALL_TAG_NAME,
   SEG_FREE, SEG_PRELAUNCH, SEG_GUIDE, SEG_MONTHLY, SEG_ANNUAL, SEG_TRAVEL_STRAT_CALL,
@@ -432,16 +432,20 @@ export async function enrollInAutomation(automationId, email, env) {
   return !!(res && res.ok);
 }
 
-// planTag ('monthly' | 'annual' | undefined) additively selects the
-// plan-specific Welcome automation instead of the generic one. Omitting it
-// (every caller before this) keeps the exact prior behavior — used as-is by
-// orchestration/guideBundle.js's grantGuideAltitudeBundle, since a bundled
-// 90-day grant isn't billed monthly or annually and shouldn't claim to be
-// in either welcome email.
+// planTag must be 'monthly' or 'annual' — the sole callers are
+// setupBeehiivMember's two plan-specific paths. There is no generic
+// fallback: the old universal Welcome automation this used to fall back to
+// (WELCOME_AUTOMATION_ID) was deleted in Beehiiv, and nothing needs a
+// plan-less Welcome anymore — see tagGuideBundle below, which no longer
+// calls this function at all for the no-activationAutomationId case.
 export async function enrollWelcomeAutomation(email, env, planTag) {
   const automationId = planTag === 'monthly' ? WELCOME_MONTHLY_AUTOMATION_ID
     : planTag === 'annual' ? WELCOME_ANNUAL_AUTOMATION_ID
-    : WELCOME_AUTOMATION_ID;
+    : null;
+  if (!automationId) {
+    console.error(`[welcome] enrollWelcomeAutomation called without a valid planTag ('monthly'|'annual') for ${email}`);
+    return;
+  }
   const res = await fetch(
     `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/automations/${automationId}/journeys`,
     {
@@ -623,10 +627,13 @@ export async function verifyTravelStratCallTag(email, env) {
 // Mirrors tagGuideBuyer but applies GUIDE_BUNDLE_TAG_NAME instead of
 // GUIDE_TAG_NAME. `activationAutomationId` is additive: omitted (the
 // standalone-grant path, orchestration/guideBundle.js's
-// grantGuideAltitudeBundle) keeps sending the generic Welcome email exactly
-// as before; passed (the deferred-activation path, activateDeferredGuideBundle)
-// sends that dedicated automation instead, since "Welcome to Altitude" would
-// read oddly to someone reactivating after their real membership just ended.
+// grantGuideAltitudeBundle) tags/recalculates only and sends no email of its
+// own — the bonus 90-day access is mentioned in the Purchase Confirmation
+// email every Guide buyer already gets (see handleGuideCheckoutComplete),
+// not a separate automation; passed (the deferred-activation path,
+// activateDeferredGuideBundle) sends that dedicated automation, since
+// "Welcome to Altitude" would read oddly to someone reactivating after their
+// real membership just ended.
 export async function tagGuideBundle(email, env, activationAutomationId) {
   const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` };
 
@@ -659,8 +666,6 @@ export async function tagGuideBundle(email, env, activationAutomationId) {
     await triggerSegmentRecalculation(env);
     if (activationAutomationId) {
       await enrollInAutomation(activationAutomationId, email, env).catch(() => {});
-    } else {
-      await enrollWelcomeAutomation(email, env).catch(() => {});
     }
     return true;
   }

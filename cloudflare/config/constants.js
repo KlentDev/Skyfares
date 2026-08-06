@@ -5,7 +5,6 @@
 
 // ── Beehiiv automation IDs ────────────────────────────────────────────────────
 
-export const WELCOME_AUTOMATION_ID      = 'aut_ed8a12c4-3661-4226-9c93-21e43ffa5e3e';
 export const MAGIC_LINK_AUTOMATION_ID   = 'aut_765b1f46-64b1-48fb-be4c-ac75386a949a';
 export const MAGIC_LINK_CF_NAME         = 'magic_link_url'; // custom field that holds the one-time URL
 
@@ -23,20 +22,30 @@ export const STARTER_MAGIC_LINK_AUTOMATION_ID = 'aut_7f86ca72-14cb-4af3-9b26-9e7
 // Now its own automation, same pattern as STARTER_MAGIC_LINK_AUTOMATION_ID.
 export const GUIDE_MAGIC_LINK_AUTOMATION_ID = 'aut_783ff7b2-e472-400c-aafd-180274e45a34';
 
+// Sent right after a KrisFlyer Guide purchase, confirming the purchase
+// itself (distinct from GUIDE_MAGIC_LINK_AUTOMATION_ID, which is the login
+// link). Previously only `segment_action`-triggered on SEG_GUIDE (so never
+// referenced here) — SEG_GUIDE's move to the daily-cron-only recalculation
+// tier (2026-08-04) meant this arrived up to 24h after purchase. Now called
+// directly from handleGuideCheckoutComplete, same as every other
+// confirmation automation in this file.
+export const GUIDE_CONFIRMATION_AUTOMATION_ID = 'aut_89052bc6-a52f-4930-bd76-eed6c257f951';
+
 // Renewal reminder automations — enrolled by the daily cron, not by user actions
 export const RENEWAL_7D_AUTOMATION_ID   = 'aut_6f675263-fec5-436d-894a-91d5c168feaf';
 export const RENEWAL_3D_AUTOMATION_ID   = 'aut_2093dcea-c91e-4a81-baae-a3b27cf8d671';
 export const RENEWAL_1D_AUTOMATION_ID   = 'aut_eb704a34-24c3-4094-b446-b4eeaf3337ac';
 
-// Plan-specific Welcome/Renewed automations (see krisflyer.md "Related Beehiiv
-// work" section) — still `draft` in Beehiiv as of this writing. Confirmed
-// (2026-07-22, via the automation's own staging-workspace config): each
-// Welcome automation's only trigger is segment_action on its matching
-// SEG_MONTHLY/SEG_ANNUAL segment, not an api trigger — so the direct
-// journeys-endpoint call in enrollWelcomeAutomation is a harmless no-op
-// today. Real enrollment happens automatically once applyIntervalTag +
-// triggerSegmentRecalculation land the subscriber in that segment. The
-// direct call is kept anyway for forward-compatibility in case that changes.
+// Plan-specific Welcome automations — live in Beehiiv, `api`-triggered
+// (2026-08-06 email-automation-consolidation; see
+// docs/superpowers/specs/2026-08-06-email-automation-consolidation-design.md).
+// Previously segment_action-only on SEG_MONTHLY/SEG_ANNUAL; once those
+// segments moved to the daily-cron-only recalculation tier (2026-08-04), that
+// wired them to arrive up to 24h late, and left the upgrade path (which never
+// enrolls in these directly) able to trigger WELCOME_ANNUAL_AUTOMATION_ID a
+// day after UPGRADED_ANNUAL_AUTOMATION_ID for the same event. Now api-only,
+// enrolment_type unlimited, fired solely from setupBeehiivMember below — a
+// Monthly→Annual upgrade never calls this, only a genuine new signup does.
 export const WELCOME_MONTHLY_AUTOMATION_ID = 'aut_d710e39c-a8a6-434f-8393-8bcfd44174f0';
 export const WELCOME_ANNUAL_AUTOMATION_ID  = 'aut_5dbf5c22-70dc-4e68-ac8d-7acde5a0033a';
 export const RENEWED_MONTHLY_AUTOMATION_ID = 'aut_a9bab9b2-39b6-4cf8-8a5d-f9ce378acce6';
@@ -47,8 +56,7 @@ export const RENEWED_ANNUAL_AUTOMATION_ID  = 'aut_2b5db0e5-e23d-4358-aa45-a23708
 // Monthly/Annual member whose real subscription just ended. Deliberately NOT
 // the generic Welcome automation: that copy ("You're in! Welcome to
 // Altitude") would read confusingly to someone who was already a member and
-// just cancelled. Still `draft` in Beehiiv as of this writing — needs a
-// manual publish before it sends.
+// just cancelled. Live and api-triggered in Beehiiv.
 export const GUIDE_BUNDLE_ACTIVATED_AUTOMATION_ID = 'aut_88e0a2b5-f8d3-48e0-ae71-b27f26fcdad7';
 
 // Sent when a scheduled Monthly→Annual upgrade actually takes effect (see
@@ -74,9 +82,12 @@ export const GUIDE_BUNDLE_TAG_ID   = 'e1e9ccfe-bee9-4786-bf7f-2e20bb94a2da';
 
 // Permanent "paid for a Travel Strategy Call" tag, applied in
 // handleAssessmentCheckoutComplete (orchestration/stripeWebhook.js) — never
-// removed, mirrors GUIDE_TAG_NAME's pattern. Feeds SEG_TRAVEL_STRAT_CALL below,
-// which triggers TRAVEL_STRAT_CALL_AUTOMATION_ID (still draft in Beehiiv as of
-// this writing — needs a manual publish before it actually sends).
+// removed, mirrors GUIDE_TAG_NAME's pattern. Feeds SEG_TRAVEL_STRAT_CALL below;
+// TRAVEL_STRAT_CALL_AUTOMATION_ID is live and api-triggered directly from
+// sendAssessmentBookingEmail (see 2026-08-06 email-automation-consolidation
+// spec — its lingering segment_action trigger is being removed in Beehiiv
+// so this direct call is the sole trigger, same as every automation in this
+// file now).
 export const TRAVEL_STRAT_CALL_TAG_NAME = 'travel-strat-call';
 export const TRAVEL_STRAT_CALL_TAG_ID   = 'e1da42a0-f5fc-4fb0-b742-b83249c350cb';
 
@@ -135,6 +146,13 @@ export const KV_PREFIX = {
   GUIDE_BUNDLE_PENDING: 'guide-bundle-pending:',
   OVERRIDE_PREMIUM: 'override:premium:',
   GUIDE_MAGIC_SENT: 'guide-magic-sent:',
+  // Same check-before-work/write-on-success/7-day-TTL shape as
+  // GUIDE_MAGIC_SENT immediately above — one per confirmation-email call
+  // site added by the 2026-08-06 email-automation-consolidation, guarding
+  // against Stripe webhook redelivery double-sending now that these
+  // automations no longer have segment_action as a backstop/duplicate path.
+  GUIDE_CONFIRMATION_SENT: 'guide-confirmation-sent:',
+  ASSESSMENT_CONFIRMATION_SENT: 'assessment-confirmation-sent:',
   // Set once a Cal.com booking is confirmed for this email (see
   // orchestration/calcomWebhook.js); checked by
   // orchestration/assessmentBooking.js's handleAssessmentBookingRedirect to

@@ -11,7 +11,7 @@ import {
 import { grantGuideAltitudeBundle, activateDeferredGuideBundle } from './guideBundle.js';
 import { buildAssessmentBookingUrl } from '../utils/signedLink.js';
 import {
-  KV_PREFIX, UPGRADED_ANNUAL_AUTOMATION_ID,
+  KV_PREFIX, UPGRADED_ANNUAL_AUTOMATION_ID, GUIDE_CONFIRMATION_AUTOMATION_ID,
   RENEWED_MONTHLY_AUTOMATION_ID, RENEWED_ANNUAL_AUTOMATION_ID,
 } from '../config/constants.js';
 
@@ -189,6 +189,15 @@ async function handleGuideCheckoutComplete(session, env) {
     await sendGuideMagicLink(email, env, full.metadata?.origin).catch(() => {});
     await env.ALTITUDE_KV.put(magicSentKey, '1', { expirationTtl: 604800 }); // 7 days — comfortably past Stripe's webhook retry window
   }
+
+  // Purchase confirmation — previously segment_action-only (SEG_GUIDE), which
+  // arrived up to 24h late once that segment moved to the daily-cron-only
+  // tier. Now fired directly here, same guard shape as magicSentKey above.
+  const confirmationSentKey = `${KV_PREFIX.GUIDE_CONFIRMATION_SENT}${session.id}`;
+  if (!(await env.ALTITUDE_KV.get(confirmationSentKey))) {
+    await enrollInAutomation(GUIDE_CONFIRMATION_AUTOMATION_ID, email, env).catch(() => {});
+    await env.ALTITUDE_KV.put(confirmationSentKey, '1', { expirationTtl: 604800 });
+  }
 }
 
 // ── Travel Strategy Call: purchase fulfillment ────────────────────────────────
@@ -220,10 +229,22 @@ async function handleAssessmentCheckoutComplete(session, env) {
   await tagTravelStrategyCallBuyer(email, env)
     .catch(err => console.error('[assessment-checkout-complete] Beehiiv tagging failed:', String(err).slice(0, 200)));
 
-  const bookingUrl = await buildAssessmentBookingUrl(email, env).catch(() => null);
-  if (bookingUrl) {
-    await sendAssessmentBookingEmail(email, bookingUrl, env)
-      .catch(err => console.error('[assessment-checkout-complete] Beehiiv confirmation email failed:', String(err).slice(0, 200)));
+  // Guarded per-session, same shape as handleGuideCheckoutComplete's
+  // magicSentKey/confirmationSentKey — this automation's lingering
+  // segment_action trigger is being removed in Beehiiv (2026-08-06
+  // email-automation-consolidation), making this direct call the sole
+  // trigger, so Stripe webhook redelivery needs its own dedup guard now.
+  // Only written once a send is actually attempted -- a bookingUrl build
+  // failure leaves the key unset so a genuine webhook retry can try again,
+  // same self-healing behavior this had before the guard was added.
+  const confirmationSentKey = `${KV_PREFIX.ASSESSMENT_CONFIRMATION_SENT}${session.id}`;
+  if (!(await env.ALTITUDE_KV.get(confirmationSentKey))) {
+    const bookingUrl = await buildAssessmentBookingUrl(email, env).catch(() => null);
+    if (bookingUrl) {
+      await sendAssessmentBookingEmail(email, bookingUrl, env)
+        .catch(err => console.error('[assessment-checkout-complete] Beehiiv confirmation email failed:', String(err).slice(0, 200)));
+      await env.ALTITUDE_KV.put(confirmationSentKey, '1', { expirationTtl: 604800 });
+    }
   }
 }
 
