@@ -1,12 +1,10 @@
 (function () {
   var WORKER_URL    = 'https://skyfares-altitude.klent-5fa.workers.dev';
+  var IN_PAGES_DIR = window.location.pathname.indexOf('/pages/') !== -1;
+  var PAGE_PREFIX = IN_PAGES_DIR ? '' : 'pages/';
+  var ALTITUDE_PRICING_URL = PAGE_PREFIX + 'altitude';
 
-  // DISABLED (temporarily) -- Altitude Premium isn't purchasable yet (confirmed
-  // by Sahej, 2026-07-03). PAYMENT_LINK is kept commented, not deleted, so real
-  // checkout can be restored below by uncommenting once Premium launches.
-  // var PAYMENT_LINK = 'https://buy.stripe.com/test_7sYaEX9Ujd0qbg8gGv3oA00';
-
-  // ─── Altitude Access modal (shared by index.html and pages/newsletter.html) ──
+  // ─── Altitude Access modal for pages/newsletter.html ───────────────────────
 
   function ensureModal() {
     if (document.getElementById('altitude-access-modal')) return;
@@ -26,14 +24,9 @@
           '<i class="fa-solid fa-crown text-[9px]"></i> Altitude Exclusive' +
         '</div>' +
         '<h2 class="text-xl font-display font-bold text-neutral-900 mb-2 tracking-tight">This issue is for Altitude members</h2>' +
-        // DISABLED (temporarily) -- original copy + real checkout link, restore when Premium launches:
-        // '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Unlock this issue and the full archive — award alerts, cabin reviews, and routing strategies, delivered weekly.</p>' +
-        // '<a href="' + PAYMENT_LINK + '" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
-        //   '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access — $4.99/mo' +
-        // '</a>' +
-        '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Altitude isn\'t open for purchase yet — join the waitlist and we\'ll email you the moment it is.</p>' +
-        '<a href="pre-signup-link" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
-          '<i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist' +
+        '<p class="text-sm text-neutral-400 mb-6 leading-relaxed">Already have Altitude? Request a magic link. New here? Choose Monthly or Annual to unlock premium issues and the full archive.</p>' +
+        '<a href="' + ALTITUDE_PRICING_URL + '" class="w-full btn-pill btn-pill-primary inline-flex items-center justify-center gap-2 mb-4">' +
+          '<i class="fa-solid fa-crown text-[10px]"></i> View Altitude Access' +
         '</a>' +
         '<p class="text-xs text-neutral-400">Already a member? ' +
           '<button type="button" onclick="window.switchToMemberAccessModal()" class="text-brand-600 underline underline-offset-2 hover:text-brand-800">Enter your email for a magic link</button>' +
@@ -76,18 +69,25 @@
   }
 
   function init() {
+    wireFreeNewsletterChoice();
     if (typeof fetch === 'undefined') return;
     fetch(WORKER_URL + '/newsletter/posts')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
-        if (!data || !data.posts || !data.posts.length) return;
+        if (!data || !data.posts || !data.posts.length) {
+          renderEmptyState('No issues are published yet.');
+          renderHomeEmpty();
+          return;
+        }
         // Cache post list in sessionStorage so the detail page can use it for related posts
         try { sessionStorage.setItem('skyfare_posts', JSON.stringify(data)); } catch (_) {}
         renderFeatured(data.posts[0]);
         renderArchive(data.posts);
+        renderHomePreview(data.posts.slice(0, 3));
       })
       .catch(function () {
-        // Fetch failed — static fallback HTML remains in place.
+        renderEmptyState('Unable to load issues right now. Please refresh in a moment.');
+        renderHomeEmpty();
       });
   }
 
@@ -127,23 +127,25 @@
       ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-lock text-gold-light text-[8px]"></i></div></div>'
       : '';
 
-    // CTA — bottom of content panel
-    // DISABLED (temporarily) -- original label, restore when Premium launches:
-    // 'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
     var ctaHtml = prem
       ? '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-gold-dark group-hover:text-gold transition-colors self-start">' +
-            'Coming Soon <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
+            'Unlock with Altitude <i class="fa-solid fa-arrow-right text-[10px]"></i></span>'
       : '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:text-brand-800 transition-colors self-start">' +
             'Read Issue <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
     // Wrapper: clickable <a> for free (opens the issue), clickable <div> for premium (opens the access modal)
-    var href     = 'newsletter-detail?slug=' + encodeURIComponent(post.slug);
+    var href     = getPublicPostUrl(post);
+    var localHref = getLocalPostUrl(post);
+    var beehiivHref = post && post.url ? withBeehiivLoginModal(post.url) : localHref;
+    var freeChoiceAttrs = !prem
+      ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
+      : '';
     var cardCls  = 'card-utility group flex h-52 max-w-5xl mx-auto overflow-hidden slide-up' +
       (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
 
     var wrapOpen = prem
       ? '<div onclick="window.openAltitudeAccessModal()" class="' + cardCls + '" style="animation-delay:.05s;">'
-      : '<a href="' + href + '" class="' + cardCls + '" style="animation-delay:.05s;">';
+      : '<a href="' + e(href) + '"' + freeChoiceAttrs + ' class="' + cardCls + '" style="animation-delay:.05s;">';
     var wrapClose = prem ? '</div>' : '</a>';
 
     container.innerHTML =
@@ -191,6 +193,52 @@
     grid.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
   }
 
+  function renderHomePreview(posts) {
+    var grid = document.getElementById('home-newsletter-grid');
+    if (!grid) return;
+
+    if (!posts || !posts.length) {
+      grid.innerHTML = '';
+      return;
+    }
+
+    grid.innerHTML = posts.map(function (post, index) {
+      return buildArchiveCard(post, index);
+    }).join('');
+
+    grid.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  function renderHomeEmpty() {
+    var grid = document.getElementById('home-newsletter-grid');
+    if (grid) grid.innerHTML = '';
+  }
+
+  function renderEmptyState(message) {
+    var featured = document.getElementById('featured-issue-container');
+    var grid = document.getElementById('archive-grid');
+    var count = document.getElementById('archive-count');
+    var dateEl = document.querySelector('[data-section="latest-issue"] [data-issue-date]');
+
+    if (dateEl) dateEl.textContent = 'Unavailable';
+    if (count) count.textContent = '0 issues';
+    if (featured) {
+      featured.innerHTML =
+        '<div class="card-utility h-52 max-w-5xl mx-auto flex items-center justify-center text-center slide-up is-visible">' +
+          '<div>' +
+            '<p class="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-400">Archive Unavailable</p>' +
+            '<p class="mt-2 text-sm text-neutral-400">' + e(message) + '</p>' +
+          '</div>' +
+        '</div>';
+    }
+    if (grid) {
+      grid.innerHTML =
+        '<div class="card-utility p-6 text-center text-sm text-neutral-400 slide-up is-visible sm:col-span-2 lg:col-span-3">' +
+          e(message) +
+        '</div>';
+    }
+  }
+
   function buildArchiveCard(post, index) {
     var prem     = isPremium(post);
     var date     = formatDate(post.published_at);
@@ -216,17 +264,19 @@
       ? '<div class="absolute top-3 right-3"><div class="w-6 h-6 rounded-full bg-black/50 backdrop-blur-sm border border-gold/30 flex items-center justify-center"><i class="fa-solid fa-lock text-gold-light text-[8px]"></i></div></div>'
       : '';
 
-    var href = 'newsletter-detail?slug=' + encodeURIComponent(post.slug);
+    var href = getPublicPostUrl(post);
+    var localHref = getLocalPostUrl(post);
+    var beehiivHref = post && post.url ? withBeehiivLoginModal(post.url) : localHref;
+    var freeChoiceAttrs = !prem
+      ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
+      : '';
 
-    // DISABLED (temporarily) -- original label, restore when Premium launches:
-    // 'Get Altitude Access <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
     var ctaHtml = prem
       ? '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark group-hover:text-gold transition-colors">' +
-            'Coming Soon <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
-            '<p class="text-[10px] text-neutral-400 mt-1 italic">Already a member? Check your email.</p>'
-      : '<a href="' + href + '"' +
-            ' class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors">' +
-            'Read <i class="fa-solid fa-arrow-right text-[10px]"></i></a>';
+            'Unlock with Altitude <i class="fa-solid fa-arrow-right text-[10px]"></i></span>' +
+            '<p class="text-[10px] text-neutral-400 mt-1 italic">Already a member? Request a magic link.</p>'
+      : '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">' +
+            'Read <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
     var cardCls = 'group card-utility overflow-hidden slide-up' +
       (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
@@ -234,9 +284,12 @@
     var titleCls = 'text-sm font-display font-bold text-neutral-900 mb-3 transition-colors leading-snug' +
       (prem ? '' : ' group-hover:text-brand-700');
 
-    var clickAttr = prem ? ' onclick="window.openAltitudeAccessModal()"' : '';
+    var wrapOpen = prem
+      ? '<article class="' + cardCls + '" onclick="window.openAltitudeAccessModal()" style="animation-delay:' + delay + 's;">'
+      : '<a href="' + e(href) + '"' + freeChoiceAttrs + ' class="' + cardCls + ' block" style="animation-delay:' + delay + 's;">';
+    var wrapClose = prem ? '</article>' : '</a>';
 
-    return '<article class="' + cardCls + '"' + clickAttr + ' style="animation-delay:' + delay + 's;">' +
+    return wrapOpen +
       '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
         imgHtml +
         '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
@@ -251,7 +304,7 @@
         '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' +
         ctaHtml +
       '</div>' +
-    '</article>';
+    wrapClose;
   }
 
   // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -265,6 +318,70 @@
     try {
       return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     } catch (err) { return ''; }
+  }
+
+  function getPublicPostUrl(post) {
+    if (post && post.url) return post.url;
+    return getLocalPostUrl(post);
+  }
+
+  function getLocalPostUrl(post) {
+    return PAGE_PREFIX + 'newsletter-detail?slug=' + encodeURIComponent(post && post.slug ? post.slug : '');
+  }
+
+  function withBeehiivLoginModal(url) {
+    if (!url) return '';
+    var separator = url.indexOf('?') === -1 ? '?' : '&';
+    return url + separator + 'modal=login';
+  }
+
+  function wireFreeNewsletterChoice() {
+    if (document.body.dataset.freeNewsletterChoiceWired === 'true') return;
+    document.body.dataset.freeNewsletterChoiceWired = 'true';
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('a[data-free-newsletter-choice="true"]');
+      if (!link) return;
+      event.preventDefault();
+      openFreeNewsletterChoiceModal(
+        link.getAttribute('data-local-url') || link.href,
+        link.getAttribute('data-beehiiv-url') || link.href
+      );
+    });
+  }
+
+  function openFreeNewsletterChoiceModal(localUrl, beehiivUrl) {
+    if (!window.SkyUI || !window.SkyUI.modal) {
+      window.location.href = localUrl || beehiivUrl;
+      return;
+    }
+
+    SkyUI.modal({
+      title: 'Choose where to read',
+      html:
+        '<p><strong>Read on Skyfare</strong> opens the free issue here. It is the fastest way to read.</p>' +
+        '<p class="mt-3"><strong>Read on Beehiiv</strong> opens the published newsletter on Beehiiv so you can verify your email and use native <strong>likes and comments</strong>.</p>' +
+        '<ol class="mt-3 list-decimal pl-5 text-sm text-neutral-500 leading-relaxed">' +
+          '<li>Verify your email on Beehiiv if asked.</li>' +
+          '<li>Beehiiv sends a one-time code.</li>' +
+          '<li>Enter the code to verify your email.</li>' +
+          '<li>Then read, <strong>like</strong>, and <strong>comment</strong> on the newsletter.</li>' +
+        '</ol>',
+      actions: [
+        {
+          label: 'Read on Skyfare',
+          onClick: function () {
+            if (localUrl) window.location.href = localUrl;
+          },
+        },
+        {
+          label: 'Read on Beehiiv',
+          style: 'primary',
+          onClick: function () {
+            window.location.href = beehiivUrl || localUrl;
+          },
+        },
+      ],
+    });
   }
 
   function e(str) {

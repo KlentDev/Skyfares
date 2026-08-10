@@ -1,5 +1,6 @@
-// services/airtable.js — flight applications, contact inquiries, and
-// testimonials. A clean leaf module: only talks to Airtable, no Stripe/Beehiiv.
+// services/airtable.js — flight applications, contact inquiries, testimonials,
+// and Travel Strategy Call bookings. A clean leaf module: only talks to
+// Airtable, no Stripe/Beehiiv/Cal.com (those live in orchestration/ instead).
 import { respond } from '../utils/http.js';
 import { ROUTE_LABELS, KV_PREFIX } from '../config/constants.js';
 
@@ -352,4 +353,50 @@ export async function handleGetTestimonialScores(request, env, corsHeaders) {
     200,
     { ...corsHeaders, 'Cache-Control': 'public, max-age=60' }
   );
+}
+
+// ── Travel Strategy Call bookings ─────────────────────────────────────────────
+// Called from orchestration/calcomWebhook.js only, on Cal.com's
+// BOOKING_CREATED event -- the ONLY point this table gets written to.
+// Payment success (orchestration/stripeWebhook.js) deliberately does NOT
+// write here: Airtable is meant to record confirmed bookings, not payments,
+// per the required flow (pay -> Beehiiv tags + emails the booking link ->
+// buyer books on Cal.com -> only then does Airtable get a row). Not exposed
+// as its own POST /airtable/* route since the caller already runs
+// server-side inside a webhook handler, not a public form submission.
+export async function createAssessmentBooking({ email, name, notes, bookingUid, slotStart, possibleDuplicate }, env) {
+  return writeToAirtable(env.AIRTABLE_TABLE_ASSESSMENT_BOOKINGS, {
+    'Email': email,
+    // Name and Notes are both optional on Cal.com's own booking form -- only
+    // write them when the attendee actually filled them in, rather than an
+    // empty string.
+    ...(name ? { 'Name': name } : {}),
+    ...(notes ? { 'Notes': notes } : {}),
+    'Status': 'Booked',
+    'Booking UID': bookingUid || '',
+    'Slot Start': slotStart || '',
+    ...(possibleDuplicate ? { 'Possible Duplicate': true } : {}),
+  }, env);
+}
+
+// Cal.com has no built-in per-attendee booking limit (only a per-event-type
+// total cap -- see https://github.com/calcom/cal.com/issues/21546), so this
+// is the enforcement point instead: called from
+// orchestration/calcomWebhook.js right before createAssessmentBooking, to
+// flag (not block) a second booking from the same email. Deliberately a soft
+// flag, not an auto-cancel -- a second call might be legitimate (Sahej
+// offering a follow-up), so this just surfaces it for a human to check.
+export async function hasExistingAssessmentBooking(email, env) {
+  const filterByFormula = `AND({Email}="${email.replace(/"/g, '\\"')}",{Status}="Booked")`;
+  const params = new URLSearchParams({ filterByFormula, maxRecords: '1' });
+  ['Email'].forEach(f => params.append('fields[]', f));
+
+  const res = await fetch(
+    `https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${env.AIRTABLE_TABLE_ASSESSMENT_BOOKINGS}?${params.toString()}`,
+    { headers: { 'Authorization': `Bearer ${env.AIRTABLE_API_KEY}` } }
+  );
+  if (!res.ok) throw new Error(`Airtable ${res.status}: ${await res.text()}`);
+
+  const { records } = await res.json();
+  return (records || []).length > 0;
 }

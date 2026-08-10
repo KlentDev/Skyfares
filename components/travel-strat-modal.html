@@ -1,0 +1,34 @@
+<!--
+  Travel Strategy Call post-payment modal, fetched once and injected by
+  js/assessment-checkout.js right after a Stripe session verifies as paid
+  (see handleAssessmentVerify in cloudflare/services/stripe.js). Replaces the
+  old inline #assessment-success section on pages/assessment.html -- the
+  booking link now only ever lives in the confirmation email, not on the
+  page itself. Same overlay/card shell as components/magic-modal.html.
+-->
+<div id="travel-strat-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
+  <div class="absolute inset-0 bg-brand-950/65 backdrop-blur-sm" data-travel-strat-modal-close></div>
+  <div class="relative bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">
+    <button data-travel-strat-modal-close class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
+      <i class="fa-solid fa-xmark text-xs"></i>
+    </button>
+
+    <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center mx-auto mb-5">
+      <i class="fa-solid fa-circle-check text-brand-600 text-lg"></i>
+    </div>
+
+    <h2 class="text-xl font-display font-bold text-neutral-900 mb-2 tracking-tight">Hooray, you're confirmed!</h2>
+    <p class="text-sm text-neutral-500 leading-relaxed mb-4">
+      Your payment went through and your Travel Strategy Call is secured. We've sent you a confirmation email with your personal booking link — pick a time that works for you, and you're all set.
+    </p>
+    <p class="text-xs text-neutral-400 leading-relaxed mb-6">
+      Don't see it in a minute or two? Check your spam folder, or
+      <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
+         data-wa-message="Hi Skyfare, I just paid for my Travel Strategy Call but haven't received the confirmation email yet."
+         class="text-brand-600 underline underline-offset-2 hover:text-brand-800 transition-colors">message us on WhatsApp</a>
+      and we'll sort it out right away.
+    </p>
+
+    <button type="button" data-travel-strat-modal-close class="btn-pill btn-pill-primary w-full justify-center">Got it</button>
+  </div>
+</div>

@@ -121,6 +121,7 @@
     if (panel === 'purchase') {
       if (request) request.classList.add('hidden');
       if (purchase) purchase.classList.remove('hidden');
+      if (window.fireBrandConfetti) window.fireBrandConfetti();
     } else {
       if (purchase) purchase.classList.add('hidden');
       if (request) request.classList.remove('hidden');

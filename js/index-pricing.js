@@ -30,9 +30,17 @@
     initAltitudeTabs();
   }
 
+  // "Save 33%" is only a true claim when Annual is the plan being shown
+  // (comparing $39.99/yr against $59.88 for 12 months of Monthly) -- on the
+  // Monthly panel there's nothing to "save" yet, so the badge switches to a
+  // generic "Best Deal" call to action instead of a saving claim that
+  // wouldn't apply to the plan currently on screen.
+  var VALUE_CHIP_TEXT = { monthly: 'Best Deal', annual: 'Save 33%' };
+
   function initAltitudeTabs() {
     var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-pricing-plan-tab]'));
     var panels = Array.prototype.slice.call(document.querySelectorAll('[data-pricing-plan-panel]'));
+    var valueChip = document.getElementById('pricing-altitude-value-chip');
     if (!tabs.length || !panels.length) return;
 
     tabs.forEach(function (tab) {
@@ -49,6 +57,8 @@
         panels.forEach(function (panel) {
           panel.hidden = panel.getAttribute('data-pricing-plan-panel') !== plan;
         });
+
+        if (valueChip && VALUE_CHIP_TEXT[plan]) valueChip.textContent = VALUE_CHIP_TEXT[plan];
       });
     });
   }

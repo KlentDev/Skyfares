@@ -1,6 +1,7 @@
 (function () {
   var WORKER  = 'https://skyfares-altitude.klent-5fa.workers.dev';
   var JWT_KEY = 'altitude_jwt'; // shared with js/altitude.js / js/krisflyer-guide.js -- one login covers both products
+  var _altMemberEmail = '';
 
   // ─── Boot ─────────────────────────────────────────────────────────────────
 
@@ -111,6 +112,7 @@
   // ─── Member view population ──────────────────────────────────────────────
 
   function populateMemberView(email, member) {
+    _altMemberEmail = email || '';
     var emailEl = document.getElementById('alt-member-email');
     if (emailEl) emailEl.textContent = email;
     window.__altSignOut = function () { clearToken(); window.location.href = '../altitude.html'; };
@@ -121,43 +123,11 @@
 
     _populateMembershipCard(member);
     updatePrivateChrome(email, member);
-
-    // Upgrade card only makes sense for an active Monthly member -- hidden
-    // for Annual (nothing to upgrade to) and Guide-bundle recipients (no
-    // real Stripe subscription to modify). `member` is null right after a
-    // fresh magic-link login (handleMagicCallback doesn't have it yet) --
-    // the card just stays hidden until the next full /altitude/verify.
-    var upgradeSection = document.getElementById('alt-upgrade-section');
-    if (upgradeSection) {
-      if (member && member.plan === 'monthly') {
-        upgradeSection.classList.remove('hidden');
-        var ctaCard = document.getElementById('alt-upgrade-cta-card');
-        var pendingCard = document.getElementById('alt-upgrade-pending-card');
-        var unavailableCard = document.getElementById('alt-upgrade-unavailable-card');
-        if (member.pending_plan === 'annual') {
-          if (ctaCard) ctaCard.classList.add('hidden');
-          if (unavailableCard) unavailableCard.classList.add('hidden');
-          if (pendingCard) pendingCard.classList.remove('hidden');
-          var pendingText = document.getElementById('alt-upgrade-pending-text');
-          if (pendingText) {
-            var days = _daysRemaining(member.upgrade_effective_at || member.current_period_end);
-            pendingText.textContent = days != null
-              ? 'Annual Subscription will automatically take effect after the ' + days + ' day' + (days === 1 ? '' : 's') + ' remaining expires.'
-              : 'Annual Subscription will automatically take effect once your current period expires.';
-          }
-        } else if (!member.current_period_end) {
-          if (ctaCard) ctaCard.classList.add('hidden');
-          if (pendingCard) pendingCard.classList.add('hidden');
-          if (unavailableCard) unavailableCard.classList.remove('hidden');
-        } else {
-          if (ctaCard) ctaCard.classList.remove('hidden');
-          if (pendingCard) pendingCard.classList.add('hidden');
-          if (unavailableCard) unavailableCard.classList.add('hidden');
-        }
-      } else {
-        upgradeSection.classList.add('hidden');
-      }
-    }
+    // js/altitude-portal-extras.js listens for this to render the
+    // Membership Plans section (replaces the old #alt-upgrade-section
+    // state-toggling block that used to live here) -- kept out of this
+    // auth-critical file.
+    window.dispatchEvent(new CustomEvent('skyfare:altitude-member', { detail: member }));
 
     // Show welcome message after a successful payment redirect
     try {
@@ -185,7 +155,7 @@
     return days > 0 ? days : 0;
   }
 
-  var PLAN_LABELS = { monthly: 'Altitude Monthly', annual: 'Altitude Annual', guide: 'KrisFlyer Guide Bundle' };
+  var PLAN_LABELS = { monthly: 'Altitude Monthly', annual: 'Altitude Annual', guide_bundle: 'KrisFlyer Guide Bundle' };
 
   function _formatRenewalDate(iso) {
     if (!iso) return '';
@@ -308,7 +278,11 @@
     var date     = formatDate(post.published_at);
     var type     = (post.content_tags || []).filter(function (t) { return t !== 'altitude-premium'; })[0] || 'Newsletter';
     var delay    = (i * 0.05) + 's';
-    var href     = 'newsletter-detail?slug=' + encodeURIComponent(post.slug);
+    var href     = getBeehiivPostUrl(post, prem);
+    var localHref = getLocalPostUrl(post);
+    var handoffAttrs = post.url
+      ? ' data-beehiiv-handoff="true" data-premium="' + (prem ? 'true' : 'false') + '" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(withBeehiivLoginModal(post.url)) + '"'
+      : '';
 
     var imgHtml = post.thumbnail_url
       ? '<img src="' + e(post.thumbnail_url) + '" alt="' + e(post.title) + '">'
@@ -319,7 +293,7 @@
       : '';
 
     return '<article class="private-resource-card reveal-stagger" style="animation-delay:' + delay + '">' +
-      '<a href="../' + href + '" class="private-resource-card__media" aria-label="Read ' + e(post.title) + '">' +
+      '<a href="' + e(href) + '"' + handoffAttrs + ' class="private-resource-card__media" aria-label="Read ' + e(post.title) + '">' +
           imgHtml +
           '<div class="private-resource-card__badge-row">' +
             (issueNum ? '<span class="private-badge">Issue ' + e(issueNum) + '</span>' : '') +
@@ -329,7 +303,7 @@
       '<div class="private-resource-card__body">' +
         '<p class="private-resource-card__meta">' + e(date || type) + '</p>' +
         '<h3>' + e(post.title) + '</h3>' +
-        '<a href="../' + href + '" class="private-resource-card__link">Read issue <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+        '<a href="' + e(href) + '"' + handoffAttrs + ' class="private-resource-card__link">Read issue <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
       '</div>' +
     '</article>';
   }
@@ -364,6 +338,74 @@
     document.querySelectorAll('.alt-filter-btn').forEach(function (btn) {
       btn.addEventListener('click', function () { _applyFilter(btn.dataset.filter); });
     });
+    _wireBeehiivHandoff();
+  }
+
+  function _wireBeehiivHandoff() {
+    var grid = document.getElementById('alt-archive-grid');
+    if (!grid || grid.dataset.beehiivHandoffWired === 'true') return;
+    grid.dataset.beehiivHandoffWired = 'true';
+    grid.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('a[data-beehiiv-handoff="true"]');
+      if (!link || !grid.contains(link)) return;
+      event.preventDefault();
+      openBeehiivHandoffModal(
+        link.getAttribute('data-beehiiv-url') || link.href,
+        link.getAttribute('data-local-url') || '',
+        link.getAttribute('data-premium') === 'true'
+      );
+    });
+  }
+
+  function openBeehiivHandoffModal(beehiivUrl, localUrl, isPremium) {
+    if (!beehiivUrl) return;
+    if (!window.SkyUI || !window.SkyUI.modal) {
+      window.location.href = beehiivUrl;
+      return;
+    }
+
+    var emailLine = _altMemberEmail
+      ? '<div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-left">' +
+          '<p class="text-[10px] font-bold uppercase tracking-widest text-amber-700">Use this email</p>' +
+          '<p class="mt-1 text-sm font-bold text-neutral-900 break-all">' + e(_altMemberEmail) + '</p>' +
+        '</div>'
+      : '';
+
+    var actions = [{
+      label: 'Read on Skyfare',
+      onClick: function () {
+        if (localUrl) window.location.href = localUrl;
+      },
+    }, {
+      label: 'Read on Beehiiv',
+      style: 'primary',
+      onClick: function () {
+        window.location.href = beehiivUrl;
+      },
+    }];
+
+    var skyfareCopy = isPremium
+      ? '<p><strong>Read on Skyfare</strong> opens the premium issue here. It is the fastest way to read.</p>'
+      : '<p><strong>Read on Skyfare</strong> opens the free issue here. It is the fastest way to read.</p>';
+    var note = isPremium
+      ? '<p class="mt-3 text-xs text-neutral-400">Beehiiv manages its own login session, so it may ask for this email again even after you are signed into the Skyfare portal.</p>'
+      : '<p class="mt-3 text-xs text-neutral-400">Beehiiv may ask you to verify your email before likes and comments are available.</p>';
+
+    SkyUI.modal({
+      title: 'Choose where to read',
+      html:
+        skyfareCopy +
+        '<p class="mt-3"><strong>Read on Beehiiv</strong> opens the published newsletter on Beehiiv so you can use native <strong>likes and comments</strong>.</p>' +
+        '<ol class="mt-3 list-decimal pl-5 text-sm text-neutral-500 leading-relaxed">' +
+          '<li>Verify your email on Beehiiv if asked.</li>' +
+          '<li>Beehiiv sends a one-time code.</li>' +
+          '<li>Enter the code to verify your email.</li>' +
+          '<li>Then read, <strong>like</strong>, and <strong>comment</strong> on the newsletter.</li>' +
+        '</ol>' +
+        (isPremium ? emailLine : '') +
+        note,
+      actions: actions,
+    });
   }
 
   // ─── Utilities ────────────────────────────────────────────────────────────
@@ -381,6 +423,21 @@
     if (!iso) return '';
     try { return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
     catch (_) { return ''; }
+  }
+
+  function getBeehiivPostUrl(post, requireLogin) {
+    if (post && post.url) return requireLogin ? withBeehiivLoginModal(post.url) : post.url;
+    return getLocalPostUrl(post);
+  }
+
+  function withBeehiivLoginModal(url) {
+    if (!url) return '';
+    var separator = url.indexOf('?') === -1 ? '?' : '&';
+    return url + separator + 'modal=login';
+  }
+
+  function getLocalPostUrl(post) {
+    return '../newsletter-detail?slug=' + encodeURIComponent(post && post.slug ? post.slug : '');
   }
 
   function e(str) {

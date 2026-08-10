@@ -27,10 +27,11 @@
 //   data-cta-primary-target       optional, e.g. "_blank"
 //   data-cta-secondary-*          same fields, omit entirely for a single-
 //                                 button CTA
-//   data-cta-secondary-locked-feature   optional -- when set, the secondary
-//                                 button is run through the existing Coming
-//                                 Soon lock treatment (js/coming-soon.js)
-//                                 instead of being a live link
+//   data-cta-primary-locked-feature / data-cta-secondary-locked-feature
+//                                 optional -- when set, that button is run
+//                                 through the existing Coming Soon lock
+//                                 treatment (js/coming-soon.js) instead of
+//                                 being a live link
 (function () {
   var mount = document.querySelector('[data-cta-mount]');
   if (!mount || window.__ctaSectionLoading) return;
@@ -115,6 +116,7 @@
         label: d.ctaPrimaryLabel,
         href: d.ctaPrimaryHref,
         target: d.ctaPrimaryTarget,
+        lockedFeature: d.ctaPrimaryLockedFeature,
       });
       fillButton(section.querySelector('#cta-section-secondary'), {
         variant: d.ctaSecondaryVariant,
@@ -124,11 +126,6 @@
         target: d.ctaSecondaryTarget,
         lockedFeature: d.ctaSecondaryLockedFeature,
       });
-      // Any locked button just added above needs js/coming-soon.js's own
-      // DOMContentLoaded pass re-run -- that pass already fired before this
-      // async-fetched component existed. init() is idempotent (see that
-      // file), so this is safe even on pages with no locked CTA at all.
-      if (window.SkyComingSoon) window.SkyComingSoon.init();
     }
 
     reveal(section);
@@ -143,6 +140,10 @@
       if (!section || !mount.parentNode) return;
       populate(section);
       mount.replaceWith(section);
+      // Locked CTA buttons are only discoverable after the fetched component
+      // enters the document. Running this while `section` is still detached
+      // leaves buttons such as the How It Works strategy-call CTA live.
+      if (window.SkyComingSoon) window.SkyComingSoon.init();
     })
     .catch(function () {});
 })();

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KrisFlyer Miles — Skyfare Consulting</title>
-  <meta name="description" content="Nominee redemptions and direct transfers for KrisFlyer miles. Confirmed Business and First Class seats — fast, secure, fully concierge-managed." />
+  <title>KrisFlyer Miles | Skyfare Consulting</title>
+  <meta name="description" content="Nominee redemptions and direct transfers for KrisFlyer miles. Confirmed Business and First Class seats with Skyfare support." />
   <link rel="icon" href="../logos/logo.webp" />
   <script src="../js/links.js"></script>
   <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
   <script src="../js/utils.js" defer></script>
+  <script src="../js/krisflyer.js" defer></script>
 </head>
 
 <body class="min-h-screen flex flex-col bg-white">
@@ -30,263 +31,263 @@
 
   <main class="flex-1">
 
-    <!-- ─── HERO ─────────────────────────────────────────────────── -->
     <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/krisflyer-miles.png');">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
         <div class="max-w-2xl mx-auto text-center slide-up">
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-            <i class="fa-solid fa-plane-up text-[10px]"></i>
-            KrisFlyer Miles &middot; Premium Redemptions
+            <i class="fa-solid fa-plane-circle-check text-[10px]"></i>
+            KrisFlyer Miles
           </div>
+
           <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
-            Fly Business Class<br>on fewer miles.
+            Redeem miles with more confidence.
           </h1>
           <p class="text-base md:text-lg text-white/65 leading-relaxed mb-8 font-medium max-w-xl mx-auto">
-            Lock in confirmed Business or First Class seats via Nominee Redemption, or transfer miles directly to your KrisFlyer account for maximum flexibility.
+            Skyfare helps you compare redemption paths, check routes, and move toward confirmed premium cabin travel.
           </p>
-          <div class="flex flex-wrap justify-center gap-3 mb-8">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer"
-              class="btn-pill btn-pill-whatsapp">
-              <i class="fa-brands fa-whatsapp text-sm"></i> Book via WhatsApp
-            </a>
-            <a href="assessment?service=krisflyer&option=nominee" class="btn-pill btn-pill-ghost"
-              data-coming-soon data-coming-soon-mode="button" data-coming-soon-feature="assessment">
-              Book Nominee Redemption
-            </a>
+
+          <div class="flex justify-center items-start divide-x divide-white/20 mt-4 mb-9">
+            <div class="text-center px-4 sm:px-6">
+              <div class="text-white leading-none" style="font-family:'Lexend',sans-serif;font-size:var(--font-stat-v2-size);font-weight:700;letter-spacing:-0.02em;">67</div>
+              <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Routes</div>
+            </div>
+            <div class="text-center px-4 sm:px-6">
+              <div class="text-white leading-none" style="font-family:'Lexend',sans-serif;font-size:var(--font-stat-v2-size);font-weight:700;letter-spacing:-0.02em;">2</div>
+              <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Options</div>
+            </div>
+            <div class="text-center px-4 sm:px-6">
+              <div class="text-white leading-none" style="font-family:'Lexend',sans-serif;font-size:var(--font-stat-v2-size);font-weight:700;letter-spacing:-0.02em;">0</div>
+              <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Guesswork</div>
+            </div>
           </div>
-          <div class="flex flex-wrap items-center justify-center gap-3 text-[11px] text-white/50">
-            <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-shield-halved text-brand-400 text-[10px]"></i> Private &amp; Secure
-            </span>
-            <span class="w-px h-3 bg-white/15"></span>
-            <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-check-double text-brand-400 text-[10px]"></i> No Waitlists
-            </span>
-            <span class="w-px h-3 bg-white/15"></span>
-            <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-user-tie text-brand-400 text-[10px]"></i> Full Concierge
-            </span>
+
+          <div class="flex flex-wrap justify-center gap-3">
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp">
+              <i class="fa-brands fa-whatsapp text-sm"></i> Check a Route
+            </a>
+            <a href="#options" class="btn-pill btn-pill-ghost">
+              Compare Options
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-
-    <!-- ─── PRICING OPTIONS ───────────────────────────────────────── -->
-    <section class="py-24 tile-parch">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-
-        <div class="flex items-center gap-4 mb-4 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Your Options</p>
-          <div class="flex-1 h-px bg-neutral-200"></div>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight slide-up">
-          Two ways to redeem your miles.
-        </h2>
-        <p class="section-lead max-w-2xl mb-14 slide-up">
-          Whether you want a seat ticketed instantly or miles credited to your own account, we manage the entire process end to end.
-        </p>
-
-        <div class="grid lg:grid-cols-3 gap-5">
-
-          <!-- Nominee Redemption — dominant -->
-          <div class="lg:col-span-2 card-utility p-8 md:p-10 slide-up flex flex-col">
-            <div class="mb-8 pb-8 border-b border-neutral-100">
-              <span class="text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border border-brand-100 px-3 py-1 rounded-full inline-block mb-4">
-                Recommended &middot; Instant Booking
-              </span>
-              <div class="flex items-center gap-3">
-                <div class="icon-chip icon-chip-lg flex-shrink-0">
-                  <i class="fa-solid fa-ticket"></i>
-                </div>
-                <h3 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 tracking-tight">Nominee Redemption</h3>
-              </div>
-            </div>
-
-            <div class="grid sm:grid-cols-2 gap-x-8 gap-y-5 mb-10">
-              <div class="flex items-start gap-3">
-                <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Confirmed Tickets</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Seats ticketed instantly — no waitlists, no uncertainty.</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">No Extra Fees</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Zero nominee fees. Pay per-1k miles plus airline taxes.</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Fully Managed</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">We handle every step — registration, ticketing, and delivery.</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Same-Day Ticketing</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Once space is confirmed, tickets are often issued within hours.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="flex flex-wrap gap-3 mt-auto">
-              <a href="assessment?service=krisflyer&option=nominee" class="btn-pill btn-pill-primary"
-                data-coming-soon data-coming-soon-mode="button" data-coming-soon-feature="assessment">
-                Book Nominee Redemption
-              </a>
-              <a href="contact" class="btn-pill btn-pill-outline">
-                Ask a Question
-              </a>
-            </div>
+    <section id="how-it-works" class="py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-diagram-project"></i>How It Works</span>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
+              A clear path before you redeem.
+            </h2>
           </div>
+          <p class="section-split-v5__copy">
+            Start with your destination, cabin, and timing. Skyfare checks the practical options before you commit miles.
+          </p>
+        </div>
 
-          <!-- Direct Transfer -->
-          <div class="card-utility p-8 slide-up flex flex-col" style="animation-delay:.05s;">
-            <div class="mb-8 pb-8 border-b border-neutral-100">
-              <span class="text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border border-brand-100 px-3 py-1 rounded-full inline-block mb-4">3&ndash;4 Weeks</span>
-              <div class="flex items-center gap-3 mb-3">
-                <div class="icon-chip icon-chip-lg flex-shrink-0">
-                  <i class="fa-solid fa-bolt-lightning"></i>
-                </div>
-                <h3 class="text-xl font-display font-bold text-neutral-900 tracking-tight">Direct Transfer</h3>
-              </div>
-              <p class="text-xs text-neutral-500 font-medium">Straight to your KrisFlyer account</p>
+        <div class="grid md:grid-cols-3 gap-4">
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.06s;">
+            <div class="process-topline-v5">
+              <span class="process-index-v5">01</span>
+              <span class="icon-chip"><i class="fa-solid fa-route"></i></span>
             </div>
+            <p class="process-label-v5">Route first</p>
+            <h3>Send the trip</h3>
+            <p>Share your destination, dates, cabin preference, and passenger count.</p>
+            <span class="process-note-v5">Start simple</span>
+          </article>
+
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.12s;">
+            <div class="process-topline-v5">
+              <span class="process-index-v5">02</span>
+              <span class="icon-chip"><i class="fa-solid fa-magnifying-glass"></i></span>
+            </div>
+            <p class="process-label-v5">Availability check</p>
+            <h3>We compare paths</h3>
+            <p>Skyfare checks route fit, miles needed, taxes, timing, and booking method.</p>
+            <span class="process-note-v5">No blind moves</span>
+          </article>
+
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.18s;">
+            <div class="process-topline-v5">
+              <span class="process-index-v5">03</span>
+              <span class="icon-chip"><i class="fa-solid fa-ticket"></i></span>
+            </div>
+            <p class="process-label-v5">Handled with care</p>
+            <h3>You choose</h3>
+            <p>Proceed with the redemption or transfer path that fits your trip best.</p>
+            <span class="process-note-v5">Clear next step</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="options" class="py-24 tile-parch overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-scale-balanced"></i>Your Options</span>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
+              Two ways to use KrisFlyer miles.
+            </h2>
+          </div>
+          <p class="section-split-v5__copy">
+            Nominee Redemption is usually best for confirmed ticketing. Direct Transfer is better when flexibility matters more than speed.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-5 max-w-5xl mx-auto">
+          <article class="card-utility card-elevate-v2 p-8 md:p-10 slide-up" style="animation-delay:0.06s;">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-ticket"></i></div>
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Recommended for speed</p>
+                <h3 class="text-2xl font-display font-bold text-neutral-900 tracking-tight">Nominee Redemption</h3>
+              </div>
+            </div>
+            <p class="text-sm text-neutral-500 leading-relaxed mb-6">
+              Best when you want help securing a confirmed premium cabin ticket through an established nominee redemption path.
+            </p>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-center gap-2.5 text-sm text-neutral-600">
-                <i class="fa-solid fa-check text-brand-500 text-xs flex-shrink-0"></i>
-                Credited directly to your account
-              </li>
-              <li class="flex items-center gap-2.5 text-sm text-neutral-600">
-                <i class="fa-solid fa-check text-brand-500 text-xs flex-shrink-0"></i>
-                Use for any redemption you choose
-              </li>
-              <li class="flex items-center gap-2.5 text-sm text-neutral-600">
-                <i class="fa-solid fa-check text-brand-500 text-xs flex-shrink-0"></i>
-                No restrictions on partner airlines
-              </li>
+              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Confirmed ticketing path</li>
+              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Skyfare manages the redemption flow</li>
+              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Useful for live route opportunities</li>
             </ul>
-            <a href="assessment?service=krisflyer&option=direct-3to4w"
-              class="btn-pill btn-pill-outline w-full justify-center mt-auto">
-              Enquire Now
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-primary">
+              Ask About Nominee Redemption
             </a>
-          </div>
+          </article>
 
+          <article class="card-utility card-elevate-v2 p-8 md:p-10 slide-up" style="animation-delay:0.12s;">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-bolt-lightning"></i></div>
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Recommended for flexibility</p>
+                <h3 class="text-2xl font-display font-bold text-neutral-900 tracking-tight">Direct Transfer</h3>
+              </div>
+            </div>
+            <p class="text-sm text-neutral-500 leading-relaxed mb-6">
+              Best when you want miles credited into your own KrisFlyer account and can work with a longer timing window.
+            </p>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Miles credited to your account</li>
+              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Flexible use after transfer</li>
+              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Typical timing is 3 to 4 weeks</li>
+            </ul>
+            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-outline">
+              Ask About Direct Transfer
+            </a>
+          </article>
         </div>
       </div>
     </section>
 
+    <section id="award-chart" class="py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-route"></i>Mileage Route Board</span>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
+              Business Class starting points.
+            </h2>
+          </div>
+          <p class="section-split-v5__copy">
+            Use this as a planning reference. Availability, taxes, surcharges, and routing rules still need a live check.
+          </p>
+        </div>
 
-    <!-- ─── GUIDE CROSS-SELL ────────────────────────────────────────
-         Links to the new pages/krisflyer-guide.html sales/preview page --
-         a separate, standalone product (learn-it-yourself playbook) rather
-         than a placement for the Nominee Redemption service above.
-         Uses card-dark (the site's existing "make this stand out on a light
-         section" component, see index.html's step cards / newsletter-archive
-         cards) instead of card-utility so it visually pops against a page
-         that's otherwise all-white cards. The whole card is one <a> (not just
-         a small button inside it) so its clickability is obvious -- hovering
-         anywhere on it triggers card-dark's existing lift + brand-border
-         hover state. A corner "New" ribbon (solid brand fill, no gradient/
-         shadow, just an overlapping badge -- a much more universally
-         recognized "just added" signal than the pulsing border this
-         replaced) marks it as newly added to the page, separate from the
-         inline "Coming Soon" badge below, which is about the product's
-         launch status, not the card's novelty. -->
-    <section class="py-24 bg-white">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-        <div class="card-dark relative p-8 md:p-10 slide-up"
-          data-coming-soon data-coming-soon-mode="card" data-coming-soon-feature="guide">
-          <span class="absolute -top-3 -right-3 bg-brand-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
-            New
-          </span>
-          <div class="flex flex-col md:flex-row items-center gap-8" data-coming-soon-content>
-            <div class="icon-chip icon-chip-dark flex-shrink-0">
-              <i class="fa-solid fa-book"></i>
+        <div class="card-utility card-elevate-v2 overflow-hidden slide-up" style="animation-delay:0.08s;">
+          <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between p-5 border-b border-neutral-100">
+            <div class="relative w-full md:max-w-xs">
+              <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs pointer-events-none"></i>
+              <input id="searchRoute" type="text" placeholder="Search destination..." class="w-full rounded-full border border-neutral-200 bg-white pl-11 pr-4 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 outline-none transition-colors">
             </div>
-            <div class="flex-1 text-center md:text-left">
-              <span class="text-[10px] font-bold uppercase tracking-widest text-white bg-white/10 border border-white/20 px-3 py-1 rounded-full inline-block mb-3">
-                Prefer to Do It Yourself?
-              </span>
-              <h3 class="text-xl md:text-2xl font-display font-bold text-white tracking-tight mb-2 flex items-center justify-center md:justify-start gap-2">
-                The KrisFlyer Guide
-                <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-brand-500 text-white text-[9px] font-bold uppercase tracking-wide leading-none">Coming Soon</span>
-              </h3>
-              <p class="text-sm text-white/70 leading-relaxed max-w-lg">Seven chapters, checklists, and planning templates for mastering your own miles — launching soon. Join the waitlist to be first in line.</p>
-            </div>
+
+            <select id="regionFilter" class="rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-700 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 outline-none transition-colors cursor-pointer">
+              <option value="all">All regions</option>
+              <option value="SE Asia">SE Asia</option>
+              <option value="NE Asia">NE Asia</option>
+              <option value="South Asia">South Asia</option>
+              <option value="Japan/Korea">Japan/Korea</option>
+              <option value="Oceania">Oceania</option>
+              <option value="Africa / Middle East">Africa / Middle East</option>
+              <option value="Europe">Europe</option>
+              <option value="N. America">N. America</option>
+            </select>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[680px]">
+              <thead>
+                <tr class="bg-neutral-50 border-b border-neutral-200">
+                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Route</th>
+                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 text-center">Region</th>
+                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 text-right">Saver Miles</th>
+                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 text-right">Advantage Miles</th>
+                </tr>
+              </thead>
+              <tbody id="awardBody" class="divide-y divide-neutral-100">
+                <tr><td colspan="4" class="px-6 py-5 text-sm text-neutral-400">Loading routes...</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </section>
 
-
-    <!-- ─── WHY SKYFARE ───────────────────────────────────────────── -->
-    <section class="py-24 tile-sky">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-
-        <div class="flex items-center gap-4 mb-4 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Why Skyfare</p>
-          <div class="flex-1 h-px bg-neutral-100"></div>
+    <section class="py-24 tile-parch overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-clipboard-check"></i>What We Check</span>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
+              The details that change the route.
+            </h2>
+          </div>
+          <p class="section-split-v5__copy">
+            Miles are only the starting point. Skyfare checks the practical parts that decide whether a redemption is worth pursuing.
+          </p>
         </div>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-14 tracking-tight slide-up">
-          Built for confidence, not compromise.
-        </h2>
 
-        <div class="grid md:grid-cols-3 gap-5 slide-up" style="animation-delay:.05s;">
-
-          <div class="card-process p-8 relative overflow-hidden">
-            <div class="icon-chip icon-chip-lg mb-5">
-              <i class="fa-solid fa-bullseye"></i>
-            </div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Confirmed Seats Only</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">We prioritize live verified inventory across Singapore Airlines and partners — no endless waitlists.</p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="card-utility card-elevate-v2 p-6 slide-up reveal-pop" style="animation-delay:0.04s;">
+            <div class="icon-chip mb-5"><i class="fa-solid fa-calendar-check"></i></div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-3">Availability and timing</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">Saver space, Advantage fallback, date flexibility, and whether the seat can realistically be confirmed.</p>
           </div>
 
-          <div class="card-process p-8 relative overflow-hidden">
-            <div class="icon-chip icon-chip-lg mb-5">
-              <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Secure Handling</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">All transfers and redemptions are handled with strict privacy protocols. Your account details are never compromised.</p>
+          <div class="card-utility card-elevate-v2 p-6 slide-up reveal-pop" style="animation-delay:0.08s;">
+            <div class="icon-chip mb-5"><i class="fa-solid fa-receipt"></i></div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-3">Taxes and surcharges</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">Cash costs can change the value of a redemption, especially on partner and connecting routes.</p>
           </div>
 
-          <div class="card-process p-8 relative overflow-hidden">
-            <div class="icon-chip icon-chip-lg mb-5">
-              <i class="fa-solid fa-award"></i>
-            </div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">End-to-End Care</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">From route search to issued ticket, our concierge team manages every step of the technical process.</p>
+          <div class="card-utility card-elevate-v2 p-6 slide-up reveal-pop" style="animation-delay:0.12s;">
+            <div class="icon-chip mb-5"><i class="fa-solid fa-user-shield"></i></div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-3">Booking path</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed">Nominee redemption, direct transfer timing, passenger details, and the sequence needed to avoid blind moves.</p>
           </div>
-
         </div>
       </div>
     </section>
 
-
-    <!-- ─── CTA BAND ──────────────────────────────────────────────── -->
     <div data-cta-mount style="min-height:420px"
-      data-cta-eyebrow-icon="fa-solid fa-arrow-up"
-      data-cta-eyebrow-text="Get Started"
-      data-cta-heading="Ready to redeem your miles?"
-      data-cta-description="Book a nominee redemption or reach us on WhatsApp — we'll find the best path for your next premium flight."
+      data-cta-eyebrow-icon="fa-solid fa-route"
+      data-cta-eyebrow-text="Have a Route in Mind?"
+      data-cta-heading="Send us your destination, dates, and cabin."
+      data-cta-description="Skyfare will check the best KrisFlyer path before you commit miles or choose the wrong routing."
       data-cta-art-image="../images/page-images/bg-3.JPG"
       data-cta-primary-variant="whatsapp"
       data-cta-primary-icon="fa-brands fa-whatsapp"
-      data-cta-primary-label="Book via WhatsApp"
+      data-cta-primary-label="Check a Route"
       data-cta-primary-href="https://api.whatsapp.com/send?phone=6581575306"
       data-cta-primary-target="_blank"
       data-cta-secondary-variant="outline"
-      data-cta-secondary-label="Book Nominee Redemption"
-      data-cta-secondary-href="assessment?service=krisflyer&option=nominee"
-      data-cta-secondary-locked-feature="assessment"
-      data-cta-footnote-text="Want to see available routes?"
-      data-cta-footnote-link-text="Browse 67 destinations →"
-      data-cta-footnote-link-href="services#routes"
+      data-cta-secondary-icon="fa-solid fa-layer-group"
+      data-cta-secondary-label="All Services"
+      data-cta-secondary-href="services"
     ></div>
     <script src="../js/cta-section.js" defer></script>
 

@@ -43,6 +43,18 @@
  *                                    by an HMAC-signed expiring token (utils/signedLink.js)
  *   GET  /guide/chapters           — published chapters for the on-site chapter reader
  *                                    (see orchestration/guideChaptersHandler.js)
+ *   POST /assessment/checkout      — create Stripe Checkout session for the Travel Strategy Call
+ *                                    (one-time $99 purchase; webhook shares /altitude/webhook,
+ *                                    branched by metadata.product — see handleAssessmentCheckoutComplete)
+ *   GET  /assessment/verify        — server-side check that a Stripe session_id was actually paid,
+ *                                    before the success page reveals the Cal.com/WhatsApp buttons.
+ *                                    Also returns a signed /assessment/book booking link (see below).
+ *   GET  /assessment/book          — signed, expiring (30-day) booking-redirect link mailed in the
+ *                                    confirmation email and shown on the success page; verifies the
+ *                                    signature then 302s to the real Cal.com URL (never exposed
+ *                                    unsigned) — see orchestration/assessmentBooking.js
+ *   POST /calcom/webhook           — Cal.com webhook handler (BOOKING_CREATED — flips the matching
+ *                                    Airtable booking row to 'Booked', see orchestration/calcomWebhook.js)
  *   POST /airtable/testimonial     — submit a testimonial (Approved=false by default)
  *   GET  /airtable/testimonials    — approved testimonials. ?scope=featured&limit=N (homepage, default 3,
  *                                    no pagination) or default/?scope=all&limit=N&offset=... (archive,
@@ -53,8 +65,25 @@
  *   STRIPE_PRICE_ID          — Altitude Access, monthly (default plan)
  *   STRIPE_PRICE_ID_ANNUAL   — Altitude Access, annual (POST /altitude/checkout {plan:'annual'})
  *   STRIPE_GUIDE_PRICE_ID   JWT_SECRET
+ *   STRIPE_ASSESSMENT_PRICE_ID  — Travel Strategy Call, one-time $99, under the "Klent sandbox"
+ *                              Stripe account (acct_1Tl1nJB9NfKSwBnU) while this product is being tested
+ *   STRIPE_ASSESSMENT_SECRET_KEY — secret key for that same sandbox account. Deliberately separate
+ *                              from STRIPE_SECRET_KEY (a different Stripe account, not just a different
+ *                              mode) -- see services/stripe.js's handleAssessmentCheckout. Swap this
+ *                              whole product to the real account and back to STRIPE_SECRET_KEY once
+ *                              testing is done.
+ *   STRIPE_WEBHOOK_SECRET_ASSESSMENT — signing secret for the sandbox account's own webhook
+ *                              endpoint (we_1U0DUnB9NfKSwBnU..., points at this same /altitude/webhook
+ *                              URL) -- checked alongside STRIPE_WEBHOOK_SECRET in handleStripeWebhook
+ *                              so both Stripe accounts' events verify correctly
+ *   ASSESSMENT_LINK_SECRET   — HMAC key for signed, expiring /assessment/book booking-redirect links
+ *   CALCOM_API_KEY           — not currently called by any handler (webhook-only integration so far),
+ *                              stored for a future pass that queries the Cal.com API directly
+ *   CALCOM_WEBHOOK_SECRET    — signing secret set on the Cal.com webhook subscription (dashboard:
+ *                              Settings -> Developer -> Webhooks), verifies X-Cal-Signature-256
  *   PDF_PASSWORD_SECRET     — HMAC key for deterministic guide-PDF password derivation
  *   PDF_LINK_SECRET         — HMAC key for signed /guide/pdf/fetch download links
+ *   AIRTABLE_API_KEY   AIRTABLE_TABLE_ASSESSMENT_BOOKINGS
  *
  * KV binding: ALTITUDE_KV
  * R2 binding: GUIDE_PDF_BUCKET (temporary guide-PDF storage for the email flow)
@@ -64,7 +93,10 @@
 import { ALLOWED_ORIGINS } from './config/constants.js';
 import { respond } from './utils/http.js';
 
-import { handleCheckout, handleGuideCheckout, handleManagePortal, handleUpgradeToAnnual } from './services/stripe.js';
+import {
+  handleCheckout, handleGuideCheckout, handleManagePortal, handleUpgradeToAnnual,
+  handleAssessmentCheckout, handleAssessmentVerify,
+} from './services/stripe.js';
 import { handleWaitlist, handleMagicRequest, handleSubscribe, triggerSegmentRecalculation } from './services/beehiiv.js';
 import { handleGetPosts, handleGetPost } from './services/newsletter.js';
 import {
@@ -73,25 +105,30 @@ import {
 } from './services/airtable.js';
 
 import { handleStripeWebhook } from './orchestration/stripeWebhook.js';
+import { handleCalcomWebhook } from './orchestration/calcomWebhook.js';
+import { handleAssessmentBookingRedirect } from './orchestration/assessmentBooking.js';
 import { handleActivate, handleVerify, handleMagicVerify } from './orchestration/session.js';
 import { handleGuidePdfDownload, handleGuidePdfEmail, handleGuidePdfFetch } from './orchestration/guidePdfHandlers.js';
 import { handleGetGuideChapters } from './orchestration/guideChaptersHandler.js';
-import { runRenewalReminders, expireGuideBundles } from './orchestration/cron.js';
+import { runRenewalReminders, expireGuideBundles, reconcileBeehiivAccess } from './orchestration/cron.js';
 
 export default {
-  // Two cron schedules:
-  //   * * * * *  — every minute: segment recalculation safety net
-  //   0 1 * * *  — daily 01:00 UTC (09:00 SGT): recalculation + renewal reminders
+  // Single daily cron: 0 1 * * * (01:00 UTC / 09:00 SGT) -- recalculation +
+  // renewal reminders. The old every-minute-then-every-5-minutes cron was
+  // dropped entirely on 2026-08-04: every event that actually changes a
+  // segment (signup, tagging) already triggers its own real-time
+  // recalculation inline (see services/beehiiv.js's call sites), so a
+  // separate frequent sweep was pure redundant Beehiiv API traffic. This
+  // daily run is now the only periodic one, and passes `{ all: true }` so it
+  // also covers SEG_GUIDE/SEG_MONTHLY/SEG_ANNUAL, which no longer get
+  // real-time recalculation (see triggerSegmentRecalculation's own comment).
   async scheduled(event, env, ctx) {
-    if (event.cron === '0 1 * * *') {
-      ctx.waitUntil(Promise.all([
-        triggerSegmentRecalculation(env),
-        runRenewalReminders(env),
-        expireGuideBundles(env),
-      ]));
-    } else {
-      ctx.waitUntil(triggerSegmentRecalculation(env));
-    }
+    ctx.waitUntil(Promise.all([
+      triggerSegmentRecalculation(env, { all: true }),
+      runRenewalReminders(env),
+      expireGuideBundles(env),
+      reconcileBeehiivAccess(env),
+    ]));
   },
 
   async fetch(request, env) {
@@ -114,6 +151,11 @@ export default {
     // Stripe webhook — skip CORS origin check (Stripe servers, not browser)
     if (request.method === 'POST' && url.pathname === '/altitude/webhook') {
       return handleStripeWebhook(request, env, corsHeaders);
+    }
+
+    // Cal.com webhook — same reasoning, Cal.com's servers have no browser Origin
+    if (request.method === 'POST' && url.pathname === '/calcom/webhook') {
+      return handleCalcomWebhook(request, env, corsHeaders);
     }
 
     // Standard CORS check for all other routes
@@ -175,6 +217,20 @@ export default {
 
     if (request.method === 'GET' && url.pathname === '/guide/chapters') {
       return handleGetGuideChapters(request, env, corsHeaders);
+    }
+
+    // ── Travel Strategy Call routes ─────────────────────────────────────────
+
+    if (request.method === 'POST' && url.pathname === '/assessment/checkout') {
+      return handleAssessmentCheckout(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/assessment/verify') {
+      return handleAssessmentVerify(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/assessment/book') {
+      return handleAssessmentBookingRedirect(request, env);
     }
 
     // ── Newsletter routes ──────────────────────────────────────────────────

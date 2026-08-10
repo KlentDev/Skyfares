@@ -5,7 +5,6 @@
 import { respond } from '../utils/http.js';
 import { getBearer, verifyJwt } from '../utils/jwt.js';
 import { PUB_BASE_URL, KV_PREFIX } from '../config/constants.js';
-import { resolveBeehiivAltitudeAccess, beehiivSyncMetadata } from './beehiiv.js';
 
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
 
@@ -158,19 +157,9 @@ export async function handleGetPost(slug, request, env, corsHeaders) {
     const payload = await verifyJwt(token, env.JWT_SECRET);
     if (payload && payload.typ === 'altitude') {
       const raw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${payload.sub}`).catch(() => null);
-      let member = null;
       if (raw) {
-        try { member = JSON.parse(raw); } catch {}
-      }
-      const decision = await resolveBeehiivAltitudeAccess(payload.sub, env, { member, repair: true });
-      isMember = decision.granted === true;
-      if (member && decision.sync) {
-        await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${payload.sub}`, JSON.stringify({ ...member, ...decision.sync })).catch(() => {});
-      } else if (member && decision.entitlements && decision.reason === 'altitude_tier') {
-        await env.ALTITUDE_KV.put(
-          `${KV_PREFIX.MEMBER}${payload.sub}`,
-          JSON.stringify({ ...member, ...beehiivSyncMetadata(decision.entitlements, { tierSynced: true }) })
-        ).catch(() => {});
+        const member = JSON.parse(raw);
+        isMember = member.status === 'active';
       }
     }
   }

@@ -70,9 +70,12 @@
 
   var openModals = [];
 
+  var FOCUSABLE_SEL = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
   function modal(opts) {
     opts = opts || {};
     var dismissible = opts.dismissible !== false;
+    var triggerEl = document.activeElement; // restored on close -- see focus trap below
 
     var overlay = document.createElement('div');
     overlay.className = 'sky-modal';
@@ -111,6 +114,14 @@
     document.body.style.overflow = 'hidden';
     requestAnimationFrame(function () { overlay.classList.add('sky-modal--in'); });
 
+    // Focus trap -- first real multi-field form used inside SkyUI.modal, so
+    // this was never needed before now. Initial focus + Tab/Shift+Tab wrap
+    // apply regardless of `dismissible` (a non-dismissible modal is still a
+    // modal); only Escape-to-close is gated on it.
+    var card = overlay.querySelector('.sky-modal__card');
+    var firstFocusable = card.querySelector(FOCUSABLE_SEL);
+    if (firstFocusable) firstFocusable.focus();
+
     function close() {
       overlay.classList.remove('sky-modal--in');
       setTimeout(function () {
@@ -119,9 +130,24 @@
         if (!openModals.length) document.body.style.overflow = '';
       }, 220);
       document.removeEventListener('keydown', onKey);
+      if (triggerEl && typeof triggerEl.focus === 'function') triggerEl.focus();
     }
 
-    function onKey(e) { if (e.key === 'Escape' && dismissible) close(); }
+    function onKey(e) {
+      if (e.key === 'Escape' && dismissible) { close(); return; }
+      if (e.key === 'Tab') {
+        var focusables = card.querySelectorAll(FOCUSABLE_SEL);
+        if (!focusables.length) return;
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+    }
+    document.addEventListener('keydown', onKey);
 
     // Wire action buttons
     actions.forEach(function (a, i) {
@@ -136,7 +162,6 @@
       overlay.querySelector('.sky-modal__backdrop').addEventListener('click', close);
       var x = overlay.querySelector('.sky-modal__x');
       if (x) x.addEventListener('click', close);
-      document.addEventListener('keydown', onKey);
     }
 
     var handle = { close: close, el: overlay };

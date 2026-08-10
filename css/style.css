@@ -1694,6 +1694,16 @@ button[class*="bg-emerald-"]:active {
 }
 
 /* ── Shared form input — pill single-line, 18px multiline, brand focus ring ── */
+.form-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 0.45rem;
+}
+
 .form-input {
   width: 100%;
   padding: 0.875rem 1.25rem;
@@ -1713,6 +1723,28 @@ button[class*="bg-emerald-"]:active {
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
 }
 textarea.form-input { border-radius: 1.125rem; resize: vertical; }
+
+.contact-panel-bg {
+  background: linear-gradient(160deg, #0d1b35 0%, #1A2437 55%, #0f2040 100%);
+}
+
+.contact-channel-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.contact-channel-link:last-child {
+  border-bottom: none;
+}
+
+.contact-channel-link:hover {
+  opacity: 0.8;
+}
 
 /* Dark-surface form input — for forms on dark panels (e.g. contact info panel) */
 .form-input-dark {
@@ -3091,6 +3123,14 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   z-index: 1;
 }
 
+.path-card-v5__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
 .path-card-v5--recommended {
   background: linear-gradient(180deg, rgba(0, 102, 204, 0.22), rgba(255, 255, 255, 0.072));
   border-color: rgba(127, 184, 255, 0.38);
@@ -3126,6 +3166,14 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 .path-card-v5 > p {
+  margin-top: 0.55rem;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.58;
+}
+
+.path-card-v5__content > p {
   margin-top: 0.55rem;
   color: rgba(255, 255, 255, 0.58);
   font-size: 0.86rem;
@@ -5514,6 +5562,427 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   }
 }
 
+/* Skyfare Flight page */
+.skyfare-ticket-wrap {
+  display: grid;
+  justify-items: center;
+  perspective: 1200px;
+}
+
+.skyfare-ticket-stage {
+  position: relative;
+  display: inline-block;
+  width: min(100%, 37.5rem);
+}
+
+.skyfare-ticket {
+  position: relative;
+  display: inline-block;
+  width: 37.5rem;
+  max-width: 100%;
+  line-height: 1.3;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+.skyfare-ticket__toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skyfare-ticket__card {
+  position: relative;
+  display: block;
+  width: 37.5rem;
+  max-width: 100%;
+  height: 15.625rem;
+  transform-style: preserve-3d;
+  transition: transform 650ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.skyfare-ticket__toggle:checked + .skyfare-ticket__card {
+  transform: rotateY(180deg);
+}
+
+.skyfare-ticket__front,
+.skyfare-ticket__back {
+  position: absolute;
+  width: 37.5rem;
+  max-width: 100%;
+  height: 15.625rem;
+  display: flex;
+  font-family: 'Manrope', sans-serif;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 26px 42px rgba(0, 0, 0, 0.28));
+}
+
+.skyfare-ticket__front {
+  transform: rotateY(0deg);
+}
+
+.skyfare-ticket__back {
+  flex-direction: row-reverse;
+  transform: rotateY(180deg);
+}
+
+.skyfare-ticket__main,
+.skyfare-ticket__small,
+.skyfare-ticket__main-back,
+.skyfare-ticket__small-back {
+  position: relative;
+  overflow: hidden;
+}
+
+.skyfare-ticket__main {
+  width: 28.125rem;
+  height: 15.625rem;
+  padding: 1.25rem;
+  background:
+    linear-gradient(112deg, #ffffff 0%, #f5f8fc 48%, #d7eaff 78%, #f6efd8 100%);
+  -webkit-mask: radial-gradient(20px, transparent 98%, #000) -225px -125px;
+  mask: radial-gradient(20px, transparent 98%, #000) -225px -125px;
+}
+
+.skyfare-ticket__main-body {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(0, 102, 204, 0.10), transparent 30%),
+    radial-gradient(circle at 88% 10%, rgba(201, 162, 39, 0.18), transparent 26%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(239, 246, 255, 0.78));
+  color: #111827;
+}
+
+.skyfare-ticket__main-body::before,
+.skyfare-ticket__small-body::before,
+.skyfare-ticket__main-back::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle, rgba(17, 24, 39, 0.18) 0 0.7px, transparent 0.9px) 0 0 / 7px 7px,
+    radial-gradient(circle, rgba(255, 255, 255, 0.65) 0 0.8px, transparent 1px) 3px 2px / 9px 9px,
+    linear-gradient(90deg, rgba(0, 102, 204, 0.05), transparent 55%),
+    linear-gradient(180deg, rgba(201, 162, 39, 0.09), transparent 42%);
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.72;
+}
+
+.skyfare-ticket__title-block,
+.skyfare-ticket__title,
+.skyfare-ticket__subtitle,
+.skyfare-ticket__vip,
+.skyfare-ticket__info,
+.skyfare-ticket__agenda,
+.skyfare-ticket__small-title,
+.skyfare-ticket__small-meta,
+.skyfare-ticket__barcode {
+  position: relative;
+  z-index: 1;
+}
+
+.skyfare-ticket__title {
+  display: block;
+  color: #111827;
+  font-family: 'Lexend', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.skyfare-ticket__subtitle {
+  display: block;
+  margin-top: 0.3rem;
+  color: #4b5563;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.skyfare-ticket__vip {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+  color: #C9A227;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.skyfare-ticket__vip span:last-child {
+  margin-left: auto;
+  color: #9ca3af;
+  font-size: 0.62rem;
+}
+
+.skyfare-ticket__number {
+  font-family: 'Manrope', sans-serif;
+  color: #111827;
+  letter-spacing: 0.08em;
+}
+
+.skyfare-ticket__info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 1.05rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(17, 24, 39, 0.12);
+}
+
+.skyfare-ticket__info span {
+  display: grid;
+  gap: 0.12rem;
+  padding: 0 0.7rem;
+  border-left: 1px solid rgba(17, 24, 39, 0.12);
+  color: #111827;
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.skyfare-ticket__info span:first-child { border-left: 0; padding-left: 0; }
+
+.skyfare-ticket__info strong {
+  color: #6b7280;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.skyfare-ticket__small {
+  position: absolute;
+  left: 25rem;
+  top: 3.125rem;
+  width: 15.625rem;
+  height: 9.375rem;
+  padding: 1rem;
+  transform: rotate(-90deg);
+  background:
+    linear-gradient(112deg, #f8fafc 0%, #eaf4ff 58%, #f6efd8 100%);
+  border-top: 3px dotted rgba(17, 24, 39, 0.72);
+  -webkit-mask: radial-gradient(20px, transparent 98%, #000) -125px -75px;
+  mask: radial-gradient(20px, transparent 98%, #000) -125px -75px;
+}
+
+.skyfare-ticket__small-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0.7rem;
+  border-radius: 0.65rem;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(0, 102, 204, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 255, 0.82));
+  color: #111827;
+}
+
+.skyfare-ticket__small-title {
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  transform: none;
+  color: #0066cc;
+  font-family: 'Lexend', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.skyfare-ticket__small-meta {
+  display: grid;
+  gap: 0.35rem;
+  color: #4b5563;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.skyfare-ticket__small-meta strong {
+  color: #111827;
+  font-size: 0.72rem;
+}
+
+.skyfare-ticket__barcode {
+  display: block;
+  height: 1.55rem;
+  width: 78%;
+  margin-top: 0.6rem;
+  border-radius: 0.35rem;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #111827 0 2px,
+      transparent 2px 5px,
+      #111827 5px 6px,
+      transparent 6px 10px,
+      #111827 10px 13px,
+      transparent 13px 17px
+    );
+  opacity: 0.82;
+}
+
+.skyfare-ticket__main-back {
+  width: 28.125rem;
+  height: 15.625rem;
+  padding: 1.25rem;
+  background:
+    linear-gradient(112deg, #ffffff 0%, #f5f8fc 48%, #d7eaff 78%, #f6efd8 100%);
+  color: #111827;
+  -webkit-mask: radial-gradient(20px, transparent 98%, #000) -225px -125px;
+  mask: radial-gradient(20px, transparent 98%, #000) -225px -125px;
+}
+
+.skyfare-ticket__agenda {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  height: 100%;
+  position: relative;
+}
+
+.skyfare-ticket__agenda span {
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.7rem;
+  color: #111827;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.skyfare-ticket__agenda strong {
+  display: block;
+  color: #C9A227;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  margin-bottom: 0.25rem;
+}
+
+.skyfare-ticket__small-back {
+  position: absolute;
+  right: 25rem;
+  top: 3.125rem;
+  width: 15.625rem;
+  height: 9.375rem;
+  padding: 1rem;
+  transform: rotate(-90deg);
+  background:
+    linear-gradient(112deg, #f8fafc 0%, #eaf4ff 58%, #f6efd8 100%);
+  border-bottom: 3px dotted rgba(17, 24, 39, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: rgba(17, 24, 39, 0.55);
+  font-size: 1.35rem;
+  -webkit-mask: radial-gradient(20px, transparent 98%, #000) -125px -75px;
+  mask: radial-gradient(20px, transparent 98%, #000) -125px -75px;
+}
+
+@media (max-width: 640px) {
+  .skyfare-ticket-stage,
+  .skyfare-ticket,
+  .skyfare-ticket__card {
+    width: min(100%, 22rem);
+    height: 22rem;
+  }
+
+  .skyfare-ticket__front,
+  .skyfare-ticket__back {
+    width: 100%;
+    height: 22rem;
+    flex-direction: column;
+  }
+
+  .skyfare-ticket__main,
+  .skyfare-ticket__main-back {
+    width: 100%;
+    height: 15rem;
+    -webkit-mask: none;
+    mask: none;
+  }
+
+  .skyfare-ticket__small,
+  .skyfare-ticket__small-back {
+    position: static;
+    transform: none;
+    width: 100%;
+    height: 7rem;
+    border-top: 2px dashed rgba(17, 24, 39, 0.32);
+    border-bottom: 0;
+    -webkit-mask: none;
+    mask: none;
+  }
+
+  .skyfare-ticket__small-title {
+    display: block;
+    top: 0.9rem;
+    right: 1rem;
+    font-size: 1rem;
+  }
+
+  .skyfare-ticket__info,
+  .skyfare-ticket__agenda {
+    grid-template-columns: 1fr;
+  }
+
+  .skyfare-ticket__title { font-size: 2.2rem; }
+}
+
+.skyfare-destination-name {
+  transition: transform 180ms var(--ease-v2-out, ease), opacity 180ms var(--ease-v2-out, ease), filter 180ms var(--ease-v2-out, ease);
+}
+
+.skyfare-destination-name.is-changing {
+  opacity: 0.35;
+  filter: blur(2px);
+  transform: translateY(4px);
+}
+
+.skyfare-story-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.skyfare-story-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.5rem 0;
+  height: 3px;
+  border-radius: 9999px 9999px 0 0;
+  background: linear-gradient(90deg, #0066cc, #C9A227);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 240ms var(--ease-v2-out, ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .skyfare-story-card:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skyfare-ticket__card,
+  .skyfare-destination-name,
+  .skyfare-story-card::after {
+    transition: none !important;
+  }
+}
+
 /* ===== COMING SOON SYSTEM (cs-*) ==========================================
    Reusable lock/blur/badge/waitlist system for not-yet-launched features.
    Consumes existing -v2 tokens (glass/shadow/radius/ease) per DESIGN.md's
@@ -5625,3 +6094,122 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 /* Crown icon reads as a premium/Altitude signal sitewide -- gold accent
    carries through automatically wherever it appears in an outline CTA. */
 .cta-action-v5--outline .fa-crown { color: #C9A227; }
+
+/* ===== ALTITUDE PORTAL REDESIGN (2026-08-06) ===============================
+   Additive classes for pages/private-pages/altitude-access-portal.html's
+   Membership Plans, Updates, and Help & Support sections. Reuses the
+   existing .private-* vocabulary's tokens (--private-gold, --private-blue,
+   --private-line, --private-radius, --private-ease) rather than new ones.
+   See docs/superpowers/specs/2026-08-06-altitude-access-portal-redesign-design.md. */
+
+/* Gold icon-chip variant -- was a one-off inline style on the comparison
+   table's "Members Only" row (pages/altitude.html); promoted to a proper
+   class since that block is already being touched for this feature. */
+.icon-chip--gold {
+  background: #fefce8;
+  color: var(--private-gold);
+}
+
+/* Membership Plans -- replaces #alt-upgrade-section entirely (section A) */
+.private-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.private-plan-card {
+  position: relative;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.private-plan-card--current {
+  border-color: var(--private-gold);
+  box-shadow: 0 0 0 1px var(--private-gold);
+}
+
+.private-plan-card__current-badge {
+  position: absolute;
+  top: -0.65rem;
+  right: 1.25rem;
+}
+
+/* Access Source explainer -- guide_bundle state replaces the 2-card grid
+   with a single informational panel (no renewal/upgrade language applies) */
+.private-access-source {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+/* Updates/Announcements panel (section F) -- simple stacked date+title+blurb
+   list, reusing .private-summary__label/.private-summary__note typography */
+.private-updates__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--private-line);
+}
+
+.private-updates__item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.private-updates__date {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--private-subtle);
+}
+
+.private-updates__title {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--private-ink);
+}
+
+.private-updates__body {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--private-muted);
+}
+
+/* Support modal -- sizing helper scoped to the injected form only, per
+   docs/superpowers/specs/2026-08-06-altitude-access-portal-redesign-design.md
+   (section C: "add any extra sizing as a new inner class scoped to the
+   injected form, not by editing .sky-modal__card itself") */
+.alt-support-form { display: grid; gap: 1rem; }
+.alt-support-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+@media (max-width: 480px) {
+  .alt-support-form__row { grid-template-columns: 1fr; }
+}
+.alt-support-form__error {
+  display: none;
+  font-size: 0.78rem;
+  color: #dc2626;
+  margin-top: 0.3rem;
+}
+.alt-support-form__error.is-visible { display: block; }
+.alt-support-form__status {
+  display: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+}
+.alt-support-form__status.is-visible { display: block; }
+.alt-support-form__status--success { background: rgba(22, 163, 74, 0.10); color: #16a34a; }
+.alt-support-form__status--error   { background: rgba(220, 38, 38, 0.10); color: #dc2626; }
+
+@media (max-width: 720px) {
+  .private-plans-grid { grid-template-columns: 1fr; }
+}

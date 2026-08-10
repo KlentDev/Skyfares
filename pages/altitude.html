@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Skyfare Altitude — Coming Soon — Skyfare Consulting</title>
-  <meta name="description" content="Skyfare Altitude — premium travel intelligence for Business and First Class travelers — is getting ready for launch. Join the waitlist for early access." />
+  <title>Skyfare Altitude Access — Coming Soon — Skyfare Consulting</title>
+  <meta name="description" content="Skyfare Altitude Access is coming soon. Check back soon for the launch." />
   <link rel="icon" href="../logos/logo.webp" />
 
   <script src="../js/links.js"></script>
@@ -27,50 +27,40 @@
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
-  <!--
-    DISABLED (temporarily) — QR Modal. Altitude Premium isn't purchasable yet
-    (confirmed by Sahej, 2026-07-03). Already unreachable through the UI (no
-    trigger sets display:flex on it), but kept commented rather than deleted
-    so it can be restored once Premium officially launches:
-
-    <div id="alt-qr-modal" class="fixed inset-0 z-[300] items-center justify-center p-4" style="display:none;">
-      <div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm"
-        onclick="document.getElementById('alt-qr-modal').style.display='none';"></div>
-      <div class="relative bg-white rounded-2xl p-8 max-w-xs w-full text-center shadow-2xl">
-        <button onclick="document.getElementById('alt-qr-modal').style.display='none';"
-          class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors">
-          <i class="fa-solid fa-xmark text-xs"></i>
-        </button>
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold-50 text-gold-dark text-[10px] font-bold uppercase tracking-widest mb-5">
-          <i class="fa-solid fa-crown text-[9px]"></i> Altitude Access
+  <!-- Coming Soon placeholder. The full Altitude launch page is preserved
+       below inside an inert <template>; move it back out when Altitude is
+       ready to launch. -->
+  <main class="flex-1 flex items-center justify-center page-hero-bg relative overflow-hidden py-16 px-4"
+    style="--hero-img:url('../images/page-images/altitude.jpg');">
+    <div class="container mx-auto px-4 md:px-6 relative z-10">
+      <div class="card-glass-v2 max-w-lg mx-auto text-center px-8 py-12 md:px-12 md:py-14 slide-up">
+        <div class="icon-chip-glass-v2 mx-auto mb-5" style="width:3rem;height:3rem;font-size:1.15rem;">
+          <i class="fa-solid fa-crown" aria-hidden="true"></i>
         </div>
-        <img src="../images/stripe-QR.png" alt="Scan to subscribe" class="w-48 h-48 mx-auto rounded-2xl mb-4">
-        <p class="text-sm font-semibold text-neutral-900 mb-1">Scan to subscribe</p>
-        <p class="text-xs text-neutral-400">Opens Stripe checkout &middot; $4.99/mo</p>
+        <span class="cs-badge mb-5">Coming Soon</span>
+        <h1 class="text-3xl md:text-4xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
+          Skyfare Altitude Access
+        </h1>
+        <p class="text-base text-white/70 leading-relaxed mb-8 font-medium max-w-md mx-auto">
+          Our premium travel intelligence membership is getting ready for launch. Check back soon.
+        </p>
+
+        <p class="mt-8 text-xs text-white/40">
+          <a href="../" class="text-white/60 underline underline-offset-2 hover:text-white/90 transition-colors">&larr; Back to Skyfare Consulting</a>
+        </p>
       </div>
     </div>
-  -->
+  </main>
 
-
-  <!-- Login Modal now lives globally in components/magic-modal.html, fetched
-       and injected by js/magic-modal.js (loaded by header.js on every page,
-       shared with the header's "Altitude Access" button) -- no longer
-       duplicated here. -->
-
+  <!-- Original Altitude Access launch page. Kept inline and inert so it can be
+       restored by moving this markup out of the template when Altitude launches. -->
+  <template id="altitude-launch-page-template">
   <main class="flex-1">
 
-      <!-- 1. HERO -->
-      <section id="alt-public-hero" class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/altitude.jpg');">
-
-        <div class="container mx-auto px-4 md:px-6 relative z-10">
-          <div class="max-w-xl mx-auto text-center slide-up">
-
-            <!-- Original hero content — kept inline (not deleted), commented out.
-                 Real Stripe checkout + login here was live at the time this was
-                 converted to Coming Soon (2026-08-01). Restore this block (and
-                 remove the Coming Soon block below it) when Altitude launches
-                 publicly for real.
-
+    <section id="alt-public-hero" class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/altitude.jpg');">
+      <div class="container mx-auto px-4 md:px-6 relative z-10">
+        <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 items-center">
+          <div class="max-w-2xl slide-up">
             <div id="alt-cancelled-note" class="hidden mb-6">
               <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold/40 bg-gold/10 text-gold-light text-xs font-semibold">
                 <i class="fa-solid fa-circle-info text-[10px]"></i>
@@ -78,405 +68,340 @@
               </div>
             </div>
 
-            <!-- RE-ENABLED for testing 2026-07-22, same reason as the checkout form below. --&gt;
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-              <i class="fa-solid fa-crown text-[10px]"></i>
-              Altitude Access &middot; $4.99 / month
-            </div>
-            <!--
-              "Launching Soon" badge -- swap back in (and comment the badge above out)
-              once testing is done and this isn't launched for real yet:
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+              <i class="fa-solid fa-crown text-[10px]" aria-hidden="true"></i>
+              Altitude Access
+            </span>
 
-              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-                <i class="fa-solid fa-crown text-[10px]"></i>
-                Altitude Access &middot; Launching <span class="text-gold-pulse">Soon</span>
-              </div>
-            --&gt;
-
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
-              Premium travel<br>intelligence.
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
+              Travel Smarter. Know More. Go Further.
             </h1>
-
-            <p class="text-base md:text-lg text-white/65 leading-relaxed mb-10 font-medium">
-              Award alerts, cabin reviews, routing strategies, and miles guides — the complete Skyfare intelligence brief, delivered weekly. Full archive access included.
+            <p class="text-base md:text-lg text-white/70 leading-relaxed mb-8 font-medium max-w-xl">
+              A paid travel intelligence membership with premium route analysis, miles strategy, redemption opportunities, and members-only updates beyond the free newsletter.
             </p>
 
-            <!-- CTA area --&gt;
-            <div class="max-w-sm mx-auto mt-2">
-
-              <!-- RE-ENABLED for testing 2026-07-22 -- was disabled pending launch
-                   (confirmed by Sahej, 2026-07-03). handleCheckout in js/altitude.js
-                   now hits the real POST /altitude/checkout worker endpoint (not the
-                   old static PAYMENT_LINK, which is stale). Comment this back out and
-                   restore the waitlist link below before this is customer-facing
-                   again, if testing wraps before real launch. --&gt;
-              <form id="alt-checkout-form">
-                <button id="alt-checkout-btn" type="submit"
-                  class="w-full btn-pill btn-pill-primary justify-center">
-                  <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
-                </button>
-              </form>
-              <button id="alt-checkout-annual-btn" type="button"
-                class="w-full btn-pill btn-pill-ghost justify-center mt-2.5">
-                <i class="fa-solid fa-calendar-check text-[10px]"></i> Get Annual — $39.99/yr <span class="text-white/60 line-through font-normal">$55</span> <span class="text-white/50 font-normal">(save $15.01)</span>
-              </button>
-              <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">
-                <span>Cancel any time</span>
-                <span aria-hidden="true">&middot;</span>
-                <span>Instant access</span>
-                <span aria-hidden="true">&middot;</span>
-                <span>Secure via Stripe</span>
+            <div class="flex flex-wrap items-end gap-6 mb-8">
+              <div>
+                <p class="text-white font-display font-bold leading-none text-4xl">$4.99</p>
+                <p class="text-white/45 text-xs font-bold uppercase tracking-widest mt-2">per month</p>
               </div>
-              <!--
-                Waitlist fallback -- swap back in (and comment the form above out)
-                once testing is done and this isn't launched for real yet:
-
-                <a id="alt-checkout-btn" href="pre-signup-link"
-                  class="flex-1 btn-pill btn-pill-primary flex items-center justify-center">
-                  <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
-                </a>
-                <div class="flex items-center justify-center gap-2.5 mt-3 text-[10px] text-white/30 font-medium">
-                  <span>No spam</span>
-                  <span aria-hidden="true">&middot;</span>
-                  <span>One email at launch</span>
-                  <span aria-hidden="true">&middot;</span>
-                  <span>Unsubscribe anytime</span>
-                </div>
-              --&gt;
-
-              <!-- RE-ENABLED for testing 2026-07-22, same reason as above. --&gt;
-              <div class="flex items-center gap-3 my-6">
-                <div class="flex-1 h-px bg-white/10"></div>
-                <span class="text-[10px] text-white/20 uppercase tracking-widest">or</span>
-                <div class="flex-1 h-px bg-white/10"></div>
+              <div class="h-12 w-px bg-white/15 hidden sm:block"></div>
+              <div>
+                <p class="text-white font-display font-bold leading-none text-4xl">$39.99</p>
+                <p class="text-white/45 text-xs font-bold uppercase tracking-widest mt-2">per year</p>
               </div>
-              <button type="button"
-                onclick="window.openLoginModal && window.openLoginModal();"
-                class="w-full group flex items-center gap-4 px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all text-left">
-                <div class="w-9 h-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <i class="fa-solid fa-key text-white/50 text-xs"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-bold text-white leading-none mb-1">Already a Member?</p>
-                  <p class="text-[11px] text-white/35 leading-none">Log in for instant archive access</p>
-                </div>
-                <i class="fa-solid fa-chevron-right text-white/20 text-xs group-hover:text-white/50 group-hover:translate-x-0.5 transition-all"></i>
-              </button>
-
             </div>
 
-            -->
+            <form id="alt-checkout-form" class="hidden" aria-hidden="true">
+              <button id="alt-checkout-btn" type="submit">Monthly checkout</button>
+            </form>
 
-            <div class="icon-chip icon-chip-lg mx-auto mb-5" style="background:rgba(255,255,255,.1);color:#ffffff;">
-              <i class="fa-solid fa-crown" aria-hidden="true"></i>
-            </div>
-            <span class="cs-badge mb-5">Coming Soon</span>
-
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
-              Premium travel<br>intelligence.
-            </h1>
-
-            <p class="text-base md:text-lg text-white/65 leading-relaxed mb-10 font-medium">
-              Skyfare Altitude is getting ready for a proper public launch. Join the waitlist and you'll be the first to know the moment early access opens.
-            </p>
-
-            <div class="max-w-sm mx-auto mt-2">
-              <a href="pre-signup-link?utm_content=altitude" class="w-full btn-pill btn-pill-primary justify-center">
-                <i class="fa-solid fa-bell text-[10px]" aria-hidden="true"></i> Join Our Waitlist
-              </a>
-
-              <!-- "Already a Member?" login card -- kept inline (not deleted), hidden
-                   per request. Restore alongside the "or" divider above it if member
-                   login should be reachable from this page again.
-              <div class="flex items-center gap-3 my-6">
-                <div class="flex-1 h-px bg-white/10"></div>
-                <span class="text-[10px] text-white/20 uppercase tracking-widest">or</span>
-                <div class="flex-1 h-px bg-white/10"></div>
-              </div>
-              <button type="button"
-                onclick="window.openLoginModal && window.openLoginModal();"
-                class="w-full group flex items-center gap-4 px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all text-left">
-                <div class="w-9 h-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <i class="fa-solid fa-key text-white/50 text-xs"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-bold text-white leading-none mb-1">Already a Member?</p>
-                  <p class="text-[11px] text-white/35 leading-none">Log in for instant archive access</p>
-                </div>
-                <i class="fa-solid fa-chevron-right text-white/20 text-xs group-hover:text-white/50 group-hover:translate-x-0.5 transition-all"></i>
+            <div class="flex flex-col sm:flex-row gap-3 max-w-xl">
+              <button type="button" data-altitude-pricing-open class="btn-pill btn-pill-primary justify-center">
+                <i class="fa-solid fa-crown text-[10px]" aria-hidden="true"></i> Get Altitude Access
               </button>
-              -->
+              <button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="btn-pill btn-pill-ghost justify-center">
+                <i class="fa-solid fa-key text-[10px]" aria-hidden="true"></i> Already a member
+              </button>
             </div>
 
+            <div class="flex flex-wrap items-center gap-2.5 mt-4 text-[10px] text-white/40 font-medium">
+              <span>Cancel anytime</span>
+              <span aria-hidden="true">&middot;</span>
+              <span>Secure Stripe checkout</span>
+              <span aria-hidden="true">&middot;</span>
+              <button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="hover:text-white transition-colors">Already a member?</button>
+            </div>
+          </div>
+
+          <div class="card-dark p-6 md:p-8 slide-up" style="animation-delay:0.08s;" data-altitude-preview-card>
+            <div class="mb-7">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-gold-light">Premium Preview</p>
+                <span class="pill-tag"><i class="fa-solid fa-lock text-[10px]" aria-hidden="true"></i> Altitude</span>
+              </div>
+              <h2 class="text-2xl font-display font-bold text-white tracking-tight" data-altitude-preview-title>Coming soon</h2>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5 mb-5">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-3" data-altitude-preview-date>Premium issue</p>
+              <div class="space-y-2 blur-[3px] select-none" data-altitude-preview-blur>
+                <p class="text-sm text-white/75 leading-relaxed">Premium route notes, booking context, and member-only analysis will appear here.</p>
+                <p class="text-sm text-white/45 leading-relaxed">Subscribe to read the full issue and archive.</p>
+              </div>
+            </div>
+            <button type="button" data-altitude-pricing-open class="btn-pill btn-pill-gold justify-center w-full mt-7">
+              <i class="fa-solid fa-lock text-[10px]" aria-hidden="true"></i> Continue reading with Altitude
+            </button>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-
-      <!-- 2. WHAT'S INCLUDED -->
-      <section class="py-24 bg-white">
-        <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-
-          <div class="flex items-center gap-4 mb-12 slide-up">
-            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">What's included</p>
-            <div class="flex-1 h-px bg-neutral-100"></div>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-start">
-
-            <div class="slide-up">
-              <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
-                Everything you need to fly premium for less.
-              </h2>
-              <p class="section-lead mb-8">
-                One issue per week — written by someone who books 100+ premium cabins a year. No filler, no affiliate spam. Just the intelligence to fly Business and First Class on fewer miles.
-              </p>
-              <a href="pre-signup-link?utm_content=altitude"
-                class="btn-pill btn-pill-primary inline-flex items-center gap-2">
-                <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
-              </a>
-            </div>
-
-            <div class="grid grid-cols-2 gap-5 slide-up" style="animation-delay:.05s;">
-              <div class="flex items-start gap-3">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
-                  <i class="fa-solid fa-satellite-dish"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Award Alerts</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Live award windows before they close</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
-                  <i class="fa-solid fa-couch"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Cabin Reviews</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">First-hand Business &amp; First Class reviews</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
-                  <i class="fa-solid fa-route"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Routing Strategies</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Itineraries that maximise cabin quality</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
-                  <i class="fa-solid fa-book-open"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Miles Guides</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">KrisFlyer, transfer partners, award charts</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5">
-                  <i class="fa-solid fa-newspaper"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Full Archive</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Every issue, readable on-site, any time</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5" style="background:#fefce8;color:#C9A227;">
-                  <i class="fa-solid fa-crown"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Members Only</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Exclusive content never sent to the free list</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-
-      <!-- Original Archive Preview + CTA Band — kept inline (not deleted),
-           commented out. The Archive Preview section fetched real premium posts
-           from the production Worker; the CTA Band had a second live checkout/
-           login CTA (the new Coming Soon hero above already carries the primary
-           waitlist CTA). Restore both when Altitude launches publicly for real.
-
-      <!-- 3. ARCHIVE PREVIEW --&gt;
-      <section class="py-24 tile-parch">
-        <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-
-          <div class="flex items-center gap-4 mb-12 slide-up">
-            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Altitude Archive</p>
-            <div class="flex-1 h-px bg-neutral-100"></div>
-            <span class="text-[10px] text-neutral-400 font-medium flex-shrink-0">Members only</span>
-          </div>
-
-          <!-- Populated by JS with real premium posts (locked for non-members) --&gt;
-          <div id="alt-preview-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-            <div class="card-dark h-48 animate-pulse"></div>
-            <div class="card-dark h-48 animate-pulse"></div>
-            <div class="card-dark h-48 animate-pulse"></div>
-          </div>
-
-          <div class="text-center slide-up" style="animation-delay:.15s;">
-            <!-- DISABLED (temporarily) — was: <a href="#alt-public-hero" onclick="...">Unlock the Archive — $4.99/mo</a>; restore when Premium launches --&gt;
-            <a href="pre-signup-link"
-              class="btn-pill btn-pill-primary inline-flex items-center gap-2">
-              <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
-            </a>
-          </div>
-
-        </div>
-      </section>
-
-
-      <!-- 4. CTA BAND --&gt;
-      <section class="cta-band">
-        <div class="cta-band__art"></div>
-        <div class="cta-band__veil"></div>
-        <div class="container mx-auto px-4 md:px-6 relative z-10">
-          <div class="max-w-xl mx-auto text-center slide-up">
-            <!-- RE-ENABLED for testing 2026-07-22, same reason as the hero above. --&gt;
-            <span class="cta-eyebrow mb-6"><i class="fa-solid fa-arrow-up text-[10px]"></i> Get Started</span>
-            <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
-              Ready to fly premium for less?
+    <section id="inside" class="py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-layer-group"></i>What's Inside Altitude?</span>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
+              Pay for the part that helps you decide.
             </h2>
-            <p class="section-lead-dark mb-9 max-w-md mx-auto">
-              Join Altitude for weekly award alerts, cabin reviews, and full archive access — for less than a coffee a week.
-            </p>
-            <div class="flex flex-wrap justify-center gap-3">
-              <a href="#alt-public-hero" onclick="document.getElementById('alt-public-hero').scrollIntoView({behavior:'smooth'});return false;"
-                class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
-                <i class="fa-solid fa-crown text-[10px]"></i> Get Access — $4.99/mo
-              </a>
-              <button type="button" onclick="window.openLoginModal && window.openLoginModal();"
-                class="btn-pill btn-pill-ghost text-base" style="padding:0.875rem 1.75rem;">
-                Already a Member? Log In
-              </button>
-            </div>
-            <!--
-              Waitlist fallback -- swap back in (and comment the block above out)
-              once testing is done and this isn't launched for real yet:
+          </div>
+          <p class="section-split-v5__copy">
+            Altitude is built around practical travel intelligence: what is worth watching, why it matters, and how to think before you book.
+          </p>
+        </div>
 
-              <span class="cta-eyebrow mb-6"><i class="fa-solid fa-bell text-[10px]"></i> Coming Soon</span>
-              <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight tracking-tight">
-                Be first when it's ready.
-              </h2>
-              <p class="section-lead-dark mb-9 max-w-md mx-auto">
-                Join the waitlist for weekly award alerts, cabin reviews, and full archive access — the moment Altitude opens.
-              </p>
-              <div class="flex flex-wrap justify-center gap-3">
-                <a href="pre-signup-link"
-                  class="btn-pill btn-pill-primary text-base" style="padding:0.875rem 1.75rem;">
-                  <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
-                </a>
-              </div>
-            --&gt;
+        <div class="grid md:grid-cols-4 gap-4">
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.04s;">
+            <div class="process-topline-v5"><span class="process-index-v5">01</span><span class="icon-chip"><i class="fa-solid fa-chart-line"></i></span></div>
+            <p class="process-label-v5">Premium insight</p>
+            <h3>Travel analysis</h3>
+            <p>Exclusive analysis and recommendations for travelers who want more than surface-level travel news.</p>
+          </article>
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.08s;">
+            <div class="process-topline-v5"><span class="process-index-v5">02</span><span class="icon-chip"><i class="fa-solid fa-plane-circle-check"></i></span></div>
+            <p class="process-label-v5">Miles strategy</p>
+            <h3>Redemption ideas</h3>
+            <p>Learn how to get more value from miles by understanding tradeoffs, timing, and booking paths.</p>
+          </article>
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.12s;">
+            <div class="process-topline-v5"><span class="process-index-v5">03</span><span class="icon-chip"><i class="fa-solid fa-route"></i></span></div>
+            <p class="process-label-v5">Route intelligence</p>
+            <h3>Better routes</h3>
+            <p>Discover interesting routes, opportunities, and travel strategies before you commit points or cash.</p>
+          </article>
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.16s;">
+            <div class="process-topline-v5"><span class="process-index-v5">04</span><span class="icon-chip"><i class="fa-solid fa-crown"></i></span></div>
+            <p class="process-label-v5">Members only</p>
+            <h3>Private updates</h3>
+            <p>Information and insights that are not included in the free newsletter.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 tile-dark1 overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--dark slide-up">
+          <div>
+            <span class="eyebrow-chip-v2 eyebrow-chip-v2--dark"><i class="fa-solid fa-unlock-keyhole"></i>Free vs Altitude</span>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
+              Upgrade when you're ready for more.
+            </h2>
+          </div>
+          <p class="section-split-v5__copy">
+            The free newsletter stays useful. Altitude adds the depth, context, and premium route thinking behind better decisions.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4 mb-5">
+          <article class="rounded-2xl border border-white/10 bg-white/[0.045] p-5 slide-up" style="animation-delay:0.04s;">
+            <div class="icon-chip icon-chip-sm icon-chip-dark mb-4"><i class="fa-solid fa-envelope-open-text text-xs"></i></div>
+            <p class="text-xs font-bold uppercase tracking-widest text-white/35 mb-2">Free newsletter</p>
+            <h3 class="text-lg font-display font-bold text-white mb-2">Good for staying current.</h3>
+            <p class="text-sm text-white/55 leading-relaxed">Useful cabin reviews, travel updates, and broad aviation context without paid strategy depth.</p>
+          </article>
+          <article class="rounded-2xl border border-gold/25 bg-gold/10 p-5 slide-up" style="animation-delay:0.08s;">
+            <div class="icon-chip icon-chip-sm icon-chip-dark mb-4"><i class="fa-solid fa-crown text-xs"></i></div>
+            <p class="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">Altitude</p>
+            <h3 class="text-lg font-display font-bold text-white mb-2">Built for better decisions.</h3>
+            <p class="text-sm text-white/60 leading-relaxed">Adds paid route thinking, member-only notes, archive access, and premium redemption context.</p>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-white/[0.045] p-5 slide-up" style="animation-delay:0.12s;">
+            <div class="icon-chip icon-chip-sm icon-chip-dark mb-4"><i class="fa-solid fa-scale-balanced text-xs"></i></div>
+            <p class="text-xs font-bold uppercase tracking-widest text-white/35 mb-2">Upgrade signal</p>
+            <h3 class="text-lg font-display font-bold text-white mb-2">When the “why” matters.</h3>
+            <p class="text-sm text-white/55 leading-relaxed">Upgrade when you want the reasoning behind routes, timing, value, and premium cabin choices.</p>
+          </article>
+        </div>
+
+        <div class="card-dark overflow-hidden slide-up" role="table" aria-label="Free vs Altitude comparison">
+          <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 bg-white/[0.05] border-b border-white/10">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Included</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40 text-center">Free</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-gold-light text-center">Altitude</span>
+          </div>
+          <div class="divide-y divide-white/10">
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-chair text-xs"></i></span><span><span class="block text-sm font-semibold">Cabin reviews</span><span class="block text-xs text-white/40 mt-0.5">Premium seat, lounge, and onboard product notes.</span></span></span><span class="text-[11px] font-semibold text-brand-200 text-center">Included</span><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-newspaper text-xs"></i></span><span><span class="block text-sm font-semibold">Weekly aviation news</span><span class="block text-xs text-white/40 mt-0.5">A quick read on what changed in travel this week.</span></span></span><span class="text-[11px] font-semibold text-brand-200 text-center">Included</span><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-right-left text-xs"></i></span><span><span class="block text-sm font-semibold">Transfer bonuses</span><span class="block text-xs text-white/40 mt-0.5">Notices when point transfers or promotions are worth watching.</span></span></span><span class="text-[11px] font-semibold text-brand-200 text-center">Included</span><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-bell text-xs"></i></span><span><span class="block text-sm font-semibold">Award alerts</span><span class="block text-xs text-white/40 mt-0.5">Availability and redemption opportunities with more context.</span></span></span><span class="text-[11px] font-semibold text-white/35 text-center">Limited</span><span class="text-[11px] font-semibold text-gold-light text-center">Deeper notes</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-plane-departure text-xs"></i></span><span><span class="block text-sm font-semibold">KrisFlyer Spontaneous Escapes</span><span class="block text-xs text-white/40 mt-0.5">Monthly fare movement and route highlights.</span></span></span><span class="text-[11px] font-semibold text-white/35 text-center">Summary</span><span class="text-[11px] font-semibold text-gold-light text-center">Strategy view</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-route text-xs"></i></span><span><span class="block text-sm font-semibold">Routing strategies</span><span class="block text-xs text-white/40 mt-0.5">Why one routing path can beat another on value or comfort.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-box-archive text-xs"></i></span><span><span class="block text-sm font-semibold">Full archive</span><span class="block text-xs text-white/40 mt-0.5">Catch up on earlier paid issues where available.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-crown text-xs"></i></span><span><span class="block text-sm font-semibold">Members-only content</span><span class="block text-xs text-white/40 mt-0.5">Paid analysis not sent to the public newsletter list.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-scale-balanced text-xs"></i></span><span><span class="block text-sm font-semibold">The Skyfare Verdict on Cabin Compare</span><span class="block text-xs text-white/40 mt-0.5">A clearer take on which cabin is actually worth choosing.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-bolt text-xs"></i></span><span><span class="block text-sm font-semibold">Flash alerts</span><span class="block text-xs text-white/40 mt-0.5">Short-form premium updates when timing matters.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      -->
+    <section class="py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-user-check"></i>Who It's For</span>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
+              Recognize yourself quickly.
+            </h2>
+          </div>
+          <p class="section-split-v5__copy">
+            Altitude is for readers who want Skyfare's travel thinking before they make the next move.
+          </p>
+        </div>
 
+        <div class="grid md:grid-cols-3 gap-4">
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.04s;">
+            <div class="process-topline-v5"><span class="process-index-v5">01</span><span class="icon-chip"><i class="fa-solid fa-gauge-high"></i></span></div>
+            <p class="process-label-v5">Miles Optimizer</p>
+            <h3>Use every mile better.</h3>
+            <p>You want to squeeze more value from your miles and avoid wasteful redemptions.</p>
+          </article>
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.08s;">
+            <div class="process-topline-v5"><span class="process-index-v5">02</span><span class="icon-chip"><i class="fa-solid fa-suitcase-rolling"></i></span></div>
+            <p class="process-label-v5">Frequent Traveler</p>
+            <h3>Plan with better context.</h3>
+            <p>You travel often and want sharper strategies before choosing dates, cabins, or routes.</p>
+          </article>
+          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.12s;">
+            <div class="process-topline-v5"><span class="process-index-v5">03</span><span class="icon-chip"><i class="fa-solid fa-binoculars"></i></span></div>
+            <p class="process-label-v5">Travel Enthusiast</p>
+            <h3>Understand the why.</h3>
+            <p>You want deeper travel knowledge and premium cabin insight, even before booking.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2 mb-4"><i class="fa-solid fa-tag"></i>Altitude Pricing</span>
+            <h2 class="font-display font-bold text-neutral-900 tracking-tight" style="font-size:var(--font-display-h2-v2-size);">
+              Simple access. Clear value.
+            </h2>
+          </div>
+          <p class="section-split-v5__copy">
+            Monthly and annual are separated clearly. Pick the plan that fits how often you want Skyfare's paid travel intelligence.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch slide-up">
+          <article class="card-utility card-pricing-v2 p-8 flex flex-col">
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Free Newsletter</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed mb-6">A lightweight way to follow Skyfare's public travel notes before upgrading.</p>
+            <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$0</span> <span class="text-sm text-neutral-400">/month</span></p>
+            <p class="text-xs text-neutral-400 font-semibold mb-6">No paid access required</p>
+            <a href="../pages/newsletter" class="btn-pill btn-pill-ghost w-full justify-center mb-6">Read Free Newsletter</a>
+            <div class="border-t border-neutral-100 pt-6 mt-auto">
+              <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">What You Get</p>
+              <ul class="space-y-2.5 text-sm text-neutral-600">
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Public travel updates</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Cabin reviews and route highlights</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-minus text-neutral-300 text-xs mt-1 flex-shrink-0"></i>No premium archive or paid strategy notes</li>
+              </ul>
+            </div>
+          </article>
+          <article class="card-utility card-pricing-v2 p-8 flex flex-col">
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Altitude Monthly</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed mb-6">Premium travel intelligence with flexible month-to-month access.</p>
+            <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$4.99</span> <span class="text-sm text-neutral-400">/month</span></p>
+            <p class="text-xs text-neutral-400 font-semibold mb-6">Cancel anytime</p>
+            <button type="button" data-altitude-direct-plan="monthly" class="btn-pill btn-pill-primary w-full justify-center mb-6">Choose Monthly</button>
+            <div class="border-t border-neutral-100 pt-6 mt-auto">
+              <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">What You Get</p>
+              <ul class="space-y-2.5 text-sm text-neutral-600">
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Premium route and award insight</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Members-only updates</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Full archive access where available</li>
+              </ul>
+            </div>
+          </article>
+          <article class="card-utility card-pricing-v2 card-pricing-v2--featured pricing-altitude-card-v5 relative p-8 flex flex-col" style="animation-delay:0.06s;">
+            <span class="pricing-value-chip-v5">Best Value</span>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Altitude Annual</h3>
+            <p class="text-sm text-neutral-500 leading-relaxed mb-6">One year of paid travel intelligence at the strongest value.</p>
+            <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$39.99</span> <span class="text-lg font-semibold text-neutral-400 line-through">$55</span> <span class="text-sm text-neutral-400">/year</span></p>
+            <p class="text-xs text-neutral-400 font-semibold mb-6">Save $19.89 vs. paying monthly</p>
+            <button id="alt-checkout-annual-btn" type="button" data-altitude-direct-plan="annual" class="btn-pill btn-pill-primary w-full justify-center mb-6">Choose Annual</button>
+            <div class="border-t border-brand-100 pt-6 mt-auto">
+              <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">What You Get</p>
+              <ul class="space-y-2.5 text-sm text-neutral-600">
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Everything in Monthly</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Lower effective monthly cost</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Best fit for frequent readers</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="section-split-v5 section-split-v5--light slide-up">
+          <div>
+            <span class="eyebrow-chip-v2 mb-4"><i class="fa-solid fa-circle-question"></i>Quick Answers</span>
+            <h2 class="font-display font-bold text-neutral-900 tracking-tight" style="font-size:var(--font-display-h2-v2-size);">
+              Before you subscribe.
+            </h2>
+          </div>
+          <p class="section-split-v5__copy">
+            Short answers about Altitude access, cancellation, and what happens after checkout.
+          </p>
+        </div>
+
+        <div class="faq-grid-v5 grid lg:grid-cols-2 gap-3">
+          <details class="faq-item-light card-elevate-v2 slide-up" style="animation-delay:0.05s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3 cursor-pointer"><span class="flex items-center gap-3 min-w-0"><span class="icon-chip icon-chip-sm flex-shrink-0"><i class="fa-solid fa-layer-group text-xs"></i></span><span class="text-base font-semibold text-neutral-900">What's included?</span></span><span class="faq-indicator flex-shrink-0 text-brand-500"><i class="fa-solid fa-chevron-down"></i></span></summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-neutral-500 leading-relaxed">Premium travel insights, miles strategies, route intelligence, members-only updates, and access to paid Altitude content.</div></div>
+          </details>
+          <details class="faq-item-light card-elevate-v2 slide-up" style="animation-delay:0.10s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3 cursor-pointer"><span class="flex items-center gap-3 min-w-0"><span class="icon-chip icon-chip-sm flex-shrink-0"><i class="fa-solid fa-unlock-keyhole text-xs"></i></span><span class="text-base font-semibold text-neutral-900">How is Altitude different from the free newsletter?</span></span><span class="faq-indicator flex-shrink-0 text-brand-500"><i class="fa-solid fa-chevron-down"></i></span></summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-neutral-500 leading-relaxed">The free newsletter gives useful travel updates. Altitude adds deeper analysis, premium strategy, and content not sent to the free list.</div></div>
+          </details>
+          <details class="faq-item-light card-elevate-v2 slide-up" style="animation-delay:0.15s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3 cursor-pointer"><span class="flex items-center gap-3 min-w-0"><span class="icon-chip icon-chip-sm flex-shrink-0"><i class="fa-solid fa-rotate-left text-xs"></i></span><span class="text-base font-semibold text-neutral-900">Can I cancel anytime?</span></span><span class="faq-indicator flex-shrink-0 text-brand-500"><i class="fa-solid fa-chevron-down"></i></span></summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-neutral-500 leading-relaxed">Yes. Billing is handled securely through Stripe.</div></div>
+          </details>
+          <details class="faq-item-light card-elevate-v2 slide-up" style="animation-delay:0.20s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3 cursor-pointer"><span class="flex items-center gap-3 min-w-0"><span class="icon-chip icon-chip-sm flex-shrink-0"><i class="fa-solid fa-key text-xs"></i></span><span class="text-base font-semibold text-neutral-900">How does access work?</span></span><span class="faq-indicator flex-shrink-0 text-brand-500"><i class="fa-solid fa-chevron-down"></i></span></summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-neutral-500 leading-relaxed">After checkout, you can access the private Altitude portal using the email tied to your membership.</div></div>
+          </details>
+          <details class="faq-item-light card-elevate-v2 slide-up" style="animation-delay:0.25s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3 cursor-pointer"><span class="flex items-center gap-3 min-w-0"><span class="icon-chip icon-chip-sm flex-shrink-0"><i class="fa-solid fa-envelope-open-text text-xs"></i></span><span class="text-base font-semibold text-neutral-900">Do I need a Beehiiv account?</span></span><span class="faq-indicator flex-shrink-0 text-brand-500"><i class="fa-solid fa-chevron-down"></i></span></summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-neutral-500 leading-relaxed">You may be asked to verify your email for Beehiiv-native reading features, but Skyfare also supports member access through the site.</div></div>
+          </details>
+          <details class="faq-item-light card-elevate-v2 slide-up" style="animation-delay:0.30s;">
+            <summary class="flex items-center justify-between px-6 py-5 gap-3 cursor-pointer"><span class="flex items-center gap-3 min-w-0"><span class="icon-chip icon-chip-sm flex-shrink-0"><i class="fa-solid fa-newspaper text-xs"></i></span><span class="text-base font-semibold text-neutral-900">Can I access previous premium content?</span></span><span class="faq-indicator flex-shrink-0 text-brand-500"><i class="fa-solid fa-chevron-down"></i></span></summary>
+            <div class="accordion-body"><div class="px-6 pb-6 pl-[4.25rem] text-sm text-neutral-500 leading-relaxed">Altitude is designed to include premium member content and archive access where available.</div></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <div data-cta-mount style="min-height:420px"
+      data-cta-eyebrow-icon="fa-solid fa-crown"
+      data-cta-eyebrow-text="Altitude Access"
+      data-cta-heading="Your next smarter travel decision starts here."
+      data-cta-description="Join Altitude for premium travel intelligence, route insight, and members-only strategy."
+      data-cta-art-image="../images/page-images/bg-3.JPG"
+      data-cta-primary-variant="gold"
+      data-cta-primary-icon="fa-solid fa-crown"
+      data-cta-primary-label="Get Altitude Access"
+      data-cta-primary-href="#"
+      data-cta-secondary-variant="outline"
+      data-cta-secondary-icon="fa-solid fa-key"
+      data-cta-secondary-label="Already a Member?"
+      data-cta-secondary-href="#"
+    ></div>
+    <script src="../js/cta-section.js" defer></script>
 
   </main>
 
   <script src="../js/altitude.js" defer></script>
-
-  <!-- Original Archive Preview fetch/render script — kept inline (not deleted),
-       commented out (its target #alt-preview-grid is inside the commented-out
-       section above, so this script would just no-op, but no reason to still
-       fetch from the Worker on every page load). Restore alongside the sections
-       above when Altitude launches publicly for real.
-  <script>
-  /* Fetch real premium posts and render them locked in the public archive preview */
-  (function () {
-    var WORKER = 'https://skyfares-altitude.klent-5fa.workers.dev';
-
-    function getIssueNum(post) {
-      var tags = post.content_tags || [];
-      for (var i = 0; i < tags.length; i++) {
-        var m = String(tags[i]).toLowerCase().match(/issue[-_]?(\d+)/);
-        if (m) return m[1].padStart(2, '0');
-      }
-      return '??';
-    }
-
-    function getType(post) {
-      return (post.content_tags || []).filter(function (t) {
-        return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/i);
-      })[0] || 'Exclusive';
-    }
-
-    function esc(str) {
-      var d = document.createElement('div');
-      d.textContent = String(str || '');
-      return d.innerHTML;
-    }
-
-    function buildCard(post, index) {
-      var issueNum = getIssueNum(post);
-      var type     = getType(post);
-      var delay    = (index * 0.05) + 's';
-
-      var imageArea = post.thumbnail_url
-        ? '<div class="relative h-40 bg-brand-950 overflow-hidden">' +
-            '<img src="' + esc(post.thumbnail_url) + '" alt="' + esc(post.title) + '" class="w-full h-full object-cover opacity-35">' +
-            '<div class="absolute inset-0 bg-brand-950/40"></div>' +
-            '<div class="absolute inset-0 flex items-center justify-center">' +
-              '<div class="text-center">' +
-                '<div class="w-10 h-10 rounded-full bg-white/10 border border-gold/30 flex items-center justify-center mx-auto mb-2">' +
-                  '<i class="fa-solid fa-lock text-gold-light"></i>' +
-                '</div>' +
-                '<span class="text-[10px] font-bold uppercase tracking-widest text-gold-light border border-gold/30 bg-black/40 px-2.5 py-1 rounded-full">Altitude Exclusive</span>' +
-              '</div>' +
-            '</div>' +
-          '</div>'
-        : '<div class="h-40 bg-brand-950 relative flex items-center justify-center">' +
-            '<div class="absolute inset-0 opacity-40" style="background:linear-gradient(135deg,#0C4A6E,#1d4ed8);"></div>' +
-            '<div class="relative z-10 text-center px-4">' +
-              '<div class="w-10 h-10 rounded-full bg-white/10 border border-gold/30 flex items-center justify-center mx-auto mb-2">' +
-                '<i class="fa-solid fa-lock text-gold-light"></i>' +
-              '</div>' +
-              '<span class="text-[10px] font-bold uppercase tracking-widest text-gold-light border border-gold/30 bg-black/30 px-2.5 py-1 rounded-full">Altitude Exclusive</span>' +
-            '</div>' +
-          '</div>';
-
-      return '<div class="card-dark overflow-hidden slide-up is-visible" style="animation-delay:' + delay + '">' +
-        imageArea +
-        '<div class="p-5">' +
-          '<p class="text-[10px] text-white/30 mb-1.5 font-medium uppercase tracking-widest">' + esc(type) + ' &middot; Issue ' + esc(issueNum) + '</p>' +
-          '<h3 class="text-sm font-display font-semibold text-white leading-snug">' + esc(post.title) + '</h3>' +
-        '</div>' +
-      '</div>';
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      var grid = document.getElementById('alt-preview-grid');
-      if (!grid) return;
-
-      fetch(WORKER + '/newsletter/posts')
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (data) {
-          if (!data || !data.posts) { grid.innerHTML = ''; return; }
-          var premium = data.posts.filter(function (p) {
-            return !!p.is_premium;
-          }).slice(0, 6);
-          if (!premium.length) {
-            grid.innerHTML = '<p class="col-span-full text-sm text-white/30 text-center py-12">Premium issues coming soon.</p>';
-            return;
-          }
-          grid.innerHTML = premium.map(buildCard).join('');
-        })
-        .catch(function () { grid.innerHTML = ''; });
-    });
-  })();
-  </script>
-  -->
 
   <script>
   (function () {
@@ -484,8 +409,6 @@
       var header = document.getElementById('main-header');
       if (!header) return;
 
-      // Mirrors newsletter.html pattern but also accounts for the announcement
-      // banner whenever it appears or is dismissed.
       var pubHero = document.getElementById('alt-public-hero');
 
       function syncPadding() {
@@ -496,13 +419,14 @@
         if (pubHero) pubHero.style.paddingTop = offset + 'px';
       }
 
-      syncPadding();                                     // run immediately
-      setTimeout(syncPadding, 700);                      // catch late-loading banner
-      new MutationObserver(syncPadding)                  // re-sync on add/remove
-        .observe(document.body, { childList: true });
+      syncPadding();
+      setTimeout(syncPadding, 700);
+      new MutationObserver(syncPadding).observe(document.body, { childList: true });
     });
   })();
   </script>
+
+  </template>
 
 </body>
 </html>

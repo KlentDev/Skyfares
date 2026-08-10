@@ -5,7 +5,6 @@
 
 // ── Beehiiv automation IDs ────────────────────────────────────────────────────
 
-export const WELCOME_AUTOMATION_ID      = 'aut_ed8a12c4-3661-4226-9c93-21e43ffa5e3e';
 export const MAGIC_LINK_AUTOMATION_ID   = 'aut_765b1f46-64b1-48fb-be4c-ac75386a949a';
 export const MAGIC_LINK_CF_NAME         = 'magic_link_url'; // custom field that holds the one-time URL
 
@@ -23,20 +22,30 @@ export const STARTER_MAGIC_LINK_AUTOMATION_ID = 'aut_7f86ca72-14cb-4af3-9b26-9e7
 // Now its own automation, same pattern as STARTER_MAGIC_LINK_AUTOMATION_ID.
 export const GUIDE_MAGIC_LINK_AUTOMATION_ID = 'aut_783ff7b2-e472-400c-aafd-180274e45a34';
 
+// Sent right after a KrisFlyer Guide purchase, confirming the purchase
+// itself (distinct from GUIDE_MAGIC_LINK_AUTOMATION_ID, which is the login
+// link). Previously only `segment_action`-triggered on SEG_GUIDE (so never
+// referenced here) — SEG_GUIDE's move to the daily-cron-only recalculation
+// tier (2026-08-04) meant this arrived up to 24h after purchase. Now called
+// directly from handleGuideCheckoutComplete, same as every other
+// confirmation automation in this file.
+export const GUIDE_CONFIRMATION_AUTOMATION_ID = 'aut_89052bc6-a52f-4930-bd76-eed6c257f951';
+
 // Renewal reminder automations — enrolled by the daily cron, not by user actions
 export const RENEWAL_7D_AUTOMATION_ID   = 'aut_6f675263-fec5-436d-894a-91d5c168feaf';
 export const RENEWAL_3D_AUTOMATION_ID   = 'aut_2093dcea-c91e-4a81-baae-a3b27cf8d671';
 export const RENEWAL_1D_AUTOMATION_ID   = 'aut_eb704a34-24c3-4094-b446-b4eeaf3337ac';
 
-// Plan-specific Welcome/Renewed automations (see krisflyer.md "Related Beehiiv
-// work" section) — still `draft` in Beehiiv as of this writing. Confirmed
-// (2026-07-22, via the automation's own staging-workspace config): each
-// Welcome automation's only trigger is segment_action on its matching
-// SEG_MONTHLY/SEG_ANNUAL segment, not an api trigger — so the direct
-// journeys-endpoint call in enrollWelcomeAutomation is a harmless no-op
-// today. Real enrollment happens automatically once applyIntervalTag +
-// triggerSegmentRecalculation land the subscriber in that segment. The
-// direct call is kept anyway for forward-compatibility in case that changes.
+// Plan-specific Welcome automations — live in Beehiiv, `api`-triggered
+// (2026-08-06 email-automation-consolidation; see
+// docs/superpowers/specs/2026-08-06-email-automation-consolidation-design.md).
+// Previously segment_action-only on SEG_MONTHLY/SEG_ANNUAL; once those
+// segments moved to the daily-cron-only recalculation tier (2026-08-04), that
+// wired them to arrive up to 24h late, and left the upgrade path (which never
+// enrolls in these directly) able to trigger WELCOME_ANNUAL_AUTOMATION_ID a
+// day after UPGRADED_ANNUAL_AUTOMATION_ID for the same event. Now api-only,
+// enrolment_type unlimited, fired solely from setupBeehiivMember below — a
+// Monthly→Annual upgrade never calls this, only a genuine new signup does.
 export const WELCOME_MONTHLY_AUTOMATION_ID = 'aut_d710e39c-a8a6-434f-8393-8bcfd44174f0';
 export const WELCOME_ANNUAL_AUTOMATION_ID  = 'aut_5dbf5c22-70dc-4e68-ac8d-7acde5a0033a';
 export const RENEWED_MONTHLY_AUTOMATION_ID = 'aut_a9bab9b2-39b6-4cf8-8a5d-f9ce378acce6';
@@ -47,8 +56,7 @@ export const RENEWED_ANNUAL_AUTOMATION_ID  = 'aut_2b5db0e5-e23d-4358-aa45-a23708
 // Monthly/Annual member whose real subscription just ended. Deliberately NOT
 // the generic Welcome automation: that copy ("You're in! Welcome to
 // Altitude") would read confusingly to someone who was already a member and
-// just cancelled. Still `draft` in Beehiiv as of this writing — needs a
-// manual publish before it sends.
+// just cancelled. Live and api-triggered in Beehiiv.
 export const GUIDE_BUNDLE_ACTIVATED_AUTOMATION_ID = 'aut_88e0a2b5-f8d3-48e0-ae71-b27f26fcdad7';
 
 // Sent when a scheduled Monthly→Annual upgrade actually takes effect (see
@@ -62,7 +70,7 @@ export const UPGRADED_ANNUAL_AUTOMATION_ID = 'aut_2c9e00f8-3e2f-4fbc-bc2c-224bde
 
 // ── Beehiiv tags & segments ───────────────────────────────────────────────────
 
-// altitude monthly / altitude annual are the sole subscriber tags that mean
+// altitude monthly / altitude annual are secondary subscriber tags for
 // "has paid Altitude access" — see services/beehiiv.js's checkBeehiivPremium.
 // The old universal "altitude premium" tag (and the automation that applied
 // it) has been retired in favor of these plan-specific tags plus
@@ -72,6 +80,17 @@ export const INTERVAL_TAG_IDS = { monthly: 'eab046f1-f103-4e7a-8568-63c5f036e13f
 export const GUIDE_BUNDLE_TAG_NAME = 'krisflyer bundle'; // temporary tag for the Guide's 90-day free Altitude bundle (see orchestration/guideBundle.js) — distinct from GUIDE_TAG_NAME, which is permanent
 export const GUIDE_BUNDLE_TAG_ID   = 'e1e9ccfe-bee9-4786-bf7f-2e20bb94a2da';
 
+// Permanent "paid for a Travel Strategy Call" tag, applied in
+// handleAssessmentCheckoutComplete (orchestration/stripeWebhook.js) — never
+// removed, mirrors GUIDE_TAG_NAME's pattern. Feeds SEG_TRAVEL_STRAT_CALL below;
+// TRAVEL_STRAT_CALL_AUTOMATION_ID is live and api-triggered directly from
+// sendAssessmentBookingEmail (see 2026-08-06 email-automation-consolidation
+// spec — its lingering segment_action trigger is being removed in Beehiiv
+// so this direct call is the sole trigger, same as every automation in this
+// file now).
+export const TRAVEL_STRAT_CALL_TAG_NAME = 'travel-strat-call';
+export const TRAVEL_STRAT_CALL_TAG_ID   = 'e1da42a0-f5fc-4fb0-b742-b83249c350cb';
+
 // "Altitude Premium Subscribers" (formerly SEG_PREMIUM, seg_6b2bf91a...) is retired — it was
 // always just the union of Monthly + Annual, both of which are already recalculated below.
 export const SEG_FREE      = 'seg_f4472be3-fe20-4ed6-b761-367041d6a522';
@@ -79,6 +98,7 @@ export const SEG_PRELAUNCH = 'seg_3b2edb32-94a4-43b8-af13-1668923ffa95'; // Pre-
 export const SEG_GUIDE      = 'seg_fd7d552b-eb91-4536-a7f7-ca7665c95782'; // KrisFlyer Guide Subscribers (where: subscriber_tag = krisflyer)
 export const SEG_MONTHLY    = 'seg_66838dd3-207a-41f0-a93b-94743e005dc1'; // Altitude Monthly Subscribers (where: altitude-monthly)
 export const SEG_ANNUAL     = 'seg_56c30f35-abc9-44bd-9c29-f40a9dbc1491'; // Altitude Annual Subscribers (where: altitude-annual)
+export const SEG_TRAVEL_STRAT_CALL = 'seg_bd786e3e-07a3-420f-95c1-8360b912dd9d'; // Travel Strategy Call Buyers (where: subscriber_tag = travel-strat-call)
 
 // ── Cross-concern URLs ────────────────────────────────────────────────────────
 
@@ -92,6 +112,8 @@ export const ALLOWED_ORIGINS = [
 
 export const PUB_BASE_URL = 'https://skyfarealtitude.beehiiv.com';
 export const SITE_URL     = 'https://skyfareconsulting.com';
+export const WORKER_BASE_URL = 'https://skyfares-altitude.klent-5fa.workers.dev'; // this Worker's own public URL -- needed for links embedded in emails, which have no request Origin to derive a base URL from (see utils/http.js's getBaseUrl)
+export const CALCOM_BOOKING_URL = 'https://cal.com/klentmicko/travel-strategy-call'; // real destination /assessment/book redirects to after verifying a signed booking link (orchestration/assessmentBooking.js)
 
 // ── Airtable ───────────────────────────────────────────────────────────────────
 
@@ -124,9 +146,27 @@ export const KV_PREFIX = {
   GUIDE_BUNDLE_PENDING: 'guide-bundle-pending:',
   OVERRIDE_PREMIUM: 'override:premium:',
   GUIDE_MAGIC_SENT: 'guide-magic-sent:',
+  // Same check-before-work/write-on-success/7-day-TTL shape as
+  // GUIDE_MAGIC_SENT immediately above — one per confirmation-email call
+  // site added by the 2026-08-06 email-automation-consolidation, guarding
+  // against Stripe webhook redelivery double-sending now that these
+  // automations no longer have segment_action as a backstop/duplicate path.
+  GUIDE_CONFIRMATION_SENT: 'guide-confirmation-sent:',
+  ASSESSMENT_CONFIRMATION_SENT: 'assessment-confirmation-sent:',
+  WELCOME_SENT: 'welcome-sent:',
+  STRIPE_EVENT: 'stripe-event:',
+  // Set once a Cal.com booking is confirmed for this email (see
+  // orchestration/calcomWebhook.js); checked by
+  // orchestration/assessmentBooking.js's handleAssessmentBookingRedirect to
+  // stop the same emailed booking link from being reused for a second
+  // booking -- gated on a real confirmed booking, not on the link being
+  // merely clicked/pre-fetched (see that file's own comment on why).
+  ASSESSMENT_BOOKED: 'assessment-booked:',
   RL_SUBSCRIBE: 'subscribe-rl:',
   RL_CHECKOUT: 'checkout-rl:',
   RL_GUIDE_CHECKOUT: 'guide-checkout-rl:',
+  RL_ASSESSMENT_CHECKOUT: 'assessment-checkout-rl:',
+  RL_CALCOM_WEBHOOK: 'calcom-webhook-rl:',
   RL_ACTIVATE: 'rl:',
   RL_PORTAL: 'portal-rl:',
   RL_UPGRADE: 'upgrade-rl:',
@@ -164,3 +204,19 @@ export const GUIDE_ID = 'krisflyer-guide';
 export const GUIDE_PDF_EMAIL_AUTOMATION_ID = 'aut_40014528-4e1f-4a2e-9056-9ad9ea81cfbd'; // "KrisFlyer Guide — PDF Delivery" — still draft in Beehiiv, needs publishing (see krisflyer.md)
 export const GUIDE_PDF_DOWNLOAD_URL_CF_NAME = 'guide_pdf_download_url';
 export const GUIDE_PDF_PASSWORD_CF_NAME = 'guide_pdf_password';
+
+// Travel Strategy Call: same custom-field + direct-journeys-enrollment
+// pattern as the Guide PDF delivery above (see services/beehiiv.js's
+// sendAssessmentBookingEmail) -- reliable, immediate send, not dependent on
+// segment recalculation timing. Automation still `draft` in Beehiiv as of
+// this writing, needs review + a manual publish before it actually sends
+// (same documented pattern as every other still-draft automation here).
+export const TRAVEL_STRAT_CALL_AUTOMATION_ID = 'aut_14deb6a2-ecd5-4215-be91-5dbed471c971'; // "Travel Strategy Call - Booking Confirmation" (payment received) -- replaces the earlier "Travel Strategy Call — Confirmation" automation (aut_6e0d402d...), deleted manually in Beehiiv
+export const TRAVEL_STRAT_CALL_BOOKING_URL_CF_NAME = 'travel_strategy_call_booking_url';
+
+// Booking-confirmed notifications (customer + admin) are handled from
+// Airtable now, not a second Beehiiv automation -- see trav-start-call.md.
+// The "Travel Strategy Call — Booking Confirmed" automation and its
+// travel_strategy_call_slot_time custom field this repo briefly wired up
+// still exist in Beehiiv (no delete API for either) but are unreferenced
+// here and should be deleted manually in the dashboard.
