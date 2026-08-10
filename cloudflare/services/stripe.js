@@ -257,7 +257,19 @@ export async function verifyStripeSignature(body, signature, secret) {
   const key     = await getHmacKey(secret, 'sign');
   const sig     = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload));
   const hex     = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
-  return hex === v1;
+  return timingSafeEqual(hex, v1);
+}
+
+function timingSafeEqual(a, b) {
+  const enc = new TextEncoder();
+  const left = enc.encode(a || '');
+  const right = enc.encode(b || '');
+  const len = Math.max(left.length, right.length);
+  let diff = left.length ^ right.length;
+  for (let i = 0; i < len; i++) {
+    diff |= (left[i] || 0) ^ (right[i] || 0);
+  }
+  return diff === 0;
 }
 
 // Altitude Access now sells two plans (monthly + annual, same product,

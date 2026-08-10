@@ -1,0 +1,39 @@
+<div id="altitude-pricing-modal" class="fixed inset-0 z-[300] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="altitude-pricing-title">
+  <button type="button" class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm" data-altitude-pricing-close aria-label="Close pricing options"></button>
+  <div class="relative bg-white rounded-2xl p-6 md:p-8 max-w-2xl w-full shadow-2xl">
+    <button type="button" data-altitude-pricing-close class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400 hover:bg-neutral-200 transition-colors" aria-label="Close">
+      <i class="fa-solid fa-xmark text-xs" aria-hidden="true"></i>
+    </button>
+
+    <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-5">
+      <i class="fa-solid fa-crown text-[9px]" aria-hidden="true"></i> Choose Altitude Access
+    </span>
+    <h2 id="altitude-pricing-title" class="text-2xl md:text-3xl font-display font-bold text-neutral-900 tracking-tight mb-2">
+      Pick your access plan.
+    </h2>
+    <p class="text-sm text-neutral-500 leading-relaxed mb-6">
+      Monthly keeps it flexible. Annual gives you the best value for the same premium travel intelligence.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <article class="card-utility card-pricing-v2 p-6 flex flex-col">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-3">Monthly</p>
+        <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums text-4xl">$4.99</span> <span class="text-sm text-neutral-400">/month</span></p>
+        <p class="text-xs text-neutral-400 font-semibold mb-5">Cancel anytime</p>
+        <button type="button" data-altitude-plan="monthly" class="btn-pill btn-pill-primary w-full justify-center mt-auto">
+          Choose Monthly
+        </button>
+      </article>
+
+      <article class="card-utility card-pricing-v2 card-pricing-v2--featured relative p-6 flex flex-col">
+        <span class="pricing-value-chip-v5">Best Value</span>
+        <p class="text-[10px] font-bold uppercase tracking-widest text-gold-dark mb-3">Annual</p>
+        <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums text-4xl">$39.99</span> <span class="text-lg font-semibold text-neutral-400 line-through">$55</span> <span class="text-sm text-neutral-400">/year</span></p>
+        <p class="text-xs text-neutral-400 font-semibold mb-5">Save $19.89 vs. paying monthly</p>
+        <button type="button" data-altitude-plan="annual" class="btn-pill btn-pill-primary w-full justify-center mt-auto">
+          Choose Annual
+        </button>
+      </article>
+    </div>
+  </div>
+</div>

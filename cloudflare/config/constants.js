@@ -70,7 +70,7 @@ export const UPGRADED_ANNUAL_AUTOMATION_ID = 'aut_2c9e00f8-3e2f-4fbc-bc2c-224bde
 
 // ── Beehiiv tags & segments ───────────────────────────────────────────────────
 
-// altitude monthly / altitude annual are the sole subscriber tags that mean
+// altitude monthly / altitude annual are secondary subscriber tags for
 // "has paid Altitude access" — see services/beehiiv.js's checkBeehiivPremium.
 // The old universal "altitude premium" tag (and the automation that applied
 // it) has been retired in favor of these plan-specific tags plus
@@ -153,6 +153,8 @@ export const KV_PREFIX = {
   // automations no longer have segment_action as a backstop/duplicate path.
   GUIDE_CONFIRMATION_SENT: 'guide-confirmation-sent:',
   ASSESSMENT_CONFIRMATION_SENT: 'assessment-confirmation-sent:',
+  WELCOME_SENT: 'welcome-sent:',
+  STRIPE_EVENT: 'stripe-event:',
   // Set once a Cal.com booking is confirmed for this email (see
   // orchestration/calcomWebhook.js); checked by
   // orchestration/assessmentBooking.js's handleAssessmentBookingRedirect to

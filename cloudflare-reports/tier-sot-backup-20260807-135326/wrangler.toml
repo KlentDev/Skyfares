@@ -20,7 +20,6 @@ crons = ["0 1 * * *"]
 
 [vars]
 BEEHIIV_PUB_ID = "pub_0be395f6-cacb-4ba9-b8a5-04c69ea44bf1"
-BEEHIIV_ALTITUDE_TIER_ID = "tier_0307bb2b-667d-4e56-afbd-31edc9114a8e"
 BEEHIIV_ALTITUDE_TIER_NAME = "Altitude Access"
 AIRTABLE_BASE_ID = "appA5rSlwgc57nswR"
 AIRTABLE_TABLE_FLIGHT_APPLICATIONS = "tblU1G8DRtIBCg2Xd"

@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     #main-header.header-scrolled   .header-wordmark .skyfare-text  { color: #0C4A6E; }
     #main-header.header-scrolled   .header-wordmark .altitude-text { color: #94a3b8; }
 
-    /* Header CTAs (Altitude Access / Book a Flight) */
+    /* Header CTA (Altitude Access) */
     .header-cta-icon {
       position: relative;
       display: inline-flex;
@@ -85,6 +85,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     .header-cta-gold { background: #C9A227; color: #ffffff; }
     .header-cta-outline { background: transparent; color: #1b70ef; border-color: #1b70ef; }
+    .header-cta-tooltip .cta-label {
+      left: 50%;
+      top: calc(100% + 0.55rem);
+      margin-left: 0;
+      padding: 0.45rem 0.65rem;
+      border-radius: 9999px;
+      background: #0f172a;
+      color: #ffffff;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+      font-size: 0.75rem;
+      line-height: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+    .header-cta-tooltip .cta-label::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -4px;
+      width: 8px;
+      height: 8px;
+      background: #0f172a;
+      transform: translateX(-50%) rotate(45deg);
+    }
+    .header-cta-tooltip:hover .cta-label,
+    .header-cta-tooltip:focus-visible .cta-label {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
     @media (hover: hover) and (pointer: fine) {
       .header-cta-gold:hover { background: #B58D1D; }
       .header-cta-outline:hover { background: rgba(27,112,239,0.08); }
@@ -133,10 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     @media (prefers-reduced-motion: reduce) {
       .header-cta-altitude { transform: none !important; }
     }
-    /* Book a Flight becomes the sole header CTA once Altitude Access is
-       hidden (Coming Soon) -- give it an always-visible label instead of
-       the icon-only/hover-reveal treatment, so the header doesn't read as
-       empty with only a bare icon on the right. */
+    /* Legacy helper for any future always-visible secondary header CTA. */
     .header-cta-solo {
       min-width: 0;
       padding: 0 1.15rem 0 0.9rem;
@@ -313,15 +338,19 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </nav>
 
-        <!-- Right side: Book a Flight. Altitude Access is hidden site-wide
-             while Skyfare Altitude is in its Coming Soon state -- the
-             magic-link login modal it opened (js/magic-modal.js) is left
-             wired for pages/altitude.html and pages/altitude-success.html,
-             only this entry point to it is removed. -->
+        <!-- Right side CTAs -->
         <div class="hidden lg:flex items-center gap-2.5 ml-auto">
-          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment"
-            class="header-cta-icon header-cta-outline header-cta-solo" aria-label="Book a Flight">
-            <i class="fa-solid fa-calendar-check text-base flex-shrink-0"></i>
+          <!-- Altitude Access temporarily hidden until launch.
+          <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/altitude"
+            class="header-cta-icon header-cta-gold header-cta-altitude" aria-label="Altitude Access">
+            <i class="fa-solid fa-crown flex-shrink-0"></i>
+            <span class="cta-label">Altitude Access</span>
+          </a>
+          -->
+          <a href="${(window.SKYFARE_LINKS && window.SKYFARE_LINKS.whatsapp) || 'https://api.whatsapp.com/send?phone=6581575306'}"
+            target="_blank" rel="noopener noreferrer"
+            class="header-cta-icon header-cta-outline header-cta-tooltip" aria-label="Book a Flight">
+            <i class="fa-solid fa-plane-departure flex-shrink-0"></i>
             <span class="cta-label">Book a Flight</span>
           </a>
         </div>
@@ -415,12 +444,14 @@ document.addEventListener('DOMContentLoaded', () => {
             </a>
           </nav>
           
+          <!-- Altitude Access temporarily hidden until launch.
           <div class="mt-auto pt-10 flex flex-col gap-3">
-            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-brand-600 text-white font-semibold shadow-lg">
-              <i class="fa-solid fa-calendar-check text-xl"></i>
-              Book a Flight
+            <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/altitude" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-gold text-white font-semibold shadow-lg">
+              <i class="fa-solid fa-crown text-xl"></i>
+              Altitude Access
             </a>
           </div>
+          -->
         </div>
       </div>
     </div>
@@ -547,6 +578,17 @@ document.addEventListener('DOMContentLoaded', () => {
   (function () {
     var s = document.createElement('script');
     s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/magic-modal.js';
+    s.defer = true;
+    document.head.appendChild(s);
+  })();
+
+  // --- Shared success-modal confetti (window.fireBrandConfetti), used by
+  //     js/magic-modal.js, js/krisflyer-guide.js, and
+  //     js/assessment-checkout.js. Loaded globally like the modal script
+  //     above so it's ready before any of those call it. ---
+  (function () {
+    var s = document.createElement('script');
+    s.src = (window.location.pathname.includes('/pages/') ? '../' : '') + 'js/confetti.js';
     s.defer = true;
     document.head.appendChild(s);
   })();

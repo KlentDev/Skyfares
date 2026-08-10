@@ -108,6 +108,7 @@
     function _open() {
       var modal = document.getElementById('travel-strat-modal');
       if (modal) modal.style.display = 'flex';
+      if (window.fireBrandConfetti) window.fireBrandConfetti();
     }
     function _close() {
       var modal = document.getElementById('travel-strat-modal');

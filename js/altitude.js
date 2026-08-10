@@ -98,8 +98,8 @@
   function wirePublicView() {
     var checkoutForm = document.getElementById('alt-checkout-form');
     if (checkoutForm) checkoutForm.addEventListener('submit', function (e) { handleCheckout(e, 'monthly', 'alt-checkout-btn'); });
-    var annualBtn = document.getElementById('alt-checkout-annual-btn');
-    if (annualBtn) annualBtn.addEventListener('click', function (e) { handleCheckout(e, 'annual', 'alt-checkout-annual-btn'); });
+    wirePricingModal();
+    loadAltitudePreview();
     document.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
   }
 
@@ -113,9 +113,9 @@
   // same pattern as js/index-pricing.js and js/krisflyer-guide.js -- not the
   // old static PAYMENT_LINK above, which is stale and no longer used here.
 
-  function handleCheckout(e, plan, btnId) {
+  function handleCheckout(e, plan, btnId, btnEl) {
     e.preventDefault();
-    var btn = document.getElementById(btnId || 'alt-checkout-btn');
+    var btn = btnEl || document.getElementById(btnId || 'alt-checkout-btn');
     var originalHtml = btn ? btn.innerHTML : '';
     if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-[11px]"></i> Redirecting…'; }
 
@@ -137,5 +137,125 @@
         if (window.SkyUI) SkyUI.toast('Network error. Please try again.', { type: 'error' });
         if (btn) { btn.disabled = false; btn.innerHTML = originalHtml; }
       });
+  }
+
+  function wirePricingModal() {
+    document.addEventListener('click', function (event) {
+      var directPlan = event.target.closest && event.target.closest('[data-altitude-direct-plan]');
+      if (directPlan) {
+        handleCheckout(event, directPlan.getAttribute('data-altitude-direct-plan') || 'monthly', null, directPlan);
+        return;
+      }
+
+      var opener = event.target.closest && event.target.closest('[data-altitude-pricing-open], #cta-section-primary');
+      if (opener) {
+        event.preventDefault();
+        openPricingModal();
+        return;
+      }
+
+      var memberLink = event.target.closest && event.target.closest('#cta-section-secondary');
+      if (memberLink) {
+        event.preventDefault();
+        window.openLoginModal && window.openLoginModal();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closePricingModal();
+    });
+  }
+
+  function openPricingModal() {
+    ensurePricingModal(function (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    });
+  }
+
+  function closePricingModal() {
+    var modal = document.getElementById('altitude-pricing-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  function ensurePricingModal(done) {
+    var existing = document.getElementById('altitude-pricing-modal');
+    if (existing) {
+      if (done) done(existing);
+      return;
+    }
+
+    var prefix = window.location.pathname.indexOf('/pages/') !== -1 ? '../' : '';
+    fetch(prefix + 'components/altitude-pricing.html')
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var tmp = document.createElement('div');
+        tmp.innerHTML = html.trim();
+        var modal = tmp.firstElementChild;
+        if (!modal) return;
+        document.body.appendChild(modal);
+
+        modal.addEventListener('click', function (event) {
+          if (event.target.closest('[data-altitude-pricing-close]')) {
+            event.preventDefault();
+            closePricingModal();
+            return;
+          }
+
+          var planBtn = event.target.closest('[data-altitude-plan]');
+          if (!planBtn) return;
+          handleCheckout(event, planBtn.getAttribute('data-altitude-plan') || 'monthly', null, planBtn);
+        });
+
+        if (done) done(modal);
+      })
+      .catch(function () {});
+  }
+
+  function loadAltitudePreview() {
+    var titleEl = document.querySelector('[data-altitude-preview-title]');
+    var dateEl = document.querySelector('[data-altitude-preview-date]');
+    var blurEl = document.querySelector('[data-altitude-preview-blur]');
+    if (!titleEl || typeof fetch === 'undefined') return;
+
+    fetch(WORKER + '/newsletter/posts')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        var posts = data && data.posts ? data.posts : [];
+        var premium = posts.filter(function (post) {
+          return post && post.is_premium === true;
+        })[0];
+        if (!premium) {
+          titleEl.textContent = 'Coming soon';
+          if (dateEl) dateEl.textContent = 'Premium issue';
+          return;
+        }
+
+        titleEl.textContent = premium.title || 'Premium issue';
+        if (dateEl) dateEl.textContent = formatDate(premium.published_at) || 'Premium issue';
+        if (blurEl) {
+          blurEl.innerHTML =
+            '<p class="text-sm text-white/75 leading-relaxed">' + e(premium.subtitle || 'Premium member analysis and route intelligence are available inside Altitude.') + '</p>' +
+            '<p class="text-sm text-white/45 leading-relaxed">Subscribe to read the full issue, strategy notes, and archive.</p>';
+        }
+      })
+      .catch(function () {});
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    try {
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function e(str) {
+    var d = document.createElement('div');
+    d.textContent = String(str || '');
+    return d.innerHTML;
   }
 })();

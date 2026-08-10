@@ -59,6 +59,7 @@
       if (starter) starter.classList.remove('hidden');
       var emailEl = document.getElementById('magic-modal-starter-email');
       if (emailEl) emailEl.textContent = email || '';
+      if (window.fireBrandConfetti) window.fireBrandConfetti();
     } else {
       if (starter) starter.classList.add('hidden');
       if (deflt) deflt.classList.remove('hidden');

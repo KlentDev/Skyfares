@@ -110,7 +110,7 @@ import { handleAssessmentBookingRedirect } from './orchestration/assessmentBooki
 import { handleActivate, handleVerify, handleMagicVerify } from './orchestration/session.js';
 import { handleGuidePdfDownload, handleGuidePdfEmail, handleGuidePdfFetch } from './orchestration/guidePdfHandlers.js';
 import { handleGetGuideChapters } from './orchestration/guideChaptersHandler.js';
-import { runRenewalReminders, expireGuideBundles } from './orchestration/cron.js';
+import { runRenewalReminders, expireGuideBundles, reconcileBeehiivAccess } from './orchestration/cron.js';
 
 export default {
   // Single daily cron: 0 1 * * * (01:00 UTC / 09:00 SGT) -- recalculation +
@@ -127,6 +127,7 @@ export default {
       triggerSegmentRecalculation(env, { all: true }),
       runRenewalReminders(env),
       expireGuideBundles(env),
+      reconcileBeehiivAccess(env),
     ]));
   },
 

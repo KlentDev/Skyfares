@@ -24,20 +24,6 @@ function beehiivHeaders(env) {
   };
 }
 
-// Guardrail for known non-customer/test/internal emails that were accidentally
-// re-created by paid-access reconciliation. Keep this narrow: it only blocks
-// paid Altitude tier/tag writes, not normal free newsletter subscription.
-const PAID_SYNC_SUPPRESSED_EMAILS = new Set([
-  'klentmicko@gmail.com',
-  'klentklent091222@gmail.com',
-  'klent@skyfareconsulting.com',
-  'gabb@skyfareconsulting.com',
-]);
-
-function isPaidSyncSuppressed(email) {
-  return PAID_SYNC_SUPPRESSED_EMAILS.has((email || '').trim().toLowerCase());
-}
-
 function getAltitudeTierConfig(env) {
   const id = (env.BEEHIIV_ALTITUDE_TIER_ID || '').trim();
   const name = (env.BEEHIIV_ALTITUDE_TIER_NAME || '').trim();
@@ -123,11 +109,6 @@ async function updateBeehiivSubscription(subId, payload, env) {
 }
 
 export async function assignBeehiivAltitudeTier(email, env, { stripeCustomerId = '' } = {}) {
-  if (isPaidSyncSuppressed(email)) {
-    console.warn(`[beehiiv-tier] suppressed paid tier sync for ${email}`);
-    return false;
-  }
-
   const tierConfig = getAltitudeTierConfig(env);
   if (!tierConfig.configured) {
     console.error(`[beehiiv-tier] BEEHIIV_ALTITUDE_TIER_ID or BEEHIIV_ALTITUDE_TIER_NAME not configured for ${email}`);
@@ -192,34 +173,20 @@ export async function verifyBeehiivAltitudeTier(email, env) {
 }
 
 export function beehiivSyncMetadata(entitlements, { tagged = null, tierSynced = null, error = '' } = {}) {
-  const tierVerified = tierSynced == null ? !!entitlements.altitude_tier : !!tierSynced;
-  const now = new Date().toISOString();
   return {
     beehiiv_tagged: tagged == null
       ? !!(entitlements.altitude_monthly || entitlements.altitude_annual || entitlements.guide_bundle)
       : !!tagged,
-    beehiiv_subscription_id: entitlements.subscription_id || '',
-    beehiiv_tier_synced: tierVerified,
+    beehiiv_tier_synced: tierSynced == null ? !!entitlements.altitude_tier : !!tierSynced,
     beehiiv_tier_ids: entitlements.premium_tier_ids || [],
     beehiiv_tier_names: entitlements.premium_tier_names || [],
     beehiiv_tags: entitlements.tags || [],
-    beehiiv_synced_at: now,
-    beehiiv_tier_verified_at: tierVerified ? now : '',
+    beehiiv_synced_at: new Date().toISOString(),
     beehiiv_sync_error: error,
   };
 }
 
 export async function syncBeehiivAltitudeAccess(email, env, { plan, stripeCustomerId = '', active = true } = {}) {
-  if (active && isPaidSyncSuppressed(email)) {
-    console.warn(`[beehiiv-sync] suppressed paid Altitude sync for ${email}`);
-    const entitlements = await getBeehiivEntitlements(email, env).catch(() => emptyBeehiivEntitlements());
-    return beehiivSyncMetadata(entitlements, {
-      tagged: false,
-      tierSynced: false,
-      error: 'paid_sync_suppressed',
-    });
-  }
-
   if (!active) {
     const tierSynced = await clearBeehiivAltitudeTier(email, env).catch(() => false);
     if (plan) await removePlanTag(email, plan, env).catch(() => {});
@@ -243,78 +210,20 @@ export async function syncBeehiivAltitudeAccess(email, env, { plan, stripeCustom
   });
 }
 
-// ── Beehiiv premium check (tier is source of truth) ───────────────────────────
+// ── Beehiiv premium check (tier first, tags as fallback) ──────────────────────
 
-// "Premium" means holding the Altitude Premium Tier. Tags are plan/product
-// metadata only; they can help repair the tier when KV still shows an active
-// Stripe-backed member, but they no longer grant access by themselves.
+// "Premium" means holding the Altitude Premium Tier, or holding a secondary
+// fallback tag (altitude monthly / altitude annual / krisflyer bundle).
 export async function checkBeehiivPremium(email, env) {
   const entitlements = await getBeehiivEntitlements(email, env);
   if (!entitlements.found || !entitlements.subscriber_active) return false;
-  return !!entitlements.altitude_tier;
-}
-
-export function getTaggedAltitudePlan(entitlements) {
-  if (!entitlements || !entitlements.subscriber_active) return '';
-  if (entitlements.altitude_annual) return 'annual';
-  if (entitlements.altitude_monthly) return 'monthly';
-  if (entitlements.guide_bundle) return 'guide_bundle';
-  return '';
-}
-
-export function getActiveCachedAltitudePlan(member) {
-  if (!member || member.status !== 'active') return '';
-  const plan = member.plan || '';
-  if (plan === 'monthly' || plan === 'annual') return plan;
-  if (plan === 'guide_bundle') {
-    if (!member.current_period_end) return '';
-    if (new Date(member.current_period_end).getTime() <= Date.now()) return '';
-    return plan;
-  }
-  return '';
-}
-
-export function hasRecentBeehiivTierCache(member, maxAgeMs = 86_400_000) {
-  if (!member || member.beehiiv_tier_synced !== true) return false;
-  if (!getActiveCachedAltitudePlan(member)) return false;
-  const verifiedAt = member.beehiiv_tier_verified_at || member.beehiiv_synced_at || '';
-  const verifiedMs = verifiedAt ? new Date(verifiedAt).getTime() : 0;
-  return Number.isFinite(verifiedMs) && verifiedMs > 0 && Date.now() - verifiedMs <= maxAgeMs;
-}
-
-export async function resolveBeehiivAltitudeAccess(email, env, { member = null, repair = true } = {}) {
-  let entitlements;
-  try {
-    entitlements = await getBeehiivEntitlements(email, env);
-  } catch (err) {
-    if (hasRecentBeehiivTierCache(member)) {
-      return { granted: true, reason: 'recent_tier_cache', entitlements: null, sync: null };
-    }
-    return { granted: false, reason: 'beehiiv_unavailable', entitlements: null, sync: null };
-  }
-
-  if (entitlements.found && entitlements.subscriber_active && entitlements.altitude_tier) {
-    return { granted: true, reason: 'altitude_tier', entitlements, sync: null };
-  }
-
-  const taggedPlan = getTaggedAltitudePlan(entitlements);
-  const cachedPlan = getActiveCachedAltitudePlan(member);
-  if (repair && taggedPlan && cachedPlan) {
-    const plan = cachedPlan === 'guide_bundle' ? 'guide_bundle' : cachedPlan;
-    const sync = await syncBeehiivAltitudeAccess(email, env, {
-      plan,
-      stripeCustomerId: member.stripe_customer_id || '',
-      active: true,
-    }).catch(() => null);
-
-    if (sync && sync.beehiiv_tier_synced) {
-      const repaired = await getBeehiivEntitlements(email, env).catch(() => entitlements);
-      return { granted: true, reason: 'tier_repaired_from_tag', entitlements: repaired, sync };
-    }
-    return { granted: false, reason: 'tier_repair_failed', entitlements, sync };
-  }
-
-  return { granted: false, reason: taggedPlan ? 'tag_without_active_member' : 'tier_missing', entitlements, sync: null };
+  if (entitlements.altitude_tier) return true;
+  const tags = entitlements.tags;
+  return (
+    tags.includes('altitude monthly') || tags.includes(INTERVAL_TAG_IDS.monthly.toLowerCase()) ||
+    tags.includes('altitude annual')  || tags.includes(INTERVAL_TAG_IDS.annual.toLowerCase())  ||
+    tags.includes(GUIDE_BUNDLE_TAG_NAME) || tags.includes(GUIDE_BUNDLE_TAG_ID.toLowerCase())
+  );
 }
 
 export async function getBeehiivEntitlements(email, env) {
@@ -538,11 +447,6 @@ export async function handleSubscribe(request, env, corsHeaders) {
 // function — the Guide's 90-day bundle grant applies GUIDE_BUNDLE_TAG_NAME
 // directly instead (see orchestration/guideBundle.js / tagGuideBundle below).
 export async function setupBeehiivMember(email, env, planTag, { stripeCustomerId = '' } = {}) {
-  if (isPaidSyncSuppressed(email)) {
-    console.warn(`[setupBeehiivMember] suppressed paid member sync for ${email}`);
-    return false;
-  }
-
   const tagName = planTag === 'annual' ? 'altitude annual' : planTag === 'monthly' ? 'altitude monthly' : null;
   if (!tagName) {
     console.error(`[setupBeehiivMember] called without a valid planTag ('monthly'|'annual') for ${email}`);
@@ -1144,19 +1048,11 @@ export async function handleMagicRequest(request, env, corsHeaders) {
       return respond({ error: 'No KrisFlyer Guide access found for this email.' }, 404, corsHeaders);
     }
   } else {
-    const kvRaw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`).catch(() => null);
-    let member = null;
-    if (kvRaw) {
-      try { member = JSON.parse(kvRaw); } catch {}
-    }
-
-    const decision = await resolveBeehiivAltitudeAccess(email, env, { member, repair: true });
-    granted = decision.granted === true;
-    if (member && decision.sync) {
-      await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify({ ...member, ...decision.sync })).catch(() => {});
-    } else if (member && decision.reason === 'altitude_tier' && decision.entitlements) {
-      Object.assign(member, beehiivSyncMetadata(decision.entitlements, { tierSynced: true }));
-      await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(member)).catch(() => {});
+    const isPremium = await checkBeehiivPremium(email, env).catch(() => null);
+    granted = isPremium === true;
+    if (!granted) {
+      const kvRaw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+      if (kvRaw) granted = JSON.parse(kvRaw).status === 'active';
     }
     if (!granted) {
       return respond({ error: 'No active Altitude membership found for this email.' }, 404, corsHeaders);

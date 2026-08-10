@@ -35,7 +35,7 @@
     guide: {
       icon: 'fa-book',
       title: 'KrisFlyer Guide',
-      desc: "The KrisFlyer Guide is still being written. Join the waitlist and we'll email you the moment it's ready.",
+      desc: "The KrisFlyer Guide is still being written. It will open here when ready.",
     },
   };
   var DEFAULT_FEATURE = {
@@ -114,14 +114,17 @@
     overlay.className = 'cs-overlay ' + (dark ? 'cs-overlay--dark' : 'cs-overlay--light');
     overlay.setAttribute('role', 'group');
     overlay.setAttribute('aria-label', feature.title + ' — Coming Soon');
+    var ctaHtml = host.dataset.comingSoonHideCta === 'true' ? '' :
+      '<a href="' + waitlistHref(feature) + '" class="btn-pill btn-pill-primary">' +
+        '<i class="fa-solid fa-bell text-xs" aria-hidden="true"></i>Join Our Waitlist' +
+      '</a>';
+
     overlay.innerHTML =
       '<div class="icon-chip icon-chip-lg' + (dark ? ' icon-chip-dark' : '') + ' mb-3"><i class="fa-solid fa-lock" aria-hidden="true"></i></div>' +
       '<span class="cs-badge mb-3">Coming Soon</span>' +
       '<h3 class="font-display font-bold text-lg mb-1.5 px-6 ' + (dark ? 'text-white' : 'text-neutral-900') + '">' + escapeHtml(feature.title) + '</h3>' +
       '<p class="text-sm leading-relaxed max-w-xs px-6 mb-5 ' + (dark ? 'text-white/70' : 'text-neutral-600') + '">' + escapeHtml(feature.desc) + '</p>' +
-      '<a href="' + waitlistHref(feature) + '" class="btn-pill btn-pill-primary">' +
-        '<i class="fa-solid fa-bell text-xs" aria-hidden="true"></i>Join Our Waitlist' +
-      '</a>';
+      ctaHtml;
 
     host.appendChild(overlay);
     reveal(overlay);
@@ -133,6 +136,7 @@
     function block(e) {
       if (el.getAttribute('aria-disabled') !== 'true') return;
       e.preventDefault();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
       e.stopPropagation();
     }
     el.addEventListener('click', block);

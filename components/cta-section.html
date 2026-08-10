@@ -7,7 +7,10 @@
   This markup is static and carries no page copy -- every value below is
   set by js/cta-section.js immediately after injection, reading its config
   from the page's [data-cta-mount] element. See that file for the full
-  data-cta-* attribute contract.
+  data-cta-* attribute contract. Either rendered button can be locked by
+  adding data-cta-primary-locked-feature or data-cta-secondary-locked-feature
+  to the mount; js/coming-soon.js supplies the lock icon, disabled behavior,
+  and accessible note.
 
   Two content modes, chosen by the mount's data-cta-mode:
   - "buttons" (default): #cta-section-buttons is shown, one or two buttons.

@@ -12,6 +12,7 @@
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
   <script src="../js/cookie-consent.js" defer></script>
+  <script src="../js/coming-soon.js" defer></script>
   <script src="../js/assessment-checkout.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,6 +28,7 @@
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
+  <template data-archived-assessment-page>
   <main class="flex-1">
 
     <!-- ─── HERO ─────────────────────────────────────────────────── -->
@@ -60,7 +62,7 @@
           </div>
 
           <div class="flex flex-wrap justify-center gap-3">
-            <a href="#" data-assessment-checkout
+            <a href="#" data-assessment-checkout data-coming-soon data-coming-soon-mode="button" data-coming-soon-feature="assessment"
                class="btn-pill btn-pill-primary btn-glow-v2">
               <i class="fa-solid fa-phone-volume text-sm"></i> Book Your Travel Strategy Call — $99
             </a>
@@ -312,7 +314,7 @@
             Not sure if Business Class on miles is right for you? A $99 Travel Strategy Call gets you a clear, honest answer — credited back if you book with us.
           </p>
           <div class="flex flex-wrap justify-center gap-3">
-            <a href="#" data-assessment-checkout
+            <a href="#" data-assessment-checkout data-coming-soon data-coming-soon-mode="button" data-coming-soon-feature="assessment"
               class="btn-pill btn-pill-primary btn-glow-v2 btn-pill-v2--lg">
               <i class="fa-solid fa-phone-volume"></i> Book Your Travel Strategy Call — $99
             </a>
@@ -324,6 +326,25 @@
       </div>
     </section>
 
+  </main>
+  </template>
+
+  <main class="flex-1 flex items-center justify-center page-hero-bg relative overflow-hidden py-16 px-4"
+    style="--hero-img:url('../images/page-images/assessment-call.png');">
+    <div class="container mx-auto px-4 md:px-6 relative z-10">
+      <div class="card-glass-v2 max-w-lg mx-auto text-center px-8 py-12 md:px-12 md:py-14 slide-up">
+        <div class="icon-chip-glass-v2 mx-auto mb-5" style="width:3rem;height:3rem;font-size:1.15rem;">
+          <i class="fa-solid fa-phone-volume" aria-hidden="true"></i>
+        </div>
+        <span class="cs-badge mb-5">Coming Soon</span>
+        <h1 class="text-3xl md:text-4xl font-display font-bold leading-tight tracking-tight mb-4 text-white">
+          Travel Strategy Call
+        </h1>
+        <p class="text-base text-white/70 leading-relaxed mb-0 font-medium max-w-md mx-auto">
+          Our one-on-one planning call is being rebuilt. Check back soon for the updated booking experience.
+        </p>
+      </div>
+    </div>
   </main>
 
 </body>
