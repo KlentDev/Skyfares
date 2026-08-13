@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Altitude Latest Issues | Skyfare</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Read your Altitude premium newsletter archive and member issues." />
+  <link rel="icon" href="../../../logos/logo.webp" />
+
+  <script src="../../../js/links.js"></script>
+  <link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <script src="../../../lib/tailwind/tailwind.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/tailwind-config.js" defer></script>
+  <script src="../../../js/ui.js" defer></script>
+  <script src="../../../js/private-layout.js" defer></script>
+  <script src="../../../js/modal-verify-access.js" defer></script>
+</head>
+
+<body class="private-body altitude-portal-shell" data-private-page="altitude" data-private-product="Altitude" data-private-subtitle="Latest issues" data-altitude-section="newsletter">
+  <div id="page-loader">
+    <img src="../../../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="private-header-slot"></div>
+
+  <nav class="altitude-subnav" aria-label="Altitude member pages">
+    <div class="private-container altitude-subnav__inner">
+      <a href="../altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
+      <a href="benefits.html" data-altitude-nav="benefits"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Benefits</span></a>
+      <a href="award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
+      <a href="routing-strategies.html" data-altitude-nav="routing-strategies"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Routing</span></a>
+      <a href="cabin-compare-verdicts.html" data-altitude-nav="cabin-verdicts"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Cabin Verdicts</span></a>
+      <a href="krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
+      <a href="newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
+    </div>
+  </nav>
+
+  <main id="main-content" class="private-main altitude-portal-main">
+    <section class="altitude-member-page" aria-labelledby="alt-archive-title">
+      <div class="private-container">
+        <div class="altitude-page-heading altitude-page-heading--split slide-up is-visible">
+          <div>
+            <a href="../altitude-access-portal.html" class="altitude-back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Overview</a>
+            <h1 id="alt-archive-title">Latest issues and archive</h1>
+            <p>Filter the archive by free and premium issues. Premium articles open directly when your member token is active.</p>
+          </div>
+          <div class="private-toolbar" id="alt-filters" aria-label="Archive filters">
+            <button type="button" data-filter="all" class="alt-filter-btn active">All</button>
+            <button type="button" data-filter="free" class="alt-filter-btn">Free</button>
+            <button type="button" data-filter="premium" class="alt-filter-btn">Premium</button>
+          </div>
+        </div>
+
+        <div class="altitude-archive-count private-panel slide-up is-visible">
+          <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></div>
+          <div>
+            <p class="private-summary__label">Available issues</p>
+            <p id="alt-post-count" class="private-summary__title">Loading issues</p>
+          </div>
+        </div>
+
+        <div id="alt-archive-grid" class="private-grid">
+          <div class="private-skeleton">
+            <span class="private-skeleton__dot" aria-hidden="true"></span>
+            <p>Loading your issue archive</p>
+          </div>
+        </div>
+        <div id="alt-archive-pagination" class="altitude-pagination" aria-label="Newsletter archive pagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="private-footer-slot"></div>
+
+  <script src="../../../js/altitude-portal.js" defer></script>
+</body>
+</html>

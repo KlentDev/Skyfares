@@ -15,11 +15,9 @@
     var token = getToken();
     var magic = new URLSearchParams(location.search).get('magic');
     if (token) {
-      // JWT first — skip magic verification if already logged in.
-      // Pass magic as fallback so if the JWT is expired we still try the link.
       verifyAndRender(token, magic);
     } else if (magic) {
-      handleMagicCallback(magic);
+      handleMagicCallback(magic, null);
     } else {
       redirectToPublic();
     }
@@ -29,7 +27,7 @@
   // anonymous visitor (unlike the old hybrid altitude.html, there's no public
   // shell here anymore), so bounce straight back to the marketing page.
   function redirectToPublic(reason) {
-    window.location.replace('../altitude.html' + (reason ? '?loginError=' + encodeURIComponent(reason) : ''));
+    window.location.replace(getPublicPagePrefix() + 'altitude.html' + (reason ? '?loginError=' + encodeURIComponent(reason) : ''));
   }
 
   // ─── Auth ──────────────────────────────────────────────────────────────────
@@ -50,13 +48,10 @@
     fetch(WORKER + '/altitude/verify?target=altitude', {
       headers: { 'Authorization': 'Bearer ' + token },
     })
-      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
       .then(function (res) {
         if (res.ok && res.data.granted) {
-          if (fallbackMagic) history.replaceState(null, '', location.pathname);
-          if (window.SkyfareAccessCache) window.SkyfareAccessCache.markVerified('altitude');
-          populateMemberView(res.data.email, res.data.member);
-          loadPremiumPosts(token);
+          renderVerifiedSession(token, res.data, !!fallbackMagic);
         } else {
           // Drop any cached "altitude verified" flag on a real denial -- it's
           // demonstrably stale now, and leaving it would keep letting the
@@ -65,48 +60,129 @@
           // window (the exact bug this fixed for the Guide side).
           if (window.SkyfareAccessCache) window.SkyfareAccessCache.invalidate('altitude');
           var authFailed = res.data.reason === 'not_authenticated' || res.data.reason === 'session_expired';
-          if (authFailed) clearToken();
-          if (authFailed && fallbackMagic) {
-            handleMagicCallback(fallbackMagic);
+          if (authFailed && !fallbackMagic) clearToken();
+          if (fallbackMagic) {
+            handleMagicCallback(fallbackMagic, token);
           } else {
             redirectToPublic(res.data.reason || (res.data.status === 'cancelled' ? 'cancelled' : 'expired'));
           }
         }
       })
       .catch(function () {
-        clearToken();
         if (fallbackMagic) {
-          handleMagicCallback(fallbackMagic);
+          handleMagicCallback(fallbackMagic, token);
         } else {
-          redirectToPublic('network');
+          showPortalNetworkError();
         }
       });
   }
 
-  function handleMagicCallback(magic) {
+  function renderVerifiedSession(token, data, stripMagicUrl) {
+    if (stripMagicUrl) history.replaceState(null, '', location.pathname);
+    document.body.classList.add('private-auth-ready');
+    if (window.SkyfareAccessCache) window.SkyfareAccessCache.markVerified('altitude');
+    populateMemberView(data.email, data.member);
+    if (document.getElementById('alt-latest-grid') || document.getElementById('alt-archive-grid') || document.getElementById('alt-post-count')) {
+      loadPremiumPosts(token);
+    }
+  }
+
+  function verifyMagicSession(newToken, previousToken) {
+    fetch(WORKER + '/altitude/verify?target=altitude', {
+      headers: { 'Authorization': 'Bearer ' + newToken },
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
+      .then(function (res) {
+        if (res.ok && res.data.granted) {
+          setToken(newToken);
+          if (window.SkyUI) SkyUI.toast('Welcome back. Access granted.', { type: 'success' });
+          renderVerifiedSession(newToken, res.data, true);
+          return;
+        }
+
+        if (window.SkyfareAccessCache) window.SkyfareAccessCache.invalidate('altitude');
+        if (previousToken) {
+          verifyAndRender(previousToken, null);
+        } else {
+          clearToken();
+          redirectToPublic(res.data.reason || (res.data.status === 'cancelled' ? 'cancelled' : 'expired'));
+        }
+      })
+      .catch(function () {
+        if (previousToken) {
+          verifyAndRender(previousToken, null);
+        } else {
+          showPortalNetworkError();
+        }
+      });
+  }
+
+  function handleMagicCallback(magic, previousToken) {
     fetch(WORKER + '/altitude/magic-verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: magic }),
     })
-      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
       .then(function (res) {
         history.replaceState(null, '', location.pathname);
         if (res.ok && res.data.token) {
-          setToken(res.data.token);
-          if (window.SkyUI) SkyUI.toast('Welcome back. Access granted.', { type: 'success' });
           // Re-verify against /altitude/verify instead of rendering with
           // member:null -- only /altitude/verify returns the real member
-          // record. No magic fallback here -- the token that got us this far
-          // is already consumed/single-use.
-          verifyAndRender(res.data.token, null);
+          // record. Keep the JWT pending until entitlement passes so a bad
+          // or stale link cannot overwrite a working shared session.
+          verifyMagicSession(res.data.token, previousToken);
+        } else if (previousToken) {
+          verifyAndRender(previousToken, null);
         } else {
-          redirectToPublic('invalid');
+          redirectToPublic(getMagicErrorReason(res));
         }
       })
       .catch(function () {
-        redirectToPublic('network');
+        if (previousToken) {
+          verifyAndRender(previousToken, null);
+        } else {
+          showPortalNetworkError();
+        }
       });
+  }
+
+  function showPortalNetworkError() {
+    document.body.classList.add('private-auth-ready');
+    var loader = document.getElementById('page-loader');
+    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+
+    var main = document.getElementById('main-content');
+    if (!main) {
+      redirectToPublic('network');
+      return;
+    }
+
+    main.innerHTML =
+      '<section class="altitude-member-page" aria-labelledby="alt-network-title">' +
+        '<div class="private-container">' +
+          '<div class="private-panel altitude-access-error">' +
+            '<div class="icon-chip icon-chip-lg"><i class="fa-solid fa-wifi" aria-hidden="true"></i></div>' +
+            '<div>' +
+              '<h1 id="alt-network-title">We could not verify your session.</h1>' +
+              '<p>The portal could not reach Skyfare access right now. Your saved login was not removed. Refresh this page once your connection or local server is stable.</p>' +
+              '<div class="private-actions">' +
+                '<button type="button" class="private-action private-action--primary" data-alt-network-retry><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Try again</button>' +
+                '<a href="' + getPublicPagePrefix() + 'altitude.html" class="private-action"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Altitude</a>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</section>';
+
+    var retry = main.querySelector('[data-alt-network-retry]');
+    if (retry) retry.addEventListener('click', function () { window.location.reload(); });
+  }
+
+  function getMagicErrorReason(res) {
+    if (res && res.status === 429) return 'rate_limited';
+    if (res && (res.status === 404 || res.status === 410)) return 'expired';
+    return 'invalid';
   }
 
   // ─── Member view population ──────────────────────────────────────────────
@@ -115,7 +191,7 @@
     _altMemberEmail = email || '';
     var emailEl = document.getElementById('alt-member-email');
     if (emailEl) emailEl.textContent = email;
-    window.__altSignOut = function () { clearToken(); window.location.href = '../altitude.html'; };
+    window.__altSignOut = function () { clearToken(); window.location.href = getPublicPagePrefix() + 'altitude.html'; };
     document.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
     _wireFilters();
     window.handleManageMembership = handleManageMembership;
@@ -156,12 +232,59 @@
   }
 
   var PLAN_LABELS = { monthly: 'Altitude Monthly', annual: 'Altitude Annual', guide_bundle: 'KrisFlyer Guide Bundle' };
+  var ARCHIVE_PAGE_SIZE = 8;
+  var _altArchiveFilter = 'all';
+  var _altArchivePage = 1;
 
   function _formatRenewalDate(iso) {
     if (!iso) return '';
     try {
       return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     } catch (_) { return ''; }
+  }
+
+  function _formatCompactDate(iso) {
+    if (!iso) return '';
+    try {
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (_) { return ''; }
+  }
+
+  function _firstMemberDate(member, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      if (member && member[keys[i]]) return member[keys[i]];
+    }
+    return '';
+  }
+
+  function _inferPeriodStart(member) {
+    var direct = _firstMemberDate(member, [
+      'purchased_at',
+      'purchase_date',
+      'started_at',
+      'created_at',
+      'joined_at',
+      'member_since',
+      'subscription_created_at',
+      'access_started_at',
+      'current_period_start',
+      'currentPeriodStart',
+    ]);
+    if (direct) return direct;
+    if (!member || !member.current_period_end) return '';
+
+    var end = new Date(member.current_period_end);
+    if (isNaN(end.getTime())) return '';
+    if (member.plan === 'annual') {
+      end.setFullYear(end.getFullYear() - 1);
+    } else if (member.plan === 'guide_bundle') {
+      end.setDate(end.getDate() - 90);
+    } else {
+      end.setMonth(end.getMonth() - 1);
+    }
+    return end.toISOString();
   }
 
   function _populateMembershipCard(member) {
@@ -173,13 +296,20 @@
     planEl.textContent = PLAN_LABELS[member.plan] || 'Altitude';
     var days = _daysRemaining(member.current_period_end);
     var renewDate = _formatRenewalDate(member.current_period_end);
+    var compactRenewDate = _formatCompactDate(member.current_period_end);
+    var purchaseDate = _formatCompactDate(_inferPeriodStart(member));
+
+    var purchasedEl = document.getElementById('alt-membership-purchased');
+    var expiresEl = document.getElementById('alt-membership-expires');
+    if (purchasedEl) purchasedEl.textContent = purchaseDate || 'Not available';
+    if (expiresEl) expiresEl.textContent = compactRenewDate || 'Not available';
+
     if (days == null) {
       daysEl.textContent = 'Renewal date unavailable';
     } else if (days === 0) {
       daysEl.textContent = 'Renews today';
     } else {
-      daysEl.textContent = days + ' day' + (days === 1 ? '' : 's') + ' remaining'
-        + (renewDate ? ' · Renews ' + renewDate : '');
+      daysEl.textContent = days + ' day' + (days === 1 ? '' : 's') + ' remaining';
     }
 
     var renewNote = document.getElementById('alt-membership-renew-note');
@@ -269,7 +399,22 @@
 
   function renderArchiveGrid(posts) {
     _altAllPosts = posts;
+    renderLatestGrid(posts);
     _applyFilter('all');
+  }
+
+  function renderLatestGrid(posts) {
+    var grid = document.getElementById('alt-latest-grid');
+    if (!grid) return;
+
+    var latest = (posts || []).slice(0, 3);
+    if (!latest.length) {
+      grid.innerHTML = '<div class="private-empty"><i class="fa-solid fa-inbox" aria-hidden="true"></i><p>No issues published yet.</p></div>';
+      return;
+    }
+
+    grid.innerHTML = latest.map(_renderCard).join('');
+    _wireBeehiivHandoffForGrid(grid);
   }
 
   function _renderCard(post, i) {
@@ -309,40 +454,103 @@
   }
 
   function _applyFilter(type) {
+    _altArchiveFilter = type || 'all';
+    _altArchivePage = 1;
+    _renderArchivePage();
+  }
+
+  function _getFilteredPosts() {
     var posts = _altAllPosts;
-    if (type === 'free') {
+    if (_altArchiveFilter === 'free') {
       posts = _altAllPosts.filter(function (p) { return !p.is_premium; });
-    } else if (type === 'premium') {
+    } else if (_altArchiveFilter === 'premium') {
       posts = _altAllPosts.filter(function (p) { return !!p.is_premium; });
     }
+    return posts;
+  }
+
+  function _renderArchivePage() {
+    var posts = _getFilteredPosts();
+    var totalPages = Math.max(1, Math.ceil(posts.length / ARCHIVE_PAGE_SIZE));
+    if (_altArchivePage > totalPages) _altArchivePage = totalPages;
+
+    var start = (_altArchivePage - 1) * ARCHIVE_PAGE_SIZE;
+    var visiblePosts = posts.slice(start, start + ARCHIVE_PAGE_SIZE);
 
     var count = document.getElementById('alt-post-count');
     if (count) count.textContent = posts.length + (posts.length === 1 ? ' issue' : ' issues');
 
     var grid = document.getElementById('alt-archive-grid');
-    if (!grid) return;
+    if (!grid) {
+      _renderPagination(posts.length, totalPages);
+      return;
+    }
 
-    if (!posts.length) {
-      var label = type === 'free' ? 'free ' : type === 'premium' ? 'premium ' : '';
+    if (!visiblePosts.length) {
+      var label = _altArchiveFilter === 'free' ? 'free ' : _altArchiveFilter === 'premium' ? 'premium ' : '';
       grid.innerHTML = '<div class="private-empty"><i class="fa-solid fa-inbox" aria-hidden="true"></i><p>No ' + label + 'issues published yet.</p></div>';
     } else {
-      grid.innerHTML = posts.map(_renderCard).join('');
+      grid.innerHTML = visiblePosts.map(_renderCard).join('');
     }
 
     document.querySelectorAll('.alt-filter-btn').forEach(function (btn) {
-      btn.classList.toggle('active', btn.dataset.filter === type);
+      btn.classList.toggle('active', btn.dataset.filter === _altArchiveFilter);
     });
+
+    _renderPagination(posts.length, totalPages);
+  }
+
+  function _renderPagination(totalItems, totalPages) {
+    var el = document.getElementById('alt-archive-pagination');
+    if (!el) return;
+
+    if (totalItems <= ARCHIVE_PAGE_SIZE) {
+      el.innerHTML = '';
+      return;
+    }
+
+    var buttons = '';
+    for (var i = 1; i <= totalPages; i++) {
+      buttons += '<button type="button" data-page="' + i + '" class="' + (i === _altArchivePage ? 'active' : '') + '" aria-label="Go to archive page ' + i + '">' + i + '</button>';
+    }
+
+    el.innerHTML =
+      '<button type="button" data-page="prev" ' + (_altArchivePage === 1 ? 'disabled' : '') + ' aria-label="Previous archive page"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>' +
+      '<div class="altitude-pagination__pages">' + buttons + '</div>' +
+      '<button type="button" data-page="next" ' + (_altArchivePage === totalPages ? 'disabled' : '') + ' aria-label="Next archive page"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>';
   }
 
   function _wireFilters() {
     document.querySelectorAll('.alt-filter-btn').forEach(function (btn) {
+      if (btn.dataset.filterWired === 'true') return;
+      btn.dataset.filterWired = 'true';
       btn.addEventListener('click', function () { _applyFilter(btn.dataset.filter); });
     });
+    var pager = document.getElementById('alt-archive-pagination');
+    if (pager && pager.dataset.paginationWired !== 'true') {
+      pager.dataset.paginationWired = 'true';
+      pager.addEventListener('click', function (event) {
+        var btn = event.target.closest && event.target.closest('button[data-page]');
+        if (!btn || btn.disabled) return;
+        var action = btn.getAttribute('data-page');
+        var totalPages = Math.max(1, Math.ceil(_getFilteredPosts().length / ARCHIVE_PAGE_SIZE));
+        if (action === 'prev') _altArchivePage = Math.max(1, _altArchivePage - 1);
+        else if (action === 'next') _altArchivePage = Math.min(totalPages, _altArchivePage + 1);
+        else _altArchivePage = Math.max(1, Math.min(totalPages, parseInt(action, 10) || 1));
+        _renderArchivePage();
+        var grid = document.getElementById('alt-archive-grid');
+        if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
     _wireBeehiivHandoff();
   }
 
   function _wireBeehiivHandoff() {
     var grid = document.getElementById('alt-archive-grid');
+    _wireBeehiivHandoffForGrid(grid);
+  }
+
+  function _wireBeehiivHandoffForGrid(grid) {
     if (!grid || grid.dataset.beehiivHandoffWired === 'true') return;
     grid.dataset.beehiivHandoffWired = 'true';
     grid.addEventListener('click', function (event) {
@@ -437,7 +645,7 @@
   }
 
   function getLocalPostUrl(post) {
-    return '../newsletter-detail?slug=' + encodeURIComponent(post && post.slug ? post.slug : '');
+    return getPublicPagePrefix() + 'newsletter-detail?slug=' + encodeURIComponent(post && post.slug ? post.slug : '');
   }
 
   function e(str) {
@@ -451,5 +659,13 @@
     var detail = { email: email || '', product: 'Altitude', plan: plan };
     if (window.SkyfarePrivate) window.SkyfarePrivate.setUser(detail);
     window.dispatchEvent(new CustomEvent('skyfare:private-user', { detail: detail }));
+  }
+
+  function isNestedAltitudePage() {
+    return /\/pages\/private-pages\/altitude-access\//.test(location.pathname.replace(/\\/g, '/'));
+  }
+
+  function getPublicPagePrefix() {
+    return isNestedAltitudePage() ? '../../' : '../';
   }
 })();

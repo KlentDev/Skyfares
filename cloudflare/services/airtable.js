@@ -3,17 +3,37 @@
 // Airtable, no Stripe/Beehiiv/Cal.com (those live in orchestration/ instead).
 import { respond } from '../utils/http.js';
 import { ROUTE_LABELS, KV_PREFIX } from '../config/constants.js';
+import { verifyAltitudeRequest } from '../orchestration/session.js';
+
+function airtableHeaders(env) {
+  return {
+    'Authorization': `Bearer ${env.AIRTABLE_API_KEY}`,
+    'Content-Type': 'application/json',
+  };
+}
+
+function airtableTableUrl(env, tableIdOrName, params = null) {
+  const base = `https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${encodeURIComponent(tableIdOrName)}`;
+  const qs = params ? params.toString() : '';
+  return qs ? `${base}?${qs}` : base;
+}
+
+function redactAirtableError(text = '') {
+  return String(text)
+    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[email]')
+    .replace(/cus_[A-Za-z0-9]+/g, 'cus_[redacted]')
+    .replace(/sub_[A-Za-z0-9]+/g, 'sub_[redacted]')
+    .replace(/cs_[A-Za-z0-9_]+/g, 'cs_[redacted]')
+    .slice(0, 300);
+}
 
 async function writeToAirtable(tableId, fields, env) {
-  const res = await fetch(`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${tableId}`, {
+  const res = await fetch(airtableTableUrl(env, tableId), {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${env.AIRTABLE_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
+    headers: airtableHeaders(env),
     body: JSON.stringify({ fields }),
   });
-  if (!res.ok) throw new Error(`Airtable ${res.status}: ${await res.text()}`);
+  if (!res.ok) throw new Error(`Airtable ${res.status}: ${redactAirtableError(await res.text())}`);
   return res.json();
 }
 
@@ -353,6 +373,215 @@ export async function handleGetTestimonialScores(request, env, corsHeaders) {
     200,
     { ...corsHeaders, 'Cache-Control': 'public, max-age=60' }
   );
+}
+
+// ── Altitude member CMS content ───────────────────────────────────────────────
+// Private read endpoints for the first Airtable-backed Altitude pages. These
+// reuse the same Altitude entitlement decision as /altitude/verify before any
+// premium CMS rows leave the Worker.
+
+const ALTITUDE_CONTENT_TYPES = {
+  'award-alerts': {
+    envKey: 'AIRTABLE_TABLE_ALTITUDE_AWARD_ALERTS',
+    fields: [
+      'Title', 'Slug', 'Status', 'Featured', 'Publish Date', 'Display Order', 'Short Description', 'Tags', 'Thumbnail', 'Last Updated',
+      'Urgency', 'Origin', 'Destination', 'Airline', 'Program', 'Cabin Class', 'Aircraft', 'Seats Available', 'Miles Required', 'Taxes / Fees',
+      'Travel Date Start', 'Travel Date End', 'Found At', 'Availability Notes', 'Booking Notes', 'Fallback Strategy',
+    ],
+    normalize: normalizeAwardAlert,
+  },
+  'routing-strategies': {
+    envKey: 'AIRTABLE_TABLE_ALTITUDE_ROUTING_STRATEGIES',
+    fields: [
+      'Title', 'Slug', 'Status', 'Featured', 'Publish Date', 'Display Order', 'Short Description', 'Tags', 'Thumbnail', 'Last Updated',
+      'Origin', 'Destination', 'Recommended Route', 'Backup Route', 'Confidence Score', 'Strategy Verdict', 'Path Options JSON',
+      'Why This Wins', 'When To Switch', 'Member Action',
+    ],
+    normalize: normalizeRoutingStrategy,
+  },
+  'krisflyer-escapes': {
+    envKey: 'AIRTABLE_TABLE_ALTITUDE_KRISFLYER_ESCAPES',
+    fields: [
+      'Title', 'Slug', 'Status', 'Featured', 'Publish Date', 'Display Order', 'Short Description', 'Tags', 'Thumbnail', 'Last Updated',
+      'Drop Month', 'Booking Window', 'Travel Window', 'Summary Verdict', 'Routes Count', 'Book Fast Count', 'Consider Count', 'Skip Count',
+      'Route Rows JSON',
+    ],
+    normalize: normalizeKrisFlyerEscape,
+  },
+  'cabin-verdicts': {
+    envKey: 'AIRTABLE_TABLE_ALTITUDE_CABIN_VERDICTS',
+    fields: [
+      'Title', 'Slug', 'Status', 'Featured', 'Publish Date', 'Display Order', 'Short Description', 'Tags', 'Thumbnail', 'Last Updated',
+      'Airline', 'Cabin Product', 'Aircraft', 'Cabin Class', 'Routes Flown', 'Overall Score', 'Verdict Headline', 'Personal Flight Note',
+      'Score Breakdown JSON', 'Recommendation', 'Caveats', 'Best For',
+    ],
+    normalize: normalizeCabinVerdict,
+  },
+};
+
+export async function handleGetAltitudeContent(request, env, corsHeaders, type) {
+  const config = ALTITUDE_CONTENT_TYPES[type];
+  if (!config) return respond({ error: 'not_found' }, 404, corsHeaders);
+
+  const access = await verifyAltitudeRequest(request, env);
+  if (!access.ok) return respond(access.data, access.status, corsHeaders);
+
+  const table = env[config.envKey];
+  if (!table) return respond({ error: 'airtable_table_not_configured', type }, 503, corsHeaders);
+  if (!env.AIRTABLE_API_KEY || !env.AIRTABLE_BASE_ID) {
+    return respond({ error: 'airtable_not_configured' }, 503, corsHeaders);
+  }
+
+  const params = new URLSearchParams({ filterByFormula: '{Status}="Published"', pageSize: '50' });
+  config.fields.forEach(f => params.append('fields[]', f));
+  params.append('sort[0][field]', 'Display Order');
+  params.append('sort[0][direction]', 'asc');
+  params.append('sort[1][field]', 'Publish Date');
+  params.append('sort[1][direction]', 'desc');
+
+  let res;
+  try {
+    res = await fetch(airtableTableUrl(env, table, params), { headers: airtableHeaders(env) });
+  } catch {
+    return respond({ error: 'Gateway error' }, 502, corsHeaders);
+  }
+
+  if (!res.ok) {
+    console.error(`Altitude content Airtable error (${type}):`, redactAirtableError(await res.text()));
+    return respond({ error: 'Airtable API error' }, res.status, corsHeaders);
+  }
+
+  const raw = await res.json();
+  const records = (raw.records || [])
+    .map(rec => config.normalize(rec))
+    .filter(item => item && item.title);
+
+  return respond(
+    { type, records },
+    200,
+    { ...corsHeaders, 'Cache-Control': 'private, no-store' }
+  );
+}
+
+function normalizeBaseContent(rec) {
+  const f = rec.fields || {};
+  const featuredValue = f['Featured'];
+  return {
+    id: rec.id,
+    title: text(f['Title']),
+    slug: text(f['Slug']),
+    status: text(f['Status']),
+    featured: featuredValue === true || String(featuredValue || '').toLowerCase() === 'yes',
+    publishDate: text(f['Publish Date']),
+    displayOrder: number(f['Display Order']),
+    shortDescription: text(f['Short Description']),
+    tags: array(f['Tags']),
+    thumbnail: attachmentUrl(f['Thumbnail']),
+    lastUpdated: text(f['Last Updated']),
+  };
+}
+
+function normalizeAwardAlert(rec) {
+  const f = rec.fields || {};
+  return {
+    ...normalizeBaseContent(rec),
+    urgency: text(f['Urgency']),
+    origin: text(f['Origin']),
+    destination: text(f['Destination']),
+    airline: text(f['Airline']),
+    program: text(f['Program']),
+    cabinClass: text(f['Cabin Class']),
+    aircraft: text(f['Aircraft']),
+    seatsAvailable: number(f['Seats Available']),
+    milesRequired: text(f['Miles Required']),
+    taxesFees: text(f['Taxes / Fees']),
+    travelDateStart: text(f['Travel Date Start']),
+    travelDateEnd: text(f['Travel Date End']),
+    foundAt: text(f['Found At']),
+    availabilityNotes: text(f['Availability Notes']),
+    bookingNotes: text(f['Booking Notes']),
+    fallbackStrategy: text(f['Fallback Strategy']),
+  };
+}
+
+function normalizeRoutingStrategy(rec) {
+  const f = rec.fields || {};
+  return {
+    ...normalizeBaseContent(rec),
+    origin: text(f['Origin']),
+    destination: text(f['Destination']),
+    recommendedRoute: text(f['Recommended Route']),
+    backupRoute: text(f['Backup Route']),
+    confidenceScore: number(f['Confidence Score']),
+    strategyVerdict: text(f['Strategy Verdict']),
+    pathOptions: jsonArray(f['Path Options JSON']),
+    whyThisWins: text(f['Why This Wins']),
+    whenToSwitch: text(f['When To Switch']),
+    memberAction: text(f['Member Action']),
+  };
+}
+
+function normalizeKrisFlyerEscape(rec) {
+  const f = rec.fields || {};
+  return {
+    ...normalizeBaseContent(rec),
+    dropMonth: text(f['Drop Month']),
+    bookingWindow: text(f['Booking Window']),
+    travelWindow: text(f['Travel Window']),
+    summaryVerdict: text(f['Summary Verdict']),
+    routesCount: number(f['Routes Count']),
+    bookFastCount: number(f['Book Fast Count']),
+    considerCount: number(f['Consider Count']),
+    skipCount: number(f['Skip Count']),
+    routeRows: jsonArray(f['Route Rows JSON']),
+  };
+}
+
+function normalizeCabinVerdict(rec) {
+  const f = rec.fields || {};
+  return {
+    ...normalizeBaseContent(rec),
+    airline: text(f['Airline']),
+    cabinProduct: text(f['Cabin Product']),
+    aircraft: text(f['Aircraft']),
+    cabinClass: text(f['Cabin Class']),
+    routesFlown: text(f['Routes Flown']),
+    overallScore: number(f['Overall Score']),
+    verdictHeadline: text(f['Verdict Headline']),
+    personalFlightNote: text(f['Personal Flight Note']),
+    scoreBreakdown: jsonArray(f['Score Breakdown JSON']),
+    recommendation: text(f['Recommendation']),
+    caveats: text(f['Caveats']),
+    bestFor: text(f['Best For']),
+  };
+}
+
+function text(value) {
+  return value == null ? '' : String(value);
+}
+
+function number(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function array(value) {
+  return Array.isArray(value) ? value.map(text).filter(Boolean) : [];
+}
+
+function attachmentUrl(value) {
+  return Array.isArray(value) && value[0] && value[0].url ? value[0].url : '';
+}
+
+function jsonArray(value) {
+  if (Array.isArray(value)) return value;
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(String(value));
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 
 // ── Travel Strategy Call bookings ─────────────────────────────────────────────

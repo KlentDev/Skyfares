@@ -27,6 +27,61 @@
     return days > 0 ? days : 0;
   }
 
+  function _formatDate(iso) {
+    if (!iso) return '';
+    try {
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (_) { return ''; }
+  }
+
+  function _firstMemberDate(member, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      if (member && member[keys[i]]) return member[keys[i]];
+    }
+    return '';
+  }
+
+  function _inferPeriodStart(member) {
+    var direct = _firstMemberDate(member, [
+      'purchased_at',
+      'purchase_date',
+      'started_at',
+      'created_at',
+      'joined_at',
+      'member_since',
+      'subscription_created_at',
+      'access_started_at',
+      'current_period_start',
+      'currentPeriodStart',
+    ]);
+    if (direct) return direct;
+    if (!member || !member.current_period_end) return '';
+
+    var end = new Date(member.current_period_end);
+    if (isNaN(end.getTime())) return '';
+    if (member.plan === 'annual') {
+      end.setFullYear(end.getFullYear() - 1);
+    } else if (member.plan === 'guide_bundle') {
+      end.setDate(end.getDate() - 90);
+    } else {
+      end.setMonth(end.getMonth() - 1);
+    }
+    return end.toISOString();
+  }
+
+  function _renderPlanDateRows(member) {
+    var purchased = _formatDate(_inferPeriodStart(member)) || 'Not available';
+    var expires = _formatDate(member && member.current_period_end) || 'Not available';
+    return (
+      '<div class="altitude-plan-date-grid">' +
+        '<div><span>Purchased</span><strong>' + purchased + '</strong></div>' +
+        '<div><span>Expires</span><strong>' + expires + '</strong></div>' +
+      '</div>'
+    );
+  }
+
   function renderPlans(member) {
     var section = document.getElementById('alt-plans-section');
     var content = document.getElementById('alt-plans-content');
@@ -71,10 +126,11 @@
     return (
       '<div class="private-plan-card private-plan-card--current">' +
         '<span class="private-badge private-badge--gold private-plan-card__current-badge">Current Plan</span>' +
-        '<div>' +
+        '<div class="altitude-plan-card__header">' +
           '<p class="private-summary__label">Altitude Monthly</p>' +
           '<p class="private-upgrade__price">$4.99 <span class="text-sm text-neutral-500">/month</span></p>' +
         '</div>' +
+        _renderPlanDateRows(member) +
         noteHtml +
         '<ul class="private-check-list">' +
           '<li><i class="fa-solid fa-check" aria-hidden="true"></i><span>Full Altitude access, billed monthly.</span></li>' +
@@ -91,7 +147,7 @@
     return (
       '<div class="private-plan-card">' +
         '<span class="private-badge">Save $15.01/year</span>' +
-        '<div>' +
+        '<div class="altitude-plan-card__header">' +
           '<p class="private-summary__label">Altitude Annual</p>' +
           '<p class="private-upgrade__price">$39.99 <span class="text-lg text-neutral-400 line-through">$55</span> <span class="text-sm text-neutral-500">/year</span></p>' +
         '</div>' +
@@ -158,10 +214,11 @@
     return (
       '<div class="private-plan-card private-plan-card--current">' +
         '<span class="private-badge private-badge--gold private-plan-card__current-badge">Current Plan</span>' +
-        '<div>' +
+        '<div class="altitude-plan-card__header">' +
           '<p class="private-summary__label">Altitude Annual</p>' +
           '<p class="private-upgrade__price">$39.99 <span class="text-sm text-neutral-500">/year</span></p>' +
         '</div>' +
+        _renderPlanDateRows(member) +
         noteHtml +
         '<button id="alt-manage-btn" type="button" data-action="manage" class="private-action private-action--primary">' +
           '<i class="fa-solid fa-gear" aria-hidden="true"></i> Manage Billing' +

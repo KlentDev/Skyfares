@@ -1,6 +1,7 @@
 (function () {
   var WORKER  = 'https://skyfares-altitude.klent-5fa.workers.dev';
   var JWT_KEY = 'altitude_jwt';
+  var DENIED_TOKEN_KEY = 'altitude_denied_jwt';
 
   // ─── RE-ENABLED for testing 2026-07-22 ────────────────────────────────────
   // Was disabled pending launch (confirmed by Sahej, 2026-07-03). Real
@@ -28,6 +29,7 @@
     var params = new URLSearchParams(location.search);
     var token  = getToken();
     var magic  = params.get('magic');
+    var deniedToken = getDeniedToken();
 
     // A loginError param means the portal already tried this token/link and
     // bounced back here -- redirecting to the portal again would just bounce
@@ -36,7 +38,7 @@
     // JWT itself, e.g. "valid login, no Altitude membership", so the token
     // was still present and immediately sent straight back). Show the error
     // instead of retrying.
-    if (!params.get('loginError') && (token || magic)) {
+    if (!params.get('loginError') && (magic || (token && token !== deniedToken))) {
       var dest = 'private-pages/altitude-access-portal.html';
       if (magic) dest += '?magic=' + encodeURIComponent(magic);
       window.location.replace(dest);
@@ -56,6 +58,19 @@
     try { localStorage.removeItem(JWT_KEY); } catch (_) {}
   }
 
+  function getDeniedToken() {
+    try { return sessionStorage.getItem(DENIED_TOKEN_KEY) || null; } catch (_) { return null; }
+  }
+
+  function rememberDeniedToken(token) {
+    if (!token) return;
+    try { sessionStorage.setItem(DENIED_TOKEN_KEY, token); } catch (_) {}
+  }
+
+  function clearDeniedToken() {
+    try { sessionStorage.removeItem(DENIED_TOKEN_KEY); } catch (_) {}
+  }
+
   // Surfaces the portal's redirect-back reason (invalid/expired link, no
   // membership, network error, etc.) in the shared login modal, since the
   // actual verify attempt happened on the portal page, not here.
@@ -65,11 +80,16 @@
     if (!err) return;
     history.replaceState(null, '', location.pathname);
 
-    // Any reason except a transient network blip means this token has
-    // already been given a definitive answer -- clear it so a later plain
-    // reload of this page (no loginError in the URL by then) doesn't read a
-    // stale token and quietly bounce to the portal and back again.
-    if (err !== 'network') clearToken();
+    // Entitlement denials mean "this account cannot open Altitude right now",
+    // not necessarily "this shared JWT is invalid". Keep the token for other
+    // private products and remember it only for this tab so the marketing
+    // page does not bounce straight back to the portal.
+    if (isAltitudeEntitlementError(err)) {
+      rememberDeniedToken(getToken());
+    } else if (err !== 'network' && err !== 'rate_limited') {
+      clearDeniedToken();
+      clearToken();
+    }
 
     if (err === 'cancelled') {
       var note = document.getElementById('alt-cancelled-note');
@@ -80,6 +100,7 @@
     var messages = {
       expired: 'This link has expired or has already been used. Please request a new one.',
       invalid: 'This link has expired or has already been used. Please request a new one.',
+      rate_limited: 'Too many magic link attempts. Please wait a few minutes, then request a new link.',
       network: 'Network error verifying your link. Please try again.',
       altitude_missing: 'No active Altitude membership was found for this email.',
       altitude_inactive: 'This Altitude membership is not currently active.',
@@ -101,6 +122,17 @@
     wirePricingModal();
     loadAltitudePreview();
     document.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  function isAltitudeEntitlementError(err) {
+    return [
+      'altitude_missing',
+      'altitude_inactive',
+      'altitude_expired',
+      'bundle_expired',
+      'bundle_missing_dates',
+      'cancelled',
+    ].indexOf(err) !== -1;
   }
 
   // Login modal (open/close, the login form, and its submit handler) lives

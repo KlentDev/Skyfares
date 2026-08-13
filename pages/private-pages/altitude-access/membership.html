@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Altitude Membership | Skyfare</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Manage your Altitude membership, renewal date, billing, and annual upgrade options." />
+  <link rel="icon" href="../../../logos/logo.webp" />
+
+  <script src="../../../js/links.js"></script>
+  <link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <script src="../../../lib/tailwind/tailwind.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/tailwind-config.js" defer></script>
+  <script src="../../../js/ui.js" defer></script>
+  <script src="../../../js/private-layout.js" defer></script>
+  <script src="../../../js/modal-verify-access.js" defer></script>
+</head>
+
+<body class="private-body altitude-portal-shell" data-private-page="altitude" data-private-product="Altitude" data-private-subtitle="Membership" data-altitude-section="membership">
+  <div id="page-loader">
+    <img src="../../../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="private-header-slot"></div>
+
+  <nav class="altitude-subnav" aria-label="Altitude member pages">
+    <div class="private-container altitude-subnav__inner">
+      <a href="../altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
+      <a href="benefits.html" data-altitude-nav="benefits"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Benefits</span></a>
+      <a href="award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
+      <a href="routing-strategies.html" data-altitude-nav="routing-strategies"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Routing</span></a>
+      <a href="cabin-compare-verdicts.html" data-altitude-nav="cabin-verdicts"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Cabin Verdicts</span></a>
+      <a href="krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
+      <a href="newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
+    </div>
+  </nav>
+
+  <main id="main-content" class="private-main altitude-portal-main">
+    <section class="altitude-member-page" aria-labelledby="alt-plans-title">
+      <div class="private-container">
+        <div class="altitude-page-heading slide-up is-visible">
+          <a href="../altitude-access-portal.html" class="altitude-back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Overview</a>
+          <h1 id="alt-plans-title">Membership and billing</h1>
+          <p>Your plan, renewal timing, billing portal, and annual upgrade options live here.</p>
+        </div>
+
+        <div class="altitude-membership-strip">
+          <div id="alt-membership-card" class="private-panel private-summary altitude-membership-card slide-up is-visible" aria-label="Current membership">
+            <div class="flex items-center justify-between gap-4">
+              <div class="icon-chip icon-chip-lg icon-chip--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i></div>
+              <span class="private-badge private-badge--gold">Member</span>
+            </div>
+            <div>
+              <p class="private-summary__label">Current membership</p>
+              <p id="alt-membership-plan" class="private-summary__title">Altitude</p>
+            </div>
+            <div class="altitude-membership-dates">
+              <div>
+                <span>Purchased</span>
+                <strong id="alt-membership-purchased">Checking</strong>
+              </div>
+              <div>
+                <span>Expires</span>
+                <strong id="alt-membership-expires">Checking</strong>
+              </div>
+            </div>
+            <div class="altitude-membership-remaining">
+              <p class="private-summary__label">Remaining access</p>
+              <p id="alt-membership-days" class="private-summary__value">Checking renewal status</p>
+            </div>
+            <p id="alt-membership-renew-note" class="hidden private-summary__note altitude-renew-note">Auto-renews. Cancel anytime.</p>
+          </div>
+        </div>
+
+        <section id="alt-plans-section" class="hidden altitude-panel-section" aria-label="Plan options">
+          <div id="alt-plans-content"></div>
+        </section>
+
+        <section class="private-panel altitude-membership-compare slide-up is-visible" aria-labelledby="alt-membership-compare-title">
+          <div class="altitude-membership-compare__heading">
+            <div>
+              <span class="private-badge private-badge--gold"><i class="fa-solid fa-unlock-keyhole" aria-hidden="true"></i> Free vs Altitude</span>
+              <h2 id="alt-membership-compare-title">What your membership unlocks</h2>
+            </div>
+            <p>
+              The free newsletter stays useful for broad travel updates. Altitude adds the deeper timing, routing, archive, and cabin-product context for members.
+            </p>
+          </div>
+
+          <div class="altitude-compare-table" role="table" aria-label="Free newsletter and Altitude membership comparison">
+            <div class="altitude-compare-row altitude-compare-row--head" role="row">
+              <span role="columnheader">Included</span>
+              <span role="columnheader">Free</span>
+              <span role="columnheader">Altitude</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-couch" aria-hidden="true"></i></span>
+                <span><strong>Cabin reviews</strong><small>First-hand premium cabin notes and product context.</small></span>
+              </div>
+              <span class="altitude-compare-value" role="cell" data-label="Free">Included</span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></span>
+                <span><strong>Weekly aviation news</strong><small>Route, loyalty, and airline updates worth tracking.</small></span>
+              </div>
+              <span class="altitude-compare-value" role="cell" data-label="Free">Included</span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span>
+                <span><strong>Transfer bonuses</strong><small>Credit card and airline transfer bonus roundups.</small></span>
+              </div>
+              <span class="altitude-compare-value" role="cell" data-label="Free">Included</span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-bell" aria-hidden="true"></i></span>
+                <span><strong>Award alerts</strong><small>Availability windows, full dates, and booking detail.</small></span>
+              </div>
+              <span class="altitude-compare-value altitude-compare-value--muted" role="cell" data-label="Free">Limited</span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Full alerts</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i></span>
+                <span><strong>KrisFlyer Spontaneous Escapes</strong><small>Monthly drop coverage and route value notes.</small></span>
+              </div>
+              <span class="altitude-compare-value altitude-compare-value--muted" role="cell" data-label="Free">Summary</span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Full breakdown</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-route" aria-hidden="true"></i></span>
+                <span><strong>Routing strategies</strong><small>Itineraries built to improve cabin quality and redemption value.</small></span>
+              </div>
+              <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-box-archive" aria-hidden="true"></i></span>
+                <span><strong>Full archive</strong><small>Every issue readable on-site at any time.</small></span>
+              </div>
+              <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm icon-chip--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i></span>
+                <span><strong>Members-only content</strong><small>Exclusive issues that never go to the free list.</small></span>
+              </div>
+              <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i></span>
+                <span><strong>The Skyfare Verdict on Cabin Compare</strong><small>Clear cabin picks based on personally flown products.</small></span>
+              </div>
+              <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span>
+                <span><strong>Flash alerts</strong><small>Mid-week openings when timing matters.</small></span>
+              </div>
+              <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="private-footer-slot"></div>
+
+  <script src="../../../js/altitude-portal.js" defer></script>
+  <script src="../../../js/altitude-portal-extras.js" defer></script>
+</body>
+</html>

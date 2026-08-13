@@ -31,6 +31,8 @@
  *                                    (modifies the existing Stripe subscription, no new
  *                                    Checkout Session — see services/stripe.js's handleUpgradeToAnnual)
  *   POST /altitude/waitlist        — join the pre-launch Altitude waitlist
+ *   GET  /altitude/content/*       — authenticated Airtable CMS content for private
+ *                                    Altitude pages; requires Altitude JWT
  *   POST /guide/checkout           — create Stripe Checkout session for the KrisFlyer Guide
  *                                    (one-time purchase; webhook shares /altitude/webhook,
  *                                    branched by session.mode — see handleGuideCheckoutComplete)
@@ -84,6 +86,7 @@
  *   PDF_PASSWORD_SECRET     — HMAC key for deterministic guide-PDF password derivation
  *   PDF_LINK_SECRET         — HMAC key for signed /guide/pdf/fetch download links
  *   AIRTABLE_API_KEY   AIRTABLE_TABLE_ASSESSMENT_BOOKINGS
+ *   AIRTABLE_TABLE_ALTITUDE_SUBSCRIBERS — paid Monthly/Annual subscriber mirror
  *
  * KV binding: ALTITUDE_KV
  * R2 binding: GUIDE_PDF_BUCKET (temporary guide-PDF storage for the email flow)
@@ -101,7 +104,7 @@ import { handleWaitlist, handleMagicRequest, handleSubscribe, triggerSegmentReca
 import { handleGetPosts, handleGetPost } from './services/newsletter.js';
 import {
   handleFlightApplication, handleContactInquiry, handlePostTestimonial,
-  handleGetTestimonials, handleGetTestimonialScores,
+  handleGetTestimonials, handleGetTestimonialScores, handleGetAltitudeContent,
 } from './services/airtable.js';
 
 import { handleStripeWebhook } from './orchestration/stripeWebhook.js';
@@ -195,6 +198,22 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/altitude/waitlist') {
       return handleWaitlist(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/altitude/content/award-alerts') {
+      return handleGetAltitudeContent(request, env, corsHeaders, 'award-alerts');
+    }
+
+    if (request.method === 'GET' && url.pathname === '/altitude/content/routing-strategies') {
+      return handleGetAltitudeContent(request, env, corsHeaders, 'routing-strategies');
+    }
+
+    if (request.method === 'GET' && url.pathname === '/altitude/content/krisflyer-escapes') {
+      return handleGetAltitudeContent(request, env, corsHeaders, 'krisflyer-escapes');
+    }
+
+    if (request.method === 'GET' && url.pathname === '/altitude/content/cabin-verdicts') {
+      return handleGetAltitudeContent(request, env, corsHeaders, 'cabin-verdicts');
     }
 
     // ── KrisFlyer Guide routes ──────────────────────────────────────────────

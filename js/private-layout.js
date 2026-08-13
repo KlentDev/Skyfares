@@ -53,13 +53,14 @@
   }
 
   function init() {
-    injectPartial('private-header-slot', 'header-private.html', fallbackHeader)
+    var privatePrefix = getPrivateRootPrefix();
+    injectPartial('private-header-slot', privatePrefix + 'header-private.html', fallbackHeader)
       .then(function () {
         enhanceHeader();
         applyState();
       });
 
-    injectPartial('private-footer-slot', 'footer-private.html', fallbackFooter)
+    injectPartial('private-footer-slot', privatePrefix + 'footer-private.html', fallbackFooter)
       .then(function () {
         enhanceFooter();
       });
@@ -89,17 +90,30 @@
     var page = document.body.getAttribute('data-private-page') || '';
     var product = document.body.getAttribute('data-private-product') || '';
     var subtitle = document.body.getAttribute('data-private-subtitle') || '';
+    var privatePrefix = getPrivateRootPrefix();
+    var sitePrefix = getSiteRootPrefix();
+    var brandLink = document.querySelector('.private-brand');
+    var brandImg = document.querySelector('.private-brand img');
     var productEl = document.getElementById('private-member-product');
     var subtitleEl = document.getElementById('private-member-subtitle');
     var manageBtn = document.querySelector('[data-private-manage]');
     var signoutBtn = document.querySelector('[data-private-signout]');
+    var accountMenu = document.querySelector('[data-private-account-menu]');
+    var accountTrigger = document.querySelector('[data-private-account-trigger]');
+    var signoutModal = document.querySelector('[data-private-signout-modal]');
+    var signoutConfirm = document.querySelector('[data-private-signout-confirm]');
+    var signoutCancelBtns = document.querySelectorAll('[data-private-signout-cancel]');
 
+    if (brandLink) brandLink.setAttribute('href', sitePrefix + 'index.html');
+    if (brandImg) brandImg.setAttribute('src', sitePrefix + 'logos/logo.webp');
     if (productEl) productEl.textContent = product || 'Member Portal';
     if (subtitleEl) subtitleEl.textContent = subtitle || 'Private access';
 
     document.querySelectorAll('[data-private-nav]').forEach(function (link) {
       var target = link.getAttribute('data-private-nav');
       var isActive = target === page;
+      if (target === 'altitude') link.setAttribute('href', privatePrefix + 'altitude-access-portal.html');
+      if (target === 'guide') link.setAttribute('href', privatePrefix + 'kf-guide-access-portal.html');
       link.classList.toggle('is-active', isActive);
       if (isActive) link.setAttribute('aria-current', 'page');
       if (!isActive && (target === 'altitude' || target === 'guide')) {
@@ -135,22 +149,101 @@
       });
     }
 
+    setupAccountMenu(page, accountMenu, accountTrigger);
+
     if (signoutBtn) {
       signoutBtn.addEventListener('click', function () {
-        if (window.SkyfareAccessCache) window.SkyfareAccessCache.clear();
-        if (page === 'guide' && window.__kfSignOut) return window.__kfSignOut();
-        if (window.__altSignOut) return window.__altSignOut();
-        try { localStorage.removeItem('altitude_jwt'); } catch (_) {}
-        window.location.href = page === 'guide' ? '../krisflyer-guide.html' : '../altitude.html';
+        closeAccountMenu(accountMenu, accountTrigger);
+        openSignoutModal(signoutModal);
       });
     }
 
+    if (signoutConfirm) {
+      signoutConfirm.addEventListener('click', function () {
+        performSignout(page);
+      });
+    }
+
+    signoutCancelBtns.forEach(function (button) {
+      button.addEventListener('click', function () {
+        closeSignoutModal(signoutModal, accountTrigger);
+      });
+    });
+
     window.dispatchEvent(new CustomEvent('skyfare:private-layout-ready'));
+  }
+
+  function setupAccountMenu(page, accountMenu, accountTrigger) {
+    var isAltitude = page === 'altitude';
+    var altitudeAccessPrefix = getAltitudeAccessPrefix();
+
+    document.querySelectorAll('[data-private-menu-altitude-only]').forEach(function (item) {
+      item.classList.toggle('is-hidden', !isAltitude);
+    });
+
+    var membershipLink = document.querySelector('[data-private-menu-membership]');
+    var manualLink = document.querySelector('[data-private-menu-manual]');
+    var supportLink = document.querySelector('[data-private-menu-support]');
+    if (membershipLink) membershipLink.setAttribute('href', altitudeAccessPrefix + 'membership.html');
+    if (manualLink) manualLink.setAttribute('href', altitudeAccessPrefix + 'beehiiv-manual.html');
+    if (supportLink) supportLink.setAttribute('href', altitudeAccessPrefix + 'support.html');
+
+    if (!accountMenu || !accountTrigger) return;
+
+    accountTrigger.addEventListener('click', function (event) {
+      event.stopPropagation();
+      var isOpen = accountMenu.classList.toggle('is-open');
+      accountTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!accountMenu.contains(event.target)) closeAccountMenu(accountMenu, accountTrigger);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        closeAccountMenu(accountMenu, accountTrigger);
+        closeSignoutModal(document.querySelector('[data-private-signout-modal]'), accountTrigger);
+      }
+    });
+  }
+
+  function closeAccountMenu(accountMenu, accountTrigger) {
+    if (!accountMenu || !accountTrigger) return;
+    accountMenu.classList.remove('is-open');
+    accountTrigger.setAttribute('aria-expanded', 'false');
+  }
+
+  function openSignoutModal(signoutModal) {
+    if (!signoutModal) return performSignout(document.body.getAttribute('data-private-page') || '');
+    signoutModal.hidden = false;
+    document.documentElement.classList.add('private-modal-open');
+    var confirm = signoutModal.querySelector('[data-private-signout-confirm]');
+    if (confirm) confirm.focus();
+  }
+
+  function closeSignoutModal(signoutModal, accountTrigger) {
+    if (!signoutModal) return;
+    signoutModal.hidden = true;
+    document.documentElement.classList.remove('private-modal-open');
+    if (accountTrigger) accountTrigger.focus();
+  }
+
+  function performSignout(page) {
+    if (window.SkyfareAccessCache) window.SkyfareAccessCache.clear();
+    if (page === 'guide' && window.__kfSignOut) return window.__kfSignOut();
+    if (window.__altSignOut) return window.__altSignOut();
+    try { localStorage.removeItem('altitude_jwt'); } catch (_) {}
+    window.location.href = getPublicPagePrefix() + (page === 'guide' ? 'krisflyer-guide.html' : 'altitude.html');
   }
 
   function enhanceFooter() {
     var yearEl = document.getElementById('private-footer-year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
+    var publicPrefix = getPublicPagePrefix();
+    document.querySelectorAll('.private-footer a[href="../contact"]').forEach(function (link) { link.setAttribute('href', publicPrefix + 'contact'); });
+    document.querySelectorAll('.private-footer a[href="../privacy"]').forEach(function (link) { link.setAttribute('href', publicPrefix + 'privacy'); });
+    document.querySelectorAll('.private-footer a[href="../terms"]').forEach(function (link) { link.setAttribute('href', publicPrefix + 'terms'); });
   }
 
   function applyState() {
@@ -222,27 +315,59 @@
   }
 
   function fallbackHeader() {
+    var privatePrefix = getPrivateRootPrefix();
+    var sitePrefix = getSiteRootPrefix();
     return '' +
       '<header class="private-header">' +
         '<div class="private-header__inner">' +
-          '<a class="private-brand" href="../../index.html" aria-label="Skyfare home">' +
-            '<img src="../../logos/logo.webp" alt="Skyfare Consulting">' +
+          '<a class="private-brand" href="' + sitePrefix + 'index.html" aria-label="Skyfare home">' +
+            '<img src="' + sitePrefix + 'logos/logo.webp" alt="Skyfare Consulting">' +
             '<span><strong>Skyfare</strong><small>Private access</small></span>' +
           '</a>' +
           '<nav class="private-nav" aria-label="Member navigation">' +
-            '<a href="altitude-access-portal.html" data-private-nav="altitude"><i class="fa-solid fa-crown"></i><span>Altitude</span></a>' +
-            '<a href="kf-guide-access-portal.html" data-private-nav="guide"><i class="fa-solid fa-book-open"></i><span>Guide</span></a>' +
+            '<a href="' + privatePrefix + 'altitude-access-portal.html" data-private-nav="altitude"><i class="fa-solid fa-crown"></i><span>Altitude</span></a>' +
+            '<a href="' + privatePrefix + 'kf-guide-access-portal.html" data-private-nav="guide"><i class="fa-solid fa-book-open"></i><span>Guide</span></a>' +
           '</nav>' +
           '<div class="private-account">' +
             '<span id="private-member-email">Member</span>' +
             '<button type="button" data-private-manage class="private-icon-btn"><i class="fa-solid fa-credit-card"></i></button>' +
-            '<button type="button" data-private-signout class="private-icon-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>' +
+            '<div class="private-account-menu" data-private-account-menu>' +
+              '<button type="button" class="private-icon-btn private-account-trigger" data-private-account-trigger aria-label="Account menu" aria-haspopup="menu" aria-expanded="false"><i class="fa-solid fa-user-gear"></i></button>' +
+              '<div class="private-account-dropdown" data-private-account-dropdown role="menu" aria-label="Account menu">' +
+                '<a href="' + getAltitudeAccessPrefix() + 'membership.html" data-private-menu-membership data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-credit-card"></i><span>Membership</span></a>' +
+                '<a href="' + getAltitudeAccessPrefix() + 'beehiiv-manual.html" data-private-menu-manual data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-book-open-reader"></i><span>Beehiiv Manual</span></a>' +
+                '<a href="' + getAltitudeAccessPrefix() + 'support.html" data-private-menu-support data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-headset"></i><span>Support</span></a>' +
+                '<button type="button" data-private-signout role="menuitem"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign out</span></button>' +
+              '</div>' +
+            '</div>' +
           '</div>' +
         '</div>' +
-      '</header>';
+      '</header>' +
+      '<div class="private-signout-modal" data-private-signout-modal hidden><div class="private-signout-modal__backdrop" data-private-signout-cancel></div><section class="private-signout-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="private-signout-title"><div class="private-signout-modal__icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></div><h2 id="private-signout-title">Sign out?</h2><p>Are you sure you want to sign out of your private access session?</p><div class="private-signout-modal__actions"><button type="button" class="private-action" data-private-signout-cancel>No</button><button type="button" class="private-action private-action--primary" data-private-signout-confirm>Yes, sign out</button></div></section></div>';
   }
 
   function fallbackFooter() {
-    return '<footer class="private-footer"><div class="private-container private-footer__inner"><p>&copy; <span id="private-footer-year"></span> Skyfare Consulting</p><nav aria-label="Private footer"><a href="../contact">Contact</a><a href="../privacy">Privacy</a><a href="../terms">Terms</a></nav></div></footer>';
+    var publicPrefix = getPublicPagePrefix();
+    return '<footer class="private-footer"><div class="private-container private-footer__inner"><p>&copy; <span id="private-footer-year"></span> Skyfare Consulting</p><nav aria-label="Private footer"><a href="' + publicPrefix + 'contact">Contact</a><a href="' + publicPrefix + 'privacy">Privacy</a><a href="' + publicPrefix + 'terms">Terms</a></nav></div></footer>';
+  }
+
+  function isNestedAltitudePage() {
+    return /\/pages\/private-pages\/altitude-access\//.test(location.pathname.replace(/\\/g, '/'));
+  }
+
+  function getPrivateRootPrefix() {
+    return isNestedAltitudePage() ? '../' : '';
+  }
+
+  function getAltitudeAccessPrefix() {
+    return isNestedAltitudePage() ? '' : 'altitude-access/';
+  }
+
+  function getPublicPagePrefix() {
+    return isNestedAltitudePage() ? '../../' : '../';
+  }
+
+  function getSiteRootPrefix() {
+    return isNestedAltitudePage() ? '../../../' : '../../';
   }
 })();

@@ -44,9 +44,12 @@
       return;
     }
 
-    var prefix = location.pathname.indexOf('/pages/private-pages/') !== -1
-      ? '../../'
-      : location.pathname.indexOf('/pages/') !== -1 ? '../' : '';
+    var normalizedPath = location.pathname.replace(/\\/g, '/');
+    var prefix = normalizedPath.indexOf('/pages/private-pages/altitude-access/') !== -1
+      ? '../../../'
+      : normalizedPath.indexOf('/pages/private-pages/') !== -1
+        ? '../../'
+        : normalizedPath.indexOf('/pages/') !== -1 ? '../' : '';
     fetch(prefix + 'components/modal-verify-access.html')
       .then(function (r) {
         if (!r.ok) throw new Error('Could not load verification modal.');
