@@ -15,31 +15,44 @@
     }));
   }
 
-  function initMarquee() {
-    var outer = document.querySelector('.marquee-outer');
-    if (!outer) return;
+  // Drives one marquee track along either axis using the Web Animations API.
+  // outer is the overflow:hidden viewport (hover target); track is the flex
+  // strip holding two duplicated copies of the item list (so translating by
+  // exactly half its scroll size loops seamlessly). Shared by the horizontal
+  // airline-logo strip (axis 'x', auto-initialized below) and any manually
+  // triggered vertical track (axis 'y', initialized once its async content
+  // exists — see js/testimonials.js).
+  function initMarquee(outer, opts) {
+    opts = opts || {};
+    var axis = opts.axis === 'y' ? 'y' : 'x';
+    var normalMs = opts.normalMs || NORMAL_MS;
+    var slowMs = opts.slowMs || SLOW_MS;
 
     var track = outer.querySelector('.marquee-track');
     if (!track) return;
 
+    function loopSize() {
+      return (axis === 'y' ? track.scrollHeight : track.scrollWidth) / 2;
+    }
+
+    function frame(distance) {
+      var from = axis === 'y' ? 'translateY(0)' : 'translateX(0)';
+      var to = axis === 'y' ? 'translateY(-' + distance + 'px)' : 'translateX(-' + distance + 'px)';
+      return [{ transform: from }, { transform: to }];
+    }
+
     whenImagesReady(track).then(function () {
-      var loopWidth = track.scrollWidth / 2;
-      if (!loopWidth) return;
+      var loopDistance = loopSize();
+      if (!loopDistance) return;
 
       track.classList.add('is-js-driven');
 
-      var duration = NORMAL_MS;
-      var animation = track.animate(
-        [
-          { transform: 'translateX(0)' },
-          { transform: 'translateX(-' + loopWidth + 'px)' }
-        ],
-        {
-          duration: duration,
-          iterations: Infinity,
-          easing: 'linear'
-        }
-      );
+      var duration = normalMs;
+      var animation = track.animate(frame(loopDistance), {
+        duration: duration,
+        iterations: Infinity,
+        easing: 'linear'
+      });
 
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         animation.pause();
@@ -59,37 +72,38 @@
       }
 
       outer.addEventListener('mouseenter', function () {
-        setSpeed(SLOW_MS);
+        setSpeed(slowMs);
       });
 
       outer.addEventListener('mouseleave', function () {
-        setSpeed(NORMAL_MS);
+        setSpeed(normalMs);
       });
 
       window.addEventListener('resize', function () {
-        var nextLoopWidth = track.scrollWidth / 2;
-        if (!nextLoopWidth) return;
+        var nextLoopDistance = loopSize();
+        if (!nextLoopDistance) return;
 
         var currentTime = animation.currentTime;
         var progress = currentTime === null ? 0 : (currentTime % duration) / duration;
 
         animation.cancel();
-        loopWidth = nextLoopWidth;
-        animation = track.animate(
-          [
-            { transform: 'translateX(0)' },
-            { transform: 'translateX(-' + loopWidth + 'px)' }
-          ],
-          {
-            duration: duration,
-            iterations: Infinity,
-            easing: 'linear'
-          }
-        );
+        loopDistance = nextLoopDistance;
+        animation = track.animate(frame(loopDistance), {
+          duration: duration,
+          iterations: Infinity,
+          easing: 'linear'
+        });
         animation.currentTime = progress * duration;
       });
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initMarquee);
+  window.SkyMarquee = { init: initMarquee };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var outers = document.querySelectorAll('.marquee-outer:not([data-marquee-manual])');
+    Array.from(outers).forEach(function (outer) {
+      initMarquee(outer, { axis: 'x' });
+    });
+  });
 })();

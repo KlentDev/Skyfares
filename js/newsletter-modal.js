@@ -7,7 +7,7 @@
  *
  * window.openNewsletterModal() is exposed so any on-page trigger (e.g. the
  * "Get the Free Brief" link in the homepage Newsletter Preview section) can
- * reopen the same instance manually from explicit subscribe triggers.
+ * reopen the same instance manually, not just the automatic 5s popup.
  *
  * Guarded against double-injection in case this ever loads twice.
  */
@@ -233,6 +233,11 @@
       if (pendingOpen) {
         pendingOpen = false;
         openPopup();
+      } else {
+        var popupEnabled = popup.hasAttribute('data-popup-enabled');
+        if (popupEnabled && !sessionStorage.getItem('altitudePopupShown') && !localStorage.getItem('altitudeSubscribed')) {
+          setTimeout(openPopup, 5000);
+        }
       }
     })
     .catch(function () {});

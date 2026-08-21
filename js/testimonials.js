@@ -1,6 +1,7 @@
-// Shared testimonial rendering — used by both index.html (home-testimonials-grid)
-// and pages/testimonials.html (testimonials-archive-grid). One module, one card
-// builder, so approvals in Airtable show up identically in both places.
+// Shared testimonial rendering — used by both index.html (the Client Stories
+// showcase) and pages/testimonials.html (testimonials-archive-grid). One
+// module, one card builder, so approvals in Airtable show up identically
+// in both places.
 (function () {
   var WORKER_URL = 'https://skyfares-altitude.klent-5fa.workers.dev';
 
@@ -30,9 +31,8 @@
 
   // variantClass defaults to the original 'card-utility' look so
   // pages/testimonials.html (which calls this with no 3rd argument) renders
-  // byte-identical output to before. The homepage grid is the only caller
-  // that passes a variant ('card-utility testimonial-card-v2') — see
-  // initHomepageGrid() below.
+  // byte-identical output to before. The homepage showcase uses its own
+  // buildFeaturedCard()/buildLatestItemCard() instead of this variant path.
   function buildTestimonialCard(t, index, variantClass) {
     variantClass = variantClass || 'card-utility';
     var quoteMark = variantClass.indexOf('testimonial-card-v2') !== -1
@@ -72,6 +72,56 @@
     el.innerHTML = testimonials.map(function (t, i) { return buildTestimonialCard(t, i, variantClass); }).join('');
   }
 
+  // The single large center card in the homepage showcase. Background photo
+  // is the reviewer's own Profile Image when Airtable has one; falls back to
+  // real Skyfare photography (never a stock/fabricated image) otherwise.
+  function buildFeaturedCard(t) {
+    var img = t.image || 'images/page-images/our-flights.jpg';
+    var labelParts = [];
+    if (t.route && t.route.length) labelParts.push(t.route[0]);
+    if (t.airline) labelParts.push(t.airline);
+    var context = esc(labelParts.join(' · '));
+    var roleText = esc(t.role || labelParts.join(', '));
+    return (
+      '<div class="testimonials-featured-card__media"><img src="' + esc(img) + '" alt="" loading="lazy" decoding="async"></div>' +
+      '<span class="testimonials-featured-card__label"><i class="fa-solid fa-quote-left" aria-hidden="true"></i>' + esc(t.name) + (context ? ' · ' + context : '') + '</span>' +
+      '<div class="testimonials-featured-card__stars">' + starsHtml(t.rating) + '</div>' +
+      '<blockquote class="testimonials-featured-card__quote">&quot;' + esc(t.quote) + '&quot;</blockquote>' +
+      '<p class="testimonials-featured-card__byline"><strong>' + esc(t.name) + '</strong>' + (roleText ? '<span>' + roleText + '</span>' : '') + '</p>'
+    );
+  }
+
+  // Compact card for the vertical "latest reviews" marquee. hidden=true marks
+  // the duplicated second copy of the list as aria-hidden, same convention as
+  // the horizontal airline-logo marquee's "Set 2" duplicate (index.html).
+  function buildLatestItemCard(t, hidden) {
+    var avatar = t.image
+      ? '<img src="' + esc(t.image) + '" alt="" loading="lazy" decoding="async">'
+      : '<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-user text-brand-200 text-xs"></i></div>';
+    return (
+      '<div class="testimonials-latest-item"' + (hidden ? ' aria-hidden="true"' : '') + '>' +
+        '<div class="testimonials-latest-item__head">' +
+          '<div class="testimonials-latest-item__avatar">' + avatar + '</div>' +
+          '<div class="testimonials-latest-item__meta">' +
+            '<strong>' + esc(t.name) + '</strong>' +
+            '<div class="testimonials-latest-item__stars">' + starsHtml(t.rating) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<blockquote>&quot;' + esc(t.quote) + '&quot;</blockquote>' +
+      '</div>'
+    );
+  }
+
+  // Shared average-rating math — used by the homepage stat card and the hero
+  // social-proof strip so the two numbers can never drift apart.
+  function computeRatingStats(list) {
+    var withRating = list.filter(function (t) { return parseInt(t.rating, 10) > 0; });
+    var avg = withRating.length
+      ? withRating.reduce(function (sum, t) { return sum + parseInt(t.rating, 10); }, 0) / withRating.length
+      : 5;
+    return { avg: avg, avgRounded: (Math.round(avg * 10) / 10).toFixed(1) };
+  }
+
   // Resolves { testimonials, offset } — offset is Airtable's opaque pagination
   // token, present when more results exist beyond this page, null otherwise.
   function fetchTestimonials(opts) {
@@ -88,28 +138,84 @@
       });
   }
 
-  function initHomepageGrid() {
-    var grid = document.getElementById('home-testimonials-grid');
-    if (!grid) return;
+  function initHomepageShowcase() {
+    var showcase = document.getElementById('home-testimonials-showcase');
+    if (!showcase) return;
     var fallback = document.getElementById('home-testimonials-status');
 
     function showFallback() {
-      grid.innerHTML = '';
-      grid.classList.add('hidden');
+      showcase.classList.add('hidden');
       if (fallback) fallback.classList.remove('hidden');
     }
 
-    fetchTestimonials({ scope: 'featured', limit: 3 })
-      .then(function (result) {
-        if (!result.testimonials.length) {
-          showFallback();
-          return;
-        }
-        grid.classList.remove('hidden');
-        if (fallback) fallback.classList.add('hidden');
-        renderInto('home-testimonials-grid', result.testimonials, 'card-utility testimonial-card-v2');
-      })
-      .catch(showFallback);
+    function renderFeatured(t) {
+      var el = document.getElementById('home-testimonial-featured');
+      if (!el) return;
+      el.classList.remove('animate-pulse');
+      el.innerHTML = buildFeaturedCard(t);
+    }
+
+    function renderLatest(list) {
+      var track = document.getElementById('home-testimonials-latest-track');
+      if (!track) return;
+      var wrap = track.closest('.testimonials-latest');
+      if (!list.length) {
+        if (wrap) wrap.classList.add('hidden');
+        return;
+      }
+      var real = list.map(function (t) { return buildLatestItemCard(t, false); }).join('');
+      var dup = list.map(function (t) { return buildLatestItemCard(t, true); }).join('');
+      track.innerHTML = real + dup;
+      if (wrap && window.SkyMarquee) window.SkyMarquee.init(wrap, { axis: 'y' });
+    }
+
+    // Rating average + review count — degrades quietly on its own (doesn't
+    // hide the already-rendered featured/latest cards if only this call fails).
+    function loadStats() {
+      return fetchTestimonials({ limit: 100 })
+        .then(function (result) {
+          var list = result.testimonials;
+          if (!list.length) throw new Error('empty');
+          var stats = computeRatingStats(list);
+          var ratingEl = document.getElementById('home-testimonial-avg-rating');
+          var countEl = document.getElementById('home-testimonial-review-count');
+          if (ratingEl) ratingEl.textContent = stats.avgRounded;
+          if (countEl) {
+            var count = list.length + (result.offset ? '+' : '');
+            countEl.innerHTML = 'Based on <strong>' + esc(count) + '</strong> verified traveler reviews';
+          }
+        })
+        .catch(function () {
+          var ratingWrap = document.querySelector('.testimonials-stat-card__rating');
+          if (ratingWrap) ratingWrap.classList.add('hidden');
+          var countEl = document.getElementById('home-testimonial-review-count');
+          if (countEl) countEl.textContent = 'Trusted by real Skyfare travelers.';
+        });
+    }
+
+    // Featured (center, exactly one) + the 4 latest reviews minus the featured
+    // one. Falls back to the single most recent approved testimonial when
+    // nothing is flagged Featured yet, so the layout never breaks on an empty
+    // flag — still real data, never fabricated.
+    function loadFeaturedAndLatest() {
+      return fetchTestimonials({ scope: 'featured', limit: 3 })
+        .then(function (result) {
+          if (result.testimonials.length) return result.testimonials[0];
+          return fetchTestimonials({ limit: 1 }).then(function (r) { return r.testimonials[0] || null; });
+        })
+        .then(function (featured) {
+          if (!featured) throw new Error('no_testimonials');
+          renderFeatured(featured);
+          return fetchTestimonials({ limit: 6 }).then(function (latestResult) {
+            var latest = latestResult.testimonials
+              .filter(function (t) { return t.id !== featured.id; })
+              .slice(0, 4);
+            renderLatest(latest);
+          });
+        });
+    }
+
+    loadFeaturedAndLatest().then(loadStats).catch(showFallback);
   }
 
   function initHeroSocialProof() {
@@ -136,11 +242,9 @@
         var list = result.testimonials;
         if (!list.length) return showFallback();
 
-        var withRating = list.filter(function (t) { return parseInt(t.rating, 10) > 0; });
-        var avg = withRating.length
-          ? withRating.reduce(function (sum, t) { return sum + parseInt(t.rating, 10); }, 0) / withRating.length
-          : 5;
-        var avgRounded = (Math.round(avg * 10) / 10).toFixed(1);
+        var stats = computeRatingStats(list);
+        var avg = stats.avg;
+        var avgRounded = stats.avgRounded;
 
         // Clear skeleton placeholders before injecting the real avatars/stars/text.
         // Note: intentionally NOT reusing avatarHtml() here — it bakes in
@@ -236,7 +340,7 @@
   };
 
   document.addEventListener('DOMContentLoaded', function () {
-    initHomepageGrid();
+    initHomepageShowcase();
     initArchivePage();
     initHeroSocialProof();
   });

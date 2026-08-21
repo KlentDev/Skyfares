@@ -113,7 +113,26 @@
     return Math.max(min, Math.min(max, value));
   }
 
+  function focusConfig() {
+    var width = window.innerWidth || document.documentElement.clientWidth || VIEWBOX_WIDTH;
+    if (width <= 640) {
+      return { minWidth: 300, minHeight: 240, paddingX: 80, paddingY: 105, shiftX: 0 };
+    }
+    if (width <= 1100) {
+      return { minWidth: 380, minHeight: 260, paddingX: 120, paddingY: 130, shiftX: 0 };
+    }
+    return { minWidth: 560, minHeight: 320, paddingX: 260, paddingY: 220, shiftX: VIEWBOX_FOCUS_SHIFT };
+  }
+
+  function renderedMapAspect() {
+    if (!svg) return VIEWBOX_WIDTH / VIEWBOX_HEIGHT;
+    var rect = svg.getBoundingClientRect();
+    if (!rect.width || !rect.height) return VIEWBOX_WIDTH / VIEWBOX_HEIGHT;
+    return rect.width / rect.height;
+  }
+
   function focusViewBox(route) {
+    var config = focusConfig();
     var points = [];
     routeGeometry(route).segments.forEach(function (segment) {
       points.push(segment.start, segment.control, segment.end);
@@ -122,16 +141,16 @@
     var maxX = Math.max.apply(null, points.map(function (point) { return point[0]; }));
     var minY = Math.min.apply(null, points.map(function (point) { return point[1]; }));
     var maxY = Math.max.apply(null, points.map(function (point) { return point[1]; }));
-    var width = Math.max(560, maxX - minX + 260);
-    var height = Math.max(320, maxY - minY + 220);
-    var aspect = VIEWBOX_WIDTH / VIEWBOX_HEIGHT;
+    var width = Math.max(config.minWidth, maxX - minX + config.paddingX);
+    var height = Math.max(config.minHeight, maxY - minY + config.paddingY);
+    var aspect = renderedMapAspect();
 
     if (width / height < aspect) width = height * aspect;
     else height = width / aspect;
     width = Math.min(VIEWBOX_WIDTH, width);
     height = Math.min(VIEWBOX_HEIGHT, height);
 
-    var centerX = ((minX + maxX) / 2) - VIEWBOX_FOCUS_SHIFT;
+    var centerX = ((minX + maxX) / 2) - config.shiftX;
     var centerY = (minY + maxY) / 2;
     return {
       x: clamp(centerX - width / 2, 0, VIEWBOX_WIDTH - width),
@@ -520,6 +539,15 @@
 
   routeSearch.addEventListener('input', updateFilters);
   regionFilter.addEventListener('change', updateFilters);
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (!selectedId) return;
+    if (resizeTimer) window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(function () {
+      var route = routeById(selectedId);
+      if (route) animateViewBox(focusViewBox(route));
+    }, 120);
+  });
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') clearPreview();
   });

@@ -282,10 +282,10 @@
             <desc id="mileage-map-description">Interactive route map showing Singapore as the origin and destinations from the Skyfare Mileage Route Board.</desc>
             <defs>
               <pattern id="mileage-land-dots" width="7" height="7" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1.05" fill="#b6c9df"></circle>
+                <circle cx="2" cy="2" r="1.05" fill="currentColor"></circle>
               </pattern>
               <marker id="mileage-route-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#0066cc"></path>
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#b8952e"></path>
               </marker>
             </defs>
             <path id="mileage-map-land" class="mileage-map-land" d=""></path>
@@ -382,6 +382,64 @@
           <div id="mileage-route-list" class="mileage-route-list" role="list"></div>
         </div>
       </dialog>
+    </div>
+  </section>
+
+  <!-- MILEAGE TRUST -->
+  <section class="lower-section-v5 miles-trust-v1 tile-dark1" id="mileage-trust" aria-labelledby="mileage-trust-title">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="miles-trust-v1__grid slide-up">
+        <div class="miles-trust-v1__copy">
+          <div class="section-heading-v8__title miles-trust-v1__heading-title">
+            <span class="eyebrow-chip-v2 eyebrow-chip-v2--dark"><i class="fa-solid fa-shield-halved"></i>Why Skyfare</span>
+            <h2 id="mileage-trust-title">Real seats, moved every month.</h2>
+            <p>Every redemption is booked through legitimate, airline-compliant channels — no shared logins, no risk to your account.</p>
+          </div>
+
+          <ul class="miles-trust-v1__list">
+            <li>
+              <span class="icon-chip icon-chip-dark" aria-hidden="true"><i class="fa-solid fa-crown"></i></span>
+              <span><strong>Business &amp; First Class</strong><small>Confirmed seat redemptions</small></span>
+            </li>
+            <li>
+              <span class="icon-chip icon-chip-dark" aria-hidden="true"><i class="fa-solid fa-bolt"></i></span>
+              <span><strong>No Waitlists</strong><small>Direct booking pathways</small></span>
+            </li>
+            <li>
+              <span class="icon-chip icon-chip-dark" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
+              <span><strong>100% Safe &amp; Legal</strong><small>Airline-compliant redemptions</small></span>
+            </li>
+          </ul>
+          <a class="miles-trust-v1__cta" href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Start a route review
+          </a>
+        </div>
+
+        <div class="miles-trust-v1__stats">
+          <div class="authority-card miles-trust-v1__stat miles-trust-v1__stat--lead">
+            <div class="miles-trust-v1__stat-head"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Miles Moved</span></div>
+            <strong>1–5M</strong>
+            <p>Monthly miles utilised across confirmed redemptions.</p>
+          </div>
+          <div class="miles-trust-v1__stat-row">
+            <div class="authority-card miles-trust-v1__stat">
+              <div class="miles-trust-v1__stat-head"><i class="fa-solid fa-sack-dollar" aria-hidden="true"></i><span>Avg. Savings</span></div>
+              <strong>60%</strong>
+              <p>Below the standard cash fare.</p>
+            </div>
+            <div class="authority-card miles-trust-v1__stat">
+              <div class="miles-trust-v1__stat-head"><i class="fa-solid fa-plane" aria-hidden="true"></i><span>Airline Network</span></div>
+              <strong>100+</strong>
+              <p>Partner airlines covered.</p>
+            </div>
+            <div class="authority-card miles-trust-v1__stat">
+              <div class="miles-trust-v1__stat-head"><i class="fa-solid fa-headset" aria-hidden="true"></i><span>Concierge</span></div>
+              <strong>24/7</strong>
+              <p>Always-on WhatsApp response.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -567,65 +625,77 @@
           <span class="eyebrow-chip-v2"><i class="fa-solid fa-quote-left"></i>Client Stories</span>
         <h2>What travelers say after they fly.</h2>
         </div>
-        <p>See how clients describe the planning, communication, and premium-cabin result.</p>
+        <div class="testimonials-heading-aside">
+          <p>See how clients describe the planning, communication, and premium-cabin result.</p>
+          <a class="testimonials-heading-aside__link" href="pages/testimonials">View all testimonials <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
       </div>
 
-      <!-- Testimonial grid — populated dynamically from Airtable via js/testimonials.js -->
-      <div id="home-testimonials-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="card-utility testimonial-card-v2 overflow-hidden flex flex-col animate-pulse">
-          <div class="h-56 bg-neutral-100"></div>
-          <div class="flex-1 p-6 flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-              <div class="h-3 w-20 bg-neutral-100 rounded"></div>
-              <div class="h-5 w-5 bg-neutral-100 rounded"></div>
+      <!-- Testimonials showcase — populated dynamically from Airtable via js/testimonials.js:
+           stat card (left) + exactly one featured story (center) + the 4 latest
+           reviews looping in an infinite vertical marquee (right). -->
+      <div id="home-testimonials-showcase" class="testimonials-showcase-v1__grid slide-up" style="animation-delay:0.08s;">
+
+        <div id="home-testimonial-stats" class="testimonials-stat-card card-utility">
+          <div class="testimonials-stat-card__rating">
+            <strong id="home-testimonial-avg-rating">—</strong><span>/5</span>
+          </div>
+          <p id="home-testimonial-review-count" class="testimonials-stat-card__count">Loading verified reviews&hellip;</p>
+
+          <ul class="testimonials-stat-card__facts">
+            <li><span class="icon-chip"><i class="fa-solid fa-crown" aria-hidden="true"></i></span><span>Business &amp; First Class specialists</span></li>
+            <li><span class="icon-chip"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span><span>Airline-compliant, no shared logins</span></li>
+            <li><span class="icon-chip"><i class="fa-solid fa-headset" aria-hidden="true"></i></span><span>WhatsApp-based concierge</span></li>
+          </ul>
+
+          <div class="testimonials-stat-card__prompt">
+            <span>Ready to plan your own trip?</span>
+            <strong>Let&rsquo;s get started</strong>
+          </div>
+          <a class="testimonials-stat-card__cta btn-pill btn-pill-whatsapp" href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Plan your trip
+          </a>
+        </div>
+
+        <div id="home-testimonial-featured" class="testimonials-featured-card animate-pulse" aria-live="polite"></div>
+
+        <div class="testimonials-latest marquee-outer marquee-outer--vertical" data-marquee-manual>
+          <div id="home-testimonials-latest-track" class="marquee-track marquee-track--vertical">
+            <div class="testimonials-latest-item animate-pulse">
+              <div class="testimonials-latest-item__head">
+                <div class="testimonials-latest-item__avatar"></div>
+                <div class="flex-1"><div class="h-3 w-24 bg-neutral-100 rounded mb-1.5"></div><div class="h-2.5 w-16 bg-neutral-100 rounded"></div></div>
+              </div>
+              <div class="h-2.5 w-full bg-neutral-100 rounded mb-1.5"></div>
+              <div class="h-2.5 w-2/3 bg-neutral-100 rounded"></div>
             </div>
-            <div class="space-y-2 flex-1 mb-5">
-              <div class="h-3 w-full bg-neutral-100 rounded"></div>
-              <div class="h-3 w-full bg-neutral-100 rounded"></div>
-              <div class="h-3 w-2/3 bg-neutral-100 rounded"></div>
+            <div class="testimonials-latest-item animate-pulse" style="animation-delay:.08s;">
+              <div class="testimonials-latest-item__head">
+                <div class="testimonials-latest-item__avatar"></div>
+                <div class="flex-1"><div class="h-3 w-24 bg-neutral-100 rounded mb-1.5"></div><div class="h-2.5 w-16 bg-neutral-100 rounded"></div></div>
+              </div>
+              <div class="h-2.5 w-full bg-neutral-100 rounded mb-1.5"></div>
+              <div class="h-2.5 w-2/3 bg-neutral-100 rounded"></div>
             </div>
-            <div class="pt-4 border-t border-neutral-100">
-              <div class="h-3 w-28 bg-neutral-100 rounded mb-2"></div>
-              <div class="h-2.5 w-20 bg-neutral-100 rounded"></div>
+            <div class="testimonials-latest-item animate-pulse" style="animation-delay:.16s;">
+              <div class="testimonials-latest-item__head">
+                <div class="testimonials-latest-item__avatar"></div>
+                <div class="flex-1"><div class="h-3 w-24 bg-neutral-100 rounded mb-1.5"></div><div class="h-2.5 w-16 bg-neutral-100 rounded"></div></div>
+              </div>
+              <div class="h-2.5 w-full bg-neutral-100 rounded mb-1.5"></div>
+              <div class="h-2.5 w-2/3 bg-neutral-100 rounded"></div>
+            </div>
+            <div class="testimonials-latest-item animate-pulse" style="animation-delay:.24s;">
+              <div class="testimonials-latest-item__head">
+                <div class="testimonials-latest-item__avatar"></div>
+                <div class="flex-1"><div class="h-3 w-24 bg-neutral-100 rounded mb-1.5"></div><div class="h-2.5 w-16 bg-neutral-100 rounded"></div></div>
+              </div>
+              <div class="h-2.5 w-full bg-neutral-100 rounded mb-1.5"></div>
+              <div class="h-2.5 w-2/3 bg-neutral-100 rounded"></div>
             </div>
           </div>
         </div>
-        <div class="card-utility testimonial-card-v2 overflow-hidden flex flex-col animate-pulse" style="animation-delay:.08s;">
-          <div class="h-56 bg-neutral-100"></div>
-          <div class="flex-1 p-6 flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-              <div class="h-3 w-20 bg-neutral-100 rounded"></div>
-              <div class="h-5 w-5 bg-neutral-100 rounded"></div>
-            </div>
-            <div class="space-y-2 flex-1 mb-5">
-              <div class="h-3 w-full bg-neutral-100 rounded"></div>
-              <div class="h-3 w-full bg-neutral-100 rounded"></div>
-              <div class="h-3 w-2/3 bg-neutral-100 rounded"></div>
-            </div>
-            <div class="pt-4 border-t border-neutral-100">
-              <div class="h-3 w-28 bg-neutral-100 rounded mb-2"></div>
-              <div class="h-2.5 w-20 bg-neutral-100 rounded"></div>
-            </div>
-          </div>
-        </div>
-        <div class="card-utility testimonial-card-v2 overflow-hidden flex flex-col animate-pulse" style="animation-delay:.16s;">
-          <div class="h-56 bg-neutral-100"></div>
-          <div class="flex-1 p-6 flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-              <div class="h-3 w-20 bg-neutral-100 rounded"></div>
-              <div class="h-5 w-5 bg-neutral-100 rounded"></div>
-            </div>
-            <div class="space-y-2 flex-1 mb-5">
-              <div class="h-3 w-full bg-neutral-100 rounded"></div>
-              <div class="h-3 w-full bg-neutral-100 rounded"></div>
-              <div class="h-3 w-2/3 bg-neutral-100 rounded"></div>
-            </div>
-            <div class="pt-4 border-t border-neutral-100">
-              <div class="h-3 w-28 bg-neutral-100 rounded mb-2"></div>
-              <div class="h-2.5 w-20 bg-neutral-100 rounded"></div>
-            </div>
-          </div>
-        </div>
+
       </div>
 
       <div id="home-testimonials-status" class="home-testimonials-status-v7 hidden" role="status">
@@ -686,7 +756,7 @@
       </div>
 
       <div class="pricing-restored-v8__grid slide-up">
-        <article class="card-utility card-pricing-v2 pricing-concierge-card-v9 p-8 flex flex-col">
+        <article class="card-utility card-pricing-v2 pricing-concierge-card-v9 p-8 flex flex-col" data-coming-soon data-coming-soon-mode="card" data-coming-soon-title="Concierge flight planning" data-coming-soon-desc="This service is being updated right now. Join the waitlist and we'll email you the moment route reviews reopen.">
           <h3 class="text-lg font-display font-bold text-white mb-2">Concierge flight planning</h3>
           <p class="text-sm text-white/65 leading-relaxed mb-6">Hands-on help for a specific trip, from route research to a practical mileage booking path.</p>
           <p class="mb-1"><span class="font-display font-bold text-white tabular-nums" style="font-size:var(--font-stat-v2-size);">Custom</span></p>

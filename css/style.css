@@ -425,6 +425,40 @@ details .accordion-body > div {
   }
 }
 
+/* Vertical marquee — same duplicated-list loop as the horizontal marquee
+   above, translating on Y instead of X. Driven by js/marquee.js's
+   axis:'y' mode; the CSS keyframe below is only the pre-JS fallback. */
+.marquee-outer--vertical {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.marquee-track--vertical {
+  flex-direction: column;
+  align-items: stretch;
+  width: auto;
+  gap: 0.85rem;
+  padding: 0;
+  animation: marqueeScrollY var(--marquee-duration, 30s) linear infinite;
+}
+
+@keyframes marqueeScrollY {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
 /* ===== TESTIMONIAL CARDS ===== */
 .testimonial-card {
   border-radius: 2.5rem;
@@ -10727,6 +10761,11 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 
 /* ── Mileage Route Explorer ─────────────────────────────────────────────── */
 .mileage-explorer-section {
+  --mileage-premium-navy: #07182c;
+  --mileage-premium-blue: #0066cc;
+  --mileage-premium-gold: #b8952e;
+  --mileage-premium-gold-soft: rgba(184, 149, 46, .16);
+  --mileage-premium-gold-line: rgba(184, 149, 46, .32);
   padding: clamp(4.5rem, 8vw, 7rem) 0;
   background: #fff;
 }
@@ -10841,7 +10880,10 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   aspect-ratio: 2 / 1;
   min-height: 29rem;
   overflow: hidden;
-  background: #fff;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(184, 149, 46, .075), transparent 18rem),
+    radial-gradient(circle at 12% 80%, rgba(0, 102, 204, .055), transparent 20rem),
+    linear-gradient(180deg, #fff 0%, #f8fbff 100%);
 }
 
 .mileage-route-details-card {
@@ -10853,7 +10895,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   width: min(18.5rem, calc(100% - 2rem));
   max-height: calc(100% - 2rem);
   overflow: auto;
-  border: 1px solid rgba(15, 23, 42, .12);
+  border: 1px solid rgba(184, 149, 46, .22);
   border-radius: 18px;
   background: rgba(255, 255, 255, .95);
   color: #0f172a;
@@ -10874,8 +10916,8 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   margin-bottom: .3rem;
   place-items: center;
   border-radius: 50%;
-  background: #f0f7ff;
-  color: #0066cc;
+  background: rgba(184, 149, 46, .1);
+  color: var(--mileage-premium-gold);
 }
 
 .mileage-route-card-empty strong {
@@ -10924,7 +10966,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 
 .mileage-route-card-close:hover,
 .mileage-route-card-close:focus-visible {
-  background: #0066cc;
+  background: var(--mileage-premium-navy);
   outline: none;
 }
 
@@ -10935,7 +10977,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   align-items: center;
   gap: .35rem;
   margin-bottom: .65rem;
-  color: #0066cc;
+  color: #8a6f18;
   font-size: .56rem;
   font-weight: 800;
   letter-spacing: .07em;
@@ -10962,7 +11004,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   align-items: center;
   gap: .35rem;
   margin-bottom: .7rem;
-  color: #0066cc;
+  color: var(--mileage-premium-blue);
   font-size: .65rem;
   font-weight: 800;
   text-decoration: none;
@@ -10982,11 +11024,11 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   gap: .18rem;
   padding: .58rem .5rem;
   border-radius: 10px;
-  background: #f5f9fe;
+  background: #f7f9fc;
   text-align: center;
 }
 
-.mileage-route-card-miles div:last-child { background: #f8fafc; }
+.mileage-route-card-miles div:last-child { background: rgba(184, 149, 46, .08); }
 
 .mileage-route-card-miles span,
 .mileage-route-card-miles small {
@@ -11012,7 +11054,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   min-height: 2.45rem;
   gap: .45rem;
   border-radius: 999px;
-  background: #0066cc;
+  background: var(--mileage-premium-navy);
   color: #fff;
   font-size: .7rem;
   font-weight: 800;
@@ -11020,7 +11062,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   transition: background-color .2s ease, transform .16s ease;
 }
 
-.mileage-route-card-cta:hover { background: #0052a3; }
+.mileage-route-card-cta:hover { background: #0b2340; }
 .mileage-route-card-cta:active { transform: scale(.98); }
 
 .mileage-route-card-disclaimer {
@@ -11035,18 +11077,19 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   display: block;
   width: 100%;
   height: 100%;
+  color: #bdcfe2;
 }
 
 .mileage-map-land {
   fill: url(#mileage-land-dots);
-  stroke: rgba(103, 135, 169, .4);
+  stroke: rgba(7, 24, 44, .26);
   stroke-width: .7;
   vector-effect: non-scaling-stroke;
 }
 
 .mileage-route-arc {
   fill: none;
-  stroke: #0066cc;
+  stroke: var(--mileage-premium-blue);
   stroke-width: 1.25;
   stroke-linecap: round;
   stroke-dasharray: 1;
@@ -11059,15 +11102,16 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 .mileage-route-arc:focus-visible {
-  stroke: #c9a227;
+  stroke: var(--mileage-premium-gold);
   stroke-width: 2.25;
   opacity: 1;
 }
 
 .mileage-route-arc.is-active {
-  stroke: #c9a227;
+  stroke: var(--mileage-premium-gold);
   stroke-width: 2.25;
   opacity: 1;
+  filter: drop-shadow(0 5px 10px rgba(184, 149, 46, .18));
 }
 
 .mileage-route-arc.is-dimmed,
@@ -11120,30 +11164,31 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 
 .mileage-route-node-group:focus-visible .mileage-route-node,
 .mileage-route-node-group.is-active .mileage-route-node {
-  fill: #c9a227;
+  fill: var(--mileage-premium-gold);
+  stroke: var(--mileage-premium-navy);
   r: 5;
 }
 
 .mileage-origin-marker circle:first-child {
-  fill: rgba(201, 162, 39, .16);
-  stroke: #c9a227;
-  stroke-width: 1;
+  fill: var(--mileage-premium-gold-soft);
+  stroke: var(--mileage-premium-gold);
+  stroke-width: 1.35;
 }
 
 .mileage-origin-marker circle:nth-child(2) {
-  fill: #c9a227;
+  fill: var(--mileage-premium-navy);
   stroke: #fff;
   stroke-width: 1.2;
 }
 
 .mileage-origin-marker text {
-  fill: #0f172a;
+  fill: var(--mileage-premium-navy);
   font: 900 9px/1 'Manrope', sans-serif;
   letter-spacing: .08em;
 }
 
 .mileage-route-signal-dot {
-  fill: #c9a227;
+  fill: var(--mileage-premium-gold);
   stroke: #fff;
   stroke-width: 1.2;
   vector-effect: non-scaling-stroke;
@@ -11157,7 +11202,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   min-width: 9.5rem;
   max-width: 13rem;
   padding: .65rem .75rem;
-  border: 1px solid rgba(0, 102, 204, .2);
+  border: 1px solid var(--mileage-premium-gold-line);
   border-radius: 10px;
   background: rgba(255, 255, 255, .97);
   box-shadow: 0 10px 28px rgba(15, 23, 42, .12);
@@ -11202,7 +11247,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 .mileage-map-loading-line {
   width: 1.8rem;
   height: 1px;
-  background: #c9a227;
+  background: var(--mileage-premium-gold);
 }
 
 .mileage-explorer-section.is-map-loaded .mileage-map-loading,
@@ -11586,9 +11631,9 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 .mileage-popular-route-pill:hover,
 .mileage-popular-route-pill:focus-visible,
 .mileage-popular-route-pill.is-active {
-  border-color: rgba(0, 102, 204, .42);
-  background: #f0f7ff;
-  color: #0066cc;
+  border-color: rgba(184, 149, 46, .46);
+  background: rgba(184, 149, 46, .1);
+  color: var(--mileage-premium-navy);
   outline: none;
 }
 
@@ -11608,10 +11653,11 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 .mileage-route-plane-shape {
-  fill: #0066cc;
-  stroke: #fff;
+  fill: var(--mileage-premium-navy);
+  stroke: var(--mileage-premium-gold);
   stroke-width: .8;
   vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 3px 5px rgba(7, 24, 44, .22));
 }
 
 .mileage-route-dialog {
@@ -12325,7 +12371,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   white-space: nowrap;
 }
 
-#testimonials-section { padding-block: clamp(4.5rem, 8vw, 7rem); }
+#testimonials-section { padding-block: clamp(3rem, 5vw, 4.5rem); }
 
 .testimonial-card-v2 blockquote {
   display: -webkit-box;
@@ -12349,6 +12395,311 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 .home-testimonials-status-v7 strong { color: #0f172a; font-size: .86rem; }
 .home-testimonials-status-v7 p { margin: .2rem 0 0; color: #64748b; font-size: .75rem; }
 .home-testimonials-status-v7 a { color: #0066cc; font-size: .75rem; font-weight: 800; }
+
+/* ===== TESTIMONIALS SHOWCASE — stat card / single featured story / infinite
+   vertical "latest reviews" list. align-items:stretch so all three columns
+   share one height driven by the tallest (the featured photo card). ===== */
+.testimonials-heading-aside {
+  justify-self: end;
+  max-width: 30rem;
+  display: grid;
+  gap: 0.6rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.testimonials-heading-aside__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0066cc;
+  white-space: nowrap;
+}
+
+.testimonials-heading-aside__link:hover { color: #0052a3; }
+
+/* --testimonials-card-h is the single source of truth for all three cards'
+   height — matches the Skyfare Pricing cards' tall, generous scale (they
+   also share one height via grid stretch + min-height:100%; here it's a
+   literal shared value since the three cards hold very different amounts
+   of content and can't rely on stretch alone to land on the same number). */
+.testimonials-showcase-v1__grid {
+  --testimonials-card-h: 40rem;
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  align-items: stretch;
+  margin-top: clamp(1.75rem, 3vw, 2.25rem);
+}
+
+/* -- Stat card -- */
+.testimonials-stat-card {
+  height: var(--testimonials-card-h, 40rem);
+  padding: clamp(1.75rem, 2.5vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonials-stat-card__rating {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.testimonials-stat-card__rating strong {
+  font-family: 'Lexend', sans-serif;
+  font-size: clamp(2.75rem, 2.2rem + 2vw, 3.5rem);
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.testimonials-stat-card__rating span {
+  font-size: 1.125rem;
+  color: #7a7a7a;
+}
+
+.testimonials-stat-card__count {
+  margin: 0.6rem 0 0;
+  font-size: 0.9375rem;
+  color: #5b5b60;
+}
+
+.testimonials-stat-card__count strong { color: #1d1d1f; font-weight: 600; }
+
+.testimonials-stat-card__facts {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid #e0e0e0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.testimonials-stat-card__facts li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.testimonials-stat-card__facts span:last-child {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.testimonials-stat-card__prompt {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.testimonials-stat-card__prompt span {
+  font-size: 0.8125rem;
+  color: #7a7a7a;
+}
+
+.testimonials-stat-card__prompt strong {
+  font-family: 'Lexend', sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.testimonials-stat-card__cta {
+  margin-top: 1rem;
+  width: fit-content;
+}
+
+/* -- Featured card (exactly one) -- */
+.testimonials-featured-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  height: var(--testimonials-card-h, 40rem);
+  background: #1A2437;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+.testimonials-featured-card__media {
+  position: absolute;
+  inset: 0;
+}
+
+.testimonials-featured-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.testimonials-featured-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 10, 18, 0.92) 0%, rgba(6, 10, 18, 0.55) 42%, rgba(6, 10, 18, 0.05) 68%, transparent 82%);
+}
+
+.testimonials-featured-card__label {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  margin-bottom: auto;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  background: rgba(6, 10, 18, 0.55);
+  backdrop-filter: blur(var(--glass-v2-blur));
+  -webkit-backdrop-filter: blur(var(--glass-v2-blur));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-v2-pill);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.testimonials-featured-card__label i { color: #38a1ff; font-size: 0.75rem; flex-shrink: 0; }
+
+.testimonials-featured-card__stars {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0.25rem;
+  color: #f5c344;
+  margin-bottom: 0.9rem;
+  font-size: 0.8125rem;
+}
+
+.testimonials-featured-card__quote {
+  position: relative;
+  z-index: 1;
+  font-family: 'Lexend', sans-serif;
+  font-size: clamp(1.25rem, 1.05rem + .9vw, 1.625rem);
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.34;
+  letter-spacing: -0.01em;
+  margin: 0 0 1.25rem;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+}
+
+.testimonials-featured-card__byline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: 'Manrope', sans-serif;
+}
+
+.testimonials-featured-card__byline strong {
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.testimonials-featured-card__byline span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.8125rem;
+}
+
+/* -- Latest list (vertical infinite marquee) -- */
+/* Fixed (not stretched) height: the track holds the 4 items duplicated once
+   for the seamless loop, so its true content height is ~2x a normal card
+   list. Without a definite height here, that full unclipped height would
+   feed into the grid row's auto-sizing even though overflow:hidden only
+   clips it visually — inflating the whole section far past one viewport. */
+.testimonials-latest {
+  border-radius: 18px;
+  height: var(--testimonials-card-h, 40rem);
+  overflow: hidden;
+}
+
+.testimonials-latest-item {
+  background: #fff;
+  border: 1px solid rgba(0, 102, 204, 0.10);
+  border-radius: 14px;
+  padding: 1.1rem;
+  height: 7.75rem;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.testimonials-latest-item__head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.testimonials-latest-item__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f0f7ff;
+}
+
+.testimonials-latest-item__avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.testimonials-latest-item__meta { min-width: 0; }
+
+.testimonials-latest-item__meta strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.testimonials-latest-item__stars {
+  color: #f5c344;
+  font-size: 0.6875rem;
+  display: flex;
+  gap: 0.15rem;
+  margin-top: 0.15rem;
+}
+
+.testimonials-latest-item blockquote {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #55565c;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+@media (max-width: 1024px) {
+  .testimonials-showcase-v1__grid { grid-template-columns: 1fr; --testimonials-card-h: 26rem; }
+}
+
+@media (max-width: 480px) {
+  .testimonials-showcase-v1__grid { --testimonials-card-h: 24rem; }
+}
 
 .newsletter-home-v5 { padding-block: clamp(4.5rem, 8vw, 7rem); }
 .newsletter-home-v7__heading a { color: #0066cc; font-weight: 800; }
@@ -12691,6 +13042,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   .hero-v7__facts { display: grid; justify-items: center; gap: .45rem; }
   .section-heading-v8 { grid-template-columns: 1fr; gap: 1rem; }
   .section-heading-v8 > p { justify-self: start; max-width: 38rem; }
+  .testimonials-heading-aside { justify-self: start; justify-items: start; text-align: left; max-width: 38rem; }
   .home-section-heading-v7.section-heading-v8 h2 { max-width: 100%; }
   .home-paths-v7__choices--below-carousel { grid-template-columns: 1fr; }
   .home-paths-v7__choices--below-carousel .home-paths-v7__intro { grid-column: auto; }
@@ -13073,5 +13425,232 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   .hero-production-v7 #hero-route-dropdown,
   .hero-production-v7 #hero-route-list {
     max-height: 16rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .mileage-map-shell {
+    display: grid;
+    grid-template-rows: auto auto;
+    aspect-ratio: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .mileage-map-svg {
+    aspect-ratio: 2 / 1;
+    height: auto;
+    min-height: 21rem;
+  }
+
+  .mileage-route-details-card {
+    position: static;
+    z-index: auto;
+    width: auto;
+    max-height: none;
+    margin: 0 clamp(.85rem, 3vw, 1.25rem) clamp(.85rem, 3vw, 1.25rem);
+    overflow: visible;
+    transform: none;
+    box-shadow: 0 14px 34px rgba(26, 66, 108, .08);
+  }
+
+  .mileage-route-details-card.is-empty {
+    display: none;
+  }
+
+  .mileage-route-card-image-wrap {
+    display: none;
+  }
+
+  .mileage-route-card-content:not([hidden]) {
+    display: grid;
+  }
+}
+
+@media (max-width: 640px) {
+  .mileage-map-svg {
+    aspect-ratio: 1.12 / 1;
+    min-height: 20rem;
+  }
+
+  .mileage-route-details-card {
+    margin-inline: .75rem;
+  }
+}
+
+/* ===== MILEAGE TRUST — dark tile between Popular Routes and Real Bookings.
+   Left: checklist of redemption guarantees. Right: a lead stat card (monthly
+   miles moved) stacked over a 3-up row of smaller stats. Reuses .authority-card
+   (the system's existing "card on a dark tile" surface) and .icon-chip-dark
+   rather than inventing new card primitives. ===== */
+.miles-trust-v1__grid {
+  display: grid;
+  grid-template-columns: minmax(0, .92fr) minmax(20rem, 1.08fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.miles-trust-v1__heading-title {
+  display: grid;
+  gap: 0.85rem;
+  margin-bottom: 2.5rem;
+}
+
+.miles-trust-v1__heading-title .eyebrow-chip-v2 { width: fit-content; margin: 0; }
+
+.miles-trust-v1__heading-title h2 {
+  font-family: 'Lexend', sans-serif;
+  font-size: var(--font-display-h2-v2-size);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.miles-trust-v1__heading-title p {
+  margin: 0;
+  max-width: 30rem;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.miles-trust-v1__list {
+  display: grid;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+}
+
+.miles-trust-v1__list li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.miles-trust-v1__list li > span:last-child {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.miles-trust-v1__list strong {
+  font-family: 'Lexend', sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.miles-trust-v1__list small {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.miles-trust-v1__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: #22c55e;
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: 9999px;
+  transition: transform 160ms ease, background-color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .miles-trust-v1__cta:hover { background: #16a34a; transform: translateY(-2px); }
+}
+
+.miles-trust-v1__stats {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.8rem;
+}
+
+.miles-trust-v1__stat {
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 15rem;
+}
+
+.miles-trust-v1__stat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.miles-trust-v1__stat-head i {
+  font-size: 0.9375rem;
+  color: #38a1ff;
+}
+
+.miles-trust-v1__stat-head span {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.miles-trust-v1__stat strong {
+  font-family: 'Lexend', sans-serif;
+  font-size: clamp(2.25rem, 1.85rem + 1.4vw, 3rem);
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-top: auto;
+}
+
+.miles-trust-v1__stat p {
+  margin: 0.6rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.miles-trust-v1__stat--lead {
+  min-height: 17rem;
+}
+
+.miles-trust-v1__stat--lead strong {
+  font-size: clamp(3rem, 2.4rem + 2.4vw, 4.25rem);
+}
+
+.miles-trust-v1__stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.miles-trust-v1__stat-row .miles-trust-v1__stat {
+  padding: 1.75rem 1.5rem;
+  min-height: 12.5rem;
+}
+
+.miles-trust-v1__stat-row .miles-trust-v1__stat strong {
+  font-size: clamp(1.625rem, 1.4rem + 0.9vw, 2rem);
+}
+
+.miles-trust-v1__stat-row .miles-trust-v1__stat-head span {
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 900px) {
+  .miles-trust-v1__grid {
+    grid-template-columns: 1fr;
+  }
+  .miles-trust-v1__stats {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .miles-trust-v1__stat-row {
+    grid-template-columns: 1fr;
   }
 }
