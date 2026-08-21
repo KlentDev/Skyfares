@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Skyfare Altitude Access | Skyfare Consulting</title>
@@ -18,6 +26,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
+  <script src="../js/checkout-flow-info.js" defer></script>
 </head>
 
 <body class="min-h-screen flex flex-col bg-white">
@@ -80,7 +89,12 @@
             <div class="flex flex-wrap items-center gap-2.5 mt-4 text-[10px] text-white/40 font-medium">
               <span>Cancel anytime</span>
               <span aria-hidden="true">&middot;</span>
-              <span>Secure Stripe checkout</span>
+              <span class="inline-flex items-center gap-1">
+                Secure Stripe checkout
+                <button type="button" class="info-icon-btn-v2 info-icon-btn-v2--on-dark" onclick="window.openCheckoutFlowInfo()" aria-label="How checkout and portal access works">
+                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                </button>
+              </span>
               <span aria-hidden="true">&middot;</span>
               <button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="hover:text-white transition-colors">Already a member?</button>
             </div>
@@ -197,12 +211,11 @@
             <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-chair text-xs"></i></span><span><span class="block text-sm font-semibold">Cabin reviews</span><span class="block text-xs text-white/40 mt-0.5">Premium seat, lounge, and onboard product notes.</span></span></span><span class="text-[11px] font-semibold text-brand-200 text-center">Included</span><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
             <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-newspaper text-xs"></i></span><span><span class="block text-sm font-semibold">Weekly aviation news</span><span class="block text-xs text-white/40 mt-0.5">A quick read on what changed in travel this week.</span></span></span><span class="text-[11px] font-semibold text-brand-200 text-center">Included</span><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
             <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-right-left text-xs"></i></span><span><span class="block text-sm font-semibold">Transfer bonuses</span><span class="block text-xs text-white/40 mt-0.5">Notices when point transfers or promotions are worth watching.</span></span></span><span class="text-[11px] font-semibold text-brand-200 text-center">Included</span><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
-            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-bell text-xs"></i></span><span><span class="block text-sm font-semibold">Award alerts</span><span class="block text-xs text-white/40 mt-0.5">Availability and redemption opportunities with more context.</span></span></span><span class="text-[11px] font-semibold text-white/35 text-center">Limited</span><span class="text-[11px] font-semibold text-gold-light text-center">Deeper notes</span></div>
-            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-plane-departure text-xs"></i></span><span><span class="block text-sm font-semibold">KrisFlyer Spontaneous Escapes</span><span class="block text-xs text-white/40 mt-0.5">Monthly fare movement and route highlights.</span></span></span><span class="text-[11px] font-semibold text-white/35 text-center">Summary</span><span class="text-[11px] font-semibold text-gold-light text-center">Strategy view</span></div>
-            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-route text-xs"></i></span><span><span class="block text-sm font-semibold">Routing strategies</span><span class="block text-xs text-white/40 mt-0.5">Why one routing path can beat another on value or comfort.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-scale-balanced text-xs"></i></span><span><span class="block text-sm font-semibold">The Skyfare Verdict on Cabin Compare</span><span class="block text-xs text-white/40 mt-0.5">A clearer take on which cabin is actually worth choosing.</span></span></span><span class="text-[11px] font-semibold text-brand-200 text-center">Included</span><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-bell text-xs"></i></span><span><span class="block text-sm font-semibold">Award alerts</span><span class="block text-xs text-white/40 mt-0.5">Availability and redemption opportunities with more context.</span></span></span><span class="text-[11px] font-semibold text-white/35 text-center">Limited</span><span class="text-[11px] font-semibold text-gold-light text-center">Full detail</span></div>
+            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-plane-departure text-xs"></i></span><span><span class="block text-sm font-semibold">KrisFlyer Escapes</span><span class="block text-xs text-white/40 mt-0.5">Monthly fare movement and route highlights.</span></span></span><span class="text-[11px] font-semibold text-white/35 text-center">Summary</span><span class="text-[11px] font-semibold text-gold-light text-center">Full briefing</span></div>
             <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-box-archive text-xs"></i></span><span><span class="block text-sm font-semibold">Full archive</span><span class="block text-xs text-white/40 mt-0.5">Catch up on earlier paid issues where available.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
             <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-crown text-xs"></i></span><span><span class="block text-sm font-semibold">Members-only content</span><span class="block text-xs text-white/40 mt-0.5">Paid analysis not sent to the public newsletter list.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
-            <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-scale-balanced text-xs"></i></span><span><span class="block text-sm font-semibold">The Skyfare Verdict on Cabin Compare</span><span class="block text-xs text-white/40 mt-0.5">A clearer take on which cabin is actually worth choosing.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
             <div class="grid grid-cols-[1fr_88px_108px] sm:grid-cols-[1fr_128px_156px] gap-3 px-5 py-4 items-center transition-all duration-300 hover:bg-white/[0.04]"><span class="flex items-center gap-3 text-white"><span class="icon-chip icon-chip-sm icon-chip-dark"><i class="fa-solid fa-bolt text-xs"></i></span><span><span class="block text-sm font-semibold">Flash alerts</span><span class="block text-xs text-white/40 mt-0.5">Short-form premium updates when timing matters.</span></span></span><i class="fa-solid fa-minus text-white/25 text-center"></i><span class="text-[11px] font-semibold text-gold-light text-center">Included</span></div>
           </div>
         </div>
@@ -270,14 +283,20 @@
             <div class="border-t border-neutral-100 pt-6 mt-auto">
               <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">What You Get</p>
               <ul class="space-y-2.5 text-sm text-neutral-600">
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Public travel updates</li>
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Cabin reviews and route highlights</li>
-                <li class="flex items-start gap-2"><i class="fa-solid fa-minus text-neutral-300 text-xs mt-1 flex-shrink-0"></i>No premium archive or paid strategy notes</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Weekly cabin reviews &amp; aviation news</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Transfer bonus roundups &amp; the Skyfare Verdict on Cabin Compare</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-minus text-neutral-300 text-xs mt-1 flex-shrink-0"></i>No full archive, flash alerts, or members-only issues</li>
               </ul>
             </div>
           </article>
-          <article class="card-utility card-pricing-v2 p-8 flex flex-col">
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Altitude Monthly</h3>
+          <article class="card-utility card-pricing-v2 relative p-8 flex flex-col">
+            <span class="pricing-value-chip-v5">Best Value</span>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <h3 class="text-lg font-display font-bold text-neutral-900">Altitude Monthly</h3>
+              <button type="button" class="info-icon-btn-v2" onclick="window.openCheckoutFlowInfo()" aria-label="How checkout and portal access works">
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+              </button>
+            </div>
             <p class="text-sm text-neutral-500 leading-relaxed mb-6">Premium travel intelligence with flexible month-to-month access.</p>
             <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$4.99</span> <span class="text-sm text-neutral-400">/month</span></p>
             <p class="text-xs text-neutral-400 font-semibold mb-6">Cancel anytime</p>
@@ -285,15 +304,22 @@
             <div class="border-t border-neutral-100 pt-6 mt-auto">
               <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">What You Get</p>
               <ul class="space-y-2.5 text-sm text-neutral-600">
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Premium route and award insight</li>
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Members-only updates</li>
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Full archive access where available</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Live Award Alerts feed, filterable by status</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Full route, cabin, miles &amp; fee detail on every alert</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Monthly KrisFlyer Escapes briefing with Skyfare Picks</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Full newsletter archive — every past premium issue</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Priority support via WhatsApp or the member help desk</li>
               </ul>
             </div>
           </article>
           <article class="card-utility card-pricing-v2 card-pricing-v2--featured pricing-altitude-card-v5 relative p-8 flex flex-col" style="animation-delay:0.06s;">
-            <span class="pricing-value-chip-v5">Best Value</span>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Altitude Annual</h3>
+            <span class="pricing-value-chip-v5">Save 33%</span>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <h3 class="text-lg font-display font-bold text-neutral-900">Altitude Annual</h3>
+              <button type="button" class="info-icon-btn-v2" onclick="window.openCheckoutFlowInfo()" aria-label="How checkout and portal access works">
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+              </button>
+            </div>
             <p class="text-sm text-neutral-500 leading-relaxed mb-6">One year of paid travel intelligence at the strongest value.</p>
             <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$39.99</span> <span class="text-lg font-semibold text-neutral-400 line-through">$55</span> <span class="text-sm text-neutral-400">/year</span></p>
             <p class="text-xs text-neutral-400 font-semibold mb-6">Save $19.89 vs. paying monthly</p>
@@ -301,9 +327,12 @@
             <div class="border-t border-brand-100 pt-6 mt-auto">
               <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">What You Get</p>
               <ul class="space-y-2.5 text-sm text-neutral-600">
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Everything in Monthly</li>
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Lower effective monthly cost</li>
-                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Best fit for frequent readers</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Live Award Alerts feed, filterable by status</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Full route, cabin, miles &amp; fee detail on every alert</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Monthly KrisFlyer Escapes briefing with Skyfare Picks</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Full newsletter archive — every past premium issue</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Priority support via WhatsApp or the member help desk</li>
+                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-500 text-xs mt-1 flex-shrink-0"></i>Locked-in annual rate, no monthly billing</li>
               </ul>
             </div>
           </article>

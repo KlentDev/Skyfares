@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>KrisFlyer Escapes | Skyfare Altitude</title>
@@ -15,6 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../../css/style.css">
+  <link rel="stylesheet" href="../../../css/altitude-editorial.css">
   <script src="../../../js/tailwind-config.js" defer></script>
   <script src="../../../js/ui.js" defer></script>
   <script src="../../../js/private-layout.js" defer></script>
@@ -32,10 +41,7 @@
   <nav class="altitude-subnav" aria-label="Altitude member pages">
     <div class="private-container altitude-subnav__inner">
       <a href="../altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
-      <a href="benefits.html" data-altitude-nav="benefits"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Benefits</span></a>
       <a href="award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
-      <a href="routing-strategies.html" data-altitude-nav="routing-strategies"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Routing</span></a>
-      <a href="cabin-compare-verdicts.html" data-altitude-nav="cabin-verdicts"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Cabin Verdicts</span></a>
       <a href="krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
       <a href="newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
     </div>
@@ -44,16 +50,27 @@
   <main id="main-content" class="private-main altitude-portal-main">
     <section class="altitude-member-page" aria-labelledby="kf-escapes-title">
       <div class="private-container">
-        <div class="altitude-page-heading slide-up is-visible">
-          <a href="benefits.html" class="altitude-back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Benefits</a>
-          <h1 id="kf-escapes-title">KrisFlyer Spontaneous Escapes breakdown</h1>
-          <p>Monthly member view for every drop, without the public cutoff: route-by-route value, cabin caveats, and practical booking context.</p>
+        <div class="altitude-page-heading altitude-page-heading--split slide-up is-visible">
+          <div>
+            <a href="../altitude-access-portal.html" class="altitude-back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Overview</a>
+            <h1 id="kf-escapes-title" class="alt-title--split"><span>KrisFlyer Spontaneous</span><span>Escapes breakdown</span></h1>
+            <p>Monthly member view for every drop, without the public cutoff: route-by-route value, cabin caveats, and practical booking context.</p>
+          </div>
+          <div class="private-toolbar" id="alt-filters" aria-label="Choose a month" data-escape-month-slot></div>
         </div>
 
         <div data-altitude-content-root="krisflyer-escapes">
-          <div class="private-panel private-skeleton altitude-content-state">
-            <span class="private-skeleton__dot" aria-hidden="true"></span>
-            <p>Loading Airtable content</p>
+          <!-- Keep in sync with skeletonFor('krisflyer-escapes') in js/altitude-content-core.js -->
+          <div class="alt-skeleton" role="status" aria-live="polite">
+            <div class="alt-skeleton-escapes">
+              <span class="alt-skeleton__block alt-skeleton-escapes__hero"></span>
+              <span class="alt-skeleton__title"></span>
+              <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+              <div class="alt-skeleton-escapes__grid">
+                <span class="alt-skeleton__block"></span><span class="alt-skeleton__block"></span><span class="alt-skeleton__block"></span>
+              </div>
+            </div>
+            <p class="alt-skeleton__copy">Curating this month’s KrisFlyer Escapes…</p>
           </div>
         </div>
       </div>
@@ -63,6 +80,7 @@
   <div id="private-footer-slot"></div>
 
   <script src="../../../js/altitude-portal.js" defer></script>
-  <script src="../../../js/altitude-content.js" defer></script>
+  <script src="../../../js/altitude-content-core.js" defer></script>
+  <script src="../../../js/altitude-content-krisflyer-escapes.js" defer></script>
 </body>
 </html>

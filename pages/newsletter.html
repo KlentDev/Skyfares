@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Skyfare Altitude — Newsletter</title>
@@ -95,7 +103,7 @@
         <div class="flex items-center gap-4 mb-4 slide-up">
           <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Latest Issue</p>
           <div class="flex-1 h-px bg-neutral-100"></div>
-          <span data-issue-date class="text-[10px] text-neutral-400 font-medium flex-shrink-0">Loading</span>
+          <span data-issue-date class="text-[10px] text-neutral-400 font-medium flex-shrink-0 animate-pulse">Loading</span>
         </div>
         <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-10 tracking-tight slide-up">
           Fresh from the flight deck.
@@ -103,10 +111,13 @@
 
         <!-- Split editorial card — populated dynamically by newsletter-archive.js -->
         <div id="featured-issue-container">
-          <div class="card-utility h-52 max-w-5xl mx-auto flex items-center justify-center text-center slide-up" style="animation-delay:.05s;">
-            <div>
-              <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-400">Loading Latest Issue</p>
-              <p class="mt-2 text-sm text-neutral-400">Fetching the current Beehiiv archive.</p>
+          <div class="card-utility overflow-hidden animate-pulse h-52 max-w-5xl mx-auto flex slide-up" style="animation-delay:.05s;">
+            <div class="w-2/5 md:w-72 flex-shrink-0 bg-neutral-100"></div>
+            <div class="flex-1 p-5 md:p-7 flex flex-col justify-center space-y-3">
+              <div class="h-2.5 w-20 bg-neutral-100 rounded-full"></div>
+              <div class="h-4 w-4/5 bg-neutral-100 rounded-full"></div>
+              <div class="h-3 w-3/5 bg-neutral-100 rounded-full"></div>
+              <div class="h-2.5 w-28 bg-neutral-100 rounded-full mt-2"></div>
             </div>
           </div>
         </div><!-- /featured-issue-container -->
@@ -124,16 +135,57 @@
         <div class="flex items-center gap-4 mb-4 slide-up">
           <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-500 flex-shrink-0">All Issues</p>
           <div class="flex-1 h-px bg-neutral-200"></div>
-          <span id="archive-count" class="text-[10px] text-neutral-400 font-medium flex-shrink-0">Loading</span>
+          <span id="archive-count" class="text-[10px] text-neutral-400 font-medium flex-shrink-0 animate-pulse">Loading</span>
         </div>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-10 tracking-tight slide-up">
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-6 tracking-tight slide-up">
           Every issue, all in one place.
         </h2>
 
+        <!-- One toolbar: an access segment (All/Free/Premium, post.is_premium)
+             plus a topic dropdown (post.content_tags, matched case-insensitively
+             since Beehiiv lowercases content_tags regardless of a tag's
+             configured display casing -- confirmed live). Both AND-combine in
+             js/newsletter-archive.js's _getFilteredArchivePosts(). -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-8 max-w-5xl mx-auto slide-up">
+          <div id="archive-access-filters" class="filter-segment" role="group" aria-label="Filter by access">
+            <button type="button" data-access="all" class="filter-pill active">All</button>
+            <button type="button" data-access="free" class="filter-pill">Free</button>
+            <button type="button" data-access="premium" class="filter-pill filter-pill--gold"><i class="fa-solid fa-crown"></i> Premium</button>
+          </div>
+          <select id="archive-topic-select" class="filter-select" aria-label="Filter by topic">
+            <option value="all">All Topics</option>
+            <option value="Credit/Debit Cards">Credit/Debit Cards</option>
+            <option value="Airlines">Airlines</option>
+            <option value="News">News</option>
+            <option value="Redemption Availability">Redemption Availability</option>
+          </select>
+        </div>
+
         <div id="archive-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
 
-          <div class="card-utility p-6 text-center text-sm text-neutral-400 slide-up">
-            Loading current issues...
+          <div class="card-utility overflow-hidden animate-pulse slide-up">
+            <div class="h-44 bg-neutral-100"></div>
+            <div class="p-5 space-y-2">
+              <div class="h-2.5 w-24 bg-neutral-100 rounded-full"></div>
+              <div class="h-3.5 w-4/5 bg-neutral-100 rounded-full"></div>
+              <div class="h-2.5 w-16 bg-neutral-100 rounded-full mt-3"></div>
+            </div>
+          </div>
+          <div class="card-utility overflow-hidden animate-pulse slide-up" style="animation-delay:.05s;">
+            <div class="h-44 bg-neutral-100"></div>
+            <div class="p-5 space-y-2">
+              <div class="h-2.5 w-24 bg-neutral-100 rounded-full"></div>
+              <div class="h-3.5 w-4/5 bg-neutral-100 rounded-full"></div>
+              <div class="h-2.5 w-16 bg-neutral-100 rounded-full mt-3"></div>
+            </div>
+          </div>
+          <div class="card-utility overflow-hidden animate-pulse slide-up" style="animation-delay:.1s;">
+            <div class="h-44 bg-neutral-100"></div>
+            <div class="p-5 space-y-2">
+              <div class="h-2.5 w-24 bg-neutral-100 rounded-full"></div>
+              <div class="h-3.5 w-4/5 bg-neutral-100 rounded-full"></div>
+              <div class="h-2.5 w-16 bg-neutral-100 rounded-full mt-3"></div>
+            </div>
           </div>
 
         </div>
@@ -144,11 +196,11 @@
     <!-- =============================================
          4. ABOUT — brief coverage summary
          ============================================= -->
-    <section class="py-24 bg-white">
+    <section class="newsletter-value-strip-v5 py-16 bg-white" aria-label="What the newsletter covers">
       <div class="container mx-auto px-4 md:px-6 max-w-5xl">
 
         <div class="flex items-center gap-4 mb-10 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">About</p>
+          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Inside the brief</p>
           <div class="flex-1 h-px bg-neutral-100"></div>
         </div>
 
@@ -156,10 +208,10 @@
 
           <div>
             <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
-              What Skyfare Altitude covers
+              What you’ll find inside
             </h2>
             <p class="section-lead">
-              One issue per week — written by someone who books 100+ premium cabins a year. No filler, no affiliate spam. Just the intelligence to fly Business and First Class on fewer miles.
+              One useful issue each week: the signals, routes, and cabin context that help you fly better with fewer miles.
             </p>
           </div>
 
@@ -210,7 +262,7 @@
     <!-- =============================================
          5. FOOTER CTA BAND — reusable component, newsletter-form mode
          ============================================= -->
-    <div data-cta-mount data-cta-mode="newsletter-form" style="min-height:420px"
+    <div data-cta-mount data-cta-mode="newsletter-form" style="min-height:300px"
       data-cta-eyebrow-icon="fa-solid fa-envelope-open-text"
       data-cta-eyebrow-text="Subscribe Free"
       data-cta-heading="Get it in your inbox."

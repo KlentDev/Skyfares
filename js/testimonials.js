@@ -21,7 +21,7 @@
 
   function avatarHtml(t) {
     if (t.image) {
-      return '<img src="' + esc(t.image) + '" alt="' + esc(t.name) + '"' +
+      return '<img src="' + esc(t.image) + '" alt="' + esc(t.name) + '" loading="lazy" decoding="async"' +
         ' class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">';
     }
     return '<div class="w-full h-full flex items-center justify-center bg-brand-50">' +
@@ -91,34 +91,50 @@
   function initHomepageGrid() {
     var grid = document.getElementById('home-testimonials-grid');
     if (!grid) return;
-    var section = document.getElementById('testimonials-section');
+    var fallback = document.getElementById('home-testimonials-status');
+
+    function showFallback() {
+      grid.innerHTML = '';
+      grid.classList.add('hidden');
+      if (fallback) fallback.classList.remove('hidden');
+    }
 
     fetchTestimonials({ scope: 'featured', limit: 3 })
       .then(function (result) {
         if (!result.testimonials.length) {
-          if (section) section.style.display = 'none';
+          showFallback();
           return;
         }
+        grid.classList.remove('hidden');
+        if (fallback) fallback.classList.add('hidden');
         renderInto('home-testimonials-grid', result.testimonials, 'card-utility testimonial-card-v2');
       })
-      .catch(function () {
-        if (section) section.style.display = 'none';
-      });
+      .catch(showFallback);
   }
 
   function initHeroSocialProof() {
     var wrap = document.getElementById('hero-social-proof');
     if (!wrap) return;
 
-    function hideWrap() {
-      wrap.classList.add('hidden');
-      wrap.classList.remove('flex');
+    function showFallback() {
+      var avatars = document.getElementById('hero-social-proof-avatars');
+      var stars = document.getElementById('hero-social-proof-stars');
+      var text = document.getElementById('hero-social-proof-text');
+      if (avatars) {
+        avatars.innerHTML = '<div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/15 flex items-center justify-center"><i class="fa-solid fa-user text-white/70 text-xs"></i></div>' +
+          '<div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/15 flex items-center justify-center"><i class="fa-solid fa-user text-white/70 text-xs"></i></div>' +
+          '<div class="w-9 h-9 rounded-full ring-2 ring-white/80 bg-white/15 flex items-center justify-center"><i class="fa-solid fa-user text-white/70 text-xs"></i></div>';
+      }
+      if (stars) stars.innerHTML = '<i class="fa-regular fa-star text-xs"></i><i class="fa-regular fa-star text-xs"></i><i class="fa-regular fa-star text-xs"></i><i class="fa-regular fa-star text-xs"></i><i class="fa-regular fa-star text-xs"></i>';
+      if (text) text.textContent = 'Client ratings and stories';
+      wrap.classList.remove('hidden');
+      wrap.classList.add('flex');
     }
 
     fetchTestimonials({ limit: 100 })
       .then(function (result) {
         var list = result.testimonials;
-        if (!list.length) return hideWrap();
+        if (!list.length) return showFallback();
 
         var withRating = list.filter(function (t) { return parseInt(t.rating, 10) > 0; });
         var avg = withRating.length
@@ -148,7 +164,7 @@
         var text = document.getElementById('hero-social-proof-text');
         text.textContent = avgRounded + ' rating · ' + count + ' happy travelers';
       })
-      .catch(hideWrap);
+      .catch(showFallback);
   }
 
   function showState(id, show) {

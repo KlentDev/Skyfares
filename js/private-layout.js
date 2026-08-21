@@ -124,6 +124,18 @@
         }
         link.addEventListener('click', function (e) {
           e.preventDefault();
+
+          // KrisFlyer Guide isn't open yet -- show the coming-soon lock
+          // instead of running the real email-verification flow. Altitude is
+          // untouched below. To bring Guide verification back once it
+          // launches, delete this "if" block (and openGuideComingSoon/
+          // closeGuideComingSoon further down) so target === 'guide' falls
+          // through to the same SkyfareVerifyAccess.open call Altitude uses.
+          if (target === 'guide') {
+            openGuideComingSoon();
+            return;
+          }
+
           var href = link.getAttribute('href') || '#';
           if (window.SkyfareAccessCache && window.SkyfareAccessCache.isValid(target)) {
             window.location.href = href;
@@ -228,6 +240,61 @@
     document.documentElement.classList.remove('private-modal-open');
     if (accountTrigger) accountTrigger.focus();
   }
+
+  // ─── Guide "coming soon" lock ────────────────────────────────────────────
+  // Stands in for the real KrisFlyer Guide verify-access flow while the
+  // Guide product isn't live. Reuses the same lock/blur visual language as
+  // js/coming-soon.js (.icon-chip-lg, .cs-badge) and the same modal shell
+  // (backdrop-blur backing, white card) as components/modal-verify-access.html,
+  // but built inline here since there's no card/section on this page to
+  // blur in place -- this is triggered from a header nav click, not an
+  // in-page [data-coming-soon] element.
+  function ensureGuideComingSoonModal() {
+    var existing = document.getElementById('guide-coming-soon-modal');
+    if (existing) return existing;
+
+    var modal = document.createElement('div');
+    modal.id = 'guide-coming-soon-modal';
+    modal.className = 'fixed inset-0 z-[320] items-center justify-center p-4';
+    modal.style.display = 'none';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'guide-coming-soon-title');
+    modal.innerHTML =
+      '<div class="absolute inset-0 bg-brand-950/70 backdrop-blur-sm" data-guide-coming-soon-close></div>' +
+      '<div class="relative w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-2xl p-8 text-center">' +
+        '<button type="button" data-guide-coming-soon-close class="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-colors hover:bg-neutral-200 hover:text-neutral-700" aria-label="Close">' +
+          '<i class="fa-solid fa-xmark text-xs" aria-hidden="true"></i>' +
+        '</button>' +
+        '<div class="icon-chip icon-chip-lg mb-4 mx-auto"><i class="fa-solid fa-lock" aria-hidden="true"></i></div>' +
+        '<span class="cs-badge mb-3">Coming Soon</span>' +
+        '<h2 id="guide-coming-soon-title" class="font-display text-xl font-bold tracking-tight text-neutral-900 mb-2">KrisFlyer Guide</h2>' +
+        '<p class="text-sm leading-relaxed text-neutral-500">We’re putting the finishing touches on the KrisFlyer Guide. Always check your email for the latest updates — we’ll let you know the moment it’s ready to unlock.</p>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+    modal.querySelectorAll('[data-guide-coming-soon-close]').forEach(function (el) {
+      el.addEventListener('click', closeGuideComingSoon);
+    });
+    return modal;
+  }
+
+  function openGuideComingSoon() {
+    var modal = ensureGuideComingSoonModal();
+    modal.style.display = 'flex';
+    document.documentElement.classList.add('private-modal-open');
+  }
+
+  function closeGuideComingSoon() {
+    var modal = document.getElementById('guide-coming-soon-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    document.documentElement.classList.remove('private-modal-open');
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeGuideComingSoon();
+  });
 
   function performSignout(page) {
     if (window.SkyfareAccessCache) window.SkyfareAccessCache.clear();

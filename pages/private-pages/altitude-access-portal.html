@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Altitude Dashboard | Skyfare</title>
@@ -15,6 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/altitude-editorial.css">
   <script src="../../js/tailwind-config.js" defer></script>
   <script src="../../js/ui.js" defer></script>
   <script src="../../js/private-layout.js" defer></script>
@@ -23,11 +32,11 @@
 
 <body class="private-body altitude-portal-shell" data-private-page="altitude" data-private-product="Altitude" data-private-subtitle="Member overview" data-altitude-section="overview">
   <!--
-    THESIS: Altitude is a private workspace, not a long sales page. The old stacked dashboard is replaced by one scannable overview and focused member pages.
-    OWN-WORLD: Skyfare private UI with white panels, blue actions, gold membership signals, compact app navigation, and restrained motion.
-    STORY: Members can confirm access, see renewal timing, read the latest issues, and jump to the exact member task they need.
-    FIRST VIEWPORT: private header, secondary member nav, left status narrative, right membership card, then compact action cards.
-    FORM: approved compact overview plus focused subpages. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+    THESIS: Altitude is a travel intelligence briefing, not a generic member dashboard.
+    OWN-WORLD: Editorial utility UI with Skyfare white surfaces, route notation, compact live signals, restrained blue actions, and gold premium markers only.
+    STORY: Members see what is fresh -- real alert and Escapes rows, not decorative placeholders -- and jump straight into the right workflow via "See more."
+    FIRST VIEWPORT: private header, Altitude nav, editorial briefing intro, membership status, then live Award Alerts / KrisFlyer Escapes previews.
+    FORM: balanced intelligence overview. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
   -->
   <div id="page-loader">
     <img src="../../logos/logo.webp" alt="Skyfare Consulting">
@@ -39,10 +48,7 @@
   <nav class="altitude-subnav" aria-label="Altitude member pages">
     <div class="private-container altitude-subnav__inner">
       <a href="altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
-      <a href="altitude-access/benefits.html" data-altitude-nav="benefits"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Benefits</span></a>
       <a href="altitude-access/award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
-      <a href="altitude-access/routing-strategies.html" data-altitude-nav="routing-strategies"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Routing</span></a>
-      <a href="altitude-access/cabin-compare-verdicts.html" data-altitude-nav="cabin-verdicts"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Cabin Verdicts</span></a>
       <a href="altitude-access/krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
       <a href="altitude-access/newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
     </div>
@@ -51,22 +57,19 @@
   <main id="main-content" class="private-main altitude-portal-main">
     <section class="altitude-overview" aria-labelledby="alt-dashboard-title">
       <div class="private-container">
-        <div class="altitude-overview__grid">
-          <div class="private-panel altitude-overview__intro slide-up is-visible">
+        <div class="altitude-briefing-hero">
+          <div class="altitude-briefing-copy slide-up is-visible">
             <div class="altitude-status-line">
               <span><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Active access</span>
               <span id="alt-member-email">Signed in</span>
             </div>
-            <h1 id="alt-dashboard-title">Your Altitude member workspace.</h1>
+            <h1 id="alt-dashboard-title">Altitude intelligence briefing.</h1>
             <p>
-              Review your membership status, continue reading premium travel intelligence, and jump into the member tools that help you use Altitude without digging through email.
+              A focused member view for award opportunities and editorial KrisFlyer escape analysis. Each area is built for the way that intelligence is actually read.
             </p>
             <div class="altitude-overview__actions">
-              <a href="altitude-access/newsletter.html" class="private-action private-action--primary">
-                <i class="fa-solid fa-newspaper" aria-hidden="true"></i> Read Latest Issues
-              </a>
-              <a href="altitude-access/beehiiv-manual.html" class="private-action">
-                <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Beehiiv Setup
+              <a href="altitude-access/award-alerts.html" class="private-action private-action--primary">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i> Open Alerts
               </a>
             </div>
           </div>
@@ -83,16 +86,16 @@
             <div class="altitude-membership-dates">
               <div>
                 <span>Purchased</span>
-                <strong id="alt-membership-purchased">Checking</strong>
+                <strong id="alt-membership-purchased"><span class="private-skel-line private-skel-line--inline" style="width:4.5rem;height:0.85em;" aria-label="Checking"></span></strong>
               </div>
               <div>
                 <span>Expires</span>
-                <strong id="alt-membership-expires">Checking</strong>
+                <strong id="alt-membership-expires"><span class="private-skel-line private-skel-line--inline" style="width:4.5rem;height:0.85em;" aria-label="Checking"></span></strong>
               </div>
             </div>
             <div class="altitude-membership-remaining">
               <p class="private-summary__label">Remaining access</p>
-              <p id="alt-membership-days" class="private-summary__value">Checking renewal status</p>
+              <p id="alt-membership-days" class="private-summary__value"><span class="private-skel-line private-skel-line--inline" style="width:9rem;height:0.85em;" aria-label="Checking renewal status"></span></p>
             </div>
             <div class="altitude-membership-footer">
               <a href="altitude-access/membership.html" class="private-action private-action--primary w-full justify-center">
@@ -105,53 +108,69 @@
       </div>
     </section>
 
-    <section class="altitude-overview-section" aria-labelledby="alt-quick-links-title">
+    <section class="altitude-overview-section" aria-labelledby="alt-intelligence-title">
       <div class="private-container">
         <div class="altitude-section-title slide-up">
-          <h2 id="alt-quick-links-title">Where do you want to go?</h2>
-          <p>Altitude now lives in focused member pages, so each task has its own clean space.</p>
+          <h2 id="alt-intelligence-title">Latest intelligence surfaces</h2>
+          <p>A live glance at each product, straight from the source.</p>
         </div>
-        <div class="altitude-link-grid">
-          <a href="altitude-access/membership.html" class="altitude-link-card slide-up">
-            <span class="icon-chip icon-chip-lg"><i class="fa-solid fa-wallet" aria-hidden="true"></i></span>
-            <span>
-              <strong>Membership</strong>
-              <small>Plan, billing, renewal timing, and annual upgrade options.</small>
-            </span>
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
-          <a href="altitude-access/newsletter.html" class="altitude-link-card slide-up">
-            <span class="icon-chip icon-chip-lg"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></span>
-            <span>
-              <strong>Latest Issues</strong>
-              <small>Read the premium archive with Skyfare or Beehiiv handoff.</small>
-            </span>
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
-          <a href="altitude-access/benefits.html" class="altitude-link-card slide-up">
-            <span class="icon-chip icon-chip-lg"><i class="fa-solid fa-unlock-keyhole" aria-hidden="true"></i></span>
-            <span>
-              <strong>Benefits</strong>
-              <small>See what stays free, what Altitude unlocks, and what is coming next.</small>
-            </span>
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
-          <a href="altitude-access/beehiiv-manual.html" class="altitude-link-card slide-up">
-            <span class="icon-chip icon-chip-lg"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span>
-            <span>
-              <strong>Beehiiv Manual</strong>
-              <small>Step-by-step setup guide for email verification and comments.</small>
-            </span>
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
-          <a href="altitude-access/support.html" class="altitude-link-card slide-up">
-            <span class="icon-chip icon-chip-lg"><i class="fa-solid fa-headset" aria-hidden="true"></i></span>
-            <span>
-              <strong>Support</strong>
-              <small>Access help, billing questions, and member support.</small>
-            </span>
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
+        <div class="altitude-intelligence-grid">
+          <article class="altitude-intel-card altitude-intel-card--alerts slide-up">
+            <div class="altitude-intel-card__head">
+              <span class="private-badge private-badge--gold">Live feed</span>
+              <h3>Award Alerts</h3>
+              <p>Fresh opportunities as they're found. Filter by status and open the full booking detail when timing matters.</p>
+            </div>
+            <div class="altitude-intel-preview" data-overview-preview="award-alerts">
+              <div role="status" aria-live="polite" aria-label="Loading latest alerts">
+                <div class="altitude-intel-preview__row">
+                  <div class="altitude-intel-preview__row-top">
+                    <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                    <span class="alt-skeleton__line" style="width:3rem;"></span>
+                  </div>
+                  <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.65rem;"></span>
+                </div>
+                <div class="altitude-intel-preview__row">
+                  <div class="altitude-intel-preview__row-top">
+                    <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                    <span class="alt-skeleton__line" style="width:3rem;"></span>
+                  </div>
+                  <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.65rem;"></span>
+                </div>
+                <div class="altitude-intel-preview__row">
+                  <div class="altitude-intel-preview__row-top">
+                    <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                    <span class="alt-skeleton__line" style="width:3rem;"></span>
+                  </div>
+                  <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.65rem;"></span>
+                </div>
+              </div>
+            </div>
+            <a href="altitude-access/award-alerts.html" class="private-action altitude-intel-card__more">
+              See all alerts <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </article>
+
+          <article class="altitude-intel-card altitude-intel-card--escape slide-up">
+            <div class="altitude-intel-card__head">
+              <span class="private-badge private-badge--gold">Editorial</span>
+              <h3>KrisFlyer Escapes</h3>
+              <p>This month's destination-led briefing with route rows and editorial context.</p>
+            </div>
+            <div class="altitude-intel-preview" data-overview-preview="krisflyer-escapes">
+              <div role="status" aria-live="polite" aria-label="Loading this month's drop">
+                <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.7rem;margin-bottom:.5rem;"></span>
+                <span class="alt-skeleton__title" style="width:90%;margin-bottom:.6rem;"></span>
+                <div class="altitude-intel-preview__row">
+                  <span class="alt-skeleton__badge"></span>
+                  <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                </div>
+              </div>
+            </div>
+            <a href="altitude-access/krisflyer-escapes.html" class="private-action altitude-intel-card__more">
+              Read this month's Escapes <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </article>
         </div>
       </div>
     </section>
@@ -167,10 +186,30 @@
             View Archive <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </a>
         </div>
-        <div id="alt-latest-grid" class="private-grid altitude-latest-grid">
-          <div class="private-skeleton">
-            <span class="private-skeleton__dot" aria-hidden="true"></span>
-            <p>Loading latest issues</p>
+        <div id="alt-latest-grid" class="private-grid altitude-latest-grid" role="status" aria-live="polite" aria-label="Loading latest issues">
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -180,5 +219,7 @@
   <div id="private-footer-slot"></div>
 
   <script src="../../js/altitude-portal.js" defer></script>
+  <script src="../../js/altitude-content-core.js" defer></script>
+  <script src="../../js/altitude-overview-preview.js" defer></script>
 </body>
 </html>

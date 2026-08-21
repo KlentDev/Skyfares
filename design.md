@@ -401,3 +401,4 @@ The sections above were written from an abstracted token analysis and drifted fr
 ### Rollout note
 
 Homepage sections stayed as inline markup in `index.html` rather than being extracted into the `components/` fetch-and-inject pattern (currently used only for the two login/purchase modals) — above-the-fold and near-fold homepage content doesn't benefit from an added network round-trip and CLS risk, and none of these sections are reused verbatim elsewhere. When this system is rolled out to an interior page, prefer extending the dual-class pattern (add `-v2` alongside the page's existing shared classes) over a wholesale rewrite.
+

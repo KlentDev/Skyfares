@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Altitude Membership | Skyfare</title>
@@ -32,10 +40,7 @@
   <nav class="altitude-subnav" aria-label="Altitude member pages">
     <div class="private-container altitude-subnav__inner">
       <a href="../altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
-      <a href="benefits.html" data-altitude-nav="benefits"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Benefits</span></a>
       <a href="award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
-      <a href="routing-strategies.html" data-altitude-nav="routing-strategies"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Routing</span></a>
-      <a href="cabin-compare-verdicts.html" data-altitude-nav="cabin-verdicts"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Cabin Verdicts</span></a>
       <a href="krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
       <a href="newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
     </div>
@@ -63,16 +68,16 @@
             <div class="altitude-membership-dates">
               <div>
                 <span>Purchased</span>
-                <strong id="alt-membership-purchased">Checking</strong>
+                <strong id="alt-membership-purchased"><span class="private-skel-line private-skel-line--inline" style="width:4.5rem;height:0.85em;" aria-label="Checking"></span></strong>
               </div>
               <div>
                 <span>Expires</span>
-                <strong id="alt-membership-expires">Checking</strong>
+                <strong id="alt-membership-expires"><span class="private-skel-line private-skel-line--inline" style="width:4.5rem;height:0.85em;" aria-label="Checking"></span></strong>
               </div>
             </div>
             <div class="altitude-membership-remaining">
               <p class="private-summary__label">Remaining access</p>
-              <p id="alt-membership-days" class="private-summary__value">Checking renewal status</p>
+              <p id="alt-membership-days" class="private-summary__value"><span class="private-skel-line private-skel-line--inline" style="width:9rem;height:0.85em;" aria-label="Checking renewal status"></span></p>
             </div>
             <p id="alt-membership-renew-note" class="hidden private-summary__note altitude-renew-note">Auto-renews. Cancel anytime.</p>
           </div>
@@ -129,30 +134,31 @@
 
             <div class="altitude-compare-row" role="row">
               <div class="altitude-compare-feature" role="cell">
+                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i></span>
+                <span><strong>The Skyfare Verdict on Cabin Compare</strong><small>Clear cabin picks based on personally flown products.</small></span>
+              </div>
+              <span class="altitude-compare-value" role="cell" data-label="Free">Included</span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
+            </div>
+
+            <div class="altitude-compare-row" role="row">
+              <div class="altitude-compare-feature" role="cell">
                 <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-bell" aria-hidden="true"></i></span>
                 <span><strong>Award alerts</strong><small>Availability windows, full dates, and booking detail.</small></span>
               </div>
               <span class="altitude-compare-value altitude-compare-value--muted" role="cell" data-label="Free">Limited</span>
-              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Full alerts</span>
+              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Full detail</span>
             </div>
 
             <div class="altitude-compare-row" role="row">
               <div class="altitude-compare-feature" role="cell">
                 <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i></span>
-                <span><strong>KrisFlyer Spontaneous Escapes</strong><small>Monthly drop coverage and route value notes.</small></span>
+                <span><strong>KrisFlyer Escapes</strong><small>Monthly drop coverage and route value notes.</small></span>
               </div>
               <span class="altitude-compare-value altitude-compare-value--muted" role="cell" data-label="Free">Summary</span>
               <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Full breakdown</span>
             </div>
 
-            <div class="altitude-compare-row" role="row">
-              <div class="altitude-compare-feature" role="cell">
-                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-route" aria-hidden="true"></i></span>
-                <span><strong>Routing strategies</strong><small>Itineraries built to improve cabin quality and redemption value.</small></span>
-              </div>
-              <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
-              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
-            </div>
 
             <div class="altitude-compare-row" role="row">
               <div class="altitude-compare-feature" role="cell">
@@ -167,15 +173,6 @@
               <div class="altitude-compare-feature" role="cell">
                 <span class="icon-chip icon-chip-sm icon-chip--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i></span>
                 <span><strong>Members-only content</strong><small>Exclusive issues that never go to the free list.</small></span>
-              </div>
-              <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
-              <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>
-            </div>
-
-            <div class="altitude-compare-row" role="row">
-              <div class="altitude-compare-feature" role="cell">
-                <span class="icon-chip icon-chip-sm"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i></span>
-                <span><strong>The Skyfare Verdict on Cabin Compare</strong><small>Clear cabin picks based on personally flown products.</small></span>
               </div>
               <span class="altitude-compare-value altitude-compare-value--empty" role="cell" data-label="Free"><i class="fa-solid fa-minus" aria-hidden="true"></i><span class="sr-only">Not included</span></span>
               <span class="altitude-compare-value altitude-compare-value--gold" role="cell" data-label="Altitude">Included</span>

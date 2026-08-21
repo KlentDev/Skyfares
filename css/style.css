@@ -658,6 +658,82 @@ details .accordion-body > div {
 }
 .btn-pill-gold:hover { background: #9E7B0D; }
 
+/* ── Archive filter toolbar (pages/newsletter.html + the private Altitude
+   Access archive) — one segmented control (access) + one dropdown (topic),
+   replacing what used to be two rows of individually-bordered pill buttons.
+   That version toggled between .btn-pill-primary (border: none) and
+   .btn-pill-secondary (border: 1px solid) on click -- swapping border width
+   shifts every button's box size by ~1px, which reads as the whole row
+   trembling on every click. A segment has no per-button border at all (the
+   active state is a background swap inside a fixed-size track), so its size
+   never changes and there's nothing left to jitter. ──────────────────────── */
+.filter-segment {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: #f1f3f7;
+}
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem 1.1rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #5b6270;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color 0.2s ease-out, color 0.2s ease-out, transform 0.12s ease-out;
+}
+.filter-pill i { font-size: 0.7rem; }
+.filter-pill:hover { color: #0066cc; }
+.filter-pill:active { transform: scale(0.96); }
+.filter-pill.active {
+  background: #0066cc;
+  color: #ffffff;
+}
+.filter-pill.active:hover { color: #ffffff; }
+
+/* Premium segment gets its own crown + gold treatment instead of the plain
+   blue active state, so it reads as a distinct tier rather than a third
+   identical toggle. */
+.filter-pill--gold { color: #9E7B0D; }
+.filter-pill--gold:hover { color: #C9A227; }
+.filter-pill--gold.active {
+  background: #C9A227;
+  color: #ffffff;
+}
+.filter-pill--gold.active:hover { color: #ffffff; }
+
+.filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #e7e9ee;
+  border-radius: 9999px;
+  padding: 0.55rem 2.25rem 0.55rem 1.1rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1d1d1f;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235b6270' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  cursor: pointer;
+  transition: border-color 0.2s ease-out;
+}
+.filter-select:hover,
+.filter-select:focus-visible {
+  border-color: #0066cc;
+  outline: none;
+}
+
 /* ── Popular Routes Accordion ─────────────────────────────────── */
 .routes-row {
   display: flex;
@@ -1653,6 +1729,19 @@ button[class*="bg-emerald-"]:active {
 }
 .sky-modal__btn--danger:hover { background: #b91c1c; border-color: #b91c1c; }
 
+/* Plain underlined text action -- no button chrome, sits alongside the
+   primary pill for a secondary/lower-emphasis choice. */
+.sky-modal__btn--link {
+  background: transparent;
+  border: none;
+  padding: 0.6875rem 0.25rem;
+  color: #0066cc;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sky-modal__btn--link:hover  { color: #0052a3; background: transparent; }
+.sky-modal__btn--link:active { transform: scale(0.97); }
+
 @media (max-width: 480px) {
   .sky-toast-wrap { left: 1rem; right: 1rem; }
   .sky-toast { min-width: 0; max-width: 100%; }
@@ -2126,7 +2215,9 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 
   /* Type — Lexend (display) / Manrope (body), using only weights already
      loaded (500/600/700 and 400/500/600 respectively) */
-  --font-display-hero-v2-size: clamp(2.25rem, 1.1rem + 3.4vw, 4.75rem);
+  /* Capped at design.md's documented {typography.hero-display} scale (56px desktop,
+     ~38px mobile) -- was overshooting to 76px at wide viewports. */
+  --font-display-hero-v2-size: clamp(2.375rem, 1.7rem + 1.8vw, 3.5rem);
   --font-display-h2-v2-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem);
   --font-eyebrow-v2-size: 0.6875rem;
   --font-stat-v2-size: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
@@ -2226,12 +2317,12 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 /* ── Form input — new visual, same data-newsletter-* attribute contract ── */
 .form-input-v2 {
   width: 100%;
-  padding: 0.9rem 1.1rem;
+  padding: 0.65rem 0.9rem;
   border-radius: var(--radius-v2-sm);
   border: 1px solid rgba(0, 102, 204, 0.14);
   background: #ffffff;
   font-family: 'Manrope', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   color: #1d1d1f;
   transition: border-color 0.25s var(--ease-v2-out), box-shadow 0.25s var(--ease-v2-out);
 }
@@ -2440,6 +2531,591 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 .newsletter-card-v2:hover { transform: translateY(-6px); box-shadow: var(--shadow-v2-md); }
 
+/* ── Homepage publication preview ──────────────────────────────────────────
+   One featured story and two quiet latest-issue rows. This deliberately does
+   not reuse the archive card grid: the homepage is a front page, not a mini
+   archive. ──────────────────────────────────────────────────────────────── */
+.newsletter-home-v5 {
+  padding-block: clamp(4.5rem, 8vw, 6.5rem);
+}
+.newsletter-home-v5__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, .65fr);
+  gap: 2rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.newsletter-home-v5__intro h2 {
+  max-width: 42rem;
+  margin: 0;
+  font-size: var(--font-display-h2-v2-size);
+  line-height: 1.08;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+.newsletter-home-v5__intro > p {
+  max-width: 31rem;
+  justify-self: end;
+  margin: 0;
+  color: rgba(54, 64, 82, .72);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+.newsletter-home-v5__preview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(21rem, .85fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: stretch;
+}
+.newsletter-home-v5__feature,
+.newsletter-home-v5__latest-item {
+  color: inherit;
+  text-decoration: none;
+}
+.newsletter-home-v5__feature {
+  display: grid;
+  grid-template-columns: minmax(12rem, .8fr) minmax(0, 1.2fr);
+  min-height: 20rem;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, .09);
+  border-radius: var(--radius-v2-lg);
+  transition: border-color .25s var(--ease-v2-out), transform .25s var(--ease-v2-out);
+}
+.newsletter-home-v5__feature:hover,
+.newsletter-home-v5__feature:focus-visible {
+  border-color: rgba(0, 102, 204, .32);
+  transform: translateY(-2px);
+}
+.newsletter-home-v5__feature--locked,
+.newsletter-home-v5__latest-item--locked { cursor: pointer; }
+.newsletter-home-v5__feature:focus-visible,
+.newsletter-home-v5__latest-item:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: 4px;
+}
+.newsletter-home-v5__feature-media {
+  position: relative;
+  min-height: 20rem;
+  overflow: hidden;
+  background: #1a2437;
+}
+.newsletter-home-v5__feature-media img,
+.newsletter-home-v5__latest-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s var(--ease-v2-out);
+}
+.newsletter-home-v5__feature:hover .newsletter-home-v5__feature-media img,
+.newsletter-home-v5__latest-item:hover .newsletter-home-v5__latest-media img {
+  transform: scale(1.035);
+}
+.newsletter-home-v5__image-empty,
+.newsletter-home-v5__latest-image-empty {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: rgba(255, 255, 255, .52);
+  font-size: 1.35rem;
+}
+.newsletter-home-v5__start-label,
+.newsletter-home-v5__kicker,
+.newsletter-home-v5__latest-label,
+.newsletter-home-v5__meta {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.newsletter-home-v5__start-label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .4rem .62rem;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: var(--radius-v2-pill);
+  background: rgba(7, 24, 41, .68);
+  color: #fff;
+  font-size: .58rem;
+  line-height: 1;
+}
+.newsletter-home-v5__feature-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+.newsletter-home-v5__kicker,
+.newsletter-home-v5__latest-label {
+  margin: 0 0 .75rem;
+  color: #0066cc;
+  font-size: .62rem;
+  line-height: 1.2;
+}
+.newsletter-home-v5__feature-copy h3 {
+  margin: 0;
+  color: #1d1d1f;
+  font-family: 'Lexend', sans-serif;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -.035em;
+  line-height: 1.16;
+  text-wrap: balance;
+}
+.newsletter-home-v5__summary,
+.newsletter-home-v5__latest-summary {
+  color: #5c6472;
+  font-size: .88rem;
+  line-height: 1.65;
+}
+.newsletter-home-v5__summary {
+  display: -webkit-box;
+  overflow: hidden;
+  max-width: 31rem;
+  margin: 1rem 0 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.newsletter-home-v5__meta {
+  margin: 1.15rem 0 0;
+  color: #8b919c;
+  font-size: .59rem;
+  letter-spacing: .08em;
+  line-height: 1.4;
+}
+.newsletter-home-v5__read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin-top: 1.2rem;
+  color: #0066cc;
+  font-size: .75rem;
+  font-weight: 700;
+  transition: color .2s ease, gap .2s ease;
+}
+.newsletter-home-v5__feature-copy > .newsletter-home-v5__read-link {
+  align-self: flex-end;
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+.newsletter-home-v5__feature:hover .newsletter-home-v5__read-link,
+.newsletter-home-v5__latest-item:hover .newsletter-home-v5__read-link {
+  gap: .65rem;
+  color: #004f9e;
+}
+.newsletter-home-v5__latest {
+  display: grid;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+.newsletter-home-v5__latest-item {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  transition: color .2s ease;
+}
+.newsletter-home-v5__latest-media {
+  width: 7rem;
+  height: 7rem;
+  overflow: hidden;
+  border-radius: var(--radius-v2-sm);
+  background: #1a2437;
+}
+.newsletter-home-v5__latest-copy h3 {
+  margin: 0;
+  color: #1d1d1f;
+  font-family: 'Lexend', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.newsletter-home-v5__latest-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: .5rem 0 0;
+  font-size: .78rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.newsletter-home-v5__latest-footer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.newsletter-home-v5__latest-footer .newsletter-home-v5__meta {
+  overflow: hidden;
+  margin-top: .65rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.newsletter-home-v5__latest-footer .newsletter-home-v5__read-link {
+  flex-shrink: 0;
+  margin-top: .65rem;
+  font-size: .7rem;
+}
+.newsletter-home-v5__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem 1.35rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+.newsletter-home-v5__archive-link,
+.newsletter-home-v5__subscribe-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: #0066cc;
+  font-size: .8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color .2s ease, gap .2s ease;
+}
+.newsletter-home-v5__archive-link:hover,
+.newsletter-home-v5__subscribe-link:hover { color: #004f9e; gap: .65rem; }
+.newsletter-home-v5__subscribe-note {
+  margin-left: auto;
+  color: #8b919c;
+  font-size: .72rem;
+}
+.newsletter-home-v5__empty {
+  grid-column: 1 / -1;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  color: #6b7280;
+  font-size: .9rem;
+  line-height: 1.6;
+}
+.newsletter-home-v5__empty p { margin: 0; }
+.newsletter-home-v5__empty-label {
+  margin-bottom: .35rem !important;
+  color: #1d1d1f;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 700;
+}
+.newsletter-home-v5__empty a { color: #0066cc; text-decoration: underline; text-underline-offset: 3px; }
+.newsletter-home-skeleton-v5 { background: #fff; }
+.newsletter-home-v5__skeleton-media { min-height: 20rem; background: #e5e7eb; }
+.newsletter-home-v5__skeleton-copy { display: flex; flex-direction: column; justify-content: center; gap: 1rem; padding: 2rem; }
+.newsletter-home-skeleton-v5__item { display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; align-items: center; padding: 1.25rem 0; border-bottom: 1px solid #e5e7eb; }
+.newsletter-home-skeleton-v5__item:first-child { border-top: 1px solid #e5e7eb; }
+.newsletter-home-skeleton-v5__item > span { width: 7rem; height: 7rem; border-radius: var(--radius-v2-sm); background: #e5e7eb; }
+.newsletter-home-skeleton-v5__item > div { display: grid; gap: .6rem; }
+.newsletter-home-skeleton-v5__item i { display: block; height: .65rem; border-radius: 999px; background: #e5e7eb; }
+.newsletter-home-skeleton-v5__item i:nth-child(1) { width: 34%; }
+.newsletter-home-skeleton-v5__item i:nth-child(2) { width: 90%; height: 1.15rem; }
+.newsletter-home-skeleton-v5__item i:nth-child(3) { width: 45%; }
+
+@media (max-width: 1068px) {
+  .newsletter-home-v5__intro,
+  .newsletter-home-v5__preview { grid-template-columns: 1fr; }
+  .newsletter-home-v5__intro { gap: 1rem; }
+  .newsletter-home-v5__intro > p { justify-self: start; }
+  .newsletter-home-v5__latest { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; gap: 1.5rem; border-top: 0; }
+  .newsletter-home-v5__latest-item { grid-template-columns: 5.5rem minmax(0, 1fr); gap: .85rem; padding: 1rem 0; }
+  .newsletter-home-v5__latest-media { width: 5.5rem; height: 5.5rem; }
+  .newsletter-home-v5__latest-item:first-child { border-top: 1px solid rgba(0, 0, 0, .1); }
+}
+
+@media (max-width: 767px) {
+  .newsletter-home-v5 { padding-block: 4rem; }
+  .newsletter-home-v5__intro h2 { font-size: clamp(1.8rem, 8vw, 2.35rem); }
+  .newsletter-home-v5__feature { grid-template-columns: 1fr; }
+  .newsletter-home-v5__feature-media,
+  .newsletter-home-v5__skeleton-media { min-height: 13rem; max-height: 16rem; }
+  .newsletter-home-v5__feature-copy { padding: 1.35rem; }
+  .newsletter-home-v5__latest { grid-template-columns: 1fr; gap: 0; }
+  .newsletter-home-v5__latest-item { grid-template-columns: 5.25rem minmax(0, 1fr); }
+  .newsletter-home-v5__latest-media,
+  .newsletter-home-skeleton-v5__item > span { width: 5.25rem; height: 5.25rem; }
+  .newsletter-home-v5__latest-summary { -webkit-line-clamp: 3; }
+  .newsletter-home-v5__actions { align-items: flex-start; flex-direction: column; gap: .65rem; }
+  .newsletter-home-v5__subscribe-note { order: 2; margin-left: 0; }
+  .newsletter-home-v5__subscribe-link { order: 3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newsletter-home-v5__feature,
+  .newsletter-home-v5__feature-media img,
+  .newsletter-home-v5__latest-media img,
+  .newsletter-home-v5__read-link,
+  .newsletter-home-v5__archive-link,
+  .newsletter-home-v5__subscribe-link { transition: none !important; }
+  .newsletter-home-v5__feature:hover,
+  .newsletter-home-v5__latest-item:hover .newsletter-home-v5__latest-media img,
+  .newsletter-home-v5__feature:hover .newsletter-home-v5__feature-media img { transform: none; }
+}
+
+/* Homepage restoration pass: centered hero proof, incumbent founder/carousel
+   composition, four-up pricing hierarchy, and light FAQ surface. */
+.hero-production-v7 > .relative {
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-v7__content {
+  max-width: 58rem;
+  margin-inline: auto;
+}
+
+.hero-production-v7 h1,
+.hero-search-card-v7 { margin-inline: auto; }
+
+.hero-v7__service,
+.hero-v7__copy,
+.hero-v7__secondary,
+.hero-v7__trust { margin-inline: auto; }
+
+.hero-v7__copy { max-width: 34rem; }
+.hero-v7__secondary { justify-content: center; }
+
+.hero-v7__trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.35rem;
+  margin-top: 1.25rem;
+}
+
+.hero-v7__trust .hero-social-proof-v4 { margin-top: 0; }
+
+.hero-v7__facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .65rem 1.1rem;
+  color: rgba(255, 255, 255, .76);
+  font-size: .67rem;
+  font-weight: 800;
+}
+
+.hero-v7__facts span { display: inline-flex; align-items: center; gap: .35rem; }
+.hero-v7__facts i { color: #ffe08a; }
+
+.home-trust-v7 { padding-block: clamp(2.25rem, 4vw, 3.5rem); }
+.home-trust-v7__label { margin-bottom: 1rem; }
+
+.home-paths-v7__choices--below-carousel {
+  max-width: 64rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+}
+
+.smart-media-v5--visual { margin-inline: auto; }
+
+.pricing-restored-v8 {
+  padding: clamp(4.5rem, 8vw, 7rem) 0;
+  background: #f3f8fd;
+}
+
+.pricing-restored-v8 .section-split-v5 { margin-bottom: 2rem; }
+.pricing-restored-v8 .section-split-v5 h2 {
+  margin: 0;
+  color: #101827;
+  font: 700 clamp(2rem, 1.4rem + 2.2vw, 3.5rem)/1.06 'Lexend', sans-serif;
+  letter-spacing: -.045em;
+}
+
+.pricing-restored-v8__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.pricing-restored-v8__grid > .home-pricing-v7__primary,
+.pricing-restored-v8__grid > .home-pricing-v7__secondary { display: contents; }
+
+.home-pricing-v7 > .container { display: grid; gap: 1rem; }
+.home-pricing-v7 > .container > .home-section-heading-v7 { grid-column: 1 / -1; }
+.home-pricing-v7__primary,
+.home-pricing-v7__secondary { display: contents; }
+.home-pricing-v7__concierge { order: 1; }
+.home-pricing-v7__free { order: 2; }
+.home-pricing-v7__altitude { order: 3; }
+.home-pricing-v7__future { order: 4; }
+
+.home-pricing-v7__free,
+.home-pricing-v7__future {
+  min-height: 100%;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgba(15, 23, 42, .1);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.home-pricing-v7__free { display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; }
+.home-pricing-v7__future { display: grid; align-content: center; gap: .8rem; }
+.home-pricing-v7__future > p { margin: .25rem 0 0; color: #64748b; font-size: .72rem; line-height: 1.55; }
+
+.faq-light-v8 { background: #f7fbff; }
+.faq-light-v8 .home-section-heading-v7 h2,
+.faq-light-v8 .home-section-heading-v7 p { color: #101827; }
+.faq-light-v8 .faq-item-v2 {
+  border-color: rgba(15, 23, 42, .1);
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(26, 66, 108, .05);
+}
+.faq-light-v8 .faq-item-v2:hover,
+.faq-light-v8 .faq-item-v2[open] { border-color: rgba(0, 102, 204, .3); }
+.faq-light-v8 .faq-item-v2 summary > span:first-child > span:last-child { color: #101827; }
+.faq-light-v8 .faq-item-v2 .icon-chip { background: #edf6ff; color: #0066cc; }
+.faq-light-v8 .faq-indicator { border-color: rgba(15, 23, 42, .13); color: #64748b; }
+.faq-light-v8 .faq-item-v2[open] .faq-indicator { background: #0066cc; border-color: #0066cc; color: #fff; }
+
+@media (max-width: 1100px) {
+  .pricing-restored-v8__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  .hero-v7__trust { align-items: flex-start; flex-direction: column; gap: .85rem; }
+  .hero-v7__facts { justify-content: flex-start; text-align: left; }
+  .pricing-restored-v8__grid { grid-template-columns: 1fr; }
+  .home-pricing-v7 > .container { display: block; }
+  .home-pricing-v7__primary,
+  .home-pricing-v7__secondary { display: grid; }
+  .home-pricing-v7__concierge,
+  .home-pricing-v7__altitude,
+  .home-pricing-v7__free,
+  .home-pricing-v7__future { order: initial; margin-top: 1rem; }
+  .home-pricing-v7__primary { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-v7__trust,
+  .home-paths-v7__choices--below-carousel { transition: none !important; }
+}
+
+/* Pinned "Welcome to Skyfare" card — dual-class modifier added alongside
+   whichever base card class buildArchiveCard() applies (.card-utility on
+   live archive/homepage cards; .newsletter-card-v2 on the homepage
+   skeleton). Mirrors the site's existing --featured idiom (see
+   .card-pricing-v2--featured / .authority-card-v2--featured above) but in
+   red, not gold -- gold is already reserved for Premium/Altitude signals
+   elsewhere in the system, so pinning couldn't reuse it without clashing. */
+.newsletter-pinned-v2 {
+  position: relative;
+  border-color: #B91C1C;
+  border-width: 3px;
+}
+.newsletter-pinned-v2:hover {
+  border-color: #B91C1C;
+}
+.newsletter-pinned-v2::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, #B91C1C, #e05a5a, #B91C1C);
+  z-index: 1;
+}
+
+/* Same pinned cue applied to the free-newsletter-modal carousel slide --
+   a photographic full-bleed frame rather than a bordered card, so the
+   ring is an inset box-shadow instead of a border. */
+.newsletter-pinned-slide-v2::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 4px #B91C1C;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.newsletter-pinned-badge-v2 {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-v2-pill);
+  background: linear-gradient(135deg, #B91C1C, #dc3d3d);
+  color: #ffffff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 14px rgba(185, 28, 28, 0.35);
+}
+
+/* "Latest" cue on the newest non-pinned issue, so it stays clearly
+   distinguishable from the gold "Pinned" card next to it. Same pill
+   grammar/position, green instead of gold. */
+.newsletter-latest-badge-v2 {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-v2-pill);
+  background: #16a34a;
+  color: #ffffff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 14px rgba(22, 163, 74, 0.35);
+}
+
+/* Small "how this works" info icon next to a pricing heading -- opens
+   window.openCheckoutFlowInfo() (js/checkout-flow-info.js). Neutral by
+   default so it doesn't compete with the pricing card's own hierarchy;
+   picks up the single brand accent on hover/focus like every other
+   interactive affordance in the system. */
+.info-icon-btn-v2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: #a3a3a3;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease-out, transform 0.2s ease-out;
+}
+.info-icon-btn-v2:hover,
+.info-icon-btn-v2:focus-visible { color: #0066cc; transform: scale(1.1); }
+.info-icon-btn-v2:focus-visible { outline: 2px solid rgba(0, 102, 204, 0.4); outline-offset: 2px; border-radius: 50%; }
+
+/* On a dark hero/tile, the default neutral gray disappears -- lighten the
+   resting color and use Sky Link Blue (the site's existing dark-surface
+   link color) instead of Sky Blue for hover/focus. */
+.info-icon-btn-v2--on-dark { color: rgba(255, 255, 255, 0.45); }
+.info-icon-btn-v2--on-dark:hover,
+.info-icon-btn-v2--on-dark:focus-visible { color: #2997ff; }
+
 .social-col-v2 {
   background: #ffffff;
   border: 1px solid rgba(0, 102, 204, 0.08);
@@ -2540,33 +3216,16 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
    Uses the existing v2 token layer and preserves the hero structure.
    ══════════════════════════════════════════════════════════════════════ */
 
+/* Full-bleed cinematic hero: the section itself is the video stage now (no
+   inset rounded card / container bleed-hack) -- isolation keeps its z-index
+   stacking (video/scrim/content) self-contained. */
 .hero-polish-v4 {
-  background: transparent;
-}
-
-.hero-stage-v4 {
   isolation: isolate;
-  min-height: 42rem;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-bottom-color: transparent;
-  box-shadow: 0 14px 34px rgba(5, 18, 38, 0.08), 0 1px 0 rgba(255, 255, 255, 0.12) inset;
-}
-
-.hero-stage-v4::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  min-height: 34rem;
 }
 
 .hero-polish-v4 .hero-photo-scrim {
-  background:
-    radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 30%),
-    linear-gradient(180deg, rgba(2, 7, 20, 0.20) 0%, rgba(4, 14, 32, 0.08) 44%, rgba(3, 10, 24, 0.34) 100%),
-    linear-gradient(90deg, rgba(0, 102, 204, 0.06), rgba(201, 162, 39, 0.035));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.24) 100%);
 }
 
 .hero-polish-v4 h1 {
@@ -2605,6 +3264,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 .hero-polish-v4 .btn-pill {
   min-height: 3rem;
   align-items: center;
+  transition: transform 0.3s var(--ease-v2-out), box-shadow 0.3s var(--ease-v2-out), background-color 0.2s ease;
 }
 
 .hero-polish-v4 .btn-glow-v2 {
@@ -2690,6 +3350,7 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   }
 
   .hero-polish-v4 .btn-glow-v2:hover {
+    transform: scale(1.05);
     box-shadow: 0 10px 22px rgba(0, 102, 204, 0.18);
   }
 
@@ -2702,20 +3363,9 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   }
 }
 
-@media (max-width: 1068px) {
-  .hero-stage-v4 {
-    min-height: 41rem;
-  }
-}
-
 @media (max-width: 767px) {
   .hero-polish-v4 {
-    padding-top: 0.25rem;
-  }
-
-  .hero-stage-v4 {
-    min-height: 39rem;
-    border-radius: 22px !important;
+    min-height: 32rem;
   }
 
   .hero-polish-v4 h1 {
@@ -2738,10 +3388,6 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 @media (max-width: 420px) {
-  .hero-stage-v4 {
-    min-height: 38rem;
-  }
-
   .hero-stats-v4 {
     width: 100%;
   }
@@ -2928,7 +3574,38 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
    token wraps here -- a smaller ceiling keeps "Real Savings, Real Results"
    on one line at desktop widths, matching the reference layout. */
 .bookings-title-v5 {
-  font-size: clamp(1.75rem, 1.1rem + 2vw, 2.25rem);
+  font-size: clamp(1.85rem, 1.1rem + 2.15vw, 2.55rem);
+  max-width: 22rem;
+}
+
+.booking-proof-ledger-v6 {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+  max-width: 24rem;
+}
+
+.booking-proof-ledger-v6 > div {
+  display: grid;
+  grid-template-columns: 3.1rem 1fr;
+  align-items: center;
+  gap: 0.8rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 102, 204, 0.12);
+}
+
+.booking-proof-ledger-v6 strong {
+  color: #0066cc;
+  font-family: 'Lexend', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: -0.04em;
+}
+
+.booking-proof-ledger-v6 span {
+  color: rgba(54, 64, 82, 0.7);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
 .trust-ledger-v5 {
@@ -2988,6 +3665,124 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.booking-case-v6 {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-case-v6 > .relative {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.booking-case-topline-v6 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 1.2rem;
+  margin-bottom: 1.35rem;
+}
+
+.booking-case-label-v6,
+.booking-case-status-v6 {
+  color: rgba(54, 64, 82, 0.56);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.booking-case-v6--featured .booking-case-label-v6 {
+  color: #0066cc;
+}
+
+.booking-case-status-v6 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.booking-case-status-v6 i {
+  color: #16854a;
+  font-size: 0.58rem;
+}
+
+.booking-case-context-v6 {
+  max-width: 26rem;
+  margin: 0 0 1.1rem 2.1rem;
+  color: rgba(54, 64, 82, 0.68);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.booking-case-metrics-v6 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0 0 1rem 2.1rem;
+}
+
+.booking-case-metrics-v6 > div {
+  padding: 0.75rem 0.8rem;
+  border-left: 2px solid rgba(0, 102, 204, 0.28);
+  background: rgba(255, 255, 255, 0.46);
+}
+
+.booking-case-metrics-v6 strong,
+.booking-case-metrics-v6 span {
+  display: block;
+}
+
+.booking-case-metrics-v6 strong {
+  color: #0066cc;
+  font-family: 'Lexend', sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.booking-case-metrics-v6 span {
+  margin-top: 0.28rem;
+  color: rgba(54, 64, 82, 0.54);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.booking-case-handled-v6 {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 102, 204, 0.1);
+  color: rgba(54, 64, 82, 0.58);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.booking-case-handled-v6 i {
+  margin-right: 0.25rem;
+  color: #16854a;
+}
+
+.booking-case-handled-v6 span {
+  color: rgba(54, 64, 82, 0.3);
+  padding-inline: 0.2rem;
+}
+
+.booking-links-v6 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.9rem;
+  margin-top: 0.55rem;
 }
 
 .path-card-v5 li i {
@@ -3238,6 +4033,192 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 
 .path-footnote-v5 a {
   color: rgba(255, 255, 255, 0.72);
+}
+
+.fit-guide-v5 {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1.65fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  margin-top: clamp(1.6rem, 3vw, 2.25rem);
+  padding: clamp(1rem, 2.3vw, 1.35rem);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: var(--radius-v2-md);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.fit-guide-v5__intro {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.fit-guide-v5__intro span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fit-guide-v5__intro h3 {
+  margin: 0;
+  max-width: 16rem;
+  color: #ffffff;
+  font: 700 clamp(1rem, 1.4vw, 1.2rem)/1.25 'Lexend', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.fit-guide-v5__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.fit-option-v5 {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.72rem;
+  min-height: 4rem;
+  padding: 0.72rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-v2-sm);
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.18s ease;
+}
+
+.fit-option-v5 i {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #2997ff;
+  font-size: 0.78rem;
+}
+
+.fit-option-v5--featured i {
+  color: #C9A227;
+}
+
+.fit-option-v5 p {
+  margin: 0 0 0.18rem;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.fit-option-v5 strong {
+  display: block;
+  color: #ffffff;
+  font-size: 0.83rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.fit-option-v5--locked {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.028);
+  border-color: rgba(255, 255, 255, 0.075);
+  cursor: not-allowed;
+}
+
+.fit-option-v5--locked > i,
+.fit-option-v5--locked > div {
+  filter: blur(2px);
+  opacity: 0.36;
+  transform: scale(0.99);
+}
+
+.fit-option-v5--locked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 36, 55, 0.34);
+  pointer-events: none;
+}
+
+.fit-option-v5__status {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  padding: 0.45rem 0.68rem;
+  border-radius: var(--radius-v2-pill);
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(8px);
+}
+
+.fit-option-v5__status i {
+  width: auto;
+  height: auto;
+  background: transparent;
+  color: currentColor;
+  font-size: 0.56rem;
+  opacity: 1;
+}
+
+.fit-option-v5--link {
+  cursor: pointer;
+}
+
+.fit-option-v5__arrow {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(201, 162, 39, 0.14);
+  color: #C9A227;
+  font-size: 0.76rem;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.18s ease;
+}
+
+.fit-guide-v5__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: end;
+  justify-content: flex-end;
+  gap: 0.7rem;
+}
+
+.fit-guide-v5__link,
+.fit-guide-v5__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.45rem;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.16s ease;
+}
+
+.fit-guide-v5__link {
+  color: #2997ff;
+}
+
+.fit-guide-v5__whatsapp {
+  padding: 0 0.95rem;
+  border-radius: var(--radius-v2-pill);
+  background: #0066cc;
+  color: #ffffff;
 }
 
 /* Popular Routes + Altitude polish pass: same content rail, same card language,
@@ -3841,6 +4822,38 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
     transform: translateY(-2px);
   }
 
+  .fit-option-v5:not(.fit-option-v5--locked):hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .fit-option-v5--link:hover {
+    transform: translateY(-2px);
+  }
+
+  .fit-option-v5--link:hover .fit-option-v5__arrow {
+    background: #C9A227;
+    color: #1A2437;
+    transform: translateX(2px);
+  }
+
+  .fit-option-v5--link:focus-visible {
+    border-color: rgba(41, 151, 255, 0.72);
+    outline: 2px solid rgba(41, 151, 255, 0.42);
+    outline-offset: 3px;
+  }
+
+  .fit-guide-v5__link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .fit-guide-v5__whatsapp:hover {
+    background: #0052a3;
+    transform: translateY(-1px);
+  }
+
   .faq-polish-v5 .faq-item-v2:hover {
     transform: translateY(-3px);
   }
@@ -3910,6 +4923,20 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
     height: 25rem;
   }
 
+  .fit-guide-v5 {
+    grid-template-columns: 1fr;
+  }
+
+  .fit-guide-v5__intro h3 {
+    max-width: none;
+  }
+
+  .fit-guide-v5__actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .popular-routes-v5 .route-tile {
     min-height: 235px;
   }
@@ -3940,6 +4967,35 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   .bookings-board-v5,
   .path-grid-v5 {
     grid-template-columns: 1fr;
+  }
+
+  .booking-case-topline-v6 {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .booking-case-context-v6,
+  .booking-case-metrics-v6 {
+    margin-left: 0;
+  }
+
+  .booking-links-v6 {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .fit-guide-v5__list {
+    grid-template-columns: 1fr;
+  }
+
+  .fit-guide-v5__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fit-guide-v5__link {
+    order: 2;
   }
 
   .process-card-v5,
@@ -4060,7 +5116,10 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   .popular-routes-v5 .route-tile,
   .popular-routes-v5 .route-tile-bg,
   .popular-routes-v5 .route-tile .icon-chip,
-  .path-cta-v5 {
+  .path-cta-v5,
+  .fit-option-v5,
+  .fit-guide-v5__link,
+  .fit-guide-v5__whatsapp {
     transition: none !important;
   }
 
@@ -4077,13 +5136,51 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
    style the logo band + entrance motion added in the visual redesign. ──── */
 
 .newsletter-modal-v2-card {
+  background: #eaf3ff;
   box-shadow: var(--shadow-v2-lg);
 }
 
-.newsletter-modal-v2-hero {
-  background:
-    radial-gradient(120% 140% at 50% -10%, rgba(0, 102, 204, 0.10), transparent 60%),
-    linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);
+.newsletter-modal-v2-carousel {
+  background: #0a1628;
+}
+
+/* Pill buttons read oversized at this card's scale (submit CTA + the
+   carousel's "Read our Newsletter" outline button) -- scoped override so
+   .btn-pill's shared padding/font-size stay untouched everywhere else.
+   font-size matches .form-input-v2 below (0.875rem / text-sm) so every
+   control in the card -- fields, buttons -- sits on the same scale. */
+.newsletter-modal-v2-card .btn-pill {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+/* Popup headline -- "Your edge on {rotating badge}" must always render on
+   one line, including the longest rotating phrase ("Business Class"). The
+   card is now an even 50/50 split, so the right column always has enough
+   room at any viewport >~514px (where this clamp is already at its 1.375rem
+   ceiling) -- no separate md-only override needed. */
+.newsletter-modal-v2-heading {
+  font-size: clamp(0.7rem, 0.35rem + 2vw, 1.375rem);
+}
+
+/* Rotating headline badge -- text content is swapped every 2s by
+   js/newsletter-modal.js; this only provides the crossfade. Kept at a
+   normal weight so it doesn't compete with the bold lead-in text. */
+.newsletter-modal-v2-badge {
+  transition: opacity 0.2s ease;
+}
+
+.newsletter-modal-v2-bullet-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 9999px;
+  background: #0066cc;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.55rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -4097,10 +5194,9 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 /* Inline "Free Newsletter" section headline (index.html #skyfare-altitude)
-   -- "Business Class intel, every {day}." must always render on one line,
-   at any weekday-name length, so it gets its own fluid clamp instead of the
-   shared --font-display-h2-v2-size every other homepage h2 uses. Scaled to
-   fit the section's own 42rem heading column down to a 320px viewport. */
+   -- gets its own fluid clamp instead of the shared --font-display-h2-v2-size
+   every other homepage h2 uses, sized to fit the section's own 42rem heading
+   column down to a 320px viewport. */
 .newsletter-heading-v6 {
   font-size: clamp(0.8rem, 0.05rem + 3.9vw, 1.75rem);
   white-space: nowrap;
@@ -4125,6 +5221,45 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   --private-radius: 18px;
   --private-radius-sm: 10px;
   --private-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Altitude editorial type scale — pages/private-pages/altitude-access/*
+     Additive to the tokens above; see css/altitude-editorial.css for the
+     classes that consume these. Sized down from the original dashboard
+     scale (page title was clamp(2.35rem, 5vw, 4.7rem)) toward a premium
+     report/editorial register. */
+  --alt-size-page-title: clamp(1.9rem, 3.2vw, 2.75rem);
+  --alt-size-intro: 1.0625rem;
+  --alt-size-section: 1.25rem;
+  --alt-size-card-title: 1.05rem;
+  --alt-size-route: 1.35rem;
+  --alt-size-metric: 1.5rem;
+  --alt-size-support: 0.85rem;
+  --alt-size-date: 0.8rem;
+  --alt-size-meta: 0.78rem;
+  --alt-size-label: 0.68rem;
+  --alt-size-note: 0.92rem;
+  --alt-size-body: 0.98rem;
+  --alt-size-caption: 0.78rem;
+  --alt-size-help: 0.82rem;
+
+  --alt-lh-title: 1.08;
+  --alt-lh-body: 1.68;
+  --alt-lh-tight: 1.25;
+  --alt-weight-title: 600;
+  --alt-weight-heading: 600;
+  --alt-weight-body: 450;
+  --alt-measure: 68ch;
+  --alt-measure-narrow: 42ch;
+
+  /* Same hex as .tile-dark1/.tile-dark2 below -- the site's one signature
+     dark-tile surface, reused here (not invented) to bring the same
+     light<->dark alternation rhythm the rest of the site uses for depth
+     into the Altitude portal, instead of relying on shadows/borders. */
+  --alt-dark-tile: #1A2437;
+  --alt-on-dark: #ffffff;
+  --alt-on-dark-muted: rgba(255, 255, 255, 0.68);
+  --alt-on-dark-line: rgba(255, 255, 255, 0.14);
+  --alt-shadow-card: 0 1px 2px rgba(20, 32, 51, 0.04), 0 8px 24px rgba(20, 32, 51, 0.08);
 }
 
 .private-body {
@@ -4252,6 +5387,8 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 .private-nav a:active,
 .private-icon-btn:active,
 .private-action:active,
+.alt-filter-btn i { font-size: 0.68rem; }
+
 .alt-filter-btn:active {
   transform: scale(0.96);
 }
@@ -4747,7 +5884,8 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 
 .private-resource-card__media {
   position: relative;
-  min-height: 9.5rem;
+  height: 9.5rem;
+  flex-shrink: 0;
   background: #12243c;
   overflow: hidden;
 }
@@ -4822,6 +5960,10 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   font-weight: 700;
   line-height: 1.28;
   text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .private-resource-card__link {
@@ -4832,6 +5974,133 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   color: var(--private-blue);
   font-size: 0.78rem;
   font-weight: 800;
+}
+
+.private-resource-card__summary {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--private-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Public newsletter page: keep the value proof useful but quiet so the
+   publication itself remains the main event. */
+.newsletter-value-strip-v5 {
+  padding-block: clamp(3rem, 6vw, 4.5rem) !important;
+}
+.newsletter-value-strip-v5 > .container > .flex {
+  margin-bottom: 1.5rem !important;
+}
+.newsletter-value-strip-v5 > .container > .grid {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 2rem;
+  align-items: center;
+}
+.newsletter-value-strip-v5 > .container > .grid > div:last-child {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .5rem;
+}
+.newsletter-value-strip-v5 .card-utility {
+  min-height: 0;
+  padding: .65rem !important;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.newsletter-value-strip-v5 .card-utility .icon-chip {
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: .7rem;
+}
+.newsletter-value-strip-v5 .card-utility p:first-of-type {
+  margin: 0;
+  font-size: .72rem;
+  line-height: 1.35;
+}
+.newsletter-value-strip-v5 .card-utility p:last-of-type { display: none; }
+
+/* Private portal newsletter: a latest briefing shelf above the historical
+   archive. It uses the existing member card renderer and access handoff. */
+.altitude-latest-briefing {
+  margin-bottom: var(--alt-panel-gap);
+}
+.altitude-latest-briefing .altitude-section-title {
+  margin-bottom: 1rem;
+}
+.altitude-section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: var(--private-blue);
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.altitude-latest-briefing h2 {
+  margin-top: .65rem;
+}
+.altitude-latest-briefing__note {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  flex-shrink: 0;
+  color: var(--private-muted);
+  font-size: .74rem;
+  font-weight: 800;
+}
+.altitude-latest-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.altitude-latest-grid .private-resource-card:first-child {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: minmax(13rem, .8fr) minmax(0, 1.2fr);
+  min-height: 14rem;
+}
+.altitude-latest-grid .private-resource-card:first-child .private-resource-card__media {
+  height: 100%;
+  min-height: 14rem;
+}
+.altitude-latest-grid .private-resource-card:first-child .private-resource-card__body {
+  justify-content: center;
+  padding: 1.35rem;
+}
+.altitude-latest-grid .private-resource-card:first-child h3 {
+  font-size: 1.15rem;
+}
+
+@media (max-width: 720px) {
+  .newsletter-value-strip-v5 > .container > .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .newsletter-value-strip-v5 > .container > .grid > div:last-child {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .altitude-latest-briefing .altitude-section-title--split {
+    align-items: flex-start;
+    gap: .75rem;
+  }
+  .altitude-latest-briefing__note { white-space: nowrap; }
+  .altitude-latest-grid { grid-template-columns: 1fr; }
+  .altitude-latest-grid .private-resource-card:first-child {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+  .altitude-latest-grid .private-resource-card:first-child .private-resource-card__media {
+    height: 10rem;
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .altitude-latest-grid .private-resource-card,
+  .altitude-latest-grid .private-resource-card__media img { transition: none !important; }
 }
 
 .private-resource-card--locked {
@@ -5351,6 +6620,83 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   to { opacity: 1; transform: scale(1); }
 }
 
+/* Content-shaped skeleton loading -- shimmer bars/cards sized to the real
+   UI they'll be replaced with, for private pages that only load style.css
+   (the richer .alt-skeleton__* system in css/altitude-editorial.css covers
+   the Altitude-editorial pages that already load that stylesheet). Reuses
+   .private-skeleton's dot pattern for genuinely tiny/instant waits, and
+   this shimmer pattern wherever the wait is filling in a real card or
+   text so a spinner reads as more jarring than a preview. */
+.private-skel-line,
+.private-skel-title,
+.private-skel-block {
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--private-surface-soft);
+}
+
+.private-skel-line::after,
+.private-skel-title::after,
+.private-skel-block::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  animation: privateSkelSweep 1.6s var(--private-ease) infinite;
+}
+
+@keyframes privateSkelSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.private-skel-line {
+  display: block;
+  height: 0.85rem;
+}
+
+.private-skel-line--inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.private-skel-title {
+  display: block;
+  height: 1.35rem;
+  width: 60%;
+  border-radius: 6px;
+}
+
+.private-skel-card {
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  flex-direction: column;
+}
+
+.private-skel-card__media {
+  height: 9.5rem;
+  border-radius: 0;
+}
+
+.private-skel-card__body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .private-skel-line::after,
+  .private-skel-title::after,
+  .private-skel-block::after {
+    animation: none;
+  }
+}
+
 .private-toolbar {
   position: relative;
   z-index: 40;
@@ -5494,6 +6840,9 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 .alt-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   min-height: 2.35rem;
   padding: 0 0.85rem;
   border: 1px solid var(--private-line);
@@ -5520,6 +6869,44 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   color: #ffffff;
   border-color: var(--private-blue);
   background: var(--private-blue);
+}
+
+/* Premium gets its own crown + gold treatment instead of the plain blue
+   active state, so it reads as a distinct tier rather than a third
+   identical toggle. */
+.alt-filter-btn--gold { color: #9E7B0D; }
+.alt-filter-btn--gold:hover,
+.alt-filter-btn--gold:focus-visible { color: var(--private-gold); border-color: var(--private-gold); }
+.alt-filter-btn--gold.active {
+  color: #ffffff;
+  border-color: var(--private-gold);
+  background: var(--private-gold);
+}
+
+/* Topic dropdown, replaces what used to be a second row of 5 alt-filter-btn
+   pills -- collapses the archive toolbar to one access segment + one select
+   instead of two rows of buttons. */
+.alt-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 2.35rem;
+  border: 1px solid var(--private-line);
+  border-radius: 9999px;
+  padding: 0 2.25rem 0 0.95rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--private-ink);
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23607086' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  cursor: pointer;
+  transition: border-color 180ms var(--private-ease);
+}
+.alt-filter-select:hover,
+.alt-filter-select:focus-visible {
+  border-color: var(--private-blue);
+  outline: none;
 }
 
 .private-upgrade {
@@ -6441,10 +7828,8 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 
 [data-altitude-section="overview"] [data-altitude-nav="overview"],
 [data-altitude-section="membership"] [data-altitude-nav="membership"],
-[data-altitude-section="benefits"] [data-altitude-nav="benefits"],
 [data-altitude-section="award-alerts"] [data-altitude-nav="award-alerts"],
 [data-altitude-section="routing-strategies"] [data-altitude-nav="routing-strategies"],
-[data-altitude-section="cabin-verdicts"] [data-altitude-nav="cabin-verdicts"],
 [data-altitude-section="krisflyer-escapes"] [data-altitude-nav="krisflyer-escapes"],
 [data-altitude-section="newsletter"] [data-altitude-nav="newsletter"],
 [data-altitude-section="manual"] [data-altitude-nav="manual"],
@@ -7869,10 +9254,23 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 .altitude-manual-note {
-  position: sticky;
-  top: 150px;
   display: grid;
   gap: 1rem;
+}
+
+/* position:sticky doesn't hold here -- html/body's site-wide overflow-x:hidden
+   (css/style.css top of file) computes their overflow-y as auto too (per the
+   CSS overflow spec, one non-visible axis forces the other to auto), which
+   makes <body> register as a scroll container even though <html> is the one
+   actually scrolling. That breaks sticky's nearest-scrolling-ancestor
+   resolution for anything under <body>. js/altitude-manual.js toggles this
+   class from a scroll listener instead -- position:fixed isn't affected by
+   that ancestor-overflow resolution the same way. Same fallback already used
+   by .alt-alert-feed--fixed (css/altitude-editorial.css, award-alerts.html). */
+.altitude-manual-note--fixed {
+  position: fixed;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
 }
 
 .altitude-manual-note h2,
@@ -7895,40 +9293,292 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 .altitude-manual-step {
+  padding: 0;
+  overflow: hidden;
+}
+
+.altitude-manual-step__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.altitude-manual-step__summary::-webkit-details-marker {
+  display: none;
+}
+
+.altitude-manual-step__summary:hover h2 {
+  color: var(--private-blue);
+}
+
+.altitude-manual-step__summary-text {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.altitude-manual-step__summary-text h2 {
+  font-size: 1.05rem;
+  transition: color 0.15s var(--private-ease, ease);
+}
+
+.altitude-manual-step__chevron {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  color: var(--private-blue);
+  background: rgba(0, 102, 204, 0.08);
+  transition: transform 0.25s var(--private-ease, ease);
+}
+
+.altitude-manual-step[open] > .altitude-manual-step__summary .altitude-manual-step__chevron {
+  transform: rotate(180deg);
+}
+
+.altitude-manual-step__content {
   display: grid;
   grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1fr);
   gap: 1.25rem;
   align-items: center;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.altitude-manual-step__content p {
+  margin: 0;
 }
 
 .altitude-manual-step__media {
   display: grid;
+  position: relative;
+  width: 100%;
   min-height: 220px;
   place-items: center;
-  gap: 0.55rem;
-  border: 1px dashed rgba(0, 102, 204, 0.28);
-  border-radius: 14px;
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius-sm);
   background: #f7fbff;
-  color: var(--private-muted);
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 800;
+  overflow: hidden;
+  padding: 0;
+  font: inherit;
+  cursor: zoom-in;
+  transition: border-color 0.2s var(--private-ease, ease);
 }
 
-.altitude-manual-step__media i {
-  font-size: 1.45rem;
-  color: var(--private-blue);
+.altitude-manual-step__media:hover,
+.altitude-manual-step__media:focus-visible {
+  border-color: rgba(0, 102, 204, 0.4);
+}
+
+.altitude-manual-step__media:focus-visible {
+  outline: 2px solid var(--private-blue);
+  outline-offset: 2px;
+}
+
+.altitude-manual-step__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.6rem;
+  pointer-events: none;
+}
+
+.altitude-manual-step__zoom {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(20, 32, 51, 0.72);
+  color: #fff;
+  font-size: 0.75rem;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.2s var(--private-ease, ease), transform 0.2s var(--private-ease, ease);
+}
+
+.altitude-manual-step__media:hover .altitude-manual-step__zoom,
+.altitude-manual-step__media:focus-visible .altitude-manual-step__zoom {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .altitude-step-number {
   display: inline-flex;
-  margin-bottom: 0.75rem;
   color: var(--private-blue);
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  white-space: nowrap;
 }
+
+.altitude-manual-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-top: 0.9rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: var(--private-radius-sm);
+  background: rgba(201, 162, 39, 0.08);
+}
+
+.altitude-manual-callout i {
+  margin-top: 0.15rem;
+  color: var(--private-gold);
+  font-size: 0.95rem;
+}
+
+.altitude-manual-callout p {
+  margin: 0;
+  color: var(--private-ink);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.altitude-manual-complete {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.altitude-manual-complete h2 {
+  margin: 0 0 0.3rem;
+  font-family: 'Lexend', system-ui, sans-serif;
+  color: var(--private-ink);
+  letter-spacing: -0.02em;
+}
+
+.altitude-manual-complete p {
+  margin: 0;
+  color: var(--private-muted);
+  line-height: 1.6;
+}
+
+.altitude-manual-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: var(--alt-panel-gap);
+}
+
+.altitude-manual-help__text {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.altitude-manual-help__text h2 {
+  margin: 0 0 0.3rem;
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: 1.05rem;
+  color: var(--private-ink);
+  letter-spacing: -0.02em;
+}
+
+.altitude-manual-help__text p {
+  margin: 0;
+  color: var(--private-muted);
+  line-height: 1.6;
+}
+
+.altitude-manual-help__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Image lightbox -- click-to-enlarge for the manual's step screenshots. */
+.altitude-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 420;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+}
+
+.altitude-lightbox--in {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.altitude-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 24, 41, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.altitude-lightbox__card {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  max-width: min(92vw, 1100px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(0.96);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.altitude-lightbox--in .altitude-lightbox__card {
+  transform: scale(1);
+}
+
+.altitude-lightbox__img {
+  max-width: 100%;
+  max-height: calc(90vh - 3rem);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  background: #fff;
+}
+
+.altitude-lightbox__caption {
+  margin-top: 0.85rem;
+  max-width: 60ch;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.altitude-lightbox__close {
+  position: absolute;
+  top: -3rem;
+  right: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.altitude-lightbox__close:hover { background: rgba(255, 255, 255, 0.26); }
 
 .altitude-support-hero {
   display: flex;
@@ -7971,10 +9621,6 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   .altitude-benefit-card--wide {
     grid-column: auto;
   }
-
-  .altitude-manual-note {
-    position: static;
-  }
 }
 
 @media (max-width: 920px) {
@@ -8007,8 +9653,29 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   }
 
   .altitude-link-grid,
-  .altitude-manual-step {
+  .altitude-manual-step__content {
     grid-template-columns: 1fr;
+  }
+
+  .altitude-manual-help {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .altitude-manual-help__actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .altitude-manual-help__actions > * {
+    justify-content: center;
+  }
+
+  .altitude-manual-complete {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .altitude-coming-card {
@@ -8131,5 +9798,3280 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   .altitude-subnav a,
   .altitude-link-card {
     transition: none;
+  }
+}
+
+/* Altitude editorial intelligence layer.
+   Scoped additions for the overview, award alerts, routing strategies, and
+   KrisFlyer Escapes without changing auth, Airtable endpoints, or shared chrome. */
+.altitude-briefing-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.24fr) minmax(300px, 0.55fr);
+  gap: var(--alt-panel-gap);
+  align-items: stretch;
+}
+
+.altitude-briefing-copy {
+  min-height: 390px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.5rem, 4.2vw, 2.8rem);
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.78) 54%, rgba(244, 247, 251, 0.68) 100%),
+    repeating-linear-gradient(90deg, rgba(0, 102, 204, 0.08) 0 1px, transparent 1px 76px);
+}
+
+.altitude-briefing-copy h1 {
+  max-width: 11ch;
+  margin: 0.85rem 0 1rem;
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: clamp(2.55rem, 6vw, 5.4rem);
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  color: var(--private-ink);
+}
+
+.altitude-briefing-copy p {
+  max-width: 68ch;
+  color: var(--private-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.altitude-intelligence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--alt-panel-gap);
+  align-items: stretch;
+}
+
+.altitude-intel-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  gap: 1.2rem;
+  overflow: hidden;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  background: #fff;
+}
+
+.altitude-intel-card__head h3 {
+  margin: 0.5rem 0 0.45rem;
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--private-ink);
+}
+
+.altitude-intel-card__head p {
+  margin: 0;
+  color: var(--private-muted);
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+
+.altitude-intel-preview {
+  display: grid;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--private-line);
+}
+
+.altitude-intel-preview__loading,
+.altitude-intel-preview__empty {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--private-muted);
+  font-size: 0.85rem;
+}
+
+.altitude-intel-preview__spinner {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 102, 204, 0.22);
+  border-top-color: var(--private-blue);
+  animation: alt-spin 0.7s linear infinite;
+}
+
+@keyframes alt-spin {
+  to { transform: rotate(360deg); }
+}
+
+.altitude-intel-preview__row {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--private-line);
+  border-radius: 14px;
+  background: rgba(244, 247, 251, 0.6);
+}
+
+.altitude-intel-preview__row-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.altitude-intel-preview__title {
+  margin: 0 0 0.6rem;
+}
+
+.altitude-intel-card__more {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.altitude-alerts-workspace,
+.altitude-route-stories,
+.altitude-escape-journal {
+  display: grid;
+  gap: var(--alt-panel-gap);
+}
+
+.altitude-alerts-command {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto minmax(9rem, 0.22fr) minmax(8rem, 0.18fr);
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem;
+}
+
+.altitude-search-field,
+.altitude-select-field {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  border: 1px solid var(--private-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--private-muted);
+}
+
+.altitude-search-field {
+  padding: 0 0.95rem;
+}
+
+.altitude-search-field input,
+.altitude-select-field select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--private-ink);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.altitude-search-field:focus-within,
+.altitude-select-field:focus-within {
+  border-color: var(--private-blue);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.altitude-select-field {
+  padding: 0 0.78rem;
+}
+
+.altitude-select-field span {
+  color: var(--private-subtle);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.altitude-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.altitude-filter-chip {
+  min-height: 44px;
+  padding: 0.58rem 0.82rem;
+  border: 1px solid var(--private-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--private-muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 120ms var(--private-ease),
+    background-color 180ms var(--private-ease),
+    border-color 180ms var(--private-ease),
+    color 180ms var(--private-ease);
+}
+
+.altitude-filter-chip.active {
+  border-color: var(--private-blue);
+  background: var(--private-blue);
+  color: #fff;
+}
+
+.altitude-filter-chip:active {
+  transform: scale(0.97);
+}
+
+.altitude-alerts-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
+  gap: var(--alt-panel-gap);
+  align-items: start;
+}
+
+.altitude-alert-feed {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.9rem;
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.altitude-alert-feed__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0.15rem 0.9rem;
+  border-bottom: 1px solid var(--private-line);
+}
+
+.altitude-alert-feed__head strong {
+  display: block;
+  color: var(--private-ink);
+  font-family: 'Lexend', system-ui, sans-serif;
+}
+
+.altitude-alert-feed__head span,
+.altitude-opportunity-card__status,
+.altitude-opportunity-card__meta,
+.altitude-route-tabs span,
+.altitude-escape-story span {
+  color: var(--private-subtle);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.altitude-alert-feed__head i {
+  color: var(--private-blue);
+}
+
+.altitude-alert-feed__list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.altitude-opportunity-card {
+  display: grid;
+  width: 100%;
+  gap: 0.25rem;
+  min-height: 116px;
+  padding: 0.92rem;
+  border: 1px solid var(--private-line);
+  border-radius: 14px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 120ms var(--private-ease),
+    border-color 180ms var(--private-ease),
+    background-color 180ms var(--private-ease);
+}
+
+.altitude-opportunity-card.active {
+  border-color: rgba(201, 162, 39, 0.36);
+  background: rgba(255, 248, 220, 0.82);
+}
+
+.altitude-opportunity-card strong {
+  color: var(--private-ink);
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+}
+
+.altitude-opportunity-card small {
+  color: var(--private-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.altitude-opportunity-card:active {
+  transform: scale(0.985);
+}
+
+.altitude-alert-detail {
+  display: grid;
+  gap: 1rem;
+}
+
+.altitude-alert-detail__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.altitude-alert-detail__top h2,
+.altitude-route-story__header h2,
+.altitude-escape-feature h2 {
+  margin: 0.75rem 0 0.45rem;
+  color: var(--private-ink);
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: clamp(1.8rem, 4vw, 3.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.altitude-alert-detail__top p,
+.altitude-route-story__header p,
+.altitude-escape-feature p {
+  max-width: 66ch;
+  margin: 0;
+  color: var(--private-muted);
+  line-height: 1.65;
+}
+
+.altitude-alert-route {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(0.85rem, 3vw, 1.4rem);
+  align-items: center;
+  min-height: 150px;
+  padding: clamp(1rem, 3vw, 1.35rem);
+  border: 1px solid var(--private-line);
+  border-radius: 18px;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 102, 204, 0.06) 0 1px, transparent 1px 64px),
+    rgba(244, 247, 251, 0.74);
+  color: var(--private-blue);
+}
+
+.altitude-alert-route span {
+  min-width: 0;
+  color: var(--private-ink);
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: clamp(2.25rem, 7vw, 5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+
+.altitude-alert-route i {
+  transform: rotate(45deg);
+}
+
+.altitude-alert-meta,
+.altitude-route-option-metrics,
+.altitude-escape-window,
+.altitude-escape-scoreline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.altitude-alert-meta div,
+.altitude-route-option-metrics div,
+.altitude-escape-window div,
+.altitude-escape-scoreline div {
+  min-width: 0;
+  padding: 0.85rem;
+  border: 1px solid var(--private-line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.altitude-alert-meta span,
+.altitude-route-option-metrics span,
+.altitude-escape-window span,
+.altitude-escape-scoreline span {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--private-subtle);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.altitude-alert-meta strong,
+.altitude-route-option-metrics strong,
+.altitude-escape-window strong,
+.altitude-escape-scoreline strong {
+  display: block;
+  color: var(--private-ink);
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.altitude-note-stack--editorial {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.altitude-route-stories {
+  gap: clamp(1.5rem, 4vw, 2.2rem);
+}
+
+.altitude-route-story {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1rem, 3vw, 1.4rem);
+}
+
+.altitude-route-story__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 0.24fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.altitude-route-experience {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.46fr);
+  gap: var(--alt-panel-gap);
+  align-items: stretch;
+}
+
+.altitude-route-map {
+  min-width: 0;
+  min-height: 330px;
+  display: grid;
+  align-items: center;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--private-line);
+  border-radius: 18px;
+  background:
+    repeating-linear-gradient(0deg, rgba(20, 32, 51, 0.04) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(90deg, rgba(20, 32, 51, 0.04) 0 1px, transparent 1px 42px),
+    #fbfdff;
+}
+
+.altitude-route-diagram {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 220px;
+}
+
+.altitude-route-diagram svg {
+  position: absolute;
+  inset: 50% 0 auto;
+  width: 100%;
+  height: 72px;
+  transform: translateY(-50%);
+  overflow: visible;
+}
+
+.altitude-route-diagram path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.altitude-route-diagram__track {
+  stroke: rgba(20, 32, 51, 0.12);
+  stroke-width: 1.5;
+}
+
+.altitude-route-diagram__active {
+  stroke: var(--private-blue);
+  stroke-width: 2.4;
+  stroke-dasharray: 90;
+  stroke-dashoffset: 90;
+  animation: altitudeRouteDraw 680ms var(--private-ease) forwards;
+}
+
+.altitude-route-nodes {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--node-count, 2), minmax(0, 1fr));
+  gap: clamp(0.75rem, 3vw, 1.2rem);
+  align-items: center;
+}
+
+.altitude-route-node {
+  display: grid;
+  min-height: 98px;
+  gap: 0.25rem;
+  place-items: center;
+  padding: 0.9rem;
+  border: 1px solid rgba(0, 102, 204, 0.2);
+  border-radius: 18px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: default;
+  transition:
+    transform 160ms var(--private-ease),
+    border-color 180ms var(--private-ease);
+}
+
+.altitude-route-node span {
+  max-width: 100%;
+  color: var(--private-ink);
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.altitude-route-node small {
+  color: var(--private-subtle);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .altitude-route-node:hover {
+    transform: translateY(-3px);
+    border-color: var(--private-line-strong);
+  }
+}
+
+.altitude-route-sidebar {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.altitude-route-tabs {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.altitude-route-tabs button {
+  display: grid;
+  gap: 0.25rem;
+  min-height: 74px;
+  padding: 0.85rem;
+  border: 1px solid var(--private-line);
+  border-radius: 14px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.altitude-route-tabs button.active {
+  border-color: rgba(201, 162, 39, 0.38);
+  background: rgba(255, 248, 220, 0.82);
+}
+
+.altitude-route-tabs strong,
+.altitude-route-option-detail h3 {
+  color: var(--private-ink);
+  font-family: 'Lexend', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.altitude-route-option-detail {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid var(--private-line);
+  border-radius: 16px;
+  background: rgba(244, 247, 251, 0.74);
+}
+
+.altitude-route-option-detail h3 {
+  margin: 0.65rem 0 0.35rem;
+  font-size: 1.25rem;
+}
+
+.altitude-route-option-detail p {
+  margin: 0;
+  color: var(--private-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.altitude-route-option-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.altitude-route-explainer {
+  border-top: 1px solid var(--private-line);
+  padding-top: 0.9rem;
+}
+
+.altitude-route-explainer summary {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--private-ink);
+  font-weight: 900;
+  cursor: pointer;
+  list-style: none;
+}
+
+.altitude-route-explainer summary::-webkit-details-marker {
+  display: none;
+}
+
+.altitude-route-explainer[open] summary i {
+  transform: rotate(180deg);
+}
+
+.altitude-escape-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.72fr);
+  min-height: 480px;
+  overflow: hidden;
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  background: #fff;
+}
+
+.altitude-escape-feature__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.4rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.altitude-escape-media {
+  position: relative;
+  min-width: 0;
+  min-height: 220px;
+  margin: 0;
+  overflow: hidden;
+  background: rgba(244, 247, 251, 0.85);
+}
+
+.altitude-escape-media--large {
+  min-height: 100%;
+}
+
+.altitude-escape-media img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+}
+
+.altitude-escape-media--placeholder {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  background:
+    linear-gradient(135deg, rgba(255, 248, 220, 0.78), rgba(244, 247, 251, 0.92)),
+    repeating-linear-gradient(135deg, rgba(201, 162, 39, 0.16) 0 1px, transparent 1px 20px);
+  color: #7b5f08;
+}
+
+.altitude-escape-media--placeholder div {
+  display: grid;
+  gap: 0.55rem;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.altitude-escape-media--placeholder i {
+  font-size: 1.55rem;
+}
+
+.altitude-escape-window {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.altitude-escape-breakdown {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.altitude-escape-routes {
+  overflow: hidden;
+  border: 1px solid var(--private-line);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.altitude-escape-routes__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 0.35fr) minmax(7rem, 0.28fr) minmax(9rem, 0.36fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 1rem;
+  border-top: 1px solid var(--private-line);
+  color: var(--private-muted);
+  font-size: 0.86rem;
+}
+
+.altitude-escape-routes__row:first-child {
+  border-top: 0;
+}
+
+.altitude-escape-routes__row--head {
+  background: rgba(244, 247, 251, 0.9);
+  color: var(--private-subtle);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.altitude-escape-routes__row strong {
+  display: block;
+  color: var(--private-ink);
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: 0.92rem;
+}
+
+.altitude-escape-routes__row small {
+  display: block;
+  margin-top: 0.18rem;
+  color: var(--private-muted);
+}
+
+.altitude-escape-story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: var(--alt-panel-gap);
+}
+
+.altitude-escape-story {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.42fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  min-height: 210px;
+  padding: 0.9rem;
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  background: #fff;
+}
+
+.altitude-escape-story--1 {
+  grid-row: span 2;
+  grid-template-columns: 1fr;
+}
+
+.altitude-escape-story h3 {
+  margin: 0.35rem 0;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.15;
+}
+
+.altitude-escape-story p {
+  margin: 0;
+  color: var(--private-muted);
+  font-size: 0.86rem;
+  line-height: 1.52;
+}
+
+@keyframes altitudeRouteDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 1080px) {
+  .altitude-briefing-hero,
+  .altitude-intelligence-grid,
+  .altitude-alerts-command,
+  .altitude-alerts-grid,
+  .altitude-route-story__header,
+  .altitude-route-experience,
+  .altitude-escape-feature,
+  .altitude-escape-story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .altitude-escape-story--1 {
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .altitude-briefing-copy,
+  .altitude-membership-card,
+  .altitude-alert-detail,
+  .altitude-route-story {
+    padding: 1rem;
+  }
+
+  .altitude-briefing-copy {
+    min-height: auto;
+  }
+
+  .altitude-briefing-copy h1 {
+    max-width: 100%;
+  }
+
+  .altitude-alerts-command {
+    align-items: stretch;
+  }
+
+  .altitude-filter-group {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.1rem;
+    scrollbar-width: none;
+  }
+
+  .altitude-filter-group::-webkit-scrollbar {
+    display: none;
+  }
+
+  .altitude-alert-detail__top,
+  .altitude-alert-route,
+  .altitude-alert-meta,
+  .altitude-note-stack--editorial,
+  .altitude-route-option-metrics,
+  .altitude-escape-window,
+  .altitude-escape-scoreline,
+  .altitude-escape-routes__row,
+  .altitude-escape-story {
+    grid-template-columns: 1fr;
+  }
+
+  .altitude-alert-detail__top {
+    gap: 0.65rem;
+  }
+
+  .altitude-alert-route {
+    min-height: auto;
+  }
+
+  .altitude-alert-route i {
+    justify-self: start;
+    transform: rotate(90deg);
+  }
+
+  .altitude-route-map {
+    min-height: 360px;
+  }
+
+  .altitude-route-diagram {
+    min-height: 300px;
+  }
+
+  .altitude-route-diagram svg {
+    inset: 0 auto 0 50%;
+    width: 68px;
+    height: 100%;
+    transform: translateX(-50%) rotate(90deg);
+  }
+
+  .altitude-route-nodes {
+    grid-template-columns: 1fr;
+  }
+
+  .altitude-escape-feature {
+    min-height: auto;
+  }
+
+  .altitude-escape-media--large {
+    min-height: 280px;
+  }
+
+  .altitude-escape-routes__row--head {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .altitude-filter-chip {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .altitude-intel-card,
+  .altitude-intel-preview__spinner,
+  .altitude-filter-chip,
+  .altitude-opportunity-card,
+  .altitude-route-node,
+  .altitude-route-diagram__active {
+    transition: none;
+    animation: none;
+  }
+
+  .altitude-route-diagram__active {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Mileage Route Explorer ─────────────────────────────────────────────── */
+.mileage-explorer-section {
+  padding: clamp(4.5rem, 8vw, 7rem) 0;
+  background: #fff;
+}
+
+.mileage-explorer-title-v5 {
+  max-width: 12ch;
+  white-space: normal;
+}
+
+.mileage-explorer-frame {
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, .1);
+  border-radius: var(--radius-v2-lg, 28px);
+  background: #fff;
+}
+
+.mileage-explorer-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(1.15rem, 2.5vw, 1.65rem) clamp(1.15rem, 3vw, 2rem);
+  border-bottom: 1px solid rgba(15, 23, 42, .08);
+}
+
+.mileage-explorer-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .65rem;
+  color: #64748b;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .045em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.mileage-explorer-summary strong {
+  color: #0f172a;
+  font-size: .78rem;
+}
+
+.mileage-explorer-summary-divider {
+  width: 1px;
+  height: 1rem;
+  background: rgba(15, 23, 42, .14);
+}
+
+.mileage-explorer-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: .75rem;
+}
+
+.mileage-explorer-field {
+  display: grid;
+  gap: .4rem;
+  color: #64748b;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mileage-explorer-field input,
+.mileage-explorer-field select {
+  min-height: 2.75rem;
+  border: 1px solid rgba(15, 23, 42, .15);
+  border-radius: var(--radius-v2-sm, 14px);
+  background: #fff;
+  color: #0f172a;
+  font: 600 .8rem/1.2 'Manrope', sans-serif;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.mileage-explorer-field input {
+  width: clamp(13rem, 20vw, 18rem);
+  padding: 0 .85rem 0 2.25rem;
+}
+
+.mileage-explorer-field select {
+  min-width: 10.5rem;
+  padding: 0 2rem 0 .85rem;
+}
+
+.mileage-explorer-field input:focus,
+.mileage-explorer-field select:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, .12);
+}
+
+.mileage-explorer-input-wrap {
+  position: relative;
+  display: block;
+}
+
+.mileage-explorer-input-wrap i {
+  position: absolute;
+  top: 50%;
+  left: .85rem;
+  color: #94a3b8;
+  font-size: .75rem;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.mileage-map-shell {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  min-height: 29rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+.mileage-route-details-card {
+  position: absolute;
+  z-index: 4;
+  top: auto;
+  bottom: 1rem;
+  left: 1rem;
+  width: min(18.5rem, calc(100% - 2rem));
+  max-height: calc(100% - 2rem);
+  overflow: auto;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .95);
+  color: #0f172a;
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+}
+
+.mileage-route-card-empty {
+  display: grid;
+  gap: .45rem;
+  padding: 1.25rem;
+}
+
+.mileage-route-card-empty-icon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: .3rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0f7ff;
+  color: #0066cc;
+}
+
+.mileage-route-card-empty strong {
+  font: 800 .86rem/1.25 'Lexend', sans-serif;
+}
+
+.mileage-route-card-empty p {
+  margin: 0;
+  color: #64748b;
+  font-size: .7rem;
+  line-height: 1.5;
+}
+
+.mileage-route-card-content[hidden],
+.mileage-route-card-compare[hidden] { display: none; }
+
+.mileage-route-card-image-wrap {
+  position: relative;
+  height: 5.4rem;
+  overflow: hidden;
+  background: #eaf3fc;
+}
+
+.mileage-route-card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mileage-route-card-close {
+  position: absolute;
+  top: .65rem;
+  right: .65rem;
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .75);
+  border-radius: 50%;
+  background: rgba(15, 23, 42, .56);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .2s ease, transform .16s ease;
+}
+
+.mileage-route-card-close:hover,
+.mileage-route-card-close:focus-visible {
+  background: #0066cc;
+  outline: none;
+}
+
+.mileage-route-card-body { padding: 1rem 1.1rem 1.05rem; }
+
+.mileage-route-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-bottom: .65rem;
+  color: #0066cc;
+  font-size: .56rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.mileage-route-card-body h3 {
+  margin: 0;
+  color: #0f172a;
+  font: 800 .98rem/1.25 'Lexend', sans-serif;
+  letter-spacing: -.02em;
+}
+
+.mileage-route-card-region {
+  margin: .3rem 0 .5rem;
+  color: #64748b;
+  font-size: .66rem;
+  line-height: 1.35;
+}
+
+.mileage-route-card-compare {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-bottom: .7rem;
+  color: #0066cc;
+  font-size: .65rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.mileage-route-card-compare:hover { color: #0052a3; }
+
+.mileage-route-card-miles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .45rem;
+  margin: .65rem 0 .8rem;
+}
+
+.mileage-route-card-miles div {
+  display: grid;
+  gap: .18rem;
+  padding: .58rem .5rem;
+  border-radius: 10px;
+  background: #f5f9fe;
+  text-align: center;
+}
+
+.mileage-route-card-miles div:last-child { background: #f8fafc; }
+
+.mileage-route-card-miles span,
+.mileage-route-card-miles small {
+  color: #7890a8;
+  font-size: .55rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.mileage-route-card-miles strong {
+  color: #0f172a;
+  font-size: .9rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.mileage-route-card-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.45rem;
+  gap: .45rem;
+  border-radius: 999px;
+  background: #0066cc;
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background-color .2s ease, transform .16s ease;
+}
+
+.mileage-route-card-cta:hover { background: #0052a3; }
+.mileage-route-card-cta:active { transform: scale(.98); }
+
+.mileage-route-card-disclaimer {
+  margin: .55rem 0 0;
+  color: #94a3b8;
+  font-size: .55rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.mileage-map-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mileage-map-land {
+  fill: url(#mileage-land-dots);
+  stroke: rgba(103, 135, 169, .4);
+  stroke-width: .7;
+  vector-effect: non-scaling-stroke;
+}
+
+.mileage-route-arc {
+  fill: none;
+  stroke: #0066cc;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  opacity: .25;
+  cursor: pointer;
+  outline: none;
+  pointer-events: stroke;
+  transition: stroke .25s ease, stroke-width .25s ease, opacity .25s ease;
+}
+
+.mileage-route-arc:focus-visible {
+  stroke: #c9a227;
+  stroke-width: 2.25;
+  opacity: 1;
+}
+
+.mileage-route-arc.is-active {
+  stroke: #c9a227;
+  stroke-width: 2.25;
+  opacity: 1;
+}
+
+.mileage-route-arc.is-dimmed,
+.mileage-route-node-group.is-dimmed {
+  opacity: .14;
+}
+
+.mileage-route-arc.is-filtered,
+.mileage-route-node-group.is-filtered {
+  display: none;
+}
+
+@keyframes mileageArcReveal {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+.mileage-explorer-section.is-map-loaded .mileage-route-arc {
+  animation: mileageArcReveal .8s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.mileage-route-node-group {
+  cursor: pointer;
+  outline: none;
+  transition: opacity .25s ease;
+}
+
+.mileage-node-hit {
+  fill: transparent;
+}
+
+.mileage-route-node {
+  fill: #0066cc;
+  stroke: #fff;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+  transition: fill .2s ease, r .2s ease;
+}
+
+.mileage-route-node-label {
+  fill: #0f172a;
+  font: 800 9px/1 'Manrope', sans-serif;
+  letter-spacing: .02em;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.mileage-route-node-group:focus-visible .mileage-route-node,
+.mileage-route-node-group.is-active .mileage-route-node {
+  fill: #c9a227;
+  r: 5;
+}
+
+.mileage-origin-marker circle:first-child {
+  fill: rgba(201, 162, 39, .16);
+  stroke: #c9a227;
+  stroke-width: 1;
+}
+
+.mileage-origin-marker circle:nth-child(2) {
+  fill: #c9a227;
+  stroke: #fff;
+  stroke-width: 1.2;
+}
+
+.mileage-origin-marker text {
+  fill: #0f172a;
+  font: 900 9px/1 'Manrope', sans-serif;
+  letter-spacing: .08em;
+}
+
+.mileage-route-signal-dot {
+  fill: #c9a227;
+  stroke: #fff;
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.mileage-map-popover {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  gap: .22rem;
+  min-width: 9.5rem;
+  max-width: 13rem;
+  padding: .65rem .75rem;
+  border: 1px solid rgba(0, 102, 204, .2);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, .12);
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.mileage-map-popover.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% + 5px));
+}
+
+.mileage-map-popover strong {
+  color: #0f172a;
+  font: 800 .78rem/1.2 'Lexend', sans-serif;
+}
+
+.mileage-map-popover span {
+  color: #64748b;
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.mileage-map-loading {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  color: #94a3b8;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  transition: opacity .25s ease;
+}
+
+.mileage-map-loading-line {
+  width: 1.8rem;
+  height: 1px;
+  background: #c9a227;
+}
+
+.mileage-explorer-section.is-map-loaded .mileage-map-loading,
+.mileage-explorer-section.is-map-fallback .mileage-map-loading {
+  opacity: 0;
+}
+
+.mileage-explorer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.65rem) clamp(1.15rem, 3vw, 2rem);
+  border-top: 1px solid rgba(15, 23, 42, .08);
+}
+
+.mileage-route-details {
+  min-height: 10rem;
+}
+
+.mileage-detail-empty {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  min-height: 10rem;
+  color: #64748b;
+}
+
+.mileage-detail-empty-icon {
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(201, 162, 39, .35);
+  border-radius: 50%;
+  color: #c9a227;
+}
+
+.mileage-detail-empty strong {
+  display: block;
+  color: #0f172a;
+  font: 800 .85rem/1.3 'Lexend', sans-serif;
+}
+
+.mileage-detail-empty p {
+  margin: .25rem 0 0;
+  font-size: .78rem;
+}
+
+.mileage-detail-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.mileage-detail-kicker {
+  display: block;
+  margin-bottom: .35rem;
+  color: #0066cc;
+  font-size: .63rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mileage-detail-heading h3 {
+  margin: 0;
+  color: #0f172a;
+  font: 800 clamp(1rem, 2vw, 1.35rem)/1.2 'Lexend', sans-serif;
+}
+
+.mileage-detail-heading p {
+  margin: .35rem 0 0;
+  color: #64748b;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.mileage-detail-plane {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0f7ff;
+  color: #0066cc;
+}
+
+.mileage-detail-miles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  padding: .8rem 0;
+  border-top: 1px solid rgba(15, 23, 42, .08);
+  border-bottom: 1px solid rgba(15, 23, 42, .08);
+}
+
+.mileage-detail-miles div,
+.mileage-detail-row {
+  display: grid;
+  gap: .18rem;
+}
+
+.mileage-detail-miles span,
+.mileage-detail-row span {
+  color: #94a3b8;
+  font-size: .63rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.mileage-detail-miles strong {
+  color: #0f172a;
+  font-size: .9rem;
+}
+
+.mileage-detail-rows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+}
+
+.mileage-detail-row strong {
+  color: #334155;
+  font-size: .75rem;
+}
+
+.mileage-detail-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin-top: 1rem;
+  color: #0066cc;
+  font-size: .72rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.mileage-detail-cta:hover { color: #0052a3; }
+
+.mileage-explorer-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .55rem 1rem;
+  color: #64748b;
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.mileage-explorer-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.mileage-legend-dot {
+  display: inline-block;
+  width: .52rem;
+  height: .52rem;
+  border-radius: 50%;
+  background: #0066cc;
+}
+
+.mileage-legend-dot--origin { background: #c9a227; }
+.mileage-legend-dot--selected { background: #c9a227; box-shadow: 0 0 0 3px rgba(201, 162, 39, .15); }
+
+.mileage-route-directory {
+  border-top: 1px solid rgba(15, 23, 42, .08);
+}
+
+.mileage-route-directory summary {
+  padding: 1rem clamp(1.15rem, 3vw, 2rem);
+  color: #0066cc;
+  cursor: pointer;
+  font-size: .75rem;
+  font-weight: 800;
+  list-style-position: inside;
+}
+
+.mileage-route-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .55rem;
+  padding: 0 clamp(1.15rem, 3vw, 2rem) 1.5rem;
+}
+
+.mileage-route-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  min-width: 0;
+  padding: .65rem .7rem;
+  border: 1px solid rgba(15, 23, 42, .1);
+  border-radius: 10px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+
+.mileage-route-list-item:hover,
+.mileage-route-list-item:focus-visible {
+  border-color: rgba(0, 102, 204, .4);
+  background: #f8fbff;
+  outline: none;
+}
+
+.mileage-route-list-item span {
+  display: grid;
+  min-width: 0;
+  gap: .16rem;
+}
+
+.mileage-route-list-item strong,
+.mileage-route-list-item small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mileage-route-list-item strong {
+  color: #0f172a;
+  font-size: .7rem;
+}
+
+.mileage-route-list-item small {
+  color: #94a3b8;
+  font-size: .6rem;
+  font-weight: 700;
+}
+
+.mileage-route-list-item b {
+  flex: 0 0 auto;
+  color: #0066cc;
+  font-size: .68rem;
+}
+
+.mileage-route-noscript {
+  margin: 0;
+  padding: 1rem clamp(1.15rem, 3vw, 2rem);
+  border-top: 1px solid rgba(15, 23, 42, .08);
+  color: #64748b;
+  font-size: .8rem;
+}
+
+.mileage-route-noscript a { color: #0066cc; font-weight: 800; }
+
+@media (max-width: 900px) {
+  .mileage-explorer-toolbar,
+  .mileage-explorer-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .mileage-explorer-toolbar {
+    display: grid;
+    align-items: start;
+  }
+
+  .mileage-explorer-controls { justify-content: stretch; }
+  .mileage-explorer-field:first-child { flex: 1 1 auto; }
+  .mileage-explorer-field input { width: 100%; }
+  .mileage-route-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .mileage-explorer-controls { display: grid; grid-template-columns: 1fr; }
+  .mileage-explorer-field select { width: 100%; }
+  .mileage-map-shell { aspect-ratio: 1.12 / 1; min-height: 22rem; }
+  .mileage-map-popover { display: none; }
+  .mileage-route-details-card {
+    top: auto;
+    bottom: .75rem;
+    left: .75rem;
+    width: calc(100% - 1.5rem);
+    max-height: calc(100% - 1.5rem);
+    transform: none;
+  }
+  .mileage-route-card-image-wrap { display: none; }
+  .mileage-route-card-body { padding: .9rem 1rem .95rem; }
+  .mileage-route-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 390px) {
+  .mileage-route-list { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mileage-route-arc,
+  .mileage-route-node-group,
+  .mileage-map-popover,
+  .mileage-route-list-item,
+  .mileage-explorer-field input,
+  .mileage-explorer-field select {
+    transition: none;
+  }
+
+  .mileage-route-signal-dot { display: none; }
+  .mileage-explorer-section.is-map-loaded .mileage-route-arc {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Popular route interaction layer ────────────────────────────────────── */
+.mileage-browse-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 2.75rem;
+  padding: .65rem .85rem;
+  border: 1px solid rgba(0, 102, 204, .2);
+  border-radius: var(--radius-v2-sm, 14px);
+  background: #f8fbff;
+  color: #0066cc;
+  cursor: pointer;
+  font: 800 .72rem/1 'Manrope', sans-serif;
+  transition: background-color .2s ease, border-color .2s ease, transform .16s ease;
+}
+
+.mileage-browse-trigger:hover {
+  border-color: rgba(0, 102, 204, .42);
+  background: #f0f7ff;
+}
+
+.mileage-browse-trigger:active,
+.mileage-popular-route-pill:active,
+.mileage-dialog-close:active {
+  transform: scale(.97);
+}
+
+.mileage-browse-trigger small {
+  color: #64748b;
+  font-size: .62rem;
+  font-weight: 700;
+}
+
+.mileage-popular-quicklinks {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .8rem 1rem;
+  padding: 1.15rem clamp(1.15rem, 3vw, 2rem) 1.25rem;
+  border-top: 1px solid rgba(15, 23, 42, .08);
+}
+
+.mileage-popular-quicklinks-label {
+  color: #0f172a;
+  font: 800 .72rem/1 'Lexend', sans-serif;
+  white-space: nowrap;
+}
+
+.mileage-popular-route-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.mileage-popular-route-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .48rem;
+  min-height: 2.15rem;
+  padding: .5rem .72rem;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font: 700 .68rem/1 'Manrope', sans-serif;
+  transition: border-color .2s ease, background-color .2s ease, color .2s ease, transform .16s ease;
+}
+
+.mileage-popular-route-pill:hover,
+.mileage-popular-route-pill:focus-visible,
+.mileage-popular-route-pill.is-active {
+  border-color: rgba(0, 102, 204, .42);
+  background: #f0f7ff;
+  color: #0066cc;
+  outline: none;
+}
+
+.mileage-popular-route-pill small {
+  color: #94a3b8;
+  font-size: .62rem;
+  font-weight: 800;
+}
+
+.mileage-explorer-bottom {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.mileage-route-plane {
+  overflow: visible;
+}
+
+.mileage-route-plane-shape {
+  fill: #0066cc;
+  stroke: #fff;
+  stroke-width: .8;
+  vector-effect: non-scaling-stroke;
+}
+
+.mileage-route-dialog {
+  width: min(44rem, calc(100% - 2rem));
+  max-width: none;
+  max-height: min(44rem, calc(100vh - 2rem));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-v2-lg, 28px);
+  background: transparent;
+  color: #0f172a;
+  overflow: visible;
+}
+
+.mileage-route-dialog::backdrop {
+  background: rgba(15, 23, 42, .62);
+  backdrop-filter: blur(5px);
+}
+
+.mileage-dialog-surface {
+  max-height: min(44rem, calc(100vh - 2rem));
+  overflow: auto;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: var(--radius-v2-lg, 28px);
+  background: #fff;
+}
+
+.mileage-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.2rem, 3vw, 1.8rem) clamp(1.2rem, 4vw, 2.2rem) 1.1rem;
+  border-bottom: 1px solid rgba(15, 23, 42, .08);
+}
+
+.mileage-dialog-kicker {
+  display: block;
+  margin-bottom: .4rem;
+  color: #0066cc;
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mileage-dialog-header h3 {
+  margin: 0;
+  color: #0f172a;
+  font: 800 clamp(1rem, 2vw, 1.35rem)/1.2 'Lexend', sans-serif;
+}
+
+.mileage-dialog-close {
+  display: grid;
+  width: 2.3rem;
+  height: 2.3rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: 50%;
+  background: #fff;
+  color: #64748b;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, transform .16s ease;
+}
+
+.mileage-dialog-close:hover,
+.mileage-dialog-close:focus-visible {
+  background: #f0f7ff;
+  color: #0066cc;
+  outline: none;
+}
+
+.mileage-route-dialog .mileage-route-details {
+  min-height: 0;
+  padding: 1.25rem clamp(1.2rem, 4vw, 2.2rem) 1.6rem;
+}
+
+.mileage-route-dialog .mileage-detail-empty {
+  min-height: 8rem;
+}
+
+.mileage-browser-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(10rem, .55fr);
+  gap: .8rem;
+  padding: 1.2rem clamp(1.2rem, 4vw, 2.2rem);
+  background: #fbfdff;
+  border-bottom: 1px solid rgba(15, 23, 42, .08);
+}
+
+.mileage-browser-results-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem clamp(1.2rem, 4vw, 2.2rem);
+  color: #94a3b8;
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.mileage-browser-results-header span:first-child { color: #0066cc; }
+
+.mileage-route-browser-dialog .mileage-route-list {
+  max-height: 22rem;
+  overflow: auto;
+  padding: 0 clamp(1.2rem, 4vw, 2.2rem) 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .mileage-explorer-toolbar { align-items: stretch; }
+  .mileage-browse-trigger { justify-content: center; }
+  .mileage-popular-quicklinks {
+    align-items: center;
+    flex-direction: row;
+    gap: .6rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: .65rem;
+    scrollbar-width: none;
+  }
+  .mileage-popular-quicklinks::-webkit-scrollbar { display: none; }
+  .mileage-popular-route-pills {
+    width: max-content;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+  .mileage-popular-route-pill { flex: 1 1 auto; justify-content: center; }
+  .mileage-browser-controls { grid-template-columns: 1fr; }
+  .mileage-route-dialog { width: calc(100% - 1rem); max-height: calc(100vh - 1rem); }
+  .mileage-dialog-surface { max-height: calc(100vh - 1rem); border-radius: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mileage-browse-trigger,
+  .mileage-popular-route-pill,
+  .mileage-dialog-close,
+  .mileage-route-card-close,
+  .mileage-route-card-cta,
+  .mileage-route-plane-shape {
+    transition: none;
+    animation: none;
+  }
+
+  .mileage-route-plane { display: none; }
+}
+
+/* ── Homepage production refinement v7 ──────────────────────────────────
+   Frontend-only consolidation layer. Keeps shared components intact while
+   giving index.html one clear editorial and conversion hierarchy. */
+
+.skip-link-v7 {
+  position: fixed;
+  z-index: 1000;
+  top: .75rem;
+  left: .75rem;
+  padding: .7rem 1rem;
+  border-radius: 10px;
+  background: #fff;
+  color: #0066cc;
+  font-size: .8rem;
+  font-weight: 800;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 160ms var(--ease-v2-out);
+}
+
+.skip-link-v7:focus { transform: translateY(0); }
+
+.home-section-heading-v7 {
+  display: grid;
+  gap: .85rem;
+  max-width: 48rem;
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.home-section-heading-v7 h2,
+.newsletter-home-v7__heading h2 {
+  margin: 0;
+  color: #101827;
+  font: 700 clamp(2rem, 1.35rem + 2.2vw, 3.25rem)/1.08 'Lexend', sans-serif;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+
+.home-section-heading-v7 p {
+  max-width: 42rem;
+  margin: 0;
+  color: rgba(54, 64, 82, .76);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.home-section-heading-v7--dark h2 { color: #fff; }
+.home-section-heading-v7--dark p { color: rgba(255, 255, 255, .64); }
+
+.hero-production-v7 {
+  min-height: 100dvh;
+  background: #07182c;
+}
+
+.hero-production-v7 .hero-photo-scrim {
+  background: linear-gradient(90deg, rgba(4, 15, 29, .88) 0%, rgba(4, 15, 29, .62) 48%, rgba(4, 15, 29, .28) 100%);
+}
+
+.hero-v7__content { padding-top: 2rem; }
+
+.hero-v7__service {
+  margin: 0 0 1rem;
+  color: #ffe4a0;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+.hero-production-v7 h1 {
+  max-width: 14ch;
+  margin: 0;
+  font-size: clamp(2.65rem, 1.6rem + 3.6vw, 5rem) !important;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.hero-v7__copy {
+  max-width: 39rem;
+  margin: 1.35rem 0 0;
+  color: rgba(255, 255, 255, .82);
+  font-size: clamp(1rem, .92rem + .35vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.hero-search-card-v7 {
+  width: min(46rem, 100%);
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 16px;
+  background: rgba(7, 24, 44, .76);
+  box-shadow: 0 18px 50px rgba(1, 10, 22, .22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.hero-search-card-v7 > label {
+  display: block;
+  margin: 0 0 .65rem .15rem;
+  color: rgba(255, 255, 255, .78);
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.hero-search-card-v7__row {
+  display: flex;
+  align-items: stretch;
+  gap: .65rem;
+}
+
+.hero-search-card-v7__input {
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0 .9rem;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 12px;
+  background: #fff;
+  color: #0f172a;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.hero-search-card-v7__input:focus-within {
+  border-color: #76b7ff;
+  box-shadow: 0 0 0 3px rgba(118, 183, 255, .2);
+}
+
+.hero-search-card-v7__input > i:first-child { color: #0066cc; }
+.hero-search-card-v7__input > i:nth-of-type(2) { margin-inline: .6rem; color: #94a3b8; font-size: .68rem; }
+
+.hero-search-card-v7__input > span {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-left: .55rem;
+  color: #0f172a;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.hero-search-card-v7__input img { width: 1rem; height: 1rem; border-radius: 50%; object-fit: cover; }
+
+.hero-search-card-v7__input input {
+  min-width: 0;
+  flex: 1;
+  padding: .5rem 0;
+  border: 0;
+  background: transparent;
+  color: #0f172a;
+  font-size: .88rem;
+  outline: 0;
+}
+
+.hero-search-card-v7__input input::placeholder { color: #7c8da2; }
+
+.hero-v7__route-cta {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .75rem 1rem;
+  border-radius: 12px;
+  background: #0066cc;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 180ms ease, transform 140ms var(--ease-v2-out);
+}
+
+.hero-v7__route-cta:active { transform: scale(.98); }
+
+.hero-search-card-v7 > p {
+  margin: .65rem .15rem 0;
+  color: rgba(255, 255, 255, .56);
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+.hero-v7__secondary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .45rem .7rem;
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, .58);
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.hero-v7__secondary a {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.home-trust-v7 {
+  padding: 1.5rem 0 2.15rem;
+  border-bottom: 1px solid rgba(0, 102, 204, .08);
+  background: #fff;
+}
+
+.home-trust-v7__proof {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(15, 23, 42, .08);
+}
+
+.home-trust-v7 .hero-social-proof-v4 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .75rem;
+  margin: 0;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.home-trust-v7 .hero-social-proof-v4 p {
+  margin: 0;
+  color: #52657a;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.home-trust-v7__facts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .55rem 1.2rem;
+}
+
+.home-trust-v7__facts span {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: #42566c;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.home-trust-v7__facts i { color: #0066cc; }
+
+.home-trust-v7__label {
+  margin: 1.3rem 0 .7rem;
+  color: #64748b;
+  font-size: .68rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.home-trust-v7__disclaimer {
+  max-width: 42rem;
+  margin: .7rem auto 0;
+  color: #94a3b8;
+  font-size: .62rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.home-trust-v7 .marquee-outer { padding-block: .25rem; }
+
+.mileage-explorer-section { padding-block: clamp(4.5rem, 7vw, 6.5rem); }
+.mileage-explorer-section .mileage-explorer-frame { margin-top: 0; }
+.mileage-explorer-section .home-section-heading-v7 { max-width: none; }
+
+.bookings-copy-v5 { max-width: 31rem; }
+.bookings-title-v5 { max-width: 14ch; }
+.booking-case-handled-v6 { gap: .25rem; }
+
+.skyfare-method-v7 {
+  padding: clamp(4.5rem, 8vw, 7rem) 0;
+  background: #f5f5f7;
+}
+
+.skyfare-method-v7__founder {
+  display: grid;
+  grid-template-columns: minmax(18rem, .82fr) minmax(0, 1.18fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.skyfare-method-v7__portrait {
+  min-height: 32rem;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #dce7f2;
+}
+
+.skyfare-method-v7__portrait picture,
+.skyfare-method-v7__portrait img { display: block; width: 100%; height: 100%; }
+.skyfare-method-v7__portrait img { min-height: 32rem; object-fit: cover; object-position: 30% center; }
+
+.skyfare-method-v7__role {
+  margin: 0 0 .85rem;
+  color: #0066cc;
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+.skyfare-method-v7__story h2 {
+  max-width: 13ch;
+  margin: 0;
+  color: #101827;
+  font: 700 clamp(2.15rem, 1.45rem + 2.2vw, 3.5rem)/1.06 'Lexend', sans-serif;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+
+.skyfare-method-v7__copy {
+  display: grid;
+  gap: .9rem;
+  max-width: 40rem;
+  margin-top: 1.4rem;
+  color: #52657a;
+  font-size: .98rem;
+  line-height: 1.75;
+}
+
+.skyfare-method-v7__copy p { margin: 0; }
+
+.skyfare-method-v7__social {
+  display: flex;
+  gap: .55rem;
+  margin-top: 1.4rem;
+}
+
+.skyfare-method-v7__social a {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: 50%;
+  background: #fff;
+  color: #334155;
+  text-decoration: none;
+  transition: border-color 180ms ease, color 180ms ease, transform 160ms var(--ease-v2-out);
+}
+
+.skyfare-process-v7 {
+  display: grid;
+  grid-template-columns: minmax(15rem, .72fr) minmax(0, 1.28fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-top: clamp(3rem, 7vw, 5.5rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid rgba(15, 23, 42, .12);
+}
+
+.skyfare-process-v7__intro h3 {
+  max-width: 14ch;
+  margin: 0;
+  color: #101827;
+  font: 700 clamp(1.65rem, 1.25rem + 1.2vw, 2.35rem)/1.12 'Lexend', sans-serif;
+  letter-spacing: -.035em;
+}
+
+.skyfare-process-v7__intro p {
+  max-width: 31rem;
+  margin: 1rem 0 0;
+  color: #64748b;
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+.skyfare-process-v7__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 1.35rem;
+  color: #0066cc;
+  font-size: .8rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.skyfare-process-v7__steps {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skyfare-process-v7__steps li {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.2rem 0;
+  border-top: 1px solid rgba(15, 23, 42, .1);
+}
+
+.skyfare-process-v7__steps li:first-child { border-top: 0; padding-top: 0; }
+
+.skyfare-process-v7__steps li > span {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #eaf3fc;
+  color: #0066cc;
+  font: 800 .78rem/1 'Lexend', sans-serif;
+}
+
+.skyfare-process-v7__steps h4 {
+  margin: 0;
+  color: #101827;
+  font: 700 1rem/1.3 'Lexend', sans-serif;
+}
+
+.skyfare-process-v7__steps p {
+  margin: .35rem 0 0;
+  color: #64748b;
+  font-size: .84rem;
+  line-height: 1.6;
+}
+
+.skyfare-process-v7__note {
+  grid-column: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: .55rem;
+  margin: .2rem 0 0;
+  padding: .85rem 1rem;
+  border-radius: 12px;
+  background: #fff;
+  color: #52657a;
+  font-size: .74rem;
+  line-height: 1.5;
+}
+
+.skyfare-process-v7__note i { margin-top: .15rem; color: #0066cc; }
+
+.home-paths-v7 { padding-block: clamp(4.5rem, 8vw, 7rem); }
+
+.home-paths-v7__layout {
+  display: grid;
+  grid-template-columns: minmax(18rem, .82fr) minmax(0, 1.18fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: stretch;
+}
+
+.home-paths-v7__media {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 32rem;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .05);
+}
+
+.home-paths-v7__media img { width: 100%; height: 100%; min-height: 26rem; object-fit: cover; }
+
+.home-paths-v7__media figcaption {
+  padding: 1rem 1.1rem;
+  color: rgba(255, 255, 255, .62);
+  font-size: .75rem;
+  line-height: 1.55;
+}
+
+.home-paths-v7__choices { display: grid; align-content: start; gap: .75rem; }
+
+.home-paths-v7__intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .15rem;
+}
+
+.home-paths-v7__intro h3 { margin: 0; color: #fff; font: 700 1.15rem/1.3 'Lexend', sans-serif; }
+.home-paths-v7__intro a { color: rgba(255, 255, 255, .68); font-size: .72rem; font-weight: 800; text-underline-offset: 3px; }
+
+.home-path-v7 {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  min-height: 7.3rem;
+  padding: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .055);
+  color: #fff;
+  text-align: left;
+  text-decoration: none;
+  transition: border-color 200ms ease, background-color 200ms ease, transform 160ms var(--ease-v2-out);
+}
+
+.home-path-v7--primary { border-color: rgba(64, 205, 118, .3); background: rgba(34, 197, 94, .09); }
+.home-path-v7--altitude { border-color: rgba(201, 162, 39, .28); }
+
+.home-path-v7__icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .09);
+  color: #72d995;
+}
+
+.home-path-v7--altitude .home-path-v7__icon { color: #f0d16e; }
+
+.home-path-v7 small,
+.home-path-v7 strong,
+.home-path-v7 em { display: block; }
+.home-path-v7 small { margin-bottom: .25rem; color: rgba(255, 255, 255, .5); font-size: .66rem; font-weight: 800; }
+.home-path-v7 strong { font: 700 1rem/1.3 'Lexend', sans-serif; }
+.home-path-v7 em { margin-top: .35rem; color: rgba(255, 255, 255, .62); font-size: .76rem; font-style: normal; line-height: 1.5; }
+.home-path-v7__arrow { color: rgba(255, 255, 255, .7); }
+
+.home-paths-v7__future { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+
+.home-path-v7--locked {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 4.5rem;
+  overflow: hidden;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.home-path-v7__locked-copy {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  filter: blur(1.8px);
+  opacity: .34;
+}
+
+.home-path-v7__locked-copy strong { font-size: .78rem; }
+
+.home-path-v7__status {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .45rem .6rem;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, .78);
+  font-size: .62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#testimonials-section { padding-block: clamp(4.5rem, 8vw, 7rem); }
+
+.testimonial-card-v2 blockquote {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.home-testimonials-status-v7 {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(15, 23, 42, .1);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.home-testimonials-status-v7 > i { color: #0066cc; }
+.home-testimonials-status-v7 strong { color: #0f172a; font-size: .86rem; }
+.home-testimonials-status-v7 p { margin: .2rem 0 0; color: #64748b; font-size: .75rem; }
+.home-testimonials-status-v7 a { color: #0066cc; font-size: .75rem; font-weight: 800; }
+
+.newsletter-home-v5 { padding-block: clamp(4.5rem, 8vw, 7rem); }
+.newsletter-home-v7__heading a { color: #0066cc; font-weight: 800; }
+
+.home-pricing-v7 {
+  padding: clamp(4.5rem, 8vw, 7rem) 0;
+  background: #f3f8fd;
+}
+
+.home-pricing-v7__primary {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: 1rem;
+}
+
+.home-pricing-v7__concierge,
+.home-pricing-v7__altitude {
+  position: relative;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgba(15, 23, 42, .1);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.home-pricing-v7__concierge { background: #0e2038; color: #fff; }
+
+.home-pricing-v7__card-heading {
+  display: grid;
+  grid-template-columns: 2.65rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .85rem;
+}
+
+.home-pricing-v7__card-heading > span {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #edf6ff;
+  color: #0066cc;
+}
+
+.home-pricing-v7__concierge .home-pricing-v7__card-heading > span { background: rgba(255, 255, 255, .1); color: #72d995; }
+
+.home-pricing-v7__card-heading small {
+  display: block;
+  margin-bottom: .15rem;
+  color: #64748b;
+  font-size: .64rem;
+  font-weight: 800;
+}
+
+.home-pricing-v7__concierge .home-pricing-v7__card-heading small { color: rgba(255, 255, 255, .52); }
+
+.home-pricing-v7__card-heading h3 { margin: 0; color: #101827; font: 700 1.08rem/1.3 'Lexend', sans-serif; }
+.home-pricing-v7__concierge .home-pricing-v7__card-heading h3 { color: #fff; }
+
+.home-pricing-v7__concierge > p,
+.home-pricing-v7__altitude > p {
+  margin: 1.2rem 0;
+  color: #64748b;
+  font-size: .86rem;
+  line-height: 1.65;
+}
+
+.home-pricing-v7__concierge > p { color: rgba(255, 255, 255, .66); }
+
+.home-pricing-v7__quote {
+  display: block;
+  margin-bottom: 1.1rem;
+  color: #fff;
+  font-size: .86rem;
+}
+
+.home-pricing-v7__concierge ul,
+.home-pricing-v7__altitude ul {
+  display: grid;
+  gap: .65rem;
+  margin: 1.1rem 0 1.4rem;
+  padding: 0;
+  list-style: none;
+  color: #52657a;
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+.home-pricing-v7__concierge ul { color: rgba(255, 255, 255, .74); }
+.home-pricing-v7__concierge li,
+.home-pricing-v7__altitude li { display: flex; align-items: flex-start; gap: .55rem; }
+.home-pricing-v7__concierge li i,
+.home-pricing-v7__altitude li i { margin-top: .18rem; color: #16854a; }
+
+.home-pricing-v7__altitude .pricing-value-chip-v5 { top: 1rem; right: 1rem; }
+.home-pricing-v7__altitude .pricing-altitude-tabs-v5 { margin: 1rem 0; }
+
+.home-pricing-v7__price {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin: 0;
+  color: #64748b;
+}
+
+.home-pricing-v7__price strong { color: #101827; font: 700 clamp(2rem, 1.4rem + 1.6vw, 2.8rem)/1 'Lexend', sans-serif; }
+.home-pricing-v7__price del { color: #94a3b8; font-size: 1rem; }
+.home-pricing-v7__price span { font-size: .8rem; }
+.home-pricing-v7__price-note { margin: .45rem 0 1rem; color: #64748b; font-size: .7rem; font-weight: 700; }
+
+.home-pricing-v7__secondary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, .75fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.home-pricing-v7__free,
+.home-pricing-v7__future {
+  padding: 1.15rem;
+  border: 1px solid rgba(15, 23, 42, .09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .74);
+}
+
+.home-pricing-v7__free {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.home-pricing-v7__free small { color: #64748b; font-size: .62rem; font-weight: 800; }
+.home-pricing-v7__free h3 { margin: .15rem 0 0; color: #101827; font: 700 .95rem/1.3 'Lexend', sans-serif; }
+.home-pricing-v7__free p { margin: .25rem 0 0; color: #64748b; font-size: .72rem; }
+.home-pricing-v7__free a { display: inline-flex; align-items: center; gap: .4rem; color: #0066cc; font-size: .74rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+
+.home-pricing-v7__future { display: grid; gap: .6rem; }
+.home-pricing-v7__future-item { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 2.7rem; gap: .8rem; }
+.home-pricing-v7__future-copy { display: flex; align-items: center; justify-content: space-between; flex: 1; gap: .6rem; filter: blur(1.6px); opacity: .42; }
+.home-pricing-v7__future-copy strong { color: #334155; font-size: .76rem; }
+.home-pricing-v7__future-copy small { color: #64748b; font-size: .7rem; }
+.home-pricing-v7__future-status { display: inline-flex; align-items: center; gap: .35rem; color: #64748b; font-size: .62rem; font-weight: 800; white-space: nowrap; }
+
+.cta-fallback-v7 {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 4rem 1.25rem;
+  background: #0e2038;
+  color: #fff;
+  text-align: center;
+}
+
+.cta-fallback-v7 h2 { margin: 0; font: 700 clamp(2rem, 1.4rem + 2vw, 3.25rem)/1.1 'Lexend', sans-serif; }
+.cta-fallback-v7 p { max-width: 36rem; margin: 0; color: rgba(255, 255, 255, .64); line-height: 1.6; }
+.cta-fallback-v7 a { display: inline-flex; min-height: 2.75rem; align-items: center; padding: .7rem 1rem; border-radius: 999px; background: #22c55e; color: #fff; font-size: .8rem; font-weight: 800; text-decoration: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-v7__route-cta:hover { background: #0052a3; transform: translateY(-1px); }
+  .hero-v7__secondary a:hover { color: #ffe4a0; }
+  .skyfare-method-v7__social a:hover { transform: translateY(-2px); border-color: rgba(0, 102, 204, .35); color: #0066cc; }
+  .home-path-v7:not(:disabled):hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, .28); background: rgba(255, 255, 255, .09); }
+}
+
+@media (max-width: 1023px) {
+  .hero-production-v7 .hero-photo-scrim { background: rgba(4, 15, 29, .7); }
+  .home-trust-v7__proof { align-items: flex-start; flex-direction: column; }
+  .home-trust-v7__facts { justify-content: flex-start; }
+  .skyfare-method-v7__founder,
+  .home-paths-v7__layout { grid-template-columns: minmax(15rem, .75fr) minmax(0, 1.25fr); }
+  .home-pricing-v7__secondary { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+  .hero-production-v7 { min-height: 42rem; }
+  .hero-production-v7 h1 { max-width: 12ch; font-size: clamp(2.55rem, 12vw, 4rem) !important; }
+  .hero-v7__content { padding-top: 1rem; }
+  .hero-search-card-v7__row { flex-direction: column; }
+  .hero-v7__route-cta { width: 100%; }
+  .home-trust-v7__facts { display: grid; grid-template-columns: 1fr; }
+  .skyfare-method-v7__founder,
+  .skyfare-process-v7,
+  .home-paths-v7__layout,
+  .home-pricing-v7__primary { grid-template-columns: 1fr; }
+  .skyfare-method-v7__portrait,
+  .skyfare-method-v7__portrait img { min-height: 24rem; }
+  .skyfare-method-v7__portrait img { object-position: center 18%; }
+  .skyfare-process-v7__note { grid-column: 1; }
+  .home-paths-v7__media { min-height: 0; }
+  .home-paths-v7__media img { min-height: 20rem; }
+}
+
+@media (max-width: 640px) {
+  .home-section-heading-v7 { margin-bottom: 2rem; }
+  .home-section-heading-v7 h2,
+  .newsletter-home-v7__heading h2 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+  .hero-production-v7 { min-height: 44rem; }
+  .hero-production-v7 > .relative { padding-inline: 1rem; }
+  .hero-search-card-v7 { padding: .8rem; }
+  .hero-v7__secondary { align-items: flex-start; flex-direction: column; }
+  .home-trust-v7 .hero-social-proof-v4 { width: 100%; }
+  .mileage-route-details-card.is-empty { display: none; }
+  .mileage-route-arc:not(.is-featured):not(.is-active),
+  .mileage-route-node-group:not(.is-featured):not(.is-active) { opacity: 0; pointer-events: none; }
+  .home-paths-v7__future { grid-template-columns: 1fr; }
+  .home-path-v7 { grid-template-columns: 2.5rem minmax(0, 1fr) auto; }
+  .home-path-v7--locked { grid-template-columns: minmax(0, 1fr) auto; }
+  .home-testimonials-status-v7 { grid-template-columns: auto minmax(0, 1fr); }
+  .home-testimonials-status-v7 a { grid-column: 2; }
+  .home-pricing-v7__free { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 390px) {
+  .hero-production-v7 h1 { font-size: 2.6rem !important; }
+  .hero-search-card-v7__input > span { margin-left: .4rem; }
+  .hero-search-card-v7__input > i:nth-of-type(2) { margin-inline: .4rem; }
+  .mileage-popular-quicklinks-label { position: sticky; left: 0; z-index: 1; padding-right: .35rem; background: #fff; }
+  .skyfare-method-v7__portrait,
+  .skyfare-method-v7__portrait img { min-height: 20rem; }
+  .home-path-v7 { padding: 1rem; }
+}
+
+/* Final homepage refinement: centered hero proof, editorial section rhythm,
+   two-up fit choices, and a consistent pricing-card frame. */
+.hero-v7__copy {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.hero-v7__trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: .75rem;
+  width: min(100%, 42rem);
+}
+
+.hero-v7__trust .hero-social-proof-v4 {
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-v7__trust .hero-social-proof-v4 > div:last-child {
+  align-items: center;
+}
+
+.hero-v7__facts {
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-v7__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .7rem;
+  margin-top: 1rem;
+}
+
+.hero-v7__primary-cta,
+.hero-v7__secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 2.75rem;
+  padding: .72rem 1.05rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 160ms var(--ease-v2-out), background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.hero-v7__primary-cta { background: #22c55e; color: #fff; }
+.hero-v7__secondary-cta { border: 1px solid rgba(255, 255, 255, .28); color: rgba(255, 255, 255, .88); }
+
+.section-heading-v8 {
+  grid-template-columns: minmax(0, 1.08fr) minmax(16rem, .72fr);
+  align-items: end;
+  max-width: none;
+  gap: clamp(1.5rem, 5vw, 5rem);
+}
+
+.section-heading-v8__title {
+  display: grid;
+  align-content: end;
+  gap: .85rem;
+  min-width: 0;
+}
+
+.section-heading-v8__title .eyebrow-chip-v2 { width: fit-content; margin: 0; }
+.section-heading-v8 > p { justify-self: end; max-width: 30rem; }
+.section-heading-v8--dark h2 { color: #fff; }
+.home-section-heading-v7.section-heading-v8 h2 { max-width: 18ch; }
+.home-section-heading-v7.section-heading-v8 p { margin: 0; }
+
+.bookings-heading-v8 { margin-bottom: 2.5rem; }
+.bookings-heading-v8 + .bookings-layout-v5 .bookings-copy-v5 { max-width: 28rem; }
+
+.home-paths-v7__choices--below-carousel {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.home-paths-v7__choices--below-carousel .home-paths-v7__intro {
+  grid-column: 1 / -1;
+}
+
+.home-paths-v7__choices--below-carousel .home-paths-v7__future {
+  display: contents;
+}
+
+.home-paths-v7__choices--below-carousel .home-path-v7--locked {
+  min-height: 7.3rem;
+}
+
+.home-pricing-v7__concierge {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  border-color: rgba(14, 32, 56, .35);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(14, 32, 56, .12);
+}
+
+.home-pricing-v7__concierge > .btn-pill { margin-top: auto; align-self: flex-start; }
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-v7__primary-cta:hover,
+  .hero-v7__secondary-cta:hover { transform: translateY(-2px); }
+  .hero-v7__primary-cta:hover { background: #16a34a; }
+  .hero-v7__secondary-cta:hover { border-color: rgba(255, 255, 255, .62); color: #fff; }
+}
+
+@media (max-width: 767px) {
+  .hero-v7__trust { width: 100%; }
+  .hero-v7__facts { display: grid; justify-items: center; gap: .45rem; }
+  .section-heading-v8 { grid-template-columns: 1fr; gap: 1rem; }
+  .section-heading-v8 > p { justify-self: start; max-width: 38rem; }
+  .home-section-heading-v7.section-heading-v8 h2 { max-width: 100%; }
+  .home-paths-v7__choices--below-carousel { grid-template-columns: 1fr; }
+  .home-paths-v7__choices--below-carousel .home-paths-v7__intro { grid-column: auto; }
+  .home-paths-v7__choices--below-carousel .home-paths-v7__future { display: grid; grid-template-columns: 1fr; }
+  .home-paths-v7__choices--below-carousel .home-path-v7--locked { min-height: 4.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-v7__primary-cta,
+  .hero-v7__secondary-cta { transition: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-v7__route-cta,
+  .hero-search-card-v7__input,
+  .skyfare-method-v7__social a,
+  .home-path-v7 { transition: none !important; }
+}
+
+/* Final scoped overrides for restored homepage surfaces. */
+.home-pricing-v7 > .container {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-pricing-v7 > .container > .home-section-heading-v7 { grid-column: 1 / -1; }
+.home-pricing-v7 > .container > .home-pricing-v7__primary,
+.home-pricing-v7 > .container > .home-pricing-v7__secondary { display: contents; }
+.home-pricing-v7 > .container > .home-pricing-v7__primary > article,
+.home-pricing-v7 > .container > .home-pricing-v7__secondary > div { order: initial; }
+.home-pricing-v7__concierge { order: 1 !important; }
+.home-pricing-v7__free { order: 2 !important; }
+.home-pricing-v7__altitude { order: 3 !important; }
+.home-pricing-v7__future { order: 4 !important; }
+
+.faq-polish-v5.faq-light-v8 {
+  background: #f7fbff !important;
+}
+
+.faq-polish-v5.faq-light-v8 .faq-item-v2 {
+  background: #fff;
+  border-color: rgba(15, 23, 42, .1);
+  box-shadow: 0 8px 24px rgba(26, 66, 108, .05);
+}
+
+.faq-polish-v5.faq-light-v8 .faq-item-v2:hover,
+.faq-polish-v5.faq-light-v8 .faq-item-v2[open] {
+  background: #fff;
+  border-color: rgba(0, 102, 204, .3);
+}
+
+.faq-polish-v5.faq-light-v8 .faq-item-v2 summary .text-base { color: #101827; }
+.faq-polish-v5.faq-light-v8 .faq-item-v2 summary .icon-chip { background: #edf6ff; border-color: #d7eaff; color: #0066cc; }
+.faq-polish-v5.faq-light-v8 .faq-indicator { background: #fff; border-color: rgba(15, 23, 42, .13); color: #64748b; }
+.faq-polish-v5.faq-light-v8 details[open] > summary .icon-chip { background: #edf6ff; border-color: #b8d7f8; color: #0066cc; }
+.faq-polish-v5.faq-light-v8 details[open] > summary .faq-indicator { background: #0066cc; border-color: #0066cc; color: #fff; }
+.faq-polish-v5.faq-light-v8 .accordion-body > div { color: #52657a; }
+.faq-polish-v5.faq-light-v8 .faq-more-v5 a { color: #0066cc !important; }
+
+@media (min-width: 1101px) {
+  .home-pricing-v7 > .container { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-pricing-v7 > .container > .home-section-heading-v7 { grid-column: 1 / -1; }
+}
+
+@media (max-width: 1100px) and (min-width: 768px) {
+  .home-pricing-v7 > .container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-pricing-v7 > .container > .home-section-heading-v7 { grid-column: 1 / -1; }
+}
+
+@media (max-width: 767px) {
+  .home-pricing-v7 > .container { display: block; }
+  .home-pricing-v7 > .container > .home-pricing-v7__primary,
+  .home-pricing-v7 > .container > .home-pricing-v7__secondary { display: grid; grid-template-columns: 1fr; }
+  .home-pricing-v7__concierge,
+  .home-pricing-v7__free,
+  .home-pricing-v7__altitude,
+  .home-pricing-v7__future { margin-top: 1rem; }
+}
+
+@media (max-width: 767px) {
+  .home-pricing-v7 > .container {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .home-pricing-v7 > .container > .home-pricing-v7__primary,
+  .home-pricing-v7 > .container > .home-pricing-v7__secondary {
+    display: contents;
+  }
+}
+
+/* Hero balance restoration: return to the old centered, photo-card composition. */
+.hero-production-v7 {
+  min-height: auto;
+  margin: .5rem 1rem 0;
+  border-radius: 28px 28px 0 0;
+}
+
+.hero-production-v7 > .relative {
+  min-height: clamp(45rem, 86dvh, 56rem);
+  padding: clamp(3.5rem, 7vw, 5.5rem) clamp(1rem, 5vw, 4rem) clamp(3rem, 6vw, 4.5rem);
+}
+
+.hero-v7__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 auto 1rem;
+  padding: .62rem 1.05rem;
+  border: 1px solid rgba(255, 220, 100, .45);
+  border-radius: 999px;
+  background: rgba(14, 32, 56, .46);
+  box-shadow: 0 8px 24px rgba(1, 10, 22, .16), 0 1px 0 rgba(255, 255, 255, .18) inset;
+  color: #fff1b5;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.hero-v7__badge i { color: #ffe08a; font-size: .62rem; }
+.hero-production-v7 .hero-v7__service { margin-bottom: .8rem; }
+.hero-production-v7 h1 { max-width: none; }
+.hero-v7__copy { margin-top: 1rem; }
+.hero-search-card-v7 { margin-top: 1.7rem; }
+.hero-v7__actions { margin-top: 1.1rem; }
+.hero-v7__trust { margin-top: 1.45rem; }
+
+@media (min-width: 768px) {
+  .hero-production-v7 h1 { white-space: nowrap; }
+}
+
+@media (max-width: 767px) {
+  .hero-production-v7 {
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .hero-production-v7 > .relative {
+    min-height: 46rem;
+    padding-inline: 1rem;
+  }
+
+  .hero-production-v7 h1 { max-width: 12ch; }
+  .hero-v7__badge { font-size: .61rem; letter-spacing: .08em; }
+}
+
+/* Original hero contract: full viewport stage, full-bleed video, and a quiet
+   top-to-bottom scrim that keeps the content readable without tinting the map
+   of the sky horizontally. */
+.hero-production-v7 {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  border-radius: 0;
+}
+
+.hero-production-v7 > .relative {
+  min-height: 0;
+  padding-block: clamp(3rem, 8vh, 6rem);
+}
+
+.hero-production-v7 .hero-photo-scrim {
+  background:
+    radial-gradient(ellipse 58% 96% at 0% 50%, rgba(0, 0, 0, .46) 0%, rgba(0, 0, 0, .24) 34%, rgba(0, 0, 0, 0) 68%),
+    radial-gradient(ellipse 58% 96% at 100% 50%, rgba(0, 0, 0, .40) 0%, rgba(0, 0, 0, .20) 34%, rgba(0, 0, 0, 0) 68%),
+    linear-gradient(to bottom, rgba(0, 0, 0, .10) 0%, rgba(0, 0, 0, .40) 100%);
+}
+
+@media (max-width: 767px) {
+  .hero-production-v7 {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .hero-production-v7 > .relative { padding-block: 3.25rem 2.5rem; }
+}
+
+/* Keep the hero headline optically centered. Earlier restoration overrides
+   allowed the nowrap title to outgrow its 58rem content column and drift. */
+.hero-production-v7 .hero-v7__content {
+  max-width: min(72rem, calc(100vw - 2rem));
+  padding-top: 0;
+  transform: translateY(clamp(-3rem, -4vh, -1.5rem));
+}
+
+.hero-production-v7 h1 {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  text-align: center;
+  letter-spacing: 0;
+}
+
+@media (min-width: 1100px) {
+  .hero-production-v7 h1 { white-space: nowrap; }
+}
+
+@media (max-width: 1099px) {
+  .hero-production-v7 h1 { white-space: normal; }
+}
+
+@media (max-width: 767px) {
+  .hero-production-v7 .hero-v7__content { transform: translateY(-.75rem); }
+  .hero-production-v7 h1 { max-width: 12ch; }
+}
+
+.hero-v7__trust .hero-social-proof-v4 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  text-align: left;
+}
+
+.hero-v7__trust .hero-social-proof-v4 > div:last-child {
+  align-items: flex-start;
+}
+
+.hero-v7__trust #hero-social-proof-stars,
+.hero-v7__trust #hero-social-proof-text {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.home-paths-v7 .smart-media-v5--visual,
+.home-paths-v7 .home-paths-v7__choices--below-carousel {
+  width: 100%;
+  max-width: 92rem;
+  margin-inline: auto;
+}
+
+.home-paths-v7 .home-paths-v7__choices--below-carousel {
+  margin-top: 1rem;
+}
+
+.pricing-restored-v8 .pricing-restored-v8__grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.pricing-restored-v8 .card-pricing-v2 {
+  min-height: 100%;
+}
+
+.pricing-concierge-card-v9 {
+  border-color: rgba(14, 32, 56, .45);
+  background: #0e2038;
+  box-shadow: 0 14px 34px rgba(14, 32, 56, .14);
+}
+
+.pricing-concierge-card-v9:hover {
+  border-color: rgba(34, 197, 94, .38);
+}
+
+.pricing-restored-v8 [data-coming-soon] {
+  min-height: 100%;
+}
+
+.pricing-upcoming-card-v9 {
+  background: #fff;
+}
+
+.pricing-upcoming-tabs-v9 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .35rem;
+  margin-bottom: 1.1rem;
+  padding: .3rem;
+  border: 1px solid rgba(0, 102, 204, .12);
+  border-radius: 999px;
+  background: rgba(0, 102, 204, .06);
+}
+
+.pricing-upcoming-tab-v9 {
+  display: inline-flex;
+  min-height: 2.35rem;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  border-radius: 999px;
+  color: #0066cc;
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.pricing-upcoming-tab-v9.is-active {
+  background: #0066cc;
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(0, 102, 204, .16);
+}
+
+.pricing-upcoming-options-v9 {
+  display: grid;
+  gap: .8rem;
+  margin-top: auto;
+}
+
+.pricing-upcoming-option-v9 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .35rem .8rem;
+  padding-top: .85rem;
+  border-top: 1px solid rgba(15, 23, 42, .08);
+}
+
+.pricing-upcoming-option-v9 h4 {
+  margin: 0 0 .22rem;
+  color: #101827;
+  font: 700 .86rem/1.25 'Lexend', sans-serif;
+}
+
+.pricing-upcoming-option-v9 p {
+  margin: 0;
+  color: #64748b;
+  font-size: .72rem;
+  line-height: 1.45;
+}
+
+.pricing-upcoming-option-v9 strong {
+  color: #101827;
+  font: 700 1rem/1 'Lexend', sans-serif;
+}
+
+.pricing-upcoming-option-v9 small {
+  grid-column: 1 / -1;
+  color: #94a3b8;
+  font-size: .66rem;
+  font-weight: 700;
+}
+
+@media (max-width: 1100px) {
+  .pricing-restored-v8 .pricing-restored-v8__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .pricing-restored-v8 .pricing-restored-v8__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hero-production-v7 .hero-search-card-v7 {
+  border-color: rgba(255, 255, 255, .24);
+  background: rgba(9, 28, 50, .46);
+  box-shadow: 0 18px 48px rgba(1, 10, 22, .16), 0 1px 0 rgba(255, 255, 255, .12) inset;
+  backdrop-filter: blur(24px) saturate(1.12);
+  -webkit-backdrop-filter: blur(24px) saturate(1.12);
+}
+
+.hero-production-v7 .hero-search-card-v7 > label,
+.hero-production-v7 .hero-search-card-v7 > p {
+  color: rgba(255, 255, 255, .82);
+}
+
+.hero-production-v7 .hero-search-card-v7__input {
+  border-color: rgba(255, 255, 255, .72);
+  box-shadow: 0 10px 24px rgba(1, 10, 22, .08);
+}
+
+.hero-production-v7 #hero-route-dropdown {
+  max-height: min(18rem, 38vh);
+  border-color: rgba(15, 23, 42, .08);
+  box-shadow: 0 24px 54px rgba(1, 10, 22, .22);
+}
+
+.hero-production-v7 #hero-route-list {
+  max-height: min(18rem, 38vh);
+}
+
+.hero-production-v7 .hero-search-card-v7.is-search-open + .hero-v7__actions,
+.hero-production-v7 .hero-search-card-v7.is-search-open + .hero-v7__actions + .hero-v7__trust {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .hero-production-v7 #hero-route-dropdown,
+  .hero-production-v7 #hero-route-list {
+    max-height: 16rem;
   }
 }

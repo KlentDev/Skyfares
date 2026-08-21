@@ -27,7 +27,7 @@ function redactAirtableError(text = '') {
     .slice(0, 300);
 }
 
-async function writeToAirtable(tableId, fields, env) {
+export async function writeToAirtable(tableId, fields, env) {
   const res = await fetch(airtableTableUrl(env, tableId), {
     method: 'POST',
     headers: airtableHeaders(env),
@@ -86,55 +86,6 @@ export async function handleFlightApplication(request, env, corsHeaders) {
     }, env);
   } catch (err) {
     console.error('Airtable flight application error:', err.message);
-    return respond({ error: 'submission_failed' }, 500, corsHeaders);
-  }
-
-  return respond({ success: true }, 200, corsHeaders);
-}
-
-export async function handleContactInquiry(request, env, corsHeaders) {
-  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  const rlKey = `${KV_PREFIX.RL_AIRTABLE_CONTACT}${ip}`;
-  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
-  if (rlCount >= 5) {
-    return respond({ error: 'rate_limited' }, 429, corsHeaders);
-  }
-
-  let body;
-  try { body = await request.json(); }
-  catch { return respond({ error: 'invalid_body' }, 400, corsHeaders); }
-
-  if (body['bot-field']) return respond({ success: true }, 200, corsHeaders);
-
-  // Count every real (non-honeypot) attempt here, regardless of outcome —
-  // matches the root subscribe route's convention, so validation/Airtable
-  // failures can't be retried past the limit for free.
-  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
-
-  const name    = (body['name']    || '').trim().slice(0, 200);
-  const email   = (body['email']   || '').trim().toLowerCase().slice(0, 200);
-  const subject = (body['subject'] || '').trim().slice(0, 300);
-  const message = (body['message'] || '').trim().slice(0, 5000);
-
-  if (!name || !message) {
-    return respond({ error: 'missing_fields' }, 400, corsHeaders);
-  }
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return respond({ error: 'invalid_email' }, 400, corsHeaders);
-  }
-
-  try {
-    await writeToAirtable(env.AIRTABLE_TABLE_CONTACT_INQUIRIES, {
-      'Name': name,
-      'Email': email,
-      'Subject': subject || '(no subject)',
-      'Message': message,
-      'Status': 'New',
-      'Source': 'website',
-      'Submission Date': new Date().toISOString().split('T')[0],
-    }, env);
-  } catch (err) {
-    console.error('Airtable contact error:', err.message);
     return respond({ error: 'submission_failed' }, 500, corsHeaders);
   }
 
@@ -386,7 +337,7 @@ const ALTITUDE_CONTENT_TYPES = {
     fields: [
       'Title', 'Slug', 'Status', 'Featured', 'Publish Date', 'Display Order', 'Short Description', 'Tags', 'Thumbnail', 'Last Updated',
       'Urgency', 'Origin', 'Destination', 'Airline', 'Program', 'Cabin Class', 'Aircraft', 'Seats Available', 'Miles Required', 'Taxes / Fees',
-      'Travel Date Start', 'Travel Date End', 'Found At', 'Availability Notes', 'Booking Notes', 'Fallback Strategy',
+      'Travel Date Start', 'Travel Date End', 'Found At', 'Availability Notes', 'Booking Notes', 'Fallback Strategy', 'Availability Calendar JSON',
     ],
     normalize: normalizeAwardAlert,
   },
@@ -404,18 +355,9 @@ const ALTITUDE_CONTENT_TYPES = {
     fields: [
       'Title', 'Slug', 'Status', 'Featured', 'Publish Date', 'Display Order', 'Short Description', 'Tags', 'Thumbnail', 'Last Updated',
       'Drop Month', 'Booking Window', 'Travel Window', 'Summary Verdict', 'Routes Count', 'Book Fast Count', 'Consider Count', 'Skip Count',
-      'Route Rows JSON',
+      'Route Rows JSON', 'Route Grid JSON', 'Discount', 'Grid Note', 'Newsletter URL',
     ],
     normalize: normalizeKrisFlyerEscape,
-  },
-  'cabin-verdicts': {
-    envKey: 'AIRTABLE_TABLE_ALTITUDE_CABIN_VERDICTS',
-    fields: [
-      'Title', 'Slug', 'Status', 'Featured', 'Publish Date', 'Display Order', 'Short Description', 'Tags', 'Thumbnail', 'Last Updated',
-      'Airline', 'Cabin Product', 'Aircraft', 'Cabin Class', 'Routes Flown', 'Overall Score', 'Verdict Headline', 'Personal Flight Note',
-      'Score Breakdown JSON', 'Recommendation', 'Caveats', 'Best For',
-    ],
-    normalize: normalizeCabinVerdict,
   },
 };
 
@@ -501,6 +443,7 @@ function normalizeAwardAlert(rec) {
     availabilityNotes: text(f['Availability Notes']),
     bookingNotes: text(f['Booking Notes']),
     fallbackStrategy: text(f['Fallback Strategy']),
+    availabilityCalendar: jsonObject(f['Availability Calendar JSON']),
   };
 }
 
@@ -534,25 +477,10 @@ function normalizeKrisFlyerEscape(rec) {
     considerCount: number(f['Consider Count']),
     skipCount: number(f['Skip Count']),
     routeRows: jsonArray(f['Route Rows JSON']),
-  };
-}
-
-function normalizeCabinVerdict(rec) {
-  const f = rec.fields || {};
-  return {
-    ...normalizeBaseContent(rec),
-    airline: text(f['Airline']),
-    cabinProduct: text(f['Cabin Product']),
-    aircraft: text(f['Aircraft']),
-    cabinClass: text(f['Cabin Class']),
-    routesFlown: text(f['Routes Flown']),
-    overallScore: number(f['Overall Score']),
-    verdictHeadline: text(f['Verdict Headline']),
-    personalFlightNote: text(f['Personal Flight Note']),
-    scoreBreakdown: jsonArray(f['Score Breakdown JSON']),
-    recommendation: text(f['Recommendation']),
-    caveats: text(f['Caveats']),
-    bestFor: text(f['Best For']),
+    routeGrid: jsonObject(f['Route Grid JSON']),
+    discount: text(f['Discount']),
+    gridNote: text(f['Grid Note']),
+    newsletterUrl: text(f['Newsletter URL']),
   };
 }
 
@@ -581,6 +509,21 @@ function jsonArray(value) {
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
+  }
+}
+
+// Same shape-tolerant parsing as jsonArray() above, but for JSON blob
+// fields that store an object (e.g. "Availability Calendar JSON":
+// {saver:{...}, advantage:{...}}) rather than an array -- jsonArray()
+// would silently drop these since it only ever returns [].
+function jsonObject(value) {
+  if (value && typeof value === 'object' && !Array.isArray(value)) return value;
+  if (!value) return {};
+  try {
+    const parsed = JSON.parse(String(value));
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
   }
 }
 

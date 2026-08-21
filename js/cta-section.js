@@ -89,8 +89,13 @@
     var art = section.querySelector('#cta-section-art');
     if (d.ctaArtImage) art.style.backgroundImage = "url('" + d.ctaArtImage + "')";
 
-    setIcon(section.querySelector('#cta-section-eyebrow-icon'), d.ctaEyebrowIcon);
-    section.querySelector('#cta-section-eyebrow-text').textContent = d.ctaEyebrowText || '';
+    var eyebrow = section.querySelector('#cta-section-eyebrow');
+    if (d.ctaEyebrowText) {
+      setIcon(section.querySelector('#cta-section-eyebrow-icon'), d.ctaEyebrowIcon);
+      section.querySelector('#cta-section-eyebrow-text').textContent = d.ctaEyebrowText;
+    } else {
+      eyebrow.remove();
+    }
     section.querySelector('#cta-section-heading').textContent = d.ctaHeading || '';
     section.querySelector('#cta-section-description').textContent = d.ctaDescription || '';
 
@@ -131,8 +136,32 @@
     reveal(section);
   }
 
+  function renderFallback() {
+    var d = mount.dataset;
+    mount.className = 'cta-fallback-v7';
+    mount.removeAttribute('style');
+    mount.innerHTML = '';
+    var heading = document.createElement('h2');
+    heading.textContent = d.ctaHeading || 'Tell us where you want to fly.';
+    var copy = document.createElement('p');
+    copy.textContent = d.ctaDescription || '';
+    var link = document.createElement('a');
+    link.href = d.ctaPrimaryHref || 'https://api.whatsapp.com/send?phone=6581575306';
+    link.textContent = d.ctaPrimaryLabel || 'Start planning on WhatsApp';
+    if (d.ctaPrimaryTarget) {
+      link.target = d.ctaPrimaryTarget;
+      link.rel = 'noopener noreferrer';
+    }
+    mount.appendChild(heading);
+    mount.appendChild(copy);
+    mount.appendChild(link);
+  }
+
   fetch(componentUrl)
-    .then(function (r) { return r.text(); })
+    .then(function (r) {
+      if (!r.ok) throw new Error('CTA component unavailable');
+      return r.text();
+    })
     .then(function (html) {
       var tmp = document.createElement('div');
       tmp.innerHTML = html.trim();
@@ -145,5 +174,5 @@
       // leaves buttons such as the How It Works strategy-call CTA live.
       if (window.SkyComingSoon) window.SkyComingSoon.init();
     })
-    .catch(function () {});
+    .catch(renderFallback);
 })();

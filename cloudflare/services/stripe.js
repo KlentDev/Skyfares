@@ -9,6 +9,12 @@ import { buildAssessmentBookingUrl } from '../utils/signedLink.js';
 import { KV_PREFIX } from '../config/constants.js';
 
 // ── Altitude: Stripe Checkout ─────────────────────────────────────────────────
+// Skyfare production Stripe configuration (live mode) — STRIPE_SECRET_KEY and
+// the STRIPE_*_PRICE_ID vars below belong to Skyfare's real production Stripe
+// account (see worker.js's secrets doc comment). This is distinct from
+// STRIPE_ASSESSMENT_SECRET_KEY further down in this file, which is a
+// deliberately separate sandbox account used only by the Travel Strategy
+// Call product.
 
 export async function handleCheckout(request, env, corsHeaders) {
   if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PRICE_ID) {
@@ -148,6 +154,8 @@ export async function handleGuideCheckout(request, env, corsHeaders) {
 // account's key, so this can't share STRIPE_SECRET_KEY. Swap this whole
 // product over to the real account (new STRIPE_ASSESSMENT_PRICE_ID under
 // that account, then point this back at STRIPE_SECRET_KEY) once out of testing.
+// Unrelated to the Skyfare production Stripe configuration used by
+// handleCheckout/handleGuideCheckout above — do not conflate the two.
 
 export async function handleAssessmentCheckout(request, env, corsHeaders) {
   if (!env.STRIPE_ASSESSMENT_SECRET_KEY || !env.STRIPE_ASSESSMENT_PRICE_ID) {

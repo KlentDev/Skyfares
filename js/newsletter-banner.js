@@ -256,12 +256,14 @@
 
   // Matches any dark-gradient hero section so the banner pushes it down correctly
   // regardless of which page's hero class is in use. Must stay in sync with the
-  // hero selector in header.js (.hero-brand-fade for the homepage, .page-hero-bg
-  // for every interior page) — a stale selector here causes the banner to pad
-  // document.body instead of the hero element, breaking the transparent header's
-  // contrast against the hero image.
+  // hero selector in header.js (.hero-photo-section for the homepage's video hero,
+  // .hero-brand-fade / .page-hero-bg for interior pages) — a stale selector here
+  // causes the banner to pad document.body instead of the hero element, which
+  // shifts the hero background down while the transparent header stays at top:0,
+  // exposing blank space behind its white-on-white logo/nav (only colored
+  // elements like the free/premium badge stay visible against it).
   function findHero() {
-    return document.querySelector('.hero-brand-fade, .page-hero-bg');
+    return document.querySelector('.hero-brand-fade, .page-hero-bg, .hero-photo-section');
   }
 
   function pushContentDown(bannerH) {

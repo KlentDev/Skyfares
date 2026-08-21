@@ -89,6 +89,7 @@
         actions.map(function (a, i) {
           var cls = a.style === 'primary' ? 'btn-pill btn-pill-primary'
                   : a.style === 'danger'  ? 'sky-modal__btn sky-modal__btn--danger'
+                  : a.style === 'link'    ? 'sky-modal__btn sky-modal__btn--link'
                   : 'sky-modal__btn';
           return '<button data-sky-action="' + i + '" class="' + cls + '">' +
             escapeHtml(a.label || 'OK') + '</button>';

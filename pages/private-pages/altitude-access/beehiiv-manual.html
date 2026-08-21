@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Beehiiv Manual | Skyfare Altitude</title>
@@ -32,10 +40,7 @@
   <nav class="altitude-subnav" aria-label="Altitude member pages">
     <div class="private-container altitude-subnav__inner">
       <a href="../altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
-      <a href="benefits.html" data-altitude-nav="benefits"><i class="fa-solid fa-gem" aria-hidden="true"></i><span>Benefits</span></a>
       <a href="award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
-      <a href="routing-strategies.html" data-altitude-nav="routing-strategies"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Routing</span></a>
-      <a href="cabin-compare-verdicts.html" data-altitude-nav="cabin-verdicts"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Cabin Verdicts</span></a>
       <a href="krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
       <a href="newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
     </div>
@@ -54,48 +59,137 @@
           <aside class="private-panel altitude-manual-note slide-up is-visible">
             <div class="icon-chip icon-chip-lg icon-chip--gold"><i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i></div>
             <h2>Before you start</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Keep the email address tied to your Altitude membership ready before opening Beehiiv.</p>
+            <p>Beehiiv checks every reader against your Skyfare subscription before unlocking likes and comments. Have the <strong>same email address</strong> tied to your Altitude membership ready, and keep that inbox open in case a verification code arrives.</p>
             <a href="newsletter.html" class="private-action private-action--primary w-full justify-center">
               Open Latest Issues
             </a>
           </aside>
 
           <div class="altitude-manual-steps">
-            <article class="private-panel altitude-manual-step slide-up">
-              <div class="altitude-manual-step__media">
-                <i class="fa-solid fa-image" aria-hidden="true"></i>
-                <span>Image placeholder</span>
+            <details class="private-panel altitude-manual-step slide-up" open>
+              <summary class="altitude-manual-step__summary">
+                <span class="altitude-manual-step__summary-text">
+                  <span class="altitude-step-number">Step 01</span>
+                  <h2>Choose &ldquo;Read on Beehiiv&rdquo;</h2>
+                </span>
+                <span class="altitude-manual-step__chevron"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+              </summary>
+              <div class="accordion-body">
+                <div class="altitude-manual-step__content">
+                  <button type="button" class="altitude-manual-step__media" data-manual-lightbox data-img="../../../images/beehiiv-steps/1.png" data-alt="Issue page with the &quot;Read on Beehiiv&quot; option highlighted next to &quot;Read on Skyfare&quot;">
+                    <img src="../../../images/beehiiv-steps/1.png" alt="Issue page with the &quot;Read on Beehiiv&quot; option highlighted next to &quot;Read on Skyfare&quot;" loading="eager" />
+                    <span class="altitude-manual-step__zoom"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></span>
+                  </button>
+                  <p>Open any Altitude issue and look above the article for two reading options. Select <strong>Read on Beehiiv</strong> instead of <strong>Read on Skyfare</strong> — this is what takes you to Beehiiv's site, where liking, commenting, and the community itself live.</p>
+                </div>
               </div>
-              <div>
-                <span class="altitude-step-number">Step 01</span>
-                <h2>Create or open your Beehiiv account</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer luctus, justo at tincidunt facilisis, lectus nisl luctus mi, at feugiat lorem arcu in neque.</p>
-              </div>
-            </article>
+            </details>
 
-            <article class="private-panel altitude-manual-step slide-up">
-              <div class="altitude-manual-step__media">
-                <i class="fa-solid fa-image" aria-hidden="true"></i>
-                <span>Image placeholder</span>
+            <details class="private-panel altitude-manual-step slide-up">
+              <summary class="altitude-manual-step__summary">
+                <span class="altitude-manual-step__summary-text">
+                  <span class="altitude-step-number">Step 02</span>
+                  <h2>Let Beehiiv verify your subscription</h2>
+                </span>
+                <span class="altitude-manual-step__chevron"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+              </summary>
+              <div class="accordion-body">
+                <div class="altitude-manual-step__content">
+                  <button type="button" class="altitude-manual-step__media" data-manual-lightbox data-img="../../../images/beehiiv-steps/2.png" data-alt="Beehiiv verification prompt confirming the reader's Skyfare subscription">
+                    <img src="../../../images/beehiiv-steps/2.png" alt="Beehiiv verification prompt confirming the reader's Skyfare subscription" loading="lazy" />
+                    <span class="altitude-manual-step__zoom"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></span>
+                  </button>
+                  <p>As soon as you land on Beehiiv, it runs a quick <strong>verification</strong> check to confirm you're subscribed to Skyfare before unlocking the issue. This happens automatically — there's nothing to fill in yet.</p>
+                </div>
               </div>
-              <div>
-                <span class="altitude-step-number">Step 02</span>
-                <h2>Verify the same member email</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Use the email shown in your Skyfare private header so Beehiiv can match your newsletter access.</p>
-              </div>
-            </article>
+            </details>
 
-            <article class="private-panel altitude-manual-step slide-up">
-              <div class="altitude-manual-step__media">
-                <i class="fa-solid fa-image" aria-hidden="true"></i>
-                <span>Image placeholder</span>
+            <details class="private-panel altitude-manual-step slide-up">
+              <summary class="altitude-manual-step__summary">
+                <span class="altitude-manual-step__summary-text">
+                  <span class="altitude-step-number">Step 03</span>
+                  <h2>Skyfare confirms your email and tier</h2>
+                </span>
+                <span class="altitude-manual-step__chevron"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+              </summary>
+              <div class="accordion-body">
+                <div class="altitude-manual-step__content">
+                  <button type="button" class="altitude-manual-step__media" data-manual-lightbox data-img="../../../images/beehiiv-steps/3.png" data-alt="Skyfare checking the reader's email and Altitude membership tier">
+                    <img src="../../../images/beehiiv-steps/3.png" alt="Skyfare checking the reader's email and Altitude membership tier" loading="lazy" />
+                    <span class="altitude-manual-step__zoom"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></span>
+                  </button>
+                  <p>Once verification passes, Skyfare loads behind the scenes to check that your email is subscribed and confirm your membership tier before handing you back to the issue.</p>
+                  <div class="altitude-manual-callout">
+                    <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                    <p><strong>Note:</strong> Beehiiv may occasionally ask for a one-time passcode. If it does, check the inbox for the email you entered — Beehiiv sends a <strong>6-digit OTP</strong> valid for a few minutes. Enter it to continue.</p>
+                  </div>
+                </div>
               </div>
+            </details>
+
+            <details class="private-panel altitude-manual-step slide-up">
+              <summary class="altitude-manual-step__summary">
+                <span class="altitude-manual-step__summary-text">
+                  <span class="altitude-step-number">Step 04</span>
+                  <h2>Find the like and comment bar</h2>
+                </span>
+                <span class="altitude-manual-step__chevron"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+              </summary>
+              <div class="accordion-body">
+                <div class="altitude-manual-step__content">
+                  <button type="button" class="altitude-manual-step__media" data-manual-lightbox data-img="../../../images/beehiiv-steps/4.png" data-alt="Like and comment controls at the bottom of a Beehiiv issue">
+                    <img src="../../../images/beehiiv-steps/4.png" alt="Like and comment controls at the bottom of a Beehiiv issue" loading="lazy" />
+                    <span class="altitude-manual-step__zoom"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></span>
+                  </button>
+                  <p>Scroll to the bottom of the issue. That's where the <strong>like</strong> and <strong>comment</strong> controls live — Beehiiv's way of joining the conversation on that issue.</p>
+                </div>
+              </div>
+            </details>
+
+            <details class="private-panel altitude-manual-step slide-up">
+              <summary class="altitude-manual-step__summary">
+                <span class="altitude-manual-step__summary-text">
+                  <span class="altitude-step-number">Step 05</span>
+                  <h2>Set up your community profile</h2>
+                </span>
+                <span class="altitude-manual-step__chevron"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+              </summary>
+              <div class="accordion-body">
+                <div class="altitude-manual-step__content">
+                  <button type="button" class="altitude-manual-step__media" data-manual-lightbox data-img="../../../images/beehiiv-steps/5.png" data-alt="Beehiiv profile setup form asking for first name, last name, and an optional avatar">
+                    <img src="../../../images/beehiiv-steps/5.png" alt="Beehiiv profile setup form asking for first name, last name, and an optional avatar" loading="lazy" />
+                    <span class="altitude-manual-step__zoom"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></span>
+                  </button>
+                  <p>Before your like or comment posts, Beehiiv asks for a few basics: your <strong>First and Last name</strong>, plus an <strong>optional avatar</strong>. Fill these in once and you're set for every future issue.</p>
+                </div>
+              </div>
+            </details>
+
+            <div class="private-panel altitude-manual-complete slide-up">
+              <div class="icon-chip icon-chip-lg icon-chip--gold"><i class="fa-solid fa-champagne-glasses" aria-hidden="true"></i></div>
               <div>
-                <span class="altitude-step-number">Step 03</span>
-                <h2>Join the community conversation</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Once verified, open the issue on Beehiiv to like, comment, and follow future community updates.</p>
+                <h2>You're ready to go</h2>
+                <p>Welcome to the Skyfare community — like, comment, and follow along on every Altitude issue from here on.</p>
               </div>
-            </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="private-panel altitude-manual-help slide-up">
+          <div class="altitude-manual-help__text">
+            <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></div>
+            <div>
+              <h2>More questions?</h2>
+              <p>If verification still isn't working the way it's described above, our team can help directly.</p>
+            </div>
+          </div>
+          <div class="altitude-manual-help__actions">
+            <a href="https://api.whatsapp.com/send?phone=6581575306&amp;text=Hi%20Skyfare%2C%20I%20need%20help%20verifying%20my%20Beehiiv%2FAltitude%20access." target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Chat on WhatsApp
+            </a>
+            <a href="support.html" class="private-action private-action--primary">
+              <i class="fa-solid fa-headset" aria-hidden="true"></i> Contact Support
+            </a>
           </div>
         </div>
       </div>
@@ -105,5 +199,6 @@
   <div id="private-footer-slot"></div>
 
   <script src="../../../js/altitude-portal.js" defer></script>
+  <script src="../../../js/altitude-manual.js" defer></script>
 </body>
 </html>

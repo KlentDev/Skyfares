@@ -1,0 +1,1450 @@
+/* ══════════════════════════════════════════════════════════════════════
+   Altitude editorial design system
+   Scoped to pages/private-pages/altitude-access/*. Consumes the
+   --private-* and --alt-* tokens defined in css/style.css (loaded first).
+   Replaces the legacy .altitude-* content-rendering classes with a
+   restrained, editorial visual language — see docs/superpowers/specs
+   plan "Altitude Private Pages — Editorial Redesign" for the rationale.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Page-title override ───────────────────────────────────────────────
+   .altitude-page-heading is a shell-level class shared with pages outside
+   this redesign (newsletter.html, membership.html, support.html) so its
+   base rule in css/style.css is left untouched. This file only loads on
+   the 4 target pages, so scoping the reduced editorial title size here
+   -- rather than editing the shared rule -- keeps other pages unaffected. */
+
+.altitude-page-heading h1 {
+  font-size: var(--alt-size-page-title);
+  font-weight: var(--alt-weight-title);
+  line-height: var(--alt-lh-title);
+  letter-spacing: -0.02em;
+}
+
+.altitude-page-heading p {
+  font-size: var(--alt-size-intro);
+  max-width: var(--alt-measure);
+}
+
+/* Forces a deliberate 2-line grouping for masthead titles where the
+   natural word-wrap breaks awkwardly (one word per line at this size).
+   nowrap guarantees each phrase stays on its own single line rather than
+   wrapping again internally; only relaxed back to normal wrapping on
+   very narrow phones, where a 3rd/4th line is the safer trade-off
+   against horizontal overflow. */
+.alt-title--split span {
+  display: block;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .alt-title--split span {
+    white-space: normal;
+  }
+}
+
+/* ── Layout primitives ─────────────────────────────────────────────── */
+
+.alt-container {
+  width: min(100% - 2rem, 1180px);
+  margin-inline: auto;
+}
+
+.alt-section {
+  margin-top: 4.5rem;
+}
+
+/* Editorial card shell -- reused wherever a distinct piece of content
+   (an alert, a verdict report, a route story, a picked destination)
+   needs a real boundary rather than a hairline. Generous padding is the
+   point: this is what makes the page read as a publication laid out on
+   the page, not a dense list. */
+.alt-card {
+  background: var(--private-surface);
+  border: 1px solid var(--private-line);
+  border-radius: var(--private-radius);
+  padding: 2.5rem;
+}
+
+@media (max-width: 640px) {
+  .alt-card {
+    padding: 1.75rem;
+  }
+}
+
+.alt-section:first-child {
+  margin-top: 0;
+}
+
+.alt-divider {
+  border: 0;
+  border-top: 1px solid var(--private-line);
+  margin: 2.25rem 0;
+}
+
+.alt-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.alt-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 860px) {
+  .alt-grid-2,
+  .alt-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Typography ─────────────────────────────────────────────────────── */
+
+.alt-title {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: var(--alt-size-page-title);
+  font-weight: var(--alt-weight-title);
+  line-height: var(--alt-lh-title);
+  letter-spacing: -0.02em;
+  color: var(--private-ink);
+  margin: 0;
+}
+
+.alt-intro {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-intro);
+  line-height: var(--alt-lh-body);
+  color: var(--private-muted);
+  max-width: var(--alt-measure);
+  margin: 0.75rem 0 0;
+}
+
+.alt-heading {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: var(--alt-size-section);
+  font-weight: var(--alt-weight-heading);
+  line-height: var(--alt-lh-tight);
+  color: var(--private-ink);
+  margin: 0;
+}
+
+.alt-card-title {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: var(--alt-size-card-title);
+  font-weight: var(--alt-weight-heading);
+  line-height: 1.3;
+  color: var(--private-ink);
+  margin: 0;
+}
+
+.alt-route {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: var(--alt-size-route);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--private-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.alt-route i {
+  font-size: 0.7em;
+  color: var(--private-blue);
+}
+
+.alt-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.alt-metric__label {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-meta);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--private-subtle);
+}
+
+.alt-metric__value {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: var(--alt-size-metric);
+  font-weight: 600;
+  color: var(--private-ink);
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.alt-support {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-support);
+  color: var(--private-muted);
+  line-height: 1.5;
+}
+
+.alt-date {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-date);
+  color: var(--private-subtle);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.alt-meta {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-meta);
+  color: var(--private-muted);
+}
+
+.alt-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--private-subtle);
+}
+
+.alt-note {
+  margin: 0 0 1.25rem;
+}
+
+.alt-note:last-child {
+  margin-bottom: 0;
+}
+
+.alt-note__title {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: var(--alt-size-note);
+  font-weight: 600;
+  color: var(--private-ink);
+  margin: 0 0 0.35rem;
+}
+
+.alt-note__body,
+.alt-body {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-body);
+  font-weight: var(--alt-weight-body);
+  line-height: var(--alt-lh-body);
+  color: var(--private-ink);
+  max-width: var(--alt-measure);
+  margin: 0;
+}
+
+.alt-caption {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-caption);
+  color: var(--private-subtle);
+  line-height: 1.5;
+}
+
+.alt-help {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-help);
+  color: var(--private-subtle);
+  line-height: 1.5;
+}
+
+/* ── Badges / metadata ──────────────────────────────────────────────── */
+
+.alt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid var(--private-line);
+  background: var(--private-surface-soft);
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--private-muted);
+  white-space: nowrap;
+}
+
+.alt-badge--gold {
+  background: rgba(201, 162, 39, 0.12);
+  border-color: rgba(201, 162, 39, 0.3);
+  color: #96771b;
+}
+
+.alt-badge--urgent {
+  background: rgba(200, 60, 60, 0.09);
+  border-color: rgba(200, 60, 60, 0.24);
+  color: #b23a3a;
+}
+
+.alt-badge--dot::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.alt-metadata-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-meta);
+  color: var(--private-muted);
+}
+
+.alt-metadata-row span:not(:last-child)::after {
+  content: '·';
+  margin-left: 0.5rem;
+  color: var(--private-subtle);
+}
+
+/* Singapore Airlines cabin branding: Economy green, Business light blue,
+   First/Suites gold. Applied to the cabin-class text wherever it appears
+   (metric values, inline metadata, section labels) via u.cabinLabel(). */
+.alt-cabin {
+  font-weight: 700;
+}
+
+.alt-cabin--economy { color: #1f7a4d; }
+.alt-cabin--premium-economy { color: #0d8a8a; }
+.alt-cabin--business { color: #2997ff; }
+.alt-cabin--first { color: #96771b; }
+
+.alt-flag {
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: -0.18em;
+  margin: 0 0.15em;
+  box-shadow: 0 0 0 1px var(--private-line);
+}
+
+/* Date/window display -- icon + label-over-value, for sentence-length
+   date strings (booking/travel windows) where a big numeral metric
+   would look oversized. */
+.alt-window-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.alt-window-item i {
+  color: var(--private-blue);
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  flex: none;
+}
+
+.alt-window-item__label {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--private-subtle);
+  margin-bottom: 0.25rem;
+}
+
+.alt-window-item__value {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-body);
+  font-weight: 600;
+  color: var(--private-ink);
+  line-height: 1.4;
+}
+
+/* ── Media hero ─────────────────────────────────────────────────────
+   Shared edge-to-edge image block used at the top of a .alt-card
+   (Award Alerts detail, KrisFlyer Escapes masthead): the image bleeds
+   to the card's top/left/right edges (cancelling the card's own
+   padding), a dark gradient scrim sits over the lower portion, and the
+   title/description live on the scrim -- an editorial cover-image
+   treatment instead of a plain text header. Falls back to the site's
+   dark-tile color + a centered icon when no image exists yet, so the
+   layout and text treatment stay identical either way. */
+
+.alt-media-hero {
+  position: relative;
+  margin: -2.5rem -2.5rem 2rem;
+  border-radius: var(--private-radius) var(--private-radius) 0 0;
+  overflow: hidden;
+  min-height: 300px;
+  display: flex;
+  align-items: flex-end;
+}
+
+@media (max-width: 640px) {
+  .alt-media-hero {
+    margin: -1.75rem -1.75rem 1.5rem;
+    min-height: 220px;
+  }
+}
+
+.alt-media-hero__media {
+  position: absolute;
+  inset: 0;
+  background: var(--alt-dark-tile);
+}
+
+.alt-media-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.alt-media-hero__media--placeholder {
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.alt-media-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 32, 51, 0) 30%, rgba(20, 32, 51, 0.93) 100%);
+}
+
+.alt-media-hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 2rem 2.25rem;
+}
+
+.alt-media-hero__content .alt-title,
+.alt-media-hero__content .alt-heading,
+.alt-media-hero__content .alt-card-title,
+.alt-media-hero__content .alt-route {
+  color: var(--alt-on-dark);
+}
+
+.alt-media-hero__content .alt-body {
+  color: var(--alt-on-dark-muted);
+}
+
+.alt-media-hero__content .alt-route i {
+  color: var(--private-gold);
+}
+
+/* ── Skeleton loading ───────────────────────────────────────────────── */
+
+.alt-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.alt-skeleton__copy {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-help);
+  color: var(--private-subtle);
+  text-align: center;
+  margin: 0.5rem 0 0;
+}
+
+.alt-skeleton__block,
+.alt-skeleton__line,
+.alt-skeleton__title,
+.alt-skeleton__badge {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--private-radius-sm);
+  background: var(--private-surface-soft);
+}
+
+.alt-skeleton__block::after,
+.alt-skeleton__line::after,
+.alt-skeleton__title::after,
+.alt-skeleton__badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  animation: altSkeletonSweep 1.6s var(--private-ease) infinite;
+}
+
+.alt-skeleton__title {
+  height: 1.6rem;
+  width: 60%;
+  border-radius: 6px;
+}
+
+.alt-skeleton__badge {
+  height: 1.1rem;
+  width: 5.5rem;
+  border-radius: 9999px;
+}
+
+.alt-skeleton__line {
+  height: 0.85rem;
+  border-radius: 5px;
+}
+
+.alt-skeleton__line--short { width: 40%; }
+.alt-skeleton__line--medium { width: 65%; }
+.alt-skeleton__line--long { width: 90%; }
+
+.alt-skeleton__block {
+  height: 5.5rem;
+}
+
+@keyframes altSkeletonSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alt-skeleton__block::after,
+  .alt-skeleton__line::after,
+  .alt-skeleton__title::after,
+  .alt-skeleton__badge::after {
+    animation: none;
+  }
+}
+
+/* Per-page skeleton compositions -- shapes that approximate each page's
+   real layout, built from the primitives above. */
+
+.alt-skeleton-award-alerts {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) 1fr;
+  gap: 1.75rem;
+}
+
+.alt-skeleton-award-alerts__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.alt-skeleton-award-alerts__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--private-line);
+}
+
+.alt-skeleton-award-alerts__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.alt-skeleton-award-alerts__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.alt-skeleton-award-alerts__metrics .alt-skeleton__block {
+  height: 3.25rem;
+}
+
+@media (max-width: 860px) {
+  .alt-skeleton-award-alerts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alt-skeleton-escapes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.alt-skeleton-escapes__hero {
+  height: 16rem;
+  width: 100%;
+}
+
+.alt-skeleton-escapes__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.alt-skeleton-escapes__grid .alt-skeleton__block {
+  height: 9rem;
+}
+
+@media (max-width: 860px) {
+  .alt-skeleton-escapes__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alt-skeleton-routing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 780px;
+}
+
+.alt-skeleton-routing__diagram {
+  height: 5.5rem;
+  width: 100%;
+}
+
+/* ── Filters / browsing controls ────────────────────────────────────── */
+
+.alt-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--private-surface);
+  border: 1px solid var(--private-line);
+  border-radius: 9999px;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 860px) {
+  .alt-filter-bar {
+    border-radius: var(--private-radius);
+    padding: 1.25rem;
+  }
+}
+
+.alt-filter-chips {
+  display: flex;
+  gap: 0.2rem;
+  background: var(--private-surface-soft);
+  border-radius: 9999px;
+  padding: 0.25rem;
+}
+
+.alt-filter-chip {
+  background: none;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-meta);
+  font-weight: 600;
+  color: var(--private-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s var(--private-ease), background-color 0.15s var(--private-ease), box-shadow 0.15s var(--private-ease);
+}
+
+.alt-filter-chip:hover {
+  color: var(--private-ink);
+}
+
+.alt-filter-chip.active {
+  color: #ffffff;
+  background: var(--private-blue);
+  box-shadow: var(--alt-shadow-card);
+}
+
+.alt-date-group__label {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--private-subtle);
+  margin: 2rem 0 0.85rem;
+}
+
+.alt-date-group:first-child .alt-date-group__label {
+  margin-top: 0;
+}
+
+.alt-load-more {
+  display: block;
+  margin: 2rem auto 0;
+}
+
+/* ── Empty / error states ───────────────────────────────────────────── */
+
+.alt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 3.5rem 1.5rem;
+}
+
+.alt-empty__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--private-surface-soft);
+  color: var(--private-subtle);
+  font-size: 1rem;
+}
+
+.alt-empty__copy {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-body);
+  color: var(--private-muted);
+  max-width: var(--alt-measure-narrow);
+  margin: 0;
+}
+
+/* ── Award Alerts ───────────────────────────────────────────────────── */
+
+.alt-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 240px;
+  min-width: 200px;
+}
+
+.alt-search-field i {
+  position: absolute;
+  left: 1.15rem;
+  color: var(--private-subtle);
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+.alt-search-field input {
+  width: 100%;
+  height: 2.75rem;
+  border: 1px solid var(--private-line);
+  border-radius: 9999px;
+  background: var(--private-surface);
+  padding: 0 1.25rem 0 2.5rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-meta);
+  color: var(--private-ink);
+  transition: border-color 0.15s var(--private-ease), box-shadow 0.15s var(--private-ease);
+}
+
+.alt-search-field input::placeholder {
+  color: var(--private-subtle);
+}
+
+.alt-search-field input:focus {
+  outline: none;
+  border-color: var(--private-blue);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+}
+
+.alt-select-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.alt-select-field select {
+  appearance: none;
+  height: 2.75rem;
+  border: 1px solid var(--private-line);
+  border-radius: 9999px;
+  background: var(--private-surface);
+  padding: 0 2.25rem 0 1.15rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-meta);
+  font-weight: 600;
+  color: var(--private-ink);
+  cursor: pointer;
+  transition: border-color 0.15s var(--private-ease);
+}
+
+.alt-select-field select:hover,
+.alt-select-field select:focus {
+  outline: none;
+  border-color: var(--private-line-strong);
+}
+
+.alt-select-field::after {
+  content: '\f078';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 0.65rem;
+  color: var(--private-subtle);
+  position: absolute;
+  right: 1.1rem;
+  pointer-events: none;
+}
+
+.alt-alerts-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .alt-alerts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alt-alert-feed__head {
+  padding-bottom: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Keep the opportunity list in view while the (often much taller) detail
+   panel scrolls past it -- desktop two-column layout only; on the
+   collapsed single-column mobile layout this stays static so it doesn't
+   cover the detail panel underneath it.
+
+   This is driven from JS (see wireStickyFeed in
+   altitude-content-award-alerts.js), not plain `position: sticky`.
+   html/body both carry site-wide `overflow-x: hidden` (css/style.css),
+   which per spec computes their overflow-y as auto too -- that makes
+   <body> register as a scroll container even though <html> is the one
+   actually scrolling, which breaks sticky's nearest-scrolling-ancestor
+   resolution for anything under <body>. Confirmed directly (the element
+   moved 1:1 with scroll instead of sticking) before reaching for this
+   fallback -- position: fixed isn't affected by that ancestor-overflow
+   resolution the same way, since none of the ancestors here have
+   transform/filter/contain set. */
+.alt-alert-feed--fixed {
+  position: fixed;
+  top: 1.5rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+
+.alt-opportunity-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  text-align: left;
+  background: var(--private-surface);
+  border: 1px solid var(--private-line);
+  border-left: 3px solid transparent;
+  border-radius: var(--private-radius-sm);
+  padding: 1rem 1.15rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s var(--private-ease), box-shadow 0.2s var(--private-ease), transform 0.2s var(--private-ease);
+}
+
+.alt-opportunity-card:last-child {
+  margin-bottom: 0;
+}
+
+.alt-opportunity-card:hover {
+  box-shadow: var(--alt-shadow-card);
+  transform: translateY(-1px);
+}
+
+.alt-opportunity-card.active {
+  border-color: var(--private-line-strong);
+  border-left-color: var(--private-gold);
+  box-shadow: var(--alt-shadow-card);
+}
+
+.alt-opportunity-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alt-opportunity-card .alt-route {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.alt-opportunity-card__miles {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--private-gold);
+}
+
+.alt-load-more.private-action {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Detail-panel content that now lives below the media hero image (see
+   .alt-media-hero above) -- title/description moved onto the image
+   itself, so everything here is normal light-surface body content. */
+.alt-media-hero__content .private-badge,
+.alt-media-hero__content .alt-badge {
+  margin-bottom: 0.6rem;
+}
+
+.alt-alert-route {
+  margin-bottom: 1.5rem;
+}
+
+.alt-alert-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--private-line);
+  margin-bottom: 1.75rem;
+}
+
+.alt-alert-stats .alt-metric--miles .alt-metric__value {
+  color: #96771b;
+}
+
+.alt-alert-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem 1.5rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--private-line);
+  margin-bottom: 1.75rem;
+}
+
+@media (max-width: 560px) {
+  .alt-alert-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.alt-alert-notes .alt-note {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--private-line);
+}
+
+.alt-alert-notes .alt-note:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.alt-alert-calendar {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--private-line);
+}
+
+.alt-alert-calendar summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  padding: 0.6rem 0.85rem;
+  margin: -0.6rem -0.85rem 0;
+  border-radius: var(--private-radius-sm);
+  transition: background-color 0.15s var(--private-ease);
+}
+
+.alt-alert-calendar summary:hover {
+  background: var(--private-surface-soft);
+}
+
+.alt-alert-calendar summary::-webkit-details-marker {
+  display: none;
+}
+
+.alt-alert-calendar summary i {
+  color: var(--private-subtle);
+  transition: transform 0.2s var(--private-ease);
+}
+
+.alt-alert-calendar[open] summary i {
+  transform: rotate(180deg);
+}
+
+.alt-calendar-tiers {
+  margin: 1rem 0 0.5rem;
+}
+
+.alt-calendar-month {
+  margin-top: 1.1rem;
+}
+
+.alt-calendar-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.alt-calendar-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.9rem;
+  height: 1.9rem;
+  padding: 0 0.3rem;
+  border-radius: 6px;
+  background: var(--private-surface-soft);
+  border: 1px solid var(--private-line);
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-support);
+  font-weight: 600;
+  color: var(--private-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── KrisFlyer Escapes ──────────────────────────────────────────────── */
+
+.alt-escape-issue {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.alt-escape-masthead__kicker {
+  margin-bottom: 0.75rem;
+}
+
+.alt-escape-masthead__title {
+  margin: 0;
+}
+
+.alt-escape-masthead__subtitle {
+  color: var(--private-muted);
+  font-weight: 500;
+  margin: 0.5rem 0 0;
+}
+
+.alt-escape-overview {
+  margin: 1.5rem 0;
+}
+
+.alt-escape-window {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--private-line);
+}
+
+.alt-escape-scoreline {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.alt-escape-picks h3 {
+  margin-bottom: 1.5rem;
+}
+
+.alt-escape-picks__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .alt-escape-picks__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alt-pick-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: box-shadow 0.2s var(--private-ease), transform 0.2s var(--private-ease);
+}
+
+.alt-pick-card:hover {
+  box-shadow: var(--alt-shadow-card);
+  transform: translateY(-1px);
+}
+
+.alt-pick-card__verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--private-subtle);
+}
+
+.alt-pick-card__verdict::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.alt-pick-card__verdict--book { color: #1f7a4d; }
+.alt-pick-card__verdict--watch { color: #96771b; }
+.alt-pick-card__verdict--skip { color: var(--private-subtle); }
+
+.alt-pick-card__route {
+  font-size: 1.15rem;
+}
+
+.alt-escape-grid__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.alt-escape-grid__search {
+  flex: 0 1 280px;
+}
+
+@media (max-width: 560px) {
+  .alt-escape-grid__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .alt-escape-grid__search {
+    flex: 1 1 auto;
+  }
+}
+
+.alt-escape-grid__note {
+  margin: 0 0 1.25rem;
+}
+
+.alt-escape-grid__section {
+  border-top: 1px solid var(--private-line);
+}
+
+.alt-escape-grid__section:last-child {
+  border-bottom: 1px solid var(--private-line);
+}
+
+.alt-escape-grid__section summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 0.85rem;
+  margin: 0 -0.85rem;
+  border-radius: var(--private-radius-sm);
+  cursor: pointer;
+  list-style: none;
+  transition: background-color 0.15s var(--private-ease);
+}
+
+.alt-escape-grid__section summary:hover {
+  background: var(--private-surface-soft);
+}
+
+.alt-escape-grid__section summary::-webkit-details-marker {
+  display: none;
+}
+
+.alt-escape-grid__section summary i {
+  margin-left: auto;
+  color: var(--private-subtle);
+  transition: transform 0.2s var(--private-ease);
+}
+
+.alt-escape-grid__section[open] summary i {
+  transform: rotate(180deg);
+}
+
+.alt-escape-grid__table {
+  padding-bottom: 1rem;
+  overflow-x: auto;
+}
+
+.alt-escape-grid__row {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) 5rem minmax(90px, 1.3fr) minmax(120px, 1.4fr);
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--alt-size-support);
+  color: var(--private-ink);
+  border-bottom: 1px solid var(--private-line);
+  white-space: nowrap;
+}
+
+/* .alt-escape-grid__row's own display:grid above would otherwise beat
+   the native [hidden] UA rule (both are one-selector specificity, and
+   author beats UA regardless) -- this explicit override is required for
+   the search filtering in altitude-content-krisflyer-escapes.js to
+   actually hide non-matching rows rather than leaving an empty grid row. */
+.alt-escape-grid__row[hidden] {
+  display: none;
+}
+
+.alt-escape-grid__row--head {
+  font-size: var(--alt-size-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--private-subtle);
+  border-bottom: 1px solid var(--private-line-strong);
+}
+
+.alt-escape-newsletter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s var(--private-ease), transform 0.2s var(--private-ease);
+}
+
+.alt-escape-newsletter:hover {
+  box-shadow: var(--alt-shadow-card);
+  transform: translateY(-1px);
+  border-color: var(--private-line-strong);
+}
+
+.alt-escape-newsletter strong {
+  display: block;
+  color: var(--private-ink);
+}
+
+.alt-escape-newsletter .alt-support {
+  display: block;
+  margin-top: 0.2rem;
+  max-width: 46ch;
+}
+
+.alt-escape-newsletter i {
+  color: var(--private-blue);
+  flex: none;
+}
+
+/* ── Routing Strategies ─────────────────────────────────────────────── */
+
+.alt-route-stories {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.alt-route-story:hover {
+  box-shadow: var(--alt-shadow-card);
+}
+
+.alt-route-story__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.alt-route-story__title {
+  margin: 0.6rem 0 0.5rem;
+}
+
+.alt-route-story__intro {
+  margin: 0;
+}
+
+.alt-route-story__confidence {
+  align-items: flex-end;
+  text-align: right;
+  flex: none;
+}
+
+.alt-route-experience {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .alt-route-experience {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alt-route-diagram {
+  padding: 2.5rem 0.5rem 1rem;
+  position: relative;
+}
+
+.alt-route-diagram svg {
+  width: 100%;
+  height: 1.25rem;
+  display: block;
+  overflow: visible;
+}
+
+.alt-route-diagram__track {
+  stroke: var(--private-line);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.alt-route-diagram__active {
+  stroke: var(--private-blue);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 4 3;
+}
+
+.alt-route-nodes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -1.7rem;
+}
+
+.alt-route-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  text-align: center;
+}
+
+.alt-route-node::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--private-blue);
+  border: 3px solid var(--private-surface);
+  box-shadow: 0 0 0 1px var(--private-line-strong);
+  margin-bottom: 0.35rem;
+}
+
+.alt-route-node__label {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--alt-size-support);
+  color: var(--private-ink);
+}
+
+.alt-route-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.alt-route-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.alt-route-tab {
+  text-align: left;
+  background: var(--private-surface-soft);
+  border: 1px solid transparent;
+  border-radius: var(--private-radius-sm);
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: background-color 0.15s var(--private-ease), border-color 0.15s var(--private-ease), box-shadow 0.15s var(--private-ease);
+}
+
+.alt-route-tab:hover {
+  background: var(--private-surface);
+  border-color: var(--private-line);
+}
+
+.alt-route-tab.active {
+  background: var(--alt-dark-tile);
+  border-color: var(--alt-dark-tile);
+  box-shadow: var(--alt-shadow-card);
+}
+
+.alt-route-tab.active .alt-label {
+  color: var(--private-gold);
+}
+
+.alt-route-tab.active .alt-route {
+  color: var(--alt-on-dark);
+}
+
+.alt-route-tab .alt-route {
+  font-size: 1rem;
+}
+
+.alt-route-option-detail {
+  padding-top: 0.25rem;
+}
+
+.alt-route-option__title {
+  margin: 0.5rem 0 0.4rem;
+}
+
+.alt-route-option-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.alt-route-explainer {
+  margin-top: 1.75rem;
+}
+
+.alt-route-explainer summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  padding: 1.1rem 1.25rem;
+  margin: 0 -1rem;
+  border-radius: var(--private-radius-sm);
+  background: var(--private-surface-soft);
+  border: 1px solid var(--private-line);
+  transition: background-color 0.15s var(--private-ease), border-color 0.15s var(--private-ease);
+}
+
+.alt-route-explainer summary:hover {
+  background: rgba(0, 102, 204, 0.06);
+  border-color: var(--private-line-strong);
+}
+
+.alt-route-explainer__label {
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--private-ink);
+}
+
+.alt-route-explainer summary i {
+  font-size: 0.9rem;
+}
+
+.alt-route-explainer summary::-webkit-details-marker {
+  display: none;
+}
+
+.alt-route-explainer summary i {
+  color: var(--private-subtle);
+  transition: transform 0.2s var(--private-ease);
+}
+
+.alt-route-explainer[open] summary i {
+  transform: rotate(180deg);
+}
+
+.alt-route-explainer__notes {
+  padding-top: 1rem;
+}
+
+/* ── Responsive base ─────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .alt-metric__value { font-size: 1.3rem; }
+  .alt-route { font-size: 1.15rem; }
+}

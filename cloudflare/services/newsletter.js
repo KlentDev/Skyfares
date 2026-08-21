@@ -226,6 +226,7 @@ export async function handleGetPost(slug, request, env, corsHeaders) {
     title:         postMeta.title || '',
     subtitle:      postMeta.subtitle || '',
     slug:          postMeta.slug || '',
+    url:           postMeta.url || (postMeta.slug ? `${PUB_BASE_URL}/p/${postMeta.slug}` : ''),
     thumbnail_url: postMeta.thumbnail_url || '',
     published_at:  postMeta.publish_date
       ? new Date(postMeta.publish_date * 1000).toISOString()

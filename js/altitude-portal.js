@@ -194,6 +194,7 @@
     window.__altSignOut = function () { clearToken(); window.location.href = getPublicPagePrefix() + 'altitude.html'; };
     document.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
     _wireFilters();
+    _wireTopicFilters();
     window.handleManageMembership = handleManageMembership;
     window.handleUpgradeToAnnual = handleUpgradeToAnnual;
 
@@ -436,6 +437,7 @@
     var badge = prem
       ? '<span class="private-badge private-badge--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i> Altitude</span>'
       : '';
+    var summary = String(post.subtitle || post.excerpt || post.description || '').trim();
 
     return '<article class="private-resource-card reveal-stagger" style="animation-delay:' + delay + '">' +
       '<a href="' + e(href) + '"' + handoffAttrs + ' class="private-resource-card__media" aria-label="Read ' + e(post.title) + '">' +
@@ -448,6 +450,7 @@
       '<div class="private-resource-card__body">' +
         '<p class="private-resource-card__meta">' + e(date || type) + '</p>' +
         '<h3>' + e(post.title) + '</h3>' +
+        (summary ? '<p class="private-resource-card__summary">' + e(summary) + '</p>' : '') +
         '<a href="' + e(href) + '"' + handoffAttrs + ' class="private-resource-card__link">Read issue <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
       '</div>' +
     '</article>';
@@ -459,12 +462,38 @@
     _renderArchivePage();
   }
 
+  // Topic filter, AND-combined with the free/premium filter above. data-topic
+  // values are display labels ("Airlines"), but Beehiiv always stores/returns
+  // a post's content_tags lowercased regardless of the tag's display casing
+  // -- confirmed live, so matching is case-insensitive.
+  var _altArchiveTopic = 'all';
+
+  function _applyTopicFilter(topic) {
+    _altArchiveTopic = topic || 'all';
+    _altArchivePage = 1;
+    _renderArchivePage();
+  }
+
+  function _wireTopicFilters() {
+    var select = document.getElementById('alt-topic-select');
+    if (select && select.dataset.filterWired !== 'true') {
+      select.dataset.filterWired = 'true';
+      select.addEventListener('change', function () { _applyTopicFilter(select.value); });
+    }
+  }
+
   function _getFilteredPosts() {
     var posts = _altAllPosts;
     if (_altArchiveFilter === 'free') {
-      posts = _altAllPosts.filter(function (p) { return !p.is_premium; });
+      posts = posts.filter(function (p) { return !p.is_premium; });
     } else if (_altArchiveFilter === 'premium') {
-      posts = _altAllPosts.filter(function (p) { return !!p.is_premium; });
+      posts = posts.filter(function (p) { return !!p.is_premium; });
+    }
+    if (_altArchiveTopic !== 'all') {
+      var topicLower = _altArchiveTopic.toLowerCase();
+      posts = posts.filter(function (p) {
+        return (p.content_tags || []).some(function (t) { return t.toLowerCase() === topicLower; });
+      });
     }
     return posts;
   }
@@ -488,14 +517,17 @@
 
     if (!visiblePosts.length) {
       var label = _altArchiveFilter === 'free' ? 'free ' : _altArchiveFilter === 'premium' ? 'premium ' : '';
+      if (_altArchiveTopic !== 'all') label += _altArchiveTopic + ' ';
       grid.innerHTML = '<div class="private-empty"><i class="fa-solid fa-inbox" aria-hidden="true"></i><p>No ' + label + 'issues published yet.</p></div>';
     } else {
       grid.innerHTML = visiblePosts.map(_renderCard).join('');
     }
 
-    document.querySelectorAll('.alt-filter-btn').forEach(function (btn) {
+    document.querySelectorAll('#alt-filters [data-filter]').forEach(function (btn) {
       btn.classList.toggle('active', btn.dataset.filter === _altArchiveFilter);
     });
+    var topicSelect = document.getElementById('alt-topic-select');
+    if (topicSelect) topicSelect.value = _altArchiveTopic;
 
     _renderPagination(posts.length, totalPages);
   }
@@ -580,15 +612,16 @@
       : '';
 
     var actions = [{
-      label: 'Read on Skyfare',
-      onClick: function () {
-        if (localUrl) window.location.href = localUrl;
-      },
-    }, {
       label: 'Read on Beehiiv',
-      style: 'primary',
+      style: 'link',
       onClick: function () {
         window.location.href = beehiivUrl;
+      },
+    }, {
+      label: 'Read on Skyfare',
+      style: 'primary',
+      onClick: function () {
+        if (localUrl) window.location.href = localUrl;
       },
     }];
 
