@@ -110,6 +110,17 @@ export const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
+// "Welcome to Skyfare" -- Skyfare's first-ever published issue. Pinned to
+// position #1 on the newsletter archive, homepage preview, and the free
+// newsletter modal's carousel (see js/newsletter-archive.js and
+// js/newsletter-modal.js, which each keep an identical isPinnedPost() copy
+// since they load independently). It's also the OLDEST post, so once more
+// than `limit` issues exist in Beehiiv's recency-ordered API response, it
+// silently falls out of the page services/newsletter.js's handleGetPosts
+// fetches -- that function fetches it directly by ID as a fallback so the
+// frontend always has it to pin.
+export const PINNED_POST_ID = 'post_288fd061-e1ff-485d-ab16-20767b42fde5';
+
 export const PUB_BASE_URL = 'https://skyfarealtitude.beehiiv.com';
 export const SITE_URL     = 'https://skyfareconsulting.com';
 export const WORKER_BASE_URL = 'https://skyfares-altitude.klent-5fa.workers.dev'; // this Worker's own public URL -- needed for links embedded in emails, which have no request Origin to derive a base URL from (see utils/http.js's getBaseUrl)
