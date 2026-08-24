@@ -4,7 +4,7 @@
 // posts and reasons about premium-gating; it never writes Beehiiv state.
 import { respond } from '../utils/http.js';
 import { getBearer, verifyJwt } from '../utils/jwt.js';
-import { PUB_BASE_URL, KV_PREFIX } from '../config/constants.js';
+import { PUB_BASE_URL, KV_PREFIX, PINNED_POST_ID } from '../config/constants.js';
 import { resolveBeehiivAltitudeAccess, beehiivSyncMetadata } from './beehiiv.js';
 
 // ── Newsletter: Get Posts ──────────────────────────────────────────────────────
@@ -87,6 +87,57 @@ function isPostLive(p) {
   return true;
 }
 
+// Shared by handleGetPosts's list mapping and its pinned-post fallback fetch
+// below, so both ever produce exactly the same post shape.
+async function mapPost(p, env) {
+  const slug = p.slug || '';
+  const contentTags = (p.content_tags || [])
+    .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
+    .filter(Boolean);
+  const computed = isPostPremium(
+    p.audience,
+    p.content && p.content.free    && p.content.free.web,
+    p.content && p.content.premium && p.content.premium.web,
+    contentTags
+  );
+  const override = await getPremiumOverride(env, slug);
+  return {
+    id:            p.id || '',
+    title:         p.title || '',
+    subtitle:      p.subtitle || '',
+    slug,
+    url:           p.url || (slug ? `${PUB_BASE_URL}/p/${slug}` : ''),
+    thumbnail_url: p.thumbnail_url || '',
+    published_at:  p.publish_date
+      ? new Date(p.publish_date * 1000).toISOString()
+      : (p.scheduled_at || p.created_at || ''),
+    content_tags:  contentTags,
+    authors: normalizeAuthors(p.authors),
+    is_premium: override !== null ? override : computed,
+  };
+}
+
+// PINNED_POST_ID ("Welcome to Skyfare") is the OLDEST published post, so
+// once Beehiiv has more than `limit` confirmed posts it ages out of the
+// recency-ordered page handleGetPosts fetches below and isPinnedPost() on
+// the frontend has nothing to pin -- fetched directly by ID as a fallback
+// only when that's happened (i.e. essentially never on a fresh publication,
+// routinely once the archive grows past one page).
+async function fetchPinnedPostFallback(env) {
+  try {
+    const res = await fetch(
+      `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUB_ID}/posts/${PINNED_POST_ID}` +
+        `?expand[]=free_web_content&expand[]=premium_web_content`,
+      { headers: { 'Authorization': `Bearer ${env.BEEHIIV_API_KEY}` } }
+    );
+    if (!res.ok) return null;
+    const raw = await res.json();
+    const p = raw.data || raw;
+    if (!p || (p.status !== 'confirmed' && p.status !== 'published') || !isPostLive(p)) return null;
+    return await mapPost(p, env);
+  } catch { return null; }
+}
+
 // No caching here on purpose — this account publishes and expects the new
 // post live immediately, not after a TTL window (a 1hr-then-5min cache TTL
 // here previously hid a freshly published post for several minutes). Every
@@ -111,39 +162,21 @@ export async function handleGetPosts(env, corsHeaders) {
   const posts = (await Promise.all(
     items
       .filter(p => (p.status === 'confirmed' || p.status === 'published') && isPostLive(p))
-      .map(async p => {
-        const slug = p.slug || '';
-        const contentTags = (p.content_tags || [])
-          .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
-          .filter(Boolean);
-        const computed = isPostPremium(
-          p.audience,
-          p.content && p.content.free    && p.content.free.web,
-          p.content && p.content.premium && p.content.premium.web,
-          contentTags
-        );
-        const override = await getPremiumOverride(env, slug);
-        return {
-          id:            p.id || '',
-          title:         p.title || '',
-          subtitle:      p.subtitle || '',
-          slug,
-          url:           p.url || (slug ? `${PUB_BASE_URL}/p/${slug}` : ''),
-          thumbnail_url: p.thumbnail_url || '',
-          published_at:  p.publish_date
-            ? new Date(p.publish_date * 1000).toISOString()
-            : (p.scheduled_at || p.created_at || ''),
-          content_tags:  contentTags,
-          authors: normalizeAuthors(p.authors),
-          is_premium: override !== null ? override : computed,
-        };
-      })
+      .map(p => mapPost(p, env))
   ))
     // Beehiiv's order_by=created_at sorts by draft-creation time, not actual
     // publish time -- a post drafted earlier but published later would land
     // in the wrong slot. Re-sort by the real publish timestamp so posts[0]
     // (what the homepage banner renders) is always the true latest issue.
     .sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+
+  if (!posts.some(p => p.id === PINNED_POST_ID)) {
+    const pinned = await fetchPinnedPostFallback(env);
+    // Appended at the end, not spliced to the front -- it's genuinely the
+    // oldest issue, so this keeps `posts` in true chronological order. The
+    // frontend's withPinnedFirst() is what actually moves it to position #1.
+    if (pinned) posts.push(pinned);
+  }
 
   return respond({ posts }, 200, { ...corsHeaders, 'Cache-Control': 'no-store' });
 }

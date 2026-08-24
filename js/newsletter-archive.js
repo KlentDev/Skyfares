@@ -121,6 +121,7 @@
         try { sessionStorage.setItem('skyfare_posts', JSON.stringify(data)); } catch (_) {}
         renderFeatured(data.posts[0]);
         renderHomePreview(withPinnedFirst(data.posts, 3));
+        renderHeroCarousel(data.posts.slice(0, 3)); // literal newest 3 -- not withPinnedFirst
 
         _archiveAllPosts = data.posts;
         _archiveTopic = _initialTopicFromQuery();
@@ -217,6 +218,109 @@
 
     var dateEl = document.querySelector('[data-section="latest-issue"] [data-issue-date]');
     if (dateEl && date) dateEl.textContent = date;
+  }
+
+  // ─── Hero carousel (pages/newsletter.html only) ─────────────────────────────
+  // Full-bleed rotating hero built from the 3 literal-newest issues (not
+  // withPinnedFirst() -- "latest" here means actually latest, same intent as
+  // renderFeatured() above). No-ops on every other page via the same
+  // getElementById guard renderFeatured() already uses, so this is safe to
+  // ship in the shared file.
+
+  function buildHeroSlide(post, isActive) {
+    var prem    = isPremium(post);
+    var type    = getPostType(post);
+    var summary = getPostSummary(post);
+    var date    = formatDate(post.published_at);
+    var author  = (post.authors || []).join(', ');
+
+    var href        = getPublicPostUrl(post);
+    var localHref    = getLocalPostUrl(post);
+    var beehiivHref  = post && post.url ? withBeehiivLoginModal(post.url) : localHref;
+    var freeChoiceAttrs = !prem
+      ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
+      : '';
+    var bgStyle = post.thumbnail_url
+      ? ' style="--hero-img:url(\'' + e(post.thumbnail_url) + '\');"'
+      : '';
+
+    var content =
+      '<div class="newsletter-hero-v3__slide-content container mx-auto px-4 md:px-6">' +
+        '<div class="newsletter-hero-v3__tags-row">' +
+          '<span class="newsletter-hero-v3__brand"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Skyfare Altitude &middot; Free</span>' +
+          '<span class="newsletter-hero-v3__chip">' + e(type) + '</span>' +
+        '</div>' +
+        '<h1>' + e(post.title) + '</h1>' +
+        (summary ? '<p class="newsletter-hero-v3__slide-desc">' + e(summary) + '</p>' : '') +
+        '<div class="newsletter-hero-v3__slide-meta">' +
+          '<div class="newsletter-hero-v3__meta-left">' +
+            (author ? '<span>' + e(author) + '</span>' : '') +
+            (date ? '<span>' + e(date) + '</span>' : '') +
+            (prem
+              ? '<span class="newsletter-hero-v3__badge-premium"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</span>'
+              : '<span>Free</span>') +
+          '</div>' +
+          '<span class="newsletter-hero-v3__read">' + (prem ? 'Unlock with Altitude' : 'Read issue') +
+            ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+        '</div>' +
+      '</div>';
+
+    var cls = 'newsletter-hero-v3__slide' + (isActive ? ' is-active' : '');
+
+    return prem
+      ? '<div class="' + cls + '"' + bgStyle + ' onclick="window.openAltitudeAccessModal()" role="button" tabindex="0" aria-label="Unlock ' + e(post.title) + '">' + content + '</div>'
+      : '<a href="' + e(href) + '"' + freeChoiceAttrs + ' class="' + cls + '"' + bgStyle + '>' + content + '</a>';
+  }
+
+  function renderHeroCarousel(posts) {
+    var track = document.getElementById('newsletter-hero-track');
+    var dotsEl = document.getElementById('newsletter-hero-dots');
+    if (!track) return;
+    if (!posts || !posts.length) return; // keep the static skeleton slide already in the markup
+
+    track.innerHTML = posts.map(function (post, i) { return buildHeroSlide(post, i === 0); }).join('');
+
+    if (dotsEl) {
+      dotsEl.innerHTML = posts.length > 1
+        ? posts.map(function (post, i) {
+            return '<button type="button" class="' + (i === 0 ? 'is-active' : '') + '"' +
+              ' role="tab" aria-selected="' + (i === 0 ? 'true' : 'false') + '"' +
+              ' aria-label="Show issue ' + (i + 1) + ' of ' + posts.length + '"></button>';
+          }).join('')
+        : '';
+    }
+
+    if (posts.length < 2) return; // nothing to rotate/no dots to wire
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll('.newsletter-hero-v3__slide'));
+    var dots   = dotsEl ? Array.prototype.slice.call(dotsEl.querySelectorAll('button')) : [];
+    var index  = 0;
+    var timer  = null;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function activate(next) {
+      index = next;
+      slides.forEach(function (s, i) { s.classList.toggle('is-active', i === index); });
+      dots.forEach(function (d, i) {
+        d.classList.toggle('is-active', i === index);
+        d.setAttribute('aria-selected', i === index ? 'true' : 'false');
+      });
+    }
+
+    function startTimer() {
+      if (reduceMotion) return; // slides/dots still render+work manually, just no auto-advance
+      timer = setInterval(function () { activate((index + 1) % slides.length); }, 3000);
+    }
+
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () {
+        if (timer) clearInterval(timer);
+        activate(i);
+        startTimer(); // restart the 2s clock from a manual pick, not resume mid-cycle
+      });
+    });
+
+    startTimer();
   }
 
   // ─── Archive grid ──────────────────────────────────────────────────────────
@@ -456,9 +560,12 @@
       return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/);
     })[0] || 'Newsletter';
 
+    // object-contain (not object-cover) so the full thumbnail is always
+    // visible instead of getting cropped to fill the 44-height box --
+    // letterboxes on the container's bg-brand-950 navy.
     var imgHtml = post.thumbnail_url
       ? '<img src="' + e(post.thumbnail_url) + '" alt="' + e(post.title) + '"' +
-          ' class="w-full h-full object-cover' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
+          ' class="w-full h-full object-contain' + (prem ? '' : ' group-hover:scale-105 transition-transform duration-500') + '">'
       : '<div class="w-full h-full flex items-center justify-center"><span class="text-[11px] font-bold uppercase tracking-widest text-white/25">No Thumbnail</span></div>';
 
     // Access badge (top-left of image) — Free (blue) or Premium (gold)

@@ -39,105 +39,38 @@
   <main class="flex-1">
 
     <!-- =============================================
-         1. HERO — compact publication masthead + subscribe form
+         1. HERO — full-bleed carousel of the 3 latest issues, populated by
+         renderHeroCarousel() in js/newsletter-archive.js. Deliberately not
+         .page-hero-bg (the static-photo hero every other interior page
+         shares) -- this page's hero content IS the latest issues, not a
+         stock brand photo.
          ============================================= -->
-    <section class="page-hero-bg newsletter-hero-v2 relative overflow-hidden" style="--hero-img:url('../images/page-images/newsletter.png');">
+    <section class="newsletter-hero-v3" id="newsletter-hero-carousel" aria-label="Latest issues">
 
-      <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="max-w-lg mx-auto text-center slide-up">
-
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-            <i class="fa-solid fa-envelope-open-text text-[10px]"></i>
-            Skyfare Altitude &middot; Free
-          </div>
-
-          <h1 class="font-display font-bold leading-tight tracking-tight text-white">
-            The Premium Travel Newsletter
-          </h1>
-
-          <p class="newsletter-hero-v2__lead text-base text-white/65 leading-relaxed font-medium mx-auto">
-            Award alerts, cabin reviews, and routing strategies for travelers who fly Business and First Class on points.
-          </p>
-
-          <div data-newsletter-form class="max-w-md mx-auto">
-            <div class="flex flex-col sm:flex-row gap-3">
-              <label for="hero-email" class="sr-only">Email address</label>
-              <input
-                id="hero-email"
-                data-newsletter-email
-                type="email"
-                autocomplete="email"
-                placeholder="Your email address"
-                class="form-input flex-1"
-              >
-              <button data-newsletter-btn class="btn-pill btn-pill-primary whitespace-nowrap">
-                Subscribe Free
-              </button>
+      <div id="newsletter-hero-track" class="newsletter-hero-v3__track" aria-live="off">
+        <!-- Skeleton slide -- swapped out once js/newsletter-archive.js's fetch resolves.
+             No placeholder copy on purpose (a fake title/badge reads as broken content,
+             not a loading state) -- pulsing bars only, same idea as the archive grid's
+             own skeleton cards further down this page. -->
+        <div class="newsletter-hero-v3__slide is-active" style="--hero-img:url('../images/page-images/newsletter.png');">
+          <div class="newsletter-hero-v3__slide-content container mx-auto px-4 md:px-6">
+            <div class="newsletter-hero-v3__tags-row">
+              <span class="newsletter-hero-v3__skel newsletter-hero-v3__skel--chip animate-pulse"></span>
+              <span class="newsletter-hero-v3__skel newsletter-hero-v3__skel--chip animate-pulse"></span>
             </div>
-            <p data-newsletter-status class="hidden text-sm font-medium mt-3 text-center" aria-live="polite"></p>
+            <div class="newsletter-hero-v3__skel newsletter-hero-v3__skel--title animate-pulse"></div>
+            <div class="newsletter-hero-v3__skel newsletter-hero-v3__skel--desc animate-pulse"></div>
+            <div class="newsletter-hero-v3__skel newsletter-hero-v3__skel--meta animate-pulse"></div>
           </div>
-
-          <p class="text-xs text-white/35 mt-3">Free to join &middot; No credit card &middot; Unsubscribe any time</p>
-
         </div>
-
-        <!-- Inside the brief -- desk card inside the hero, same pattern as
-             .services-hero-v3__desk / .kris-hero-v3__desk on
-             pages/services.html and pages/krisflyer.html. Full container
-             width (not nested in the narrow centered column above) so its
-             3-column layout has room to lay out properly. -->
-        <div class="newsletter-hero-v2__desk slide-up mt-12" style="animation-delay:.1s;" aria-label="What the newsletter covers">
-          <div class="newsletter-hero-v2__desk-head">
-            <span>Inside the brief</span>
-            <strong>What you'll find in every issue</strong>
-          </div>
-          <div class="newsletter-hero-v2__desk-grid">
-            <span><i class="fa-solid fa-credit-card" aria-hidden="true"></i>Credit/Debit Cards</span>
-            <span><i class="fa-solid fa-newspaper" aria-hidden="true"></i>News</span>
-            <span><i class="fa-solid fa-ticket" aria-hidden="true"></i>Redemption Availability</span>
-            <span><i class="fa-solid fa-plane" aria-hidden="true"></i>Airlines</span>
-          </div>
-          <p>One useful issue each week: card and transfer moves, breaking news, live redemption windows, and airline-specific strategy.</p>
-        </div>
-
       </div>
+
+      <div id="newsletter-hero-dots" class="newsletter-hero-v3__dots" role="tablist" aria-label="Choose issue"></div>
     </section>
 
 
     <!-- =============================================
-         2. FEATURED ISSUE — cover-story layout
-         ============================================= -->
-    <section class="py-24 bg-white" data-section="latest-issue">
-      <div class="container mx-auto px-4 md:px-6">
-
-        <!-- Section rule -->
-        <div class="flex items-center gap-4 mb-4 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Latest Issue</p>
-          <div class="flex-1 h-px bg-neutral-100"></div>
-          <span data-issue-date class="text-[10px] text-neutral-400 font-medium flex-shrink-0 animate-pulse">Loading</span>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-10 tracking-tight slide-up">
-          Fresh from the flight deck.
-        </h2>
-
-        <!-- Split editorial card — populated dynamically by newsletter-archive.js -->
-        <div id="featured-issue-container">
-          <div class="card-utility newsletter-featured-card-v2 overflow-hidden animate-pulse max-w-5xl mx-auto flex slide-up" style="animation-delay:.05s;">
-            <div class="w-2/5 md:w-72 flex-shrink-0 bg-neutral-100"></div>
-            <div class="flex-1 p-5 md:p-7 flex flex-col justify-center space-y-3">
-              <div class="h-2.5 w-20 bg-neutral-100 rounded-full"></div>
-              <div class="h-4 w-4/5 bg-neutral-100 rounded-full"></div>
-              <div class="h-3 w-3/5 bg-neutral-100 rounded-full"></div>
-              <div class="h-2.5 w-28 bg-neutral-100 rounded-full mt-2"></div>
-            </div>
-          </div>
-        </div><!-- /featured-issue-container -->
-      </div>
-    </section>
-
-
-    <!-- =============================================
-         4. ARCHIVE — all issues grid
+         2. ARCHIVE — all issues grid
          Add new cards here as issues publish.
          ============================================= -->
     <section class="py-24 tile-parch" id="archive">
@@ -205,7 +138,31 @@
 
 
     <!-- =============================================
-         5. FOOTER CTA BAND — reusable component, newsletter-form mode
+         3. INSIDE THE BRIEF — moved out of the hero (2026-08-25), now sits
+         directly under the archive grid; same desk-card component/CSS as
+         before, just relocated.
+         ============================================= -->
+    <section class="tile-mist py-16" aria-label="What the newsletter covers">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="newsletter-hero-v2__desk newsletter-hero-v2__desk--light slide-up">
+          <div class="newsletter-hero-v2__desk-head">
+            <span>Inside the brief</span>
+            <strong>What you'll find in every issue</strong>
+          </div>
+          <div class="newsletter-hero-v2__desk-grid">
+            <span><i class="fa-solid fa-credit-card" aria-hidden="true"></i>Credit/Debit Cards</span>
+            <span><i class="fa-solid fa-newspaper" aria-hidden="true"></i>News</span>
+            <span><i class="fa-solid fa-ticket" aria-hidden="true"></i>Redemption Availability</span>
+            <span><i class="fa-solid fa-plane" aria-hidden="true"></i>Airlines</span>
+          </div>
+          <p>One useful issue each week: card and transfer moves, breaking news, live redemption windows, and airline-specific strategy.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =============================================
+         4. FOOTER CTA BAND — reusable component, newsletter-form mode
          ============================================= -->
     <div data-cta-mount data-cta-mode="newsletter-form" style="min-height:300px"
       data-cta-eyebrow-icon="fa-solid fa-envelope-open-text"
