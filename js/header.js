@@ -349,54 +349,45 @@ document.addEventListener('DOMContentLoaded', () => {
               <i class="fa-solid fa-layer-group text-[13px] opacity-60"></i> Services
               <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
-            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:460px;">
+            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:320px;">
               <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
-                <div class="grid grid-cols-2 gap-x-2">
-                  <!-- Left: Our Services -->
-                  <div>
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2 px-3">Our Services</p>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-layer-group text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Overview</div>
-                    </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-plane-circle-check text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">KrisFlyer Miles</div>
-                    </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-phone-volume text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Travel Strategy Call</div>
-                    </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/cabin-compare" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-scale-balanced text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Cabin Compare</div>
-                    </a>
+                <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2 px-3">Our Services</p>
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/services" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-layer-group text-sm"></i>
                   </div>
-                  <!-- Right: Extra Services -->
-                  <div class="border-l border-brand-100 pl-2">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-2 px-3">Extra Services</p>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/chauffeur" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-car text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Chauffeur</div>
-                    </a>
-                    <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/extra-services" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
-                      <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
-                        <i class="fa-solid fa-concierge-bell text-sm"></i>
-                      </div>
-                      <div class="text-sm font-semibold text-brand-950">Concierge Services</div>
-                    </a>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">Overview</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">All Skyfare services in one place</div>
                   </div>
-                </div>
+                </a>
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-plane-circle-check text-sm"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">KrisFlyer Miles</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">Nominee redemptions and direct transfers</div>
+                  </div>
+                </a>
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/assessment" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-phone-volume text-sm"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">Travel Strategy Call</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">A paid 1-on-1 planning session</div>
+                  </div>
+                </a>
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/cabin-compare" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                  <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-scale-balanced text-sm"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">Cabin Compare</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">Seats, Wi-Fi, and miles by airline</div>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -406,19 +397,25 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="flex items-center gap-1.5 px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
               <i class="fa-solid fa-plane text-[13px] opacity-60"></i> Flights <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
-            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:240px;">
+            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:300px;">
               <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/past-flight-deals" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                     <i class="fa-solid fa-ticket-simple text-sm"></i>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">Our Flights</div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">Our Flights</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">Real bookings we've arranged for clients</div>
+                  </div>
                 </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/the-skyfare-flight" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                     <i class="fa-solid fa-paper-plane text-sm"></i>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">Skyfare Flight</div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">Skyfare Flight</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">One person flies free, every quarter</div>
+                  </div>
                 </a>
               </div>
             </div>
@@ -438,31 +435,43 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="flex items-center gap-1.5 px-2 xl:px-3 py-2 text-neutral-600 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
               <i class="fa-solid fa-book-open text-[13px] opacity-60"></i> Resources <i class="fa-solid fa-chevron-down text-[11px] transition-transform group-hover/dropdown:rotate-180"></i>
             </button>
-            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:280px;">
+            <div class="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/dropdown:opacity-100 group-hover/dropdown:translate-y-0 group-hover/dropdown:pointer-events-auto transition-all duration-300" style="width:300px;">
               <div class="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden p-4">
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/testimonials" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                     <i class="fa-solid fa-star text-sm"></i>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">Testimonials</div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">Testimonials</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">What clients say about flying with us</div>
+                  </div>
                 </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/faq" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                     <i class="fa-solid fa-circle-question text-sm"></i>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">FAQs</div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">FAQs</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">Answers on miles, bookings, and fees</div>
+                  </div>
                 </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer-guide" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/krisflyer-guide" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                     <i class="fa-solid fa-book text-sm"></i>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">KrisFlyer Guide</div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">KrisFlyer Guide</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">Learn the mileage system yourself — coming soon</div>
+                  </div>
                 </a>
-                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact" class="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
+                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}pages/contact" class="flex items-start gap-3 p-3 rounded-xl hover:bg-brand-50 transition-colors group/item">
                   <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 group-hover/item:scale-110 transition-transform flex-shrink-0">
                     <i class="fa-solid fa-envelope text-sm"></i>
                   </div>
-                  <div class="text-sm font-semibold text-brand-950">Contact</div>
+                  <div class="min-w-0">
+                    <div class="text-sm font-semibold text-brand-950">Contact</div>
+                    <div class="text-[11px] text-neutral-400 leading-snug mt-0.5">Reach the Skyfare team directly</div>
+                  </div>
                 </a>
               </div>
             </div>

@@ -12,6 +12,7 @@
 
   var source = window.SKYFARE_MILEAGE_ROUTES || { origin: { city: 'Singapore', code: 'SIN' }, routes: [] };
   var origin = source.origin;
+  var assetPrefix = (document.body && document.body.getAttribute('data-site-prefix')) || '';
   var content = card.querySelector('.mileage-route-card-content');
   var emptyState = card.querySelector('.mileage-route-card-empty');
   var cardImage = document.getElementById('mileage-route-card-image');
@@ -46,7 +47,7 @@
   };
 
   function flagImage(file) {
-    return file ? '<img src="logos/flags/' + file + '" alt="" class="inline-block w-4 h-4 rounded-full object-cover align-[-3px] mx-0.5">' : '';
+    return file ? '<img src="' + assetPrefix + 'logos/flags/' + file + '" alt="" class="inline-block w-4 h-4 rounded-full object-cover align-[-3px] mx-0.5">' : '';
   }
 
   function flagFor(destination) {
@@ -71,7 +72,7 @@
     cardRegion.textContent = route.region + ', ' + (route.cabin || 'Business Class');
     cardSaver.textContent = Number(route.saver).toLocaleString();
     cardAdvantage.textContent = Number(route.advantage).toLocaleString();
-    if (route.imageKey) cardImage.src = 'images/' + route.imageKey;
+    if (route.imageKey) cardImage.src = assetPrefix + 'images/' + route.imageKey;
     else cardImage.removeAttribute('src');
     cardImage.alt = route.to || route.city || 'Destination';
     cardWhatsapp.href = 'https://api.whatsapp.com/send?phone=6581575306&text=' + encodeURIComponent(
@@ -80,7 +81,7 @@
 
     var code = destinationCode(route);
     if (cabinCompareRoutes[code]) {
-      cardCompare.href = 'pages/cabin-compare.html?route=' + code;
+      cardCompare.href = (assetPrefix ? 'cabin-compare.html?route=' : 'pages/cabin-compare.html?route=') + code;
       cardCompare.hidden = false;
     } else {
       cardCompare.hidden = true;

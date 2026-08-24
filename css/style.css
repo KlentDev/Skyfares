@@ -6021,42 +6021,6 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   -webkit-line-clamp: 2;
 }
 
-/* Public newsletter page: keep the value proof useful but quiet so the
-   publication itself remains the main event. */
-.newsletter-value-strip-v5 {
-  padding-block: clamp(3rem, 6vw, 4.5rem) !important;
-}
-.newsletter-value-strip-v5 > .container > .flex {
-  margin-bottom: 1.5rem !important;
-}
-.newsletter-value-strip-v5 > .container > .grid {
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: 2rem;
-  align-items: center;
-}
-.newsletter-value-strip-v5 > .container > .grid > div:last-child {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: .5rem;
-}
-.newsletter-value-strip-v5 .card-utility {
-  min-height: 0;
-  padding: .65rem !important;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-}
-.newsletter-value-strip-v5 .card-utility .icon-chip {
-  width: 1.75rem;
-  height: 1.75rem;
-  font-size: .7rem;
-}
-.newsletter-value-strip-v5 .card-utility p:first-of-type {
-  margin: 0;
-  font-size: .72rem;
-  line-height: 1.35;
-}
-.newsletter-value-strip-v5 .card-utility p:last-of-type { display: none; }
-
 /* Private portal newsletter: a latest briefing shelf above the historical
    archive. It uses the existing member card renderer and access handoff. */
 .altitude-latest-briefing {
@@ -6109,13 +6073,6 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 }
 
 @media (max-width: 720px) {
-  .newsletter-value-strip-v5 > .container > .grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .newsletter-value-strip-v5 > .container > .grid > div:last-child {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .altitude-latest-briefing .altitude-section-title--split {
     align-items: flex-start;
     gap: .75rem;
@@ -13653,4 +13610,1092 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   .miles-trust-v1__stat-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* ==========================================================================
+   SERVICES + KRISFLYER ROUTE DESK SURFACES
+   Scoped additions for the 2026 interior-page redesign.
+   ========================================================================== */
+
+.surface-services,
+.surface-krisflyer {
+  --route-navy: #1a2437;
+  --route-ink: #172033;
+  --route-muted: #657084;
+  --route-line: rgba(23, 32, 51, .12);
+  --route-blue: #0066cc;
+  --route-gold: #c9a227;
+  --route-ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+.surface-services a,
+.surface-services button,
+.surface-krisflyer a,
+.surface-krisflyer button,
+.surface-krisflyer input,
+.surface-krisflyer select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.surface-services a:focus-visible,
+.surface-services button:focus-visible,
+.surface-krisflyer a:focus-visible,
+.surface-krisflyer button:focus-visible,
+.surface-krisflyer input:focus-visible,
+.surface-krisflyer select:focus-visible {
+  outline: 3px solid rgba(0, 102, 204, .38);
+  outline-offset: 3px;
+}
+
+.services-hero-v2,
+.kris-hero-v2 {
+  min-height: 39rem;
+  color: #fff;
+  background-color: var(--route-navy);
+  background-image: linear-gradient(90deg, rgba(12, 22, 40, .98) 0%, rgba(15, 30, 55, .88) 44%, rgba(15, 30, 55, .3) 100%), var(--hero-image);
+  background-position: center;
+  background-size: cover;
+}
+
+.services-hero-v2 { --hero-image: url('../images/page-images/overview.JPG'); }
+.kris-hero-v2 { --hero-image: url('../images/page-images/krisflyer-miles.png'); }
+
+.services-hero-v2__meta,
+.kris-hero-v2__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.35rem 0 4rem;
+  color: rgba(255, 255, 255, .58);
+  font: 700 .65rem/1.2 'Manrope', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.services-hero-v2__grid,
+.kris-hero-v2__grid {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(22rem, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 7vw, 8rem);
+  padding: 0 0 3.75rem;
+}
+
+.services-hero-v2__copy,
+.kris-hero-v2__copy { max-width: 38rem; }
+
+.services-hero-v2__label,
+.kris-hero-v2__label {
+  margin: 0 0 1.2rem;
+  color: #d6b94e;
+  font: 700 .7rem/1.2 'Manrope', sans-serif;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.services-hero-v2 h1,
+.kris-hero-v2 h1 {
+  max-width: 12ch;
+  margin: 0;
+  color: #fff;
+  /* Matches pages/newsletter.html's .newsletter-hero-v2 h1 scale -- the
+     newsletter hero was shrunk down from this same clamp() range on CEO
+     feedback that its title read too large; applied here too so all three
+     interior-page heroes carry one consistent, more compact scale. */
+  font: 600 clamp(1.85rem, 1.5rem + 1.6vw, 2.75rem)/1.1 'Lexend', sans-serif;
+  letter-spacing: -.035em;
+}
+
+.services-hero-v2__lead,
+.kris-hero-v2__lead {
+  max-width: 36rem;
+  margin: 1.5rem 0 2rem;
+  color: rgba(255, 255, 255, .72);
+  font: 400 1.08rem/1.65 'Manrope', sans-serif;
+}
+
+.services-hero-v2__visual,
+.kris-hero-v2__visual {
+  position: relative;
+  min-height: 24rem;
+  align-self: stretch;
+}
+
+.services-hero-v2__visual-image,
+.kris-hero-v2__visual-image {
+  position: absolute;
+  inset: 0 0 1.5rem 1.5rem;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 22px 34px rgba(8, 22, 42, .3);
+}
+
+.services-hero-v2__visual-image { background-image: url('../images/page-images/our-flights.jpg'); }
+.kris-hero-v2__visual-image { background-image: url('../images/page-images/first-class.jpg'); }
+
+.services-hero-v2__visual-note,
+.kris-hero-v2__route-note {
+  position: absolute;
+  right: -1.25rem;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  max-width: 16rem;
+  padding: .85rem 1rem;
+  background: #fff;
+  color: var(--route-ink);
+  box-shadow: 0 18px 32px rgba(10, 24, 45, .2);
+}
+
+.services-hero-v2__note-mark,
+.kris-hero-v2__route-note > span:first-child {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0, 102, 204, .1);
+  color: var(--route-blue);
+}
+
+.services-hero-v2__visual-note strong,
+.services-hero-v2__visual-note small,
+.kris-hero-v2__route-note strong,
+.kris-hero-v2__route-note small { display: block; }
+
+.services-hero-v2__visual-note strong,
+.kris-hero-v2__route-note strong { font: 700 .8rem/1.25 'Manrope', sans-serif; }
+.services-hero-v2__visual-note small,
+.kris-hero-v2__route-note small { margin-top: .2rem; color: #687489; font: 400 .68rem/1.35 'Manrope', sans-serif; }
+
+.kris-hero-v2__route-note { display: grid; grid-template-columns: auto 1fr; gap: .15rem .55rem; }
+.kris-hero-v2__route-note > span:first-child { grid-row: span 2; }
+.kris-hero-v2__route-note > i { color: var(--route-gold); font-size: .65rem; }
+.kris-hero-v2__route-note strong { grid-column: 2; }
+.kris-hero-v2__route-note small { grid-column: 2; }
+
+.services-hero-v2__proof,
+.kris-hero-v2__proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  color: rgba(255, 255, 255, .65);
+  font: 600 .72rem/1.3 'Manrope', sans-serif;
+}
+
+.services-hero-v2__proof span,
+.kris-hero-v2__proof span {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 3.4rem;
+  padding: 0 1.6rem;
+  border-right: 1px solid rgba(255, 255, 255, .14);
+}
+
+.services-hero-v2__proof span:first-child,
+.kris-hero-v2__proof span:first-child { padding-left: 0; }
+.services-hero-v2__proof i { color: #d6b94e; }
+.kris-hero-v2__proof b { color: #d6b94e; font-size: .65rem; letter-spacing: .08em; }
+
+.services-hero-v3,
+.kris-hero-v3 {
+  display: grid;
+  gap: clamp(2.4rem, 6vw, 5.5rem);
+  padding: 0 0 3.75rem;
+}
+
+.services-hero-v3__copy,
+.kris-hero-v3__copy {
+  max-width: 54rem;
+}
+
+.services-hero-v3__copy h1,
+.kris-hero-v3__copy h1 {
+  max-width: 13ch;
+  letter-spacing: -.035em;
+}
+
+.services-hero-v3__copy .services-hero-v2__lead,
+.kris-hero-v3__copy .kris-hero-v2__lead {
+  max-width: 43rem;
+}
+
+.services-hero-v3__desk,
+.kris-hero-v3__desk,
+.newsletter-hero-v2__desk {
+  display: grid;
+  align-items: stretch;
+  border-top: 1px solid rgba(255, 255, 255, .18);
+  border-bottom: 1px solid rgba(255, 255, 255, .18);
+  background: rgba(9, 19, 36, .38);
+  box-shadow: 0 24px 42px rgba(4, 12, 24, .2);
+}
+
+.services-hero-v3__desk {
+  grid-template-columns: minmax(15rem, .65fr) minmax(0, 1fr) minmax(14rem, .55fr);
+}
+
+.kris-hero-v3__desk {
+  grid-template-columns: minmax(14rem, .55fr) minmax(0, 1fr) minmax(16rem, .6fr);
+}
+
+.newsletter-hero-v2__desk {
+  grid-template-columns: minmax(13rem, .55fr) minmax(0, 1fr) minmax(14rem, .55fr);
+}
+
+.services-hero-v3__desk-head,
+.services-hero-v3__desk > p,
+.kris-hero-v3__route,
+.kris-hero-v3__desk > p,
+.newsletter-hero-v2__desk-head,
+.newsletter-hero-v2__desk > p {
+  padding: 1.2rem 1.35rem;
+}
+
+.services-hero-v3__desk-head,
+.kris-hero-v3__route,
+.newsletter-hero-v2__desk-head {
+  border-right: 1px solid rgba(255, 255, 255, .16);
+}
+
+.services-hero-v3__desk-head span,
+.services-hero-v3__desk-head strong,
+.newsletter-hero-v2__desk-head span,
+.newsletter-hero-v2__desk-head strong {
+  display: block;
+}
+
+.services-hero-v3__desk-head span,
+.newsletter-hero-v2__desk-head span {
+  margin-bottom: .45rem;
+  color: #d6b94e;
+  font: 700 .64rem/1.25 'Manrope', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.services-hero-v3__desk-head strong,
+.newsletter-hero-v2__desk-head strong {
+  max-width: 18rem;
+  color: #fff;
+  font: 600 1.05rem/1.3 'Lexend', sans-serif;
+}
+
+.services-hero-v3__desk-grid,
+.newsletter-hero-v2__desk-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.services-hero-v3__desk-grid span,
+.kris-hero-v3__checks span,
+.newsletter-hero-v2__desk-grid span {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 4.5rem;
+  padding: 1rem;
+  border-right: 1px solid rgba(255, 255, 255, .16);
+  color: rgba(255, 255, 255, .78);
+  font: 700 .72rem/1.35 'Manrope', sans-serif;
+}
+
+.services-hero-v3__desk-grid span:last-child,
+.kris-hero-v3__checks span:last-child,
+.newsletter-hero-v2__desk-grid span:last-child {
+  border-right: 0;
+}
+
+.services-hero-v3__desk-grid i,
+.newsletter-hero-v2__desk-grid i {
+  color: #d6b94e;
+  font-size: .75rem;
+}
+
+.services-hero-v3__desk > p,
+.kris-hero-v3__desk > p,
+.newsletter-hero-v2__desk > p {
+  align-self: center;
+  margin: 0;
+  color: rgba(255, 255, 255, .64);
+  font: 400 .83rem/1.55 'Manrope', sans-serif;
+}
+
+.kris-hero-v3__route {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: .75rem;
+}
+
+.kris-hero-v3__route span,
+.kris-hero-v3__route strong {
+  color: #fff;
+  font: 700 .9rem/1.2 'Manrope', sans-serif;
+}
+
+.kris-hero-v3__route span {
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .1);
+  color: #d6b94e;
+  letter-spacing: .04em;
+}
+
+.kris-hero-v3__route i {
+  color: #d6b94e;
+  font-size: .8rem;
+}
+
+.kris-hero-v3__checks {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.services-section-intro-v2,
+.kris-section-intro-v2,
+.kris-map-intro-v2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, .7fr);
+  align-items: end;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.services-section-intro-v2 h2,
+.kris-section-intro-v2 h2,
+.kris-map-intro-v2 h2,
+.services-process-v2 h2,
+.services-decision-v2 h2,
+.kris-checks-v2 h2 {
+  max-width: 17ch;
+  margin: .95rem 0 0;
+  color: var(--route-ink);
+  font: 600 clamp(2rem, 3.5vw, 3.25rem)/1.08 'Lexend', sans-serif;
+  letter-spacing: -.04em;
+}
+
+.services-section-intro-v2 > p,
+.kris-section-intro-v2 > p,
+.kris-map-intro-v2 > div:last-child > p {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--route-muted);
+  font: 400 1rem/1.65 'Manrope', sans-serif;
+}
+
+.services-path-grid-v2 {
+  display: grid;
+  grid-template-columns: 1.18fr .91fr .91fr;
+  gap: 1rem;
+}
+
+.service-path-v2 {
+  position: relative;
+  display: flex;
+  min-height: 26rem;
+  flex-direction: column;
+  padding: clamp(1.35rem, 3vw, 2.2rem);
+  overflow: hidden;
+  border: 1px solid var(--route-line);
+  border-radius: 20px;
+  background: #fff;
+  color: var(--route-ink);
+  text-decoration: none;
+  transition: transform 220ms var(--route-ease), box-shadow 220ms var(--route-ease), border-color 220ms ease;
+}
+
+.service-path-v2::after {
+  position: absolute;
+  right: -3rem;
+  bottom: -4rem;
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  background: rgba(0, 102, 204, .055);
+  content: '';
+  transition: transform 240ms var(--route-ease);
+}
+
+.service-path-v2:hover { border-color: rgba(0, 102, 204, .38); box-shadow: 0 18px 35px rgba(17, 37, 66, .1); transform: translateY(-4px); }
+.service-path-v2:hover::after { transform: scale(1.16); }
+.service-path-v2--feature { min-height: 31rem; background: var(--route-navy); color: #fff; }
+.service-path-v2--feature::after { background: rgba(201, 162, 39, .12); }
+.service-path-v2--warm { background: #fbfaf4; }
+
+.service-path-v2__topline { display: flex; justify-content: space-between; gap: 1rem; color: #7e8a9e; font: 700 .65rem/1.25 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.service-path-v2--feature .service-path-v2__topline { color: rgba(255, 255, 255, .55); }
+.service-path-v2__topline > i { color: var(--route-blue); }
+.service-path-v2--feature .service-path-v2__topline > i { color: #d6b94e; }
+.service-path-v2__icon { display: grid; width: 3rem; height: 3rem; margin-top: auto; margin-bottom: 1.2rem; place-items: center; border-radius: 50%; background: rgba(0, 102, 204, .1); color: var(--route-blue); font-size: 1rem; }
+.service-path-v2--feature .service-path-v2__icon { background: rgba(255, 255, 255, .1); color: #d6b94e; }
+.service-path-v2 h3 { position: relative; z-index: 1; max-width: 13ch; margin: 0; font: 600 clamp(1.45rem, 2vw, 2.15rem)/1.12 'Lexend', sans-serif; letter-spacing: -.035em; }
+.service-path-v2 p { position: relative; z-index: 1; max-width: 34ch; margin: 1rem 0 1.5rem; color: #687489; font: 400 .9rem/1.65 'Manrope', sans-serif; }
+.service-path-v2--feature p { color: rgba(255, 255, 255, .66); }
+.service-path-v2__link { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .65rem; margin-top: auto; font: 700 .78rem/1.3 'Manrope', sans-serif; }
+.service-path-v2__link i { transition: transform 180ms var(--route-ease); }
+.service-path-v2:hover .service-path-v2__link i { transform: translateX(4px); }
+
+.services-decision-v2 { padding: 6.5rem 0; color: #fff; }
+.services-decision-v2__grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: clamp(2rem, 8vw, 9rem); align-items: start; }
+.services-decision-v2 h2 { color: #fff; }
+.services-decision-v2__intro p { max-width: 28rem; margin: 1.25rem 0 1.75rem; color: rgba(255, 255, 255, .65); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.services-decision-v2__list { border-top: 1px solid rgba(255, 255, 255, .16); }
+.services-decision-v2__list a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid rgba(255, 255, 255, .16); color: #fff; text-decoration: none; transition: color 180ms ease, transform 220ms var(--route-ease); }
+.services-decision-v2__list a:hover { transform: translateX(.5rem); color: #d6b94e; }
+.services-decision-v2__list b,.services-decision-v2__list small { display: block; }
+.services-decision-v2__list b { max-width: 32rem; font: 600 1.02rem/1.35 'Lexend', sans-serif; letter-spacing: -.02em; }
+.services-decision-v2__list small { margin-top: .4rem; color: rgba(255, 255, 255, .48); font: 400 .75rem/1.35 'Manrope', sans-serif; }
+
+.services-route-grid-v2 { display: grid; grid-template-columns: 1.25fr .75fr; grid-auto-rows: minmax(16rem, 22rem); gap: 1rem; }
+.services-route-v2 { position: relative; display: flex; min-height: 16rem; flex-direction: column; justify-content: flex-end; padding: clamp(1.35rem, 3vw, 2rem); overflow: hidden; background-color: var(--route-navy); background-position: center; background-size: cover; color: #fff; text-decoration: none; }
+.services-route-v2--wide { min-height: 22rem; }
+.services-route-v2::before { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15, 32, 64, .04), rgba(15, 32, 64, .9)); content: ''; transition: opacity 220ms ease; }
+.services-route-v2::after { position: absolute; inset: 0; border: 1px solid rgba(255, 255, 255, .2); content: ''; pointer-events: none; }
+.services-route-v2:hover::before { opacity: .72; }
+.services-route-v2 > * { position: relative; z-index: 1; }
+.services-route-v2 span { margin-bottom: .55rem; color: rgba(255, 255, 255, .68); font: 700 .63rem/1.2 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.services-route-v2 strong { font: 600 clamp(1.45rem, 2.2vw, 2.2rem)/1.1 'Lexend', sans-serif; letter-spacing: -.04em; }
+.services-route-v2 small { margin-top: .45rem; color: rgba(255, 255, 255, .78); font: 400 .78rem/1.4 'Manrope', sans-serif; }
+.services-route-v2 em { display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem; padding-top: .8rem; border-top: 1px solid rgba(255, 255, 255, .2); color: #d6b94e; font: 700 .7rem/1.3 'Manrope', sans-serif; font-style: normal; }
+.services-route-v2 em i { transition: transform 180ms var(--route-ease); }
+.services-route-v2:hover em i { transform: translate(3px, -3px); }
+
+.services-process-v2__grid { display: grid; grid-template-columns: minmax(18rem, .82fr) minmax(0, 1.18fr); gap: clamp(2rem, 7vw, 7rem); align-items: center; }
+.services-process-v2__image { position: relative; min-height: 34rem; background-position: center; background-size: cover; }
+.services-process-v2__image::after { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(15, 32, 64, .82)); content: ''; }
+.services-process-v2__image span { position: absolute; z-index: 1; right: 1.5rem; bottom: 1.5rem; left: 1.5rem; color: #fff; font: 600 1.2rem/1.2 'Lexend', sans-serif; letter-spacing: -.03em; }
+.services-process-v2__lead { max-width: 36rem; margin: 1.5rem 0 2rem; color: var(--route-muted); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.services-process-v2__steps { margin: 0 0 2rem; padding: 0; list-style: none; border-top: 1px solid var(--route-line); }
+.services-process-v2__steps li { display: grid; grid-template-columns: 2.6rem 1fr; gap: 1rem; padding: 1.15rem 0; border-bottom: 1px solid var(--route-line); }
+.services-process-v2__steps li > span { color: var(--route-blue); font: 700 .7rem/1.4 'Manrope', sans-serif; letter-spacing: .1em; }
+.services-process-v2__steps strong { display: block; color: var(--route-ink); font: 600 1rem/1.3 'Lexend', sans-serif; }
+.services-process-v2__steps p { margin: .35rem 0 0; color: var(--route-muted); font: 400 .82rem/1.5 'Manrope', sans-serif; }
+.text-link-v2 { display: inline-flex; align-items: center; gap: .6rem; color: var(--route-blue); font: 700 .8rem/1.3 'Manrope', sans-serif; text-decoration: none; }
+.text-link-v2 i { transition: transform 180ms var(--route-ease); }
+.text-link-v2:hover i { transform: translateX(4px); }
+
+.services-tools-grid-v2 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.services-tool-v2 { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; min-height: 8.5rem; padding: 1.25rem; border: 1px solid var(--route-line); background: #fff; color: var(--route-ink); text-decoration: none; transition: transform 220ms var(--route-ease), border-color 180ms ease, box-shadow 220ms var(--route-ease); }
+.services-tool-v2:hover { border-color: rgba(0, 102, 204, .36); box-shadow: 0 16px 30px rgba(17, 37, 66, .08); transform: translateY(-3px); }
+.services-tool-v2__icon { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border-radius: 50%; background: rgba(0, 102, 204, .1); color: var(--route-blue); }
+.services-tool-v2--gold .services-tool-v2__icon { background: rgba(201, 162, 39, .14); color: #9a7812; }
+.services-tool-v2 strong,.services-tool-v2 small { display: block; }
+.services-tool-v2 strong { font: 600 1rem/1.25 'Lexend', sans-serif; }
+.services-tool-v2 small { margin-top: .35rem; color: var(--route-muted); font: 400 .75rem/1.45 'Manrope', sans-serif; }
+.services-tool-v2 > i { color: var(--route-blue); font-size: .75rem; }
+
+.kris-intents-v2__rail { display: flex; align-items: center; gap: 0; overflow-x: auto; border-top: 1px solid var(--route-line); border-bottom: 1px solid var(--route-line); }
+.kris-intents-v2__prompt { flex: 0 0 auto; margin-right: auto; padding: 1.1rem 2rem 1.1rem 0; color: var(--route-muted); font: 700 .68rem/1.3 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.kris-intents-v2__rail a { display: inline-flex; align-items: center; gap: .65rem; min-height: 3.8rem; padding: 0 1.35rem; border-left: 1px solid var(--route-line); color: var(--route-ink); font: 700 .75rem/1.3 'Manrope', sans-serif; text-decoration: none; white-space: nowrap; transition: color 180ms ease, background-color 180ms ease; }
+.kris-intents-v2__rail a:hover { background: #f5f5f7; color: var(--route-blue); }
+.kris-intents-v2__rail a > i:first-child { color: var(--route-blue); }
+.kris-intents-v2__rail a > i:last-child { margin-left: .35rem; color: #8994a5; font-size: .65rem; }
+
+.kris-map-section-v2 { padding: 6.5rem 0 0; }
+.kris-map-intro-v2 { align-items: start; margin-bottom: 2.3rem; }
+.kris-map-intro-v2__hint { display: inline-flex; align-items: center; gap: .5rem; margin-top: 1rem; color: #8a6f18; font: 700 .68rem/1.4 'Manrope', sans-serif; }
+.kris-map-toolbar-v2 { border: 1px solid var(--route-line); border-bottom: 0; background: #fff; }
+.kris-popular-v2 { padding: 1rem 0 1.35rem; }
+.kris-map-shell-v2 { border: 1px solid var(--route-line); border-top: 0; background: #fff; }
+.kris-map-shell-v2 .mileage-route-details-card { left: 1.25rem; bottom: 1.25rem; }
+.kris-map-shell-v2 + .mileage-explorer-bottom { border-right: 1px solid var(--route-line); border-bottom: 1px solid var(--route-line); border-left: 1px solid var(--route-line); background: #fff; }
+
+.kris-options-v2 { padding-top: 6.5rem; }
+.kris-options-grid-v2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 72rem; }
+.kris-option-v2 { min-height: 27rem; padding: clamp(1.5rem, 3vw, 2.6rem); border: 1px solid var(--route-line); background: #fff; }
+.kris-option-v2--featured { border-color: rgba(0, 102, 204, .3); background: #f7fbff; }
+.kris-option-v2__head { display: flex; align-items: center; gap: 1rem; }
+.kris-option-v2__icon { display: grid; width: 3rem; height: 3rem; flex: 0 0 auto; place-items: center; border-radius: 50%; background: rgba(0, 102, 204, .11); color: var(--route-blue); }
+.kris-option-v2__head small,.kris-option-v2__head strong { display: block; }
+.kris-option-v2__head small { margin-bottom: .3rem; color: var(--route-blue); font: 700 .65rem/1.2 'Manrope', sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.kris-option-v2__head strong { color: var(--route-ink); font: 600 clamp(1.4rem, 2vw, 2rem)/1.1 'Lexend', sans-serif; letter-spacing: -.04em; }
+.kris-option-v2 > p { max-width: 38rem; margin: 1.5rem 0; color: var(--route-muted); font: 400 .9rem/1.65 'Manrope', sans-serif; }
+.kris-option-v2 ul { display: grid; gap: .8rem; margin: 0 0 2rem; padding: 1rem 0 1.35rem; border-top: 1px solid var(--route-line); border-bottom: 1px solid var(--route-line); list-style: none; }
+.kris-option-v2 li { display: flex; align-items: start; gap: .65rem; color: #526076; font: 600 .78rem/1.4 'Manrope', sans-serif; }
+.kris-option-v2 li i { margin-top: .2rem; color: var(--route-blue); font-size: .65rem; }
+
+.kris-board-v2 { padding-top: 6rem; }
+.kris-board-shell-v2 { overflow: hidden; border: 1px solid var(--route-line); background: #fff; }
+.kris-board-controls-v2 { display: grid; grid-template-columns: 1fr 16rem; gap: 1rem; padding: 1.25rem; border-bottom: 1px solid var(--route-line); }
+.kris-board-controls-v2 label { display: grid; gap: .5rem; color: #667389; font: 700 .65rem/1.2 'Manrope', sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.kris-board-input { position: relative; display: block; }
+.kris-board-input i { position: absolute; top: 50%; left: 1rem; color: #9ba5b5; font-size: .75rem; pointer-events: none; transform: translateY(-50%); }
+.kris-board-input input,.kris-board-controls-v2 select { width: 100%; min-height: 2.8rem; border: 1px solid rgba(23, 32, 51, .14); border-radius: 999px; background: #fff; color: var(--route-ink); font: 600 .8rem/1.3 'Manrope', sans-serif; }
+.kris-board-input input { padding: 0 1rem 0 2.65rem; }
+.kris-board-controls-v2 select { padding: 0 1rem; }
+.kris-award-table-v2 th { padding: 1rem 1.25rem; background: #f8f9fb; color: #768298; font: 700 .62rem/1.2 'Manrope', sans-serif; letter-spacing: .09em; text-transform: uppercase; }
+.kris-award-table-v2 td { padding: 1.1rem 1.25rem; border-top: 1px solid rgba(23, 32, 51, .08); color: #506078; font: 600 .78rem/1.4 'Manrope', sans-serif; }
+.kris-award-table-v2 td:first-child { color: var(--route-ink); font-weight: 700; }
+.kris-award-table-v2 td:nth-child(3),.kris-award-table-v2 td:nth-child(4) { color: var(--route-ink); font-variant-numeric: tabular-nums; text-align: right; }
+.kris-award-table-v2 tbody tr { transition: background-color 160ms ease; }
+.kris-award-table-v2 tbody tr:hover { background: rgba(0, 102, 204, .045); }
+
+.kris-checks-v2 { padding: 6.5rem 0; color: #fff; }
+.kris-checks-v2__grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: clamp(2rem, 8vw, 9rem); align-items: start; }
+.kris-checks-v2 h2 { color: #fff; }
+.kris-checks-v2__intro > p { max-width: 30rem; margin: 1.25rem 0 1.75rem; color: rgba(255, 255, 255, .64); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.kris-check-list-v2 { border-top: 1px solid rgba(255, 255, 255, .16); }
+.kris-check-list-v2 > div { display: grid; grid-template-columns: 2.8rem minmax(0, 1fr); column-gap: 1rem; row-gap: .45rem; padding: 1.45rem 0; border-bottom: 1px solid rgba(255, 255, 255, .16); }
+.kris-check-list-v2 span { color: #d6b94e; font: 700 .68rem/1.35 'Manrope', sans-serif; letter-spacing: .1em; }
+.kris-check-list-v2 strong { display: block; grid-column: 2; color: #fff; font: 600 1.05rem/1.25 'Lexend', sans-serif; }
+.kris-check-list-v2 p { grid-column: 2; max-width: 36rem; margin: 0; color: rgba(255, 255, 255, .56); font: 400 .8rem/1.55 'Manrope', sans-serif; }
+
+@media (max-width: 1068px) {
+  .services-hero-v2__meta,.kris-hero-v2__meta { padding-bottom: 3rem; }
+  .services-hero-v2__grid,.kris-hero-v2__grid { grid-template-columns: minmax(0, .95fr) minmax(20rem, 1.05fr); gap: 3rem; }
+  .services-hero-v3__desk,.kris-hero-v3__desk,.newsletter-hero-v2__desk { grid-template-columns: 1fr; }
+  .services-hero-v3__desk-head,.kris-hero-v3__route,.newsletter-hero-v2__desk-head { border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, .16); }
+  .services-hero-v3__desk-grid,.kris-hero-v3__checks,.newsletter-hero-v2__desk-grid { border-bottom: 1px solid rgba(255, 255, 255, .16); }
+  .services-path-grid-v2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .service-path-v2--feature { grid-row: span 2; }
+  .services-tools-grid-v2 { grid-template-columns: 1fr; }
+  .services-tool-v2 { min-height: 6.5rem; }
+}
+
+@media (max-width: 833px) {
+  .services-hero-v2,.kris-hero-v2 { min-height: auto; }
+  .services-hero-v2__grid,.kris-hero-v2__grid { grid-template-columns: 1fr; gap: 2.5rem; padding-bottom: 2.7rem; }
+  .services-hero-v3,.kris-hero-v3 { padding-bottom: 2.7rem; }
+  .services-hero-v2__visual,.kris-hero-v2__visual { min-height: 22rem; }
+  .services-hero-v2__visual-note,.kris-hero-v2__route-note { right: .75rem; }
+  .services-section-intro-v2,.kris-section-intro-v2,.kris-map-intro-v2 { grid-template-columns: 1fr; align-items: start; gap: 1rem; }
+  .services-decision-v2__grid,.services-process-v2__grid,.kris-checks-v2__grid { grid-template-columns: 1fr; gap: 2.75rem; }
+  .services-process-v2__image { min-height: 24rem; }
+  .kris-intents-v2__prompt { margin-right: 0; }
+  .kris-intents-v2__rail { align-items: stretch; }
+  .kris-intents-v2__rail a { min-width: max-content; }
+  .kris-map-shell-v2 { min-height: 24rem; }
+  .kris-map-shell-v2 .mileage-route-details-card { position: relative; right: auto; bottom: auto; left: auto; width: auto; max-height: none; margin: 0 1rem 1rem; }
+  .kris-map-shell-v2 .mileage-map-svg { min-height: 24rem; }
+  .kris-options-grid-v2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .services-hero-v2__meta,.kris-hero-v2__meta { flex-direction: column; gap: .45rem; padding-top: 1rem; padding-bottom: 2.5rem; }
+  .services-hero-v2 h1,.kris-hero-v2 h1 { max-width: 10ch; }
+  .services-hero-v2__lead,.kris-hero-v2__lead { font-size: .95rem; }
+  .services-hero-v2__visual,.kris-hero-v2__visual { min-height: 16rem; }
+  .services-hero-v2__visual-image,.kris-hero-v2__visual-image { inset: 0 .65rem .85rem 0; box-shadow: 0 16px 28px rgba(8, 22, 42, .24); }
+  .services-hero-v2__visual-note,.kris-hero-v2__route-note { right: 0; }
+  .services-hero-v2__proof,.kris-hero-v2__proof { display: grid; grid-template-columns: 1fr; }
+  .services-hero-v2__proof span,.kris-hero-v2__proof span { min-height: 2.6rem; padding: 0; border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, .14); }
+  .services-hero-v2__proof span:last-child,.kris-hero-v2__proof span:last-child { border-bottom: 0; }
+  .services-path-grid-v2 { grid-template-columns: 1fr; }
+  .service-path-v2,.service-path-v2--feature { min-height: 23rem; grid-row: auto; }
+  .services-route-grid-v2 { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .services-route-v2,.services-route-v2--wide { min-height: 18rem; }
+  .services-decision-v2,.services-process-v2,.kris-checks-v2 { padding: 4.75rem 0; }
+  .services-section-intro-v2,.kris-section-intro-v2,.kris-map-intro-v2 { margin-bottom: 2rem; }
+  .services-section-intro-v2 h2,.kris-section-intro-v2 h2,.kris-map-intro-v2 h2,.services-process-v2 h2,.services-decision-v2 h2,.kris-checks-v2 h2 { font-size: 2rem; }
+  .services-tools-grid-v2 { gap: .7rem; }
+  .services-tool-v2 { grid-template-columns: auto 1fr auto; padding: 1rem; }
+  .kris-map-section-v2,.kris-options-v2,.kris-board-v2 { padding-top: 4.75rem; }
+  .kris-map-toolbar-v2 { display: grid; gap: 1rem; }
+  .kris-map-toolbar-v2 .mileage-browse-trigger { width: 100%; justify-content: center; }
+  .kris-popular-v2 { overflow-x: auto; }
+  .kris-map-shell-v2 { min-height: 21rem; overflow: visible; }
+  .kris-map-shell-v2 .mileage-map-svg { min-height: 21rem; }
+  .kris-map-shell-v2 .mileage-route-details-card { margin: 0 .75rem .75rem; }
+  .kris-board-controls-v2 { grid-template-columns: 1fr; }
+  .kris-option-v2 { min-height: auto; padding: 1.45rem; }
+  .kris-option-v2 .btn-pill { width: 100%; justify-content: center; }
+  .services-hero-v3__desk-grid,.kris-hero-v3__checks,.newsletter-hero-v2__desk-grid { grid-template-columns: 1fr; }
+  .services-hero-v3__desk-grid span,.kris-hero-v3__checks span,.newsletter-hero-v2__desk-grid span { min-height: 3rem; border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, .12); }
+  .services-hero-v3__desk-grid span:last-child,.kris-hero-v3__checks span:last-child,.newsletter-hero-v2__desk-grid span:last-child { border-bottom: 0; }
+  .kris-check-list-v2 > div { grid-template-columns: 2.2rem minmax(0, 1fr); column-gap: .8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-path-v2,
+  .service-path-v2::after,
+  .services-decision-v2__list a,
+  .services-route-v2 em i,
+  .services-tool-v2,
+  .kris-intents-v2__rail a,
+  .text-link-v2 i { transition-duration: 0.01ms; }
+  .service-path-v2:hover,.services-tool-v2:hover { transform: none; }
+}
+
+/* ==========================================================================
+   Editorial proof surfaces: Past Flight Deals + The Skyfare Flight
+   Scoped additions only. These pages use the existing Skyfare route desk
+   language while giving their different jobs distinct compositions.
+   ========================================================================== */
+
+.past-deals-page,
+.skyfare-flight-page {
+  --editorial-navy: #1a2437;
+  --editorial-blue: #0066cc;
+  --editorial-gold: #d6b94e;
+  --editorial-ink: #172033;
+  --editorial-muted: #687489;
+  --editorial-line: rgba(23, 32, 51, .12);
+}
+
+.past-deals-hero {
+  min-height: 38rem;
+  color: #fff;
+  background-image: linear-gradient(112deg, rgba(7, 20, 39, .98) 0%, rgba(22, 39, 67, .94) 58%, rgba(15, 32, 64, .76) 100%), var(--hero-img);
+}
+
+.past-deals-hero__meta,
+.skyfare-flight-hero__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.35rem 0 4.8rem;
+  color: rgba(255, 255, 255, .58);
+  font: 700 .65rem/1.2 'Manrope', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.past-deals-hero__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(18rem, .94fr);
+  align-items: end;
+  gap: clamp(2rem, 7vw, 7rem);
+  padding-bottom: 4rem;
+}
+
+.past-deals-hero__copy { max-width: 42rem; }
+.past-deals-kicker,
+.skyfare-flight-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin-bottom: 1.2rem;
+  color: var(--editorial-gold);
+  font: 700 .7rem/1.2 'Manrope', sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.past-deals-hero h1,
+.skyfare-flight-hero h1 {
+  max-width: 12ch;
+  margin: 0;
+  color: #fff;
+  font: 600 clamp(2.7rem, 5.6vw, 5.25rem)/1.02 'Lexend', sans-serif;
+  letter-spacing: -.045em;
+}
+
+.past-deals-hero__copy > p,
+.skyfare-flight-hero__copy > p:not(.skyfare-flight-hero__note) {
+  max-width: 38rem;
+  margin: 1.5rem 0 2rem;
+  color: rgba(255, 255, 255, .72);
+  font: 400 1.05rem/1.65 'Manrope', sans-serif;
+}
+
+.past-deals-hero__ledger {
+  border-top: 1px solid rgba(255, 255, 255, .24);
+  border-bottom: 1px solid rgba(255, 255, 255, .24);
+  background: rgba(8, 19, 36, .36);
+}
+
+.past-deals-hero__ledger-head { padding: 1.25rem 1.35rem; border-bottom: 1px solid rgba(255, 255, 255, .16); }
+.past-deals-hero__ledger-head span,
+.past-deals-hero__ledger-head strong { display: block; }
+.past-deals-hero__ledger-head span { margin-bottom: .4rem; color: var(--editorial-gold); font: 700 .63rem/1.2 'Manrope', sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.past-deals-hero__ledger-head strong { color: #fff; font: 600 1.05rem/1.3 'Lexend', sans-serif; }
+.past-deals-hero__ledger-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.past-deals-hero__ledger-grid span { display: grid; gap: .35rem; min-height: 7.3rem; padding: 1.1rem 1rem; border-right: 1px solid rgba(255, 255, 255, .14); align-content: center; }
+.past-deals-hero__ledger-grid span:last-child { border-right: 0; }
+.past-deals-hero__ledger-grid b { color: #fff; font: 600 1.65rem/1 'Lexend', sans-serif; letter-spacing: -.04em; }
+.past-deals-hero__ledger-grid small { color: rgba(255, 255, 255, .56); font: 600 .68rem/1.35 'Manrope', sans-serif; }
+.past-deals-hero__ledger > p { margin: 0; padding: 1rem 1.35rem 1.2rem; color: rgba(255, 255, 255, .56); font: 400 .78rem/1.55 'Manrope', sans-serif; }
+
+.past-deals-featured { padding-block: clamp(4.5rem, 8vw, 7rem); }
+.past-deals-featured__grid { display: grid; grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: clamp(2rem, 7vw, 7rem); align-items: center; max-width: 78rem; margin: 0 auto; }
+.past-deals-featured__image img { display: block; width: 100%; aspect-ratio: 1 / 1.08; object-fit: cover; }
+.past-deals-image-note { display: inline-flex; align-items: center; gap: .45rem; margin-top: .75rem; color: #8994a5; font: 700 .66rem/1.2 'Manrope', sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.past-deals-image-note i { color: var(--editorial-gold); }
+.past-deals-route-label { margin: 1.7rem 0 .7rem; color: var(--editorial-blue); font: 700 .7rem/1.3 'Manrope', sans-serif; letter-spacing: .13em; text-transform: uppercase; }
+.past-deals-featured h2,
+.past-deals-section-heading h2,
+.past-deals-method h2,
+.past-deals-close h2,
+.skyfare-flight-section-heading h2,
+.skyfare-flight-prompts h2,
+.skyfare-flight-application h2,
+.skyfare-flight-close h2 { margin: 0; color: var(--editorial-ink); font: 600 clamp(2rem, 4vw, 3.8rem)/1.08 'Lexend', sans-serif; letter-spacing: -.045em; }
+.past-deals-featured h2 { max-width: 13ch; }
+.past-deals-featured__lead { max-width: 38rem; margin: 1.4rem 0 2rem; color: var(--editorial-muted); font: 400 1rem/1.7 'Manrope', sans-serif; }
+.past-deals-value-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--editorial-line); border-bottom: 1px solid var(--editorial-line); }
+.past-deals-value-grid div { display: grid; gap: .3rem; padding: 1rem 1rem 1rem 0; border-right: 1px solid var(--editorial-line); }
+.past-deals-value-grid div + div { padding-left: 1rem; }
+.past-deals-value-grid div:last-child { border-right: 0; }
+.past-deals-value-grid strong { color: var(--editorial-ink); font: 600 1.2rem/1.15 'Lexend', sans-serif; letter-spacing: -.04em; }
+.past-deals-value-grid span { color: #8994a5; font: 600 .67rem/1.3 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: .09em; }
+.past-deals-featured__footer { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 1.5rem; color: #526076; font: 700 .76rem/1.3 'Manrope', sans-serif; }
+.past-deals-featured__footer > span { display: inline-flex; align-items: center; gap: .5rem; }
+.past-deals-featured__footer > span i { color: var(--editorial-blue); }
+
+.past-deals-section-heading { display: grid; gap: 1rem; max-width: 48rem; margin-bottom: 2.5rem; }
+.past-deals-section-heading h2 { max-width: 15ch; font-size: clamp(2rem, 4vw, 3.4rem); }
+.past-deals-section-heading > p { max-width: 42rem; margin: 0; color: var(--editorial-muted); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.past-deals-lens__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; border-top: 1px solid var(--editorial-line); border-bottom: 1px solid var(--editorial-line); }
+.past-deals-lens__item { display: grid; grid-template-columns: auto 1fr; gap: 1rem; min-height: 12rem; padding: 1.5rem 1.35rem 1.5rem 0; border-right: 1px solid var(--editorial-line); }
+.past-deals-lens__item + .past-deals-lens__item { padding-left: 1.35rem; }
+.past-deals-lens__item:last-child { border-right: 0; }
+.past-deals-lens__item > span { color: var(--editorial-gold); font: 700 .68rem/1.2 'Manrope', sans-serif; letter-spacing: .12em; }
+.past-deals-lens__item h3 { margin: 0; color: var(--editorial-ink); font: 600 1.15rem/1.25 'Lexend', sans-serif; letter-spacing: -.025em; }
+.past-deals-lens__item p { margin: .6rem 0 0; color: var(--editorial-muted); font: 400 .82rem/1.6 'Manrope', sans-serif; }
+
+.past-deals-archive { padding-block: clamp(4.5rem, 8vw, 7rem); }
+.past-deals-section-heading--archive { margin-bottom: 2rem; }
+.past-deals-filter-bar { display: grid; grid-template-columns: minmax(15rem, 1.35fr) repeat(2, minmax(11rem, .72fr)) auto; gap: .8rem; align-items: end; padding: 1rem; border: 1px solid var(--editorial-line); background: #f8fafc; }
+.past-deals-filter-field { display: grid; gap: .45rem; min-width: 0; }
+.past-deals-filter-field > span:first-child { color: #768298; font: 700 .63rem/1.2 'Manrope', sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.past-deals-input-wrap { position: relative; display: block; }
+.past-deals-input-wrap i { position: absolute; top: 50%; left: 1rem; color: #9ba5b5; font-size: .75rem; transform: translateY(-50%); pointer-events: none; }
+.past-deals-filter-field input,
+.past-deals-filter-field select { width: 100%; min-height: 2.8rem; border: 1px solid rgba(23, 32, 51, .14); border-radius: 999px; background: #fff; color: var(--editorial-ink); font: 600 .8rem/1.3 'Manrope', sans-serif; }
+.past-deals-filter-field input { padding: 0 1rem 0 2.55rem; }
+.past-deals-filter-field select { padding: 0 1rem; }
+.past-deals-filter-field input:focus-visible,
+.past-deals-filter-field select:focus-visible { outline: 3px solid rgba(0, 102, 204, .22); outline-offset: 2px; border-color: var(--editorial-blue); }
+.past-deals-reset { min-height: 2.8rem; padding: 0 1rem; border: 0; background: transparent; color: var(--editorial-blue); font: 700 .76rem/1.2 'Manrope', sans-serif; cursor: pointer; white-space: nowrap; }
+.past-deals-reset:hover { color: #0052a3; text-decoration: underline; }
+.past-deals-results-meta { display: flex; justify-content: space-between; gap: 1rem; padding: 1.2rem 0 .75rem; color: #8994a5; font: 600 .7rem/1.4 'Manrope', sans-serif; }
+.past-deals-results-meta span:first-child { color: var(--editorial-blue); }
+.past-deals-list { border-top: 1px solid var(--editorial-line); }
+.past-deal-row { display: grid; grid-template-columns: 2.6rem minmax(9rem, .8fr) minmax(0, 1.5fr) 7rem; gap: 1rem; align-items: center; min-height: 7.2rem; padding: 1.1rem 0; border-bottom: 1px solid var(--editorial-line); transition: background-color 180ms ease, padding 180ms ease; }
+.past-deal-row:hover { padding-inline: 1rem; background: #f7fbff; }
+.past-deal-row[hidden] { display: none; }
+.past-deal-row__index { color: var(--editorial-gold); font: 700 .68rem/1.2 'Manrope', sans-serif; letter-spacing: .1em; }
+.past-deal-row__route span,
+.past-deal-row__details strong,
+.past-deal-row__value strong { display: block; }
+.past-deal-row__route span { color: var(--editorial-ink); font: 600 1.05rem/1.25 'Lexend', sans-serif; letter-spacing: -.035em; }
+.past-deal-row__route span i { margin: 0 .3rem; color: var(--editorial-blue); font-size: .7rem; }
+.past-deal-row__route small,
+.past-deal-row__details small,
+.past-deal-row__value small { display: block; margin-top: .35rem; color: #8994a5; font: 400 .72rem/1.4 'Manrope', sans-serif; }
+.past-deal-row__details strong { color: var(--editorial-ink); font: 600 .92rem/1.3 'Lexend', sans-serif; }
+.past-deal-row__value { text-align: right; }
+.past-deal-row__value strong { color: #9a7812; font: 600 1.25rem/1.1 'Lexend', sans-serif; letter-spacing: -.04em; }
+.past-deal-row--featured { background: #fbfaf4; }
+.past-deal-row--featured:hover { background: #f8f5e8; }
+.past-deals-empty { padding: 3rem 1.5rem; border: 1px dashed rgba(0, 102, 204, .24); background: #f8fbff; text-align: center; }
+.past-deals-empty[hidden] { display: none; }
+.past-deals-empty > i { color: var(--editorial-blue); font-size: 1.4rem; }
+.past-deals-empty strong { display: block; margin-top: .8rem; color: var(--editorial-ink); font: 600 1.1rem/1.3 'Lexend', sans-serif; }
+.past-deals-empty p { margin: .45rem auto 1.2rem; color: var(--editorial-muted); font: 400 .85rem/1.5 'Manrope', sans-serif; }
+
+.past-deals-method { color: #fff; }
+.past-deals-method__grid { display: grid; grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); gap: clamp(2rem, 8vw, 9rem); align-items: start; }
+.past-deals-method h2 { max-width: 12ch; color: #fff; }
+.past-deals-method > .container > .past-deals-method__grid > div > p { max-width: 30rem; margin: 1.25rem 0 1.75rem; color: rgba(255, 255, 255, .64); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.past-deals-method__steps { margin: 0; padding: 0; border-top: 1px solid rgba(255, 255, 255, .16); list-style: none; }
+.past-deals-method__steps li { display: grid; grid-template-columns: 2.8rem minmax(0, 1fr); gap: 1rem; padding: 1.35rem 0; border-bottom: 1px solid rgba(255, 255, 255, .16); }
+.past-deals-method__steps li > span { color: var(--editorial-gold); font: 700 .68rem/1.35 'Manrope', sans-serif; letter-spacing: .1em; }
+.past-deals-method__steps strong { display: block; color: #fff; font: 600 1.05rem/1.25 'Lexend', sans-serif; }
+.past-deals-method__steps p { margin: .35rem 0 0; color: rgba(255, 255, 255, .56); font: 400 .8rem/1.55 'Manrope', sans-serif; }
+.past-deals-close__inner,
+.skyfare-flight-close__inner { display: flex; justify-content: space-between; align-items: end; gap: 2rem; max-width: 78rem; margin: 0 auto; }
+.past-deals-close h2,
+.skyfare-flight-close h2 { max-width: 18ch; font-size: clamp(1.8rem, 3vw, 2.7rem); }
+
+.skyfare-flight-hero { min-height: 42rem; color: #fff; background-image: linear-gradient(112deg, rgba(7, 20, 39, .98) 0%, rgba(22, 39, 67, .9) 56%, rgba(15, 32, 64, .55) 100%), var(--hero-img); }
+.skyfare-flight-hero__layout { display: grid; grid-template-columns: minmax(0, .92fr) minmax(20rem, 1.08fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; padding-bottom: 4rem; }
+.skyfare-flight-hero__copy { max-width: 38rem; }
+.skyfare-flight-hero h1 { max-width: 11ch; }
+.skyfare-flight-hero__copy > p:not(.skyfare-flight-hero__note) { max-width: 35rem; }
+.skyfare-flight-hero__note { max-width: 33rem; margin: 1rem 0 0; color: rgba(255, 255, 255, .46); font: 400 .72rem/1.5 'Manrope', sans-serif; }
+.skyfare-flight-ticket-panel { display: grid; justify-items: center; gap: .8rem; min-width: 0; }
+.skyfare-flight-ticket-panel__hint { display: inline-flex; align-items: center; gap: .5rem; color: rgba(255, 255, 255, .62); font: 700 .68rem/1.3 'Manrope', sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.skyfare-flight-ticket-panel__hint i { color: var(--editorial-gold); }
+.skyfare-flight-page .skyfare-ticket-wrap { width: 100%; }
+.skyfare-flight-page .skyfare-ticket { outline: 0; }
+.skyfare-flight-page .skyfare-ticket__toggle:focus-visible + .skyfare-ticket__card { outline: 3px solid var(--editorial-gold); outline-offset: 8px; }
+.skyfare-flight-page .skyfare-ticket__card { transition-duration: 520ms; }
+
+.skyfare-flight-status { border-bottom: 1px solid var(--editorial-line); }
+.skyfare-flight-status__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 78rem; margin: 0 auto; }
+.skyfare-flight-status__grid > div { display: grid; gap: .35rem; min-height: 7.2rem; padding: 1.4rem 1.4rem 1.4rem 0; border-right: 1px solid var(--editorial-line); align-content: center; }
+.skyfare-flight-status__grid > div + div { padding-left: 1.4rem; }
+.skyfare-flight-status__grid > div:last-child { border-right: 0; }
+.skyfare-flight-status span,
+.skyfare-flight-application__facts span { color: #8994a5; font: 700 .63rem/1.2 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.skyfare-flight-status strong { color: var(--editorial-ink); font: 600 1rem/1.3 'Lexend', sans-serif; letter-spacing: -.02em; }
+.skyfare-flight-status strong.is-open,
+.skyfare-flight-application__facts strong.is-open { color: #1a9c58; }
+
+.skyfare-flight-section-heading { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, .8fr); gap: 3rem; align-items: end; margin-bottom: 3rem; }
+.skyfare-flight-section-heading h2 { max-width: 12ch; }
+.skyfare-flight-section-heading > p { max-width: 32rem; margin: 0; color: var(--editorial-muted); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.skyfare-flight-timeline { margin: 0; padding: 0; border-top: 1px solid var(--editorial-line); list-style: none; }
+.skyfare-flight-timeline li { display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: 1.2rem; align-items: center; padding: 1.35rem 0; border-bottom: 1px solid var(--editorial-line); }
+.skyfare-flight-timeline__index { color: var(--editorial-gold); font: 700 .68rem/1.2 'Manrope', sans-serif; letter-spacing: .1em; }
+.skyfare-flight-timeline li div > span { color: var(--editorial-blue); font: 700 .64rem/1.2 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.skyfare-flight-timeline h3 { margin: .3rem 0 0; color: var(--editorial-ink); font: 600 1.25rem/1.2 'Lexend', sans-serif; letter-spacing: -.035em; }
+.skyfare-flight-timeline p { margin: .35rem 0 0; color: var(--editorial-muted); font: 400 .83rem/1.5 'Manrope', sans-serif; }
+.skyfare-flight-timeline li > i { color: var(--editorial-blue); font-size: .8rem; }
+
+.skyfare-flight-prompts__grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2rem, 8vw, 8rem); align-items: start; }
+.skyfare-flight-prompts h2 { max-width: 11ch; }
+.skyfare-flight-prompts__grid > div > p { max-width: 28rem; margin: 1.25rem 0 0; color: var(--editorial-muted); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.skyfare-flight-prompt-list { border-top: 1px solid var(--editorial-line); }
+.skyfare-flight-prompt-list article { display: grid; grid-template-columns: 2.8rem minmax(0, 1fr); gap: 1rem; padding: 1.35rem 0; border-bottom: 1px solid var(--editorial-line); }
+.skyfare-flight-prompt-list article > span { color: var(--editorial-gold); font: 700 .68rem/1.3 'Manrope', sans-serif; letter-spacing: .1em; }
+.skyfare-flight-prompt-list strong { color: var(--editorial-ink); font: 600 1.05rem/1.25 'Lexend', sans-serif; }
+.skyfare-flight-prompt-list p { margin: .35rem 0 0; color: var(--editorial-muted); font: 400 .83rem/1.55 'Manrope', sans-serif; }
+
+.skyfare-flight-application { color: #fff; }
+.skyfare-flight-application__grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2rem, 7vw, 7rem); align-items: stretch; max-width: 78rem; margin: 0 auto; }
+.skyfare-flight-application__intro { display: flex; flex-direction: column; align-items: flex-start; padding: .5rem 0; }
+.skyfare-flight-application h2 { max-width: 12ch; color: #fff; }
+.skyfare-flight-application__intro > p { max-width: 29rem; margin: 1.2rem 0 2rem; color: rgba(255, 255, 255, .64); font: 400 1rem/1.65 'Manrope', sans-serif; }
+.skyfare-flight-application__facts { width: 100%; margin-top: auto; border-top: 1px solid rgba(255, 255, 255, .16); }
+.skyfare-flight-application__facts div { display: flex; justify-content: space-between; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid rgba(255, 255, 255, .16); }
+.skyfare-flight-application__facts strong { color: #fff; font: 600 .85rem/1.3 'Lexend', sans-serif; }
+.skyfare-flight-application__facts strong.is-open { color: #65d695; }
+.skyfare-flight-application blockquote { margin: 2rem 0 0; padding-left: 1rem; border-left: 2px solid rgba(255, 255, 255, .18); }
+.skyfare-flight-application blockquote p { color: rgba(255, 255, 255, .48); font: italic 400 .78rem/1.55 'Manrope', sans-serif; }
+.skyfare-flight-application blockquote cite { display: block; margin-top: .5rem; color: rgba(255, 255, 255, .3); font: 700 .62rem/1.2 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.skyfare-flight-form-panel { padding: clamp(1.5rem, 4vw, 3rem); background: #fff; color: var(--editorial-ink); }
+.skyfare-flight-form-heading { display: grid; gap: .35rem; margin-bottom: 1.8rem; padding-bottom: 1rem; border-bottom: 1px solid var(--editorial-line); }
+.skyfare-flight-form-heading span { color: var(--editorial-blue); font: 700 .65rem/1.2 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.skyfare-flight-form-heading strong { font: 600 1.55rem/1.2 'Lexend', sans-serif; letter-spacing: -.04em; }
+.skyfare-flight-form-panel .form-label { color: #526076; }
+.skyfare-flight-form-panel .form-input:focus { border-color: var(--editorial-blue); box-shadow: 0 0 0 3px rgba(0, 102, 204, .12); }
+.skyfare-flight-form-error { margin: 0; padding: .75rem .9rem; border: 1px solid rgba(185, 28, 28, .2); background: #fff5f5; color: #a11b1b; font: 600 .78rem/1.45 'Manrope', sans-serif; }
+.skyfare-flight-success-icon { display: grid; width: 3.5rem; height: 3.5rem; margin: 0 auto 1rem; place-items: center; border-radius: 50%; background: #edf9f1; color: #1a9c58; font-size: 1.3rem; }
+.skyfare-flight-form-panel #flight-form-success h3 { margin: 0 0 .4rem; color: var(--editorial-ink); font: 600 1.35rem/1.2 'Lexend', sans-serif; }
+.skyfare-flight-form-panel #flight-form-success p { max-width: 20rem; margin: 0 auto; color: var(--editorial-muted); font: 400 .85rem/1.55 'Manrope', sans-serif; }
+
+.skyfare-flight-log__empty { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 1.3rem; align-items: center; max-width: 78rem; margin: 0 auto; padding: 1.5rem; border: 1px solid var(--editorial-line); }
+.skyfare-flight-log__mark { display: grid; width: 3.5rem; height: 3.5rem; place-items: center; border-radius: 50%; background: #edf6ff; color: var(--editorial-blue); }
+.skyfare-flight-log__empty > div > span { color: var(--editorial-blue); font: 700 .64rem/1.2 'Manrope', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.skyfare-flight-log__empty h3 { margin: .35rem 0 0; color: var(--editorial-ink); font: 600 1.25rem/1.2 'Lexend', sans-serif; letter-spacing: -.035em; }
+.skyfare-flight-log__empty p { margin: .35rem 0 0; color: var(--editorial-muted); font: 400 .83rem/1.5 'Manrope', sans-serif; }
+.skyfare-flight-log__status { color: #8994a5; font: 700 .65rem/1.3 'Manrope', sans-serif; letter-spacing: .08em; text-align: right; text-transform: uppercase; }
+
+@media (max-width: 900px) {
+  .past-deals-hero__layout,
+  .skyfare-flight-hero__layout,
+  .past-deals-featured__grid,
+  .past-deals-method__grid,
+  .skyfare-flight-prompts__grid,
+  .skyfare-flight-application__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .past-deals-hero__meta,
+  .skyfare-flight-hero__meta { padding-bottom: 3rem; }
+  .past-deals-hero__ledger { max-width: 45rem; }
+  .past-deals-featured__image img { aspect-ratio: 16 / 9; }
+  .skyfare-flight-ticket-panel { justify-items: start; }
+  .skyfare-flight-section-heading { grid-template-columns: 1fr; gap: 1rem; }
+  .skyfare-flight-section-heading > p { max-width: 38rem; }
+  .past-deals-filter-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .past-deals-filter-field--search { grid-column: span 2; }
+  .past-deals-reset { justify-self: start; }
+}
+
+@media (max-width: 640px) {
+  .past-deals-hero,
+  .skyfare-flight-hero { min-height: auto; }
+  .past-deals-hero__meta,
+  .skyfare-flight-hero__meta { display: grid; gap: .5rem; padding: 1.2rem 0 3.3rem; }
+  .past-deals-hero h1,
+  .skyfare-flight-hero h1 { max-width: 10ch; font-size: clamp(2.55rem, 13vw, 3.7rem); }
+  .past-deals-hero__copy > p,
+  .skyfare-flight-hero__copy > p:not(.skyfare-flight-hero__note) { font-size: .95rem; }
+  .past-deals-hero__ledger-grid { grid-template-columns: 1fr; }
+  .past-deals-hero__ledger-grid span { min-height: auto; border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, .14); }
+  .past-deals-hero__ledger-grid span:last-child { border-bottom: 0; }
+  .past-deals-value-grid { grid-template-columns: 1fr; }
+  .past-deals-value-grid div,
+  .past-deals-value-grid div + div { padding: .8rem 0; border-right: 0; border-bottom: 1px solid var(--editorial-line); }
+  .past-deals-value-grid div:last-child { border-bottom: 0; }
+  .past-deals-featured__footer,
+  .past-deals-close__inner,
+  .skyfare-flight-close__inner { align-items: flex-start; flex-direction: column; }
+  .past-deals-lens__grid { grid-template-columns: 1fr; }
+  .past-deals-lens__item,
+  .past-deals-lens__item + .past-deals-lens__item { min-height: auto; padding: 1.2rem 0; border-right: 0; border-bottom: 1px solid var(--editorial-line); }
+  .past-deals-lens__item:last-child { border-bottom: 0; }
+  .past-deals-filter-bar { grid-template-columns: 1fr; }
+  .past-deals-filter-field--search { grid-column: auto; }
+  .past-deals-results-meta { display: grid; gap: .35rem; }
+  .past-deal-row { grid-template-columns: 2rem minmax(0, 1fr) auto; gap: .75rem; min-height: auto; padding: 1rem 0; }
+  .past-deal-row:hover { padding-inline: .5rem; }
+  .past-deal-row__details { grid-column: 2 / -1; }
+  .past-deal-row__value { grid-column: 3; grid-row: 1; }
+  .past-deal-row__value strong { font-size: 1rem; }
+  .past-deal-row__route span { font-size: .95rem; }
+  .past-deals-method h2 { max-width: 14ch; }
+  .skyfare-flight-status__grid { grid-template-columns: 1fr; }
+  .skyfare-flight-status__grid > div,
+  .skyfare-flight-status__grid > div + div { min-height: auto; padding: 1rem 0; border-right: 0; border-bottom: 1px solid var(--editorial-line); }
+  .skyfare-flight-status__grid > div:last-child { border-bottom: 0; }
+  .skyfare-flight-timeline li { grid-template-columns: 2.2rem minmax(0, 1fr); gap: .8rem; }
+  .skyfare-flight-timeline li > i { display: none; }
+  .skyfare-flight-timeline h3 { font-size: 1.05rem; }
+  .skyfare-flight-log__empty { grid-template-columns: auto minmax(0, 1fr); gap: 1rem; }
+  .skyfare-flight-log__status { grid-column: 2; text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .past-deal-row { transition-duration: .01ms; }
+  .past-deal-row:hover { padding-inline: 0; }
+  .skyfare-flight-page .skyfare-ticket__card { transition-duration: .01ms; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   NEWSLETTER PAGE REBALANCE — 2026-08 (pages/newsletter.html)
+   Hero shrink, section reorder, featured/archive lead-card treatment,
+   inline signup banner, and "Choose where to read" modal emphasis.
+   All rules here are additive dual-class modifiers -- .page-hero-bg,
+   .card-utility, .sky-modal*, .btn-pill* stay untouched so every other
+   page/modal that shares them is unaffected.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Hero -- was a full two-field form under a large heading with 96px of
+   bottom padding; CEO feedback was that this reads as an oversized "mental
+   blocker" before any newsletter content is visible. Shrunk to a compact
+   editorial masthead: badge, one-line heading, short subhead, single-row
+   email form. */
+.newsletter-hero-v2 {
+  padding-bottom: 2.5rem;
+}
+.newsletter-hero-v2 h1 {
+  font-size: clamp(1.85rem, 1.5rem + 1.6vw, 2.75rem);
+  margin-bottom: .75rem;
+}
+.newsletter-hero-v2__lead {
+  max-width: 34rem;
+  margin-bottom: 1.5rem !important;
+}
+@media (max-width: 640px) {
+  .newsletter-hero-v2 { padding-bottom: 2rem; }
+}
+
+
+/* Featured issue -- larger "cover story" title + a real two-line excerpt
+   (via getPostSummary()) instead of a single truncated line. Tailwind has
+   no line-clamp plugin registered in this codebase, hence the manual
+   -webkit-line-clamp here rather than a `line-clamp-2` utility class. */
+.newsletter-featured-title-v2 {
+  font-size: 1.375rem;
+  line-height: 1.3;
+}
+@media (min-width: 768px) {
+  .newsletter-featured-title-v2 { font-size: 1.625rem; }
+}
+.newsletter-featured-excerpt-v2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: .8125rem;
+  line-height: 1.5;
+  color: #6b7280;
+}
+.newsletter-featured-card-v2 {
+  min-height: 15rem;
+}
+@media (max-width: 640px) {
+  .newsletter-featured-card-v2 { min-height: 0; }
+}
+
+/* Archive lead card -- the post at index 0 (the pinned "Start Here" post
+   whenever one is present in the current filtered view) gets a wider
+   horizontal treatment; every other card keeps the standard compact
+   layout. Gated behind 640px so mobile always falls back to the same
+   single-column markup every other card already uses -- no JS
+   special-casing needed for small screens. Deliberately no color-coding:
+   after filtering, index 0 isn't always the actual pinned post, so this
+   modifier must never look like a "pinned" signal on its own. */
+.newsletter-archive-lead-v2 {
+  position: relative;
+}
+@media (min-width: 640px) {
+  /* Qualified with the element type (a.___ / article.___) so this reliably
+     beats Tailwind's `.block` utility class on the same anchor -- the
+     Tailwind CDN build injects its stylesheet after css/style.css in the
+     DOM, so a same-specificity class-only selector loses the cascade even
+     though it's declared later in this file. */
+  a.newsletter-archive-lead-v2,
+  article.newsletter-archive-lead-v2 {
+    grid-column: span 2 / span 2;
+    display: flex;
+    box-shadow: var(--shadow-v2-sm);
+  }
+  /* Overrides the markup's own Tailwind h-44 (fixed 11rem) so the image
+     stretches to match whatever height the row ends up at -- same
+     "no fixed height on the split image column" approach the Featured
+     Issue card already uses (renderFeatured()'s w-2/5 column has no
+     height utility at all). Needs the parent-qualified selector to beat
+     .h-44 on specificity for the same cascade-order reason as above. */
+  a.newsletter-archive-lead-v2 .newsletter-archive-lead-v2__media,
+  article.newsletter-archive-lead-v2 .newsletter-archive-lead-v2__media {
+    width: 42%;
+    height: auto;
+    flex-shrink: 0;
+  }
+  /* div.___ (not .___ alone) for the same reason as the a.___/article.___
+     qualification above -- beats Tailwind's .p-5 on this element regardless
+     of injection order. justify-content:flex-start (not center) because
+     CSS Grid stretches this whole row to match its tallest sibling in the
+     3-col track (e.g. a longer-titled neighbor card); centering would
+     otherwise leave an ugly dead gap above the text whenever that happens. */
+  div.newsletter-archive-lead-v2__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1.75rem;
+  }
+  .newsletter-archive-lead-v2__title { font-size: 1.5rem; line-height: 1.22; }
+  /* Three-part split down the (often taller, grid-stretched) lead card:
+     meta stays flush top, the CTA sits flush bottom-right, and title+
+     excerpt float centered in whatever room is left between them --
+     the classic flex trick of putting margin-top/bottom:auto on only the
+     middle item, so it alone absorbs all the free vertical space evenly
+     on both sides. */
+  .newsletter-archive-lead-v2__center { margin-top: auto; margin-bottom: auto; }
+  .newsletter-archive-lead-v2__center .newsletter-featured-excerpt-v2 { margin-top: .5rem; }
+  .newsletter-archive-lead-v2__cta { align-self: flex-end; }
+}
+
+/* "Choose where to read" modal -- Read on Skyfare is now the large,
+   full-width, first-listed primary action; Read on Beehiiv is a small
+   secondary link beneath. Scoped entirely under .sky-modal--read-choice so
+   the other 5 SkyUI.modal() call sites (Altitude access, checkout flow,
+   KrisFlyer guide portal) are completely unaffected. */
+.sky-modal--read-choice .sky-modal__card { max-width: 480px; }
+.sky-modal--read-choice .sky-modal__actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: .5rem;
+}
+.sky-modal--read-choice .sky-modal__actions .btn-pill-primary {
+  width: 100%;
+  justify-content: center;
+}
+/* Intentionally overrides the base ≤480px `column-reverse` rule above --
+   Read on Skyfare must lead at every width in this variant, never reverse
+   on mobile. Do not "fix" this back to column-reverse. */
+.sky-modal--read-choice .sky-modal__actions .sky-modal__btn--link {
+  align-self: center;
+  width: auto;
+  padding: .5rem .25rem;
+  font-size: .8125rem;
+}
+.sky-modal--read-choice .sky-modal__beehiiv-note {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  font-size: .8125rem;
+  color: #9ca3af;
+  line-height: 1.5;
 }

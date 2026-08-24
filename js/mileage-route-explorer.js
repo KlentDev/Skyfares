@@ -455,7 +455,7 @@
   }
 
   function loadWorldMap() {
-    fetch('images/world-map-outline.svg', { credentials: 'same-origin' })
+        fetch(root.getAttribute('data-map-asset') || 'images/world-map-outline.svg', { credentials: 'same-origin' })
       .then(function (response) {
         if (!response.ok) throw new Error('World map asset unavailable');
         return response.text();

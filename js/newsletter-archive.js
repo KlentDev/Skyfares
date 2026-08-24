@@ -143,6 +143,7 @@
     var prem     = isPremium(post);
     var date     = formatDate(post.published_at);
     var author   = (post.authors || []).join(', ');
+    var summary  = getPostSummary(post);
 
     var tags = (post.content_tags || []).filter(function (t) {
       return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/);
@@ -183,7 +184,7 @@
     var freeChoiceAttrs = !prem
       ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
       : '';
-    var cardCls  = 'card-utility group flex h-52 max-w-5xl mx-auto overflow-hidden slide-up' +
+    var cardCls  = 'card-utility newsletter-featured-card-v2 group flex max-w-5xl mx-auto overflow-hidden slide-up' +
       (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
 
     var wrapOpen = prem
@@ -203,8 +204,8 @@
 
         '<div class="flex-1 bg-white p-5 md:p-7 flex flex-col justify-center min-w-0">' +
           (tagHtml ? '<div class="flex flex-wrap gap-1 mb-3">' + tagHtml + '</div>' : '') +
-          '<h3 class="text-base md:text-lg font-display font-bold text-neutral-900 leading-snug mb-2 ' + (prem ? '' : 'group-hover:text-brand-700') + ' transition-colors">' + e(post.title) + '</h3>' +
-          (post.subtitle ? '<p class="text-xs text-neutral-400 mb-3 font-medium truncate">' + e(post.subtitle) + '</p>' : '') +
+          '<h3 class="newsletter-featured-title-v2 font-display font-bold text-neutral-900 leading-snug mb-2 ' + (prem ? '' : 'group-hover:text-brand-700') + ' transition-colors">' + e(post.title) + '</h3>' +
+          (summary ? '<p class="newsletter-featured-excerpt-v2 mb-3">' + e(summary) + '</p>' : '') +
           (author ? '<div class="flex items-center gap-2 text-xs text-neutral-400 mb-1.5"><i class="fa-regular fa-user text-[10px]"></i><span>' + e(author) + '</span></div>' : '') +
           (date ? '<div class="flex items-center gap-2 text-xs text-neutral-400 mb-4"><i class="fa-regular fa-calendar text-[10px]"></i><span>' + e(date) + '</span></div>' : '') +
           ctaHtml +
@@ -484,12 +485,25 @@
             'Read <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
     var pinned = isPinnedPost(post);
+    // The card at index 0 (whatever post is currently first -- the pinned
+    // post whenever one survives the active filter, otherwise just the
+    // newest match) gets a wider "lead" layout so the archive isn't a wall
+    // of identical cards. Purely layout/shadow, never color-coded, since
+    // index 0 isn't always the actual pinned post once filters are applied.
+    var isLead = index === 0;
+    // Only the lead card shows an excerpt -- its wider column otherwise
+    // reads as an empty gap next to the title (getPostSummary() falls back
+    // to the pinned post's own onboarding blurb when there's no
+    // subtitle/excerpt/description on the post itself).
+    var leadSummary = isLead ? getPostSummary(post) : '';
 
     var cardCls = 'group card-utility overflow-hidden slide-up' +
       (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '') +
-      (pinned ? ' newsletter-pinned-v2' : '');
+      (pinned ? ' newsletter-pinned-v2' : '') +
+      (isLead ? ' newsletter-archive-lead-v2' : '');
 
-    var titleCls = 'text-sm font-display font-bold text-neutral-900 mb-3 transition-colors leading-snug' +
+    var titleCls = (isLead ? 'newsletter-archive-lead-v2__title ' : 'text-sm ') +
+      'font-display font-bold text-neutral-900 mb-3 transition-colors leading-snug' +
       (prem ? '' : ' group-hover:text-brand-700');
 
     var pinnedBadge = pinned
@@ -505,7 +519,7 @@
     var wrapClose = prem ? '</article>' : '</a>';
 
     return wrapOpen +
-      '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
+      '<div class="relative h-44 bg-brand-950 overflow-hidden' + (isLead ? ' newsletter-archive-lead-v2__media' : '') + '">' +
         imgHtml +
         '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
         '<div class="absolute top-3 left-3">' + accessBadge + '</div>' +
@@ -515,10 +529,15 @@
         lockIcon +
       '</div>' +
       pinnedBadge + latestBadge +
-      '<div class="p-5">' +
+      '<div class="p-5' + (isLead ? ' newsletter-archive-lead-v2__body' : '') + '">' +
         (metaLine ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(metaLine) + '</p>' : '') +
-        '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' +
-        ctaHtml +
+        (isLead
+          ? '<div class="newsletter-archive-lead-v2__center">' +
+              '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' +
+              (leadSummary ? '<p class="newsletter-featured-excerpt-v2">' + e(leadSummary) + '</p>' : '') +
+            '</div>' +
+            '<div class="newsletter-archive-lead-v2__cta">' + ctaHtml + '</div>'
+          : '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' + ctaHtml) +
       '</div>' +
     wrapClose;
   }
@@ -573,28 +592,31 @@
 
     SkyUI.modal({
       title: 'Choose where to read',
+      variant: 'read-choice',
       html:
-        '<p><strong>Read on Skyfare</strong> opens the free issue here. It is the fastest way to read.</p>' +
-        '<p class="mt-3"><strong>Read on Beehiiv</strong> opens the published newsletter on Beehiiv so you can verify your email and use native <strong>likes and comments</strong>.</p>' +
-        '<ol class="mt-3 list-decimal pl-5 text-sm text-neutral-500 leading-relaxed">' +
-          '<li>Verify your email on Beehiiv if asked.</li>' +
-          '<li>Beehiiv sends a one-time code.</li>' +
-          '<li>Enter the code to verify your email.</li>' +
-          '<li>Then read, <strong>like</strong>, and <strong>comment</strong> on the newsletter.</li>' +
-        '</ol>',
+        '<p><strong>Read on Skyfare</strong> is the fastest way to read this issue — it opens instantly, right here, with nothing else to set up.</p>' +
+        '<div class="sky-modal__beehiiv-note">' +
+          '<p><strong>Prefer Beehiiv?</strong> You can read it there instead, verify your email, and use native likes and comments.</p>' +
+          '<ol class="mt-2 list-decimal pl-5 leading-relaxed">' +
+            '<li>Verify your email on Beehiiv if asked.</li>' +
+            '<li>Beehiiv sends a one-time code.</li>' +
+            '<li>Enter the code to verify your email.</li>' +
+            '<li>Then read, like, and comment on the newsletter.</li>' +
+          '</ol>' +
+        '</div>',
       actions: [
         {
-          label: 'Read on Beehiiv',
-          style: 'link',
+          label: 'Read on Skyfare',
+          style: 'primary-lg',
           onClick: function () {
-            window.location.href = beehiivUrl || localUrl;
+            if (localUrl) window.location.href = localUrl;
           },
         },
         {
-          label: 'Read on Skyfare',
-          style: 'primary',
+          label: 'Read on Beehiiv instead',
+          style: 'link',
           onClick: function () {
-            if (localUrl) window.location.href = localUrl;
+            window.location.href = beehiivUrl || localUrl;
           },
         },
       ],

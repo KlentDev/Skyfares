@@ -1,18 +1,10 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-DX0B0NKJDC');
-  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>KrisFlyer Miles | Skyfare Consulting</title>
-  <meta name="description" content="Nominee redemptions and direct transfers for KrisFlyer miles. Confirmed Business and First Class seats with Skyfare support." />
+  <meta name="description" content="Explore KrisFlyer routes, redemption paths, and mileage starting points with Skyfare's practical route guidance." />
   <link rel="icon" href="../logos/logo.webp" />
   <script src="../js/links.js"></script>
   <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
@@ -28,269 +20,177 @@
   <script src="../js/tailwind-config.js" defer></script>
   <script src="../js/utils.js" defer></script>
   <script src="../js/mileage-route-data.js"></script>
+  <script src="../js/route-modal.js" defer></script>
   <script src="../js/krisflyer.js" defer></script>
+  <script src="../js/mileage-route-explorer.js" defer></script>
 </head>
 
-<body class="min-h-screen flex flex-col bg-white">
-
+<body class="min-h-screen flex flex-col bg-white surface-krisflyer" data-page-surface="krisflyer" data-site-prefix="../">
+  <!--
+    THESIS: KrisFlyer is a route-intelligence desk, not another generic service page; the mileage map proves the mechanism immediately.
+    OWN-WORLD: Navy and parchment travel surfaces, route lines, data-led controls, Lexend headings, Manrope utility copy, Sky Blue actions, Gold mileage signals.
+    STORY: Visitors understand the decision, explore a real route, compare redemption paths, then start a focused conversation.
+    FIRST VIEWPORT: A text-led route desk frames KrisFlyer planning as a sequence of route, miles, timing, and booking decisions.
+    FORM: Editorial Route Desk, extending the homepage mileage explorer.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
   <div id="page-loader">
     <img src="../logos/logo.webp" alt="Skyfare Consulting">
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
   <main class="flex-1">
-
-    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/krisflyer-miles.png');">
+    <section class="kris-hero-v2 page-hero-bg relative overflow-hidden">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="max-w-2xl mx-auto text-center slide-up">
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-            <i class="fa-solid fa-plane-circle-check text-[10px]"></i>
-            KrisFlyer Miles
-          </div>
-
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
-            Redeem miles with more confidence.
-          </h1>
-          <p class="text-base md:text-lg text-white/65 leading-relaxed mb-8 font-medium max-w-xl mx-auto">
-            Skyfare helps you compare redemption paths, check routes, and move toward confirmed premium cabin travel.
-          </p>
-
-          <div class="flex justify-center items-start divide-x divide-white/20 mt-4 mb-9">
-            <div class="text-center px-4 sm:px-6">
-              <div class="text-white leading-none" style="font-family:'Lexend',sans-serif;font-size:var(--font-stat-v2-size);font-weight:700;letter-spacing:-0.02em;">67</div>
-              <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Routes</div>
-            </div>
-            <div class="text-center px-4 sm:px-6">
-              <div class="text-white leading-none" style="font-family:'Lexend',sans-serif;font-size:var(--font-stat-v2-size);font-weight:700;letter-spacing:-0.02em;">2</div>
-              <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Options</div>
-            </div>
-            <div class="text-center px-4 sm:px-6">
-              <div class="text-white leading-none" style="font-family:'Lexend',sans-serif;font-size:var(--font-stat-v2-size);font-weight:700;letter-spacing:-0.02em;">0</div>
-              <div class="text-[10px] text-white/55 uppercase font-bold tracking-widest mt-1.5">Guesswork</div>
+        <div class="kris-hero-v2__meta"><span>Skyfare / KrisFlyer</span><span>Route intelligence from Singapore</span></div>
+        <div class="kris-hero-v3">
+          <div class="kris-hero-v2__copy kris-hero-v3__copy slide-up">
+            <h1>Use KrisFlyer miles with a clearer plan.</h1>
+            <p class="kris-hero-v2__lead">The right redemption is more than a mileage number. Skyfare helps you think through route, timing, availability, taxes, cabin, and the practical path to a confirmed seat.</p>
+            <div class="flex flex-wrap gap-3">
+              <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp"><i class="fa-brands fa-whatsapp text-sm" aria-hidden="true"></i> Check a KrisFlyer route</a>
+              <a href="#mileage-explorer" class="btn-pill btn-pill-ghost">Explore the mileage map <i class="fa-solid fa-arrow-down text-[10px]" aria-hidden="true"></i></a>
             </div>
           </div>
-
-          <div class="flex flex-wrap justify-center gap-3">
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp">
-              <i class="fa-brands fa-whatsapp text-sm"></i> Check a Route
-            </a>
-            <a href="#options" class="btn-pill btn-pill-ghost">
-              Compare Options
-            </a>
+          <div class="kris-hero-v3__desk slide-up" style="animation-delay:.1s;" aria-label="KrisFlyer route planning desk">
+            <div class="kris-hero-v3__route">
+              <span>SIN</span>
+              <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+              <strong>Your route</strong>
+            </div>
+            <div class="kris-hero-v3__checks">
+              <span>Availability</span>
+              <span>Miles</span>
+              <span>Taxes</span>
+              <span>Cabin</span>
+              <span>Booking path</span>
+            </div>
+            <p>Before you transfer, nominate, or waitlist, pressure-test the route as a real itinerary.</p>
           </div>
+        </div>
+        <div class="kris-hero-v2__proof" aria-label="KrisFlyer planning focus">
+          <span><b>01</b> Route fit</span><span><b>02</b> Miles and timing</span><span><b>03</b> Booking path</span>
         </div>
       </div>
     </section>
 
-    <section id="how-it-works" class="py-24 bg-white overflow-hidden">
+    <section class="kris-intents-v2 py-14 bg-white overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
-        <div class="section-split-v5 section-split-v5--light slide-up">
-          <div>
-            <span class="eyebrow-chip-v2"><i class="fa-solid fa-diagram-project"></i>How It Works</span>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
-              A clear path before you redeem.
-            </h2>
-          </div>
-          <p class="section-split-v5__copy">
-            Start with your destination, cabin, and timing. Skyfare checks the practical options before you commit miles.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-4">
-          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.06s;">
-            <div class="process-topline-v5">
-              <span class="process-index-v5">01</span>
-              <span class="icon-chip"><i class="fa-solid fa-route"></i></span>
-            </div>
-            <p class="process-label-v5">Route first</p>
-            <h3>Send the trip</h3>
-            <p>Share your destination, dates, cabin preference, and passenger count.</p>
-            <span class="process-note-v5">Start simple</span>
-          </article>
-
-          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.12s;">
-            <div class="process-topline-v5">
-              <span class="process-index-v5">02</span>
-              <span class="icon-chip"><i class="fa-solid fa-magnifying-glass"></i></span>
-            </div>
-            <p class="process-label-v5">Availability check</p>
-            <h3>We compare paths</h3>
-            <p>Skyfare checks route fit, miles needed, taxes, timing, and booking method.</p>
-            <span class="process-note-v5">No blind moves</span>
-          </article>
-
-          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.18s;">
-            <div class="process-topline-v5">
-              <span class="process-index-v5">03</span>
-              <span class="icon-chip"><i class="fa-solid fa-ticket"></i></span>
-            </div>
-            <p class="process-label-v5">Handled with care</p>
-            <h3>You choose</h3>
-            <p>Proceed with the redemption or transfer path that fits your trip best.</p>
-            <span class="process-note-v5">Clear next step</span>
-          </article>
+        <div class="kris-intents-v2__rail slide-up">
+          <span class="kris-intents-v2__prompt">What are you trying to work out?</span>
+          <a href="#mileage-explorer"><i class="fa-solid fa-route" aria-hidden="true"></i><span>Find a route</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          <a href="#options"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>Compare redemption paths</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          <a href="#how-it-works"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i><span>Understand the process</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
     </section>
 
-    <section id="options" class="py-24 tile-parch overflow-hidden">
+    <section id="mileage-explorer" class="mileage-explorer-section kris-map-section-v2 tile-parch overflow-hidden" data-mileage-explorer data-map-asset="../images/world-map-outline.svg">
       <div class="container mx-auto px-4 md:px-6">
-        <div class="section-split-v5 section-split-v5--light slide-up">
+        <div class="kris-map-intro-v2 slide-up">
           <div>
-            <span class="eyebrow-chip-v2"><i class="fa-solid fa-scale-balanced"></i>Your Options</span>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
-              Two ways to use KrisFlyer miles.
-            </h2>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i>Explore the network</span>
+            <h2>Where could your KrisFlyer miles take you?</h2>
           </div>
-          <p class="section-split-v5__copy">
-            Nominee Redemption is usually best for confirmed ticketing. Direct Transfer is better when flexibility matters more than speed.
-          </p>
+          <div>
+            <p>Start with the route, not the guess. Select a destination to focus the map, see indicative Saver and Advantage starting points, and open the next useful action.</p>
+            <span class="kris-map-intro-v2__hint"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i> Hover or focus a route · select to explore it</span>
+          </div>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-5 max-w-5xl mx-auto">
-          <article class="card-utility card-elevate-v2 p-8 md:p-10 slide-up" style="animation-delay:0.06s;">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-ticket"></i></div>
-              <div>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Recommended for speed</p>
-                <h3 class="text-2xl font-display font-bold text-neutral-900 tracking-tight">Nominee Redemption</h3>
-              </div>
-            </div>
-            <p class="text-sm text-neutral-500 leading-relaxed mb-6">
-              Best when you want help securing a confirmed premium cabin ticket through an established nominee redemption path.
-            </p>
-            <ul class="space-y-3 mb-8">
-              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Confirmed ticketing path</li>
-              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Skyfare manages the redemption flow</li>
-              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Useful for live route opportunities</li>
-            </ul>
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-primary">
-              Ask About Nominee Redemption
-            </a>
-          </article>
+        <div class="mileage-explorer-toolbar kris-map-toolbar-v2 slide-up">
+          <div class="mileage-explorer-summary">
+            <span id="mileage-route-count">Loading destinations...</span>
+            <span class="mileage-explorer-summary-divider" aria-hidden="true"></span>
+            <span>Business Class saver</span>
+            <strong id="mileage-route-range">Loading mileage range...</strong>
+          </div>
+          <button type="button" class="mileage-browse-trigger" id="mileage-route-browser-open" aria-haspopup="dialog" aria-controls="mileage-route-browser-dialog">
+            <i class="fa-solid fa-list-ul" aria-hidden="true"></i><span>Browse all routes</span><small id="mileage-browse-count">67 destinations</small>
+          </button>
+        </div>
 
-          <article class="card-utility card-elevate-v2 p-8 md:p-10 slide-up" style="animation-delay:0.12s;">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-bolt-lightning"></i></div>
-              <div>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-1">Recommended for flexibility</p>
-                <h3 class="text-2xl font-display font-bold text-neutral-900 tracking-tight">Direct Transfer</h3>
-              </div>
+        <div class="mileage-popular-quicklinks kris-popular-v2" aria-label="Popular routes">
+          <span class="mileage-popular-quicklinks-label">Popular from SIN:</span>
+          <div class="mileage-popular-route-pills" id="mileage-popular-route-pills">
+            <button type="button" class="mileage-popular-route-pill" data-route-code="JFK"><span>New York</span><small></small></button>
+            <button type="button" class="mileage-popular-route-pill" data-route-code="LHR"><span>London</span><small></small></button>
+            <button type="button" class="mileage-popular-route-pill" data-route-code="MEL"><span>Melbourne</span><small></small></button>
+            <button type="button" class="mileage-popular-route-pill" data-route-code="DXB"><span>Dubai</span><small></small></button>
+            <button type="button" class="mileage-popular-route-pill" data-route-code="CDG"><span>Paris</span><small></small></button>
+            <button type="button" class="mileage-popular-route-pill" data-route-code="LAX"><span>Los Angeles</span><small></small></button>
+          </div>
+        </div>
+
+        <div class="mileage-map-shell kris-map-shell-v2" data-mileage-map-shell>
+          <div class="mileage-map-loading" aria-hidden="true"><span class="mileage-map-loading-line"></span><span>Loading route map</span></div>
+          <svg id="mileage-map-svg" class="mileage-map-svg" viewBox="0 0 1000 500" role="group" aria-labelledby="mileage-map-title mileage-map-description">
+            <title id="mileage-map-title">KrisFlyer mileage routes from Singapore</title>
+            <desc id="mileage-map-description">Interactive route map showing Singapore as the origin and destinations from Skyfare's Mileage Route Board.</desc>
+            <defs>
+              <pattern id="mileage-land-dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.05" fill="currentColor"></circle></pattern>
+              <marker id="mileage-route-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b8952e"></path></marker>
+            </defs>
+            <path id="mileage-map-land" class="mileage-map-land" d=""></path>
+            <g id="mileage-route-arcs"></g><g id="mileage-route-nodes"></g><g id="mileage-route-signal" aria-hidden="true"></g>
+          </svg>
+          <div id="mileage-map-popover" class="mileage-map-popover is-hidden" role="status" aria-hidden="true"><strong id="mileage-map-popover-title"></strong><span id="mileage-map-popover-meta"></span></div>
+          <aside id="mileage-route-details-card" class="mileage-route-details-card is-empty" aria-live="polite" aria-labelledby="mileage-route-card-title">
+            <div class="mileage-route-card-empty"><span class="mileage-route-card-empty-icon" aria-hidden="true"><i class="fa-solid fa-location-arrow"></i></span><strong>Choose a destination</strong><p>Select a route to focus the map and compare its mileage starting points.</p></div>
+            <div class="mileage-route-card-content" hidden>
+              <div class="mileage-route-card-image-wrap"><img id="mileage-route-card-image" src="../images/page-images/our-flights.jpg" alt="" class="mileage-route-card-image"><button type="button" id="mileage-route-card-close" class="mileage-route-card-close" aria-label="Clear selected route"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+              <div class="mileage-route-card-body"><span class="mileage-route-card-badge"><i class="fa-solid fa-plane" aria-hidden="true"></i> Business Class, KrisFlyer miles</span><h3 id="mileage-route-card-title"></h3><p id="mileage-route-card-region" class="mileage-route-card-region"></p><a id="mileage-route-card-compare" href="#" class="mileage-route-card-compare" hidden><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> Compare cabins <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><div class="mileage-route-card-miles"><div><span>Saver</span><strong id="mileage-route-card-saver"></strong><small>miles</small></div><div><span>Advantage</span><strong id="mileage-route-card-advantage"></strong><small>miles</small></div></div><a id="mileage-route-card-wa" href="#" target="_blank" rel="noopener noreferrer" class="mileage-route-card-cta"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Enquire via WhatsApp</a><p class="mileage-route-card-disclaimer">Mileage is indicative. Award space, taxes, and fees vary.</p></div>
             </div>
-            <p class="text-sm text-neutral-500 leading-relaxed mb-6">
-              Best when you want miles credited into your own KrisFlyer account and can work with a longer timing window.
-            </p>
-            <ul class="space-y-3 mb-8">
-              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Miles credited to your account</li>
-              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Flexible use after transfer</li>
-              <li class="flex items-start gap-3 text-sm text-neutral-600"><i class="fa-solid fa-check text-brand-500 text-xs mt-1"></i> Typical timing is 3 to 4 weeks</li>
-            </ul>
-            <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-outline">
-              Ask About Direct Transfer
-            </a>
-          </article>
+          </aside>
+        </div>
+        <div class="mileage-explorer-bottom"><div class="mileage-explorer-legend" aria-label="Map legend"><span><i class="mileage-legend-dot mileage-legend-dot--origin"></i>Origin: SIN</span><span><i class="mileage-legend-dot mileage-legend-dot--route"></i>Route available</span><span><i class="mileage-legend-dot mileage-legend-dot--selected"></i>Selected route</span></div></div>
+        <p id="mileage-route-status" class="sr-only" aria-live="polite">Choose a destination to see its mileage starting point.</p>
+        <noscript><p class="mileage-route-noscript">Interactive map unavailable. <a href="krisflyer#award-chart">View the full Mileage Route Board</a>.</p></noscript>
+      </div>
+
+      <dialog id="mileage-route-browser-dialog" class="mileage-route-dialog mileage-route-browser-dialog" aria-labelledby="mileage-browser-dialog-title">
+        <div class="mileage-dialog-surface"><div class="mileage-dialog-header"><div><span class="mileage-dialog-kicker">From Singapore</span><h3 id="mileage-browser-dialog-title">Browse all destinations</h3></div><button type="button" class="mileage-dialog-close" data-mileage-dialog-close aria-label="Close route directory"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="mileage-browser-controls"><label class="mileage-explorer-field"><span>Find a destination</span><span class="mileage-explorer-input-wrap"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="mileage-route-search" type="search" autocomplete="off" placeholder="Search city or code" aria-label="Search destinations"></span></label><label class="mileage-explorer-field mileage-explorer-field--region"><span>Region</span><select id="mileage-route-region" aria-label="Filter routes by region"><option value="all">All regions</option><option value="SE Asia">SE Asia</option><option value="NE Asia">NE Asia</option><option value="South Asia">South Asia</option><option value="Japan/Korea">Japan/Korea</option><option value="Oceania">Oceania</option><option value="Africa/Middle East">Africa / Middle East</option><option value="Europe">Europe</option><option value="N. America">N. America</option></select></label></div><div class="mileage-browser-results-header"><span id="mileage-browser-results-count">67 destinations</span><span>Business Class saver</span></div><div id="mileage-route-list" class="mileage-route-list" role="list"></div></div>
+      </dialog>
+    </section>
+
+    <section id="options" class="kris-options-v2 py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="kris-section-intro-v2 slide-up"><div><span class="eyebrow-chip-v2"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>Choose the path</span><h2>Two ways to use KrisFlyer miles.</h2></div><p>The better option depends on whether speed, confirmed ticketing, or flexibility matters most for this trip.</p></div>
+        <div class="kris-options-grid-v2">
+          <article class="kris-option-v2 kris-option-v2--featured slide-up"><div class="kris-option-v2__head"><span class="kris-option-v2__icon"><i class="fa-solid fa-ticket" aria-hidden="true"></i></span><span><small>Usually the faster route</small><strong>Nominee Redemption</strong></span></div><p>Useful when you want Skyfare to help secure a confirmed premium-cabin ticket through an established nominee path.</p><ul><li><i class="fa-solid fa-check" aria-hidden="true"></i> Confirmed ticketing path</li><li><i class="fa-solid fa-check" aria-hidden="true"></i> Skyfare manages the redemption flow</li><li><i class="fa-solid fa-check" aria-hidden="true"></i> Useful for live route opportunities</li></ul><a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-primary">Ask about nominee redemption</a></article>
+          <article class="kris-option-v2 slide-up" style="animation-delay:.08s;"><div class="kris-option-v2__head"><span class="kris-option-v2__icon"><i class="fa-solid fa-bolt-lightning" aria-hidden="true"></i></span><span><small>Usually the more flexible route</small><strong>Direct Transfer</strong></span></div><p>Useful when you want miles credited into your own KrisFlyer account and can work with a longer timing window.</p><ul><li><i class="fa-solid fa-check" aria-hidden="true"></i> Miles credited to your account</li><li><i class="fa-solid fa-check" aria-hidden="true"></i> Flexible use after transfer</li><li><i class="fa-solid fa-check" aria-hidden="true"></i> Typical timing is 3 to 4 weeks</li></ul><a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-outline">Ask about direct transfer</a></article>
         </div>
       </div>
     </section>
 
-    <section id="award-chart" class="py-24 bg-white overflow-hidden">
+    <section id="award-chart" class="kris-board-v2 py-24 tile-parch overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
-        <div class="section-split-v5 section-split-v5--light slide-up">
-          <div>
-            <span class="eyebrow-chip-v2"><i class="fa-solid fa-route"></i>Mileage Route Board</span>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
-              Business Class starting points.
-            </h2>
-          </div>
-          <p class="section-split-v5__copy">
-            Use this as a planning reference. Availability, taxes, surcharges, and routing rules still need a live check.
-          </p>
-        </div>
-
-        <div class="card-utility card-elevate-v2 overflow-hidden slide-up" style="animation-delay:0.08s;">
-          <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between p-5 border-b border-neutral-100">
-            <div class="relative w-full md:max-w-xs">
-              <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs pointer-events-none"></i>
-              <input id="searchRoute" type="text" placeholder="Search destination..." class="w-full rounded-full border border-neutral-200 bg-white pl-11 pr-4 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 outline-none transition-colors">
-            </div>
-
-            <select id="regionFilter" class="rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-700 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 outline-none transition-colors cursor-pointer">
-              <option value="all">All regions</option>
-              <option value="SE Asia">SE Asia</option>
-              <option value="NE Asia">NE Asia</option>
-              <option value="South Asia">South Asia</option>
-              <option value="Japan/Korea">Japan/Korea</option>
-              <option value="Oceania">Oceania</option>
-              <option value="Africa/Middle East">Africa / Middle East</option>
-              <option value="Europe">Europe</option>
-              <option value="N. America">N. America</option>
-            </select>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left min-w-[680px]">
-              <thead>
-                <tr class="bg-neutral-50 border-b border-neutral-200">
-                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Route</th>
-                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 text-center">Region</th>
-                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 text-right">Saver Miles</th>
-                  <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 text-right">Advantage Miles</th>
-                </tr>
-              </thead>
-              <tbody id="awardBody" class="divide-y divide-neutral-100">
-                <tr><td colspan="4" class="px-6 py-5 text-sm text-neutral-400">Loading routes...</td></tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="kris-section-intro-v2 slide-up"><div><span class="eyebrow-chip-v2"><i class="fa-solid fa-table-list" aria-hidden="true"></i>Route board</span><h2>Use the numbers as a starting point.</h2></div><p>Search the full route list when you know the destination. Availability, taxes, surcharges, and routing rules still need a live check.</p></div>
+        <div class="kris-board-shell-v2 slide-up">
+          <div class="kris-board-controls-v2"><label><span>Find a destination</span><span class="kris-board-input"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="searchRoute" type="search" placeholder="Search city or airport code" aria-label="Search KrisFlyer destinations"></span></label><label><span>Region</span><select id="regionFilter" aria-label="Filter routes by region"><option value="all">All regions</option><option value="SE Asia">SE Asia</option><option value="NE Asia">NE Asia</option><option value="South Asia">South Asia</option><option value="Japan/Korea">Japan / Korea</option><option value="Oceania">Oceania</option><option value="Africa/Middle East">Africa / Middle East</option><option value="Europe">Europe</option><option value="N. America">N. America</option></select></label></div>
+          <div class="overflow-x-auto"><table class="kris-award-table-v2 w-full text-left min-w-[680px]"><thead><tr><th>Route</th><th>Region</th><th>Saver miles</th><th>Advantage miles</th></tr></thead><tbody id="awardBody"><tr><td colspan="4">Loading routes...</td></tr></tbody></table></div>
         </div>
       </div>
     </section>
 
-    <section class="py-24 tile-parch overflow-hidden">
+    <section id="how-it-works" class="kris-checks-v2 py-24 tile-dark1 overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
-        <div class="section-split-v5 section-split-v5--light slide-up">
-          <div>
-            <span class="eyebrow-chip-v2"><i class="fa-solid fa-clipboard-check"></i>What We Check</span>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
-              The details that change the route.
-            </h2>
-          </div>
-          <p class="section-split-v5__copy">
-            Miles are only the starting point. Skyfare checks the practical parts that decide whether a redemption is worth pursuing.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div class="card-utility card-elevate-v2 p-6 slide-up reveal-pop" style="animation-delay:0.04s;">
-            <div class="icon-chip mb-5"><i class="fa-solid fa-calendar-check"></i></div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-3">Availability and timing</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">Saver space, Advantage fallback, date flexibility, and whether the seat can realistically be confirmed.</p>
-          </div>
-
-          <div class="card-utility card-elevate-v2 p-6 slide-up reveal-pop" style="animation-delay:0.08s;">
-            <div class="icon-chip mb-5"><i class="fa-solid fa-receipt"></i></div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-3">Taxes and surcharges</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">Cash costs can change the value of a redemption, especially on partner and connecting routes.</p>
-          </div>
-
-          <div class="card-utility card-elevate-v2 p-6 slide-up reveal-pop" style="animation-delay:0.12s;">
-            <div class="icon-chip mb-5"><i class="fa-solid fa-user-shield"></i></div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-3">Booking path</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">Nominee redemption, direct transfer timing, passenger details, and the sequence needed to avoid blind moves.</p>
-          </div>
+        <div class="kris-checks-v2__grid">
+          <div class="kris-checks-v2__intro slide-up"><span class="eyebrow-chip-v2 eyebrow-chip-v2--dark"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>What Skyfare checks</span><h2>Miles are only the beginning.</h2><p>A route can look good on paper and still be wrong for the trip. Skyfare checks the practical details that decide whether it is worth pursuing.</p><a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Check a route</a></div>
+          <div class="kris-check-list-v2 slide-up" style="animation-delay:.1s;"><div><span>01</span><strong>Availability and timing</strong><p>Saver space, Advantage fallback, date flexibility, and whether the seat can realistically be confirmed.</p></div><div><span>02</span><strong>Taxes and surcharges</strong><p>Cash costs can change the value of a redemption, especially on partner and connecting routes.</p></div><div><span>03</span><strong>Booking path</strong><p>Nominee redemption, transfer timing, passenger details, and the sequence needed to avoid blind moves.</p></div></div>
         </div>
       </div>
     </section>
 
     <div data-cta-mount style="min-height:420px"
       data-cta-eyebrow-icon="fa-solid fa-route"
-      data-cta-eyebrow-text="Have a Route in Mind?"
-      data-cta-heading="Send us your destination, dates, and cabin."
-      data-cta-description="Skyfare will check the best KrisFlyer path before you commit miles or choose the wrong routing."
+      data-cta-eyebrow-text="Have a route in mind?"
+      data-cta-heading="Send us the destination before you commit the miles."
+      data-cta-description="Share your route, dates, and cabin. Skyfare will help you understand the useful path before you choose the wrong redemption."
       data-cta-art-image="../images/page-images/bg-3.JPG"
       data-cta-primary-variant="whatsapp"
       data-cta-primary-icon="fa-brands fa-whatsapp"
-      data-cta-primary-label="Check a Route"
+      data-cta-primary-label="Check a KrisFlyer route"
       data-cta-primary-href="https://api.whatsapp.com/send?phone=6581575306"
       data-cta-primary-target="_blank"
       data-cta-secondary-variant="outline"
@@ -299,8 +199,6 @@
       data-cta-secondary-href="services"
     ></div>
     <script src="../js/cta-section.js" defer></script>
-
   </main>
-
 </body>
 </html>
