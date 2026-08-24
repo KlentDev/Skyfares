@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Reading — KrisFlyer Guide — Skyfare</title>
@@ -33,7 +41,7 @@
       <div class="kf-read-topbar__inner">
         <div class="kf-read-titles">
           <span class="kf-read-guide-title">The KrisFlyer Guide</span>
-          <span class="kf-read-chapter-title" data-read-chapter-title>Loading…</span>
+          <span class="kf-read-chapter-title" data-read-chapter-title><span class="private-skel-line private-skel-line--inline" style="width:9rem;height:0.9em;" aria-label="Loading chapter title"></span></span>
         </div>
         <div class="kf-read-meta">
           <span data-read-position></span>
@@ -64,12 +72,15 @@
 
       <article class="kf-read-column">
         <header class="kf-read-article-head">
-          <span class="kf-read-article-kicker" data-read-chapter-label>Loading chapter</span>
-          <h1 data-read-chapter-heading-title>Loading…</h1>
+          <span class="kf-read-article-kicker" data-read-chapter-label><span class="private-skel-line private-skel-line--inline" style="width:6rem;height:0.85em;" aria-label="Loading chapter"></span></span>
+          <h1 data-read-chapter-heading-title><span class="private-skel-title" style="width:70%;height:1.6em;" aria-label="Loading chapter title"></span></h1>
           <div class="kf-read-article-meta" data-read-meta-row></div>
         </header>
-        <div class="kf-read-content" data-read-content>
-          <p>Loading chapter…</p>
+        <div class="kf-read-content" data-read-content role="status" aria-live="polite" aria-label="Loading chapter">
+          <span class="private-skel-line" style="width:95%;margin-bottom:.6rem;"></span>
+          <span class="private-skel-line" style="width:88%;margin-bottom:.6rem;"></span>
+          <span class="private-skel-line" style="width:92%;margin-bottom:.6rem;"></span>
+          <span class="private-skel-line" style="width:60%;"></span>
         </div>
         <div class="kf-read-nav-row">
           <button type="button" class="kf-read-nav-btn" data-read-prev><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Previous</button>

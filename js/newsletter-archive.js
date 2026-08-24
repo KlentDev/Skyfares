@@ -4,6 +4,44 @@
   var PAGE_PREFIX = IN_PAGES_DIR ? '' : 'pages/';
   var ALTITUDE_PRICING_URL = PAGE_PREFIX + 'altitude';
 
+  // "Welcome to Skyfare" is Skyfare's first-ever published issue and acts as
+  // the onboarding entry point for new visitors -- it's always pinned to
+  // position #1 on the newsletter archive, homepage preview, and the free
+  // newsletter modal (js/newsletter-modal.js keeps an identical copy of
+  // isPinnedPost/withPinnedFirst since it loads independently on pages that
+  // don't include this file).
+  var PINNED_POST_ID   = 'post_288fd061-e1ff-485d-ab16-20767b42fde5';
+  var PINNED_POST_SLUG = 'welcome-to-skyfare';
+
+  function isPinnedPost(post) {
+    if (!post) return false;
+    if (post.id && post.id === PINNED_POST_ID) return true;
+    if (post.slug && post.slug === PINNED_POST_SLUG) return true;
+    return false;
+  }
+
+  // Pinned post first (if present in `posts`), then the rest in their
+  // existing (newest-first) order. Falls back to a plain slice if the
+  // pinned post isn't in the list, so nothing breaks if it's ever
+  // unpublished or excluded by a filter.
+  function withPinnedFirst(posts, limit) {
+    var pinned = posts.filter(isPinnedPost)[0];
+    var rest = posts.filter(function (p) { return !isPinnedPost(p); });
+    var ordered = pinned ? [pinned].concat(rest) : rest;
+    return typeof limit === 'number' ? ordered.slice(0, limit) : ordered;
+  }
+
+  // The newest issue that isn't the pinned one -- gets its own "Latest"
+  // badge so it stays visually distinct from the "Pinned" card next to it.
+  // `_latestNonPinnedId` is set right before each render call below, scoped
+  // to whatever list (filtered archive vs. homepage preview) is being built.
+  var _latestNonPinnedId = null;
+
+  function getLatestNonPinnedId(posts) {
+    var latest = posts.filter(function (p) { return !isPinnedPost(p); })[0];
+    return latest ? latest.id : null;
+  }
+
   // ─── Altitude Access modal for pages/newsletter.html ───────────────────────
 
   function ensureModal() {
@@ -82,8 +120,13 @@
         // Cache post list in sessionStorage so the detail page can use it for related posts
         try { sessionStorage.setItem('skyfare_posts', JSON.stringify(data)); } catch (_) {}
         renderFeatured(data.posts[0]);
-        renderArchive(data.posts);
-        renderHomePreview(data.posts.slice(0, 3));
+        renderHomePreview(withPinnedFirst(data.posts, 3));
+
+        _archiveAllPosts = data.posts;
+        _archiveTopic = _initialTopicFromQuery();
+        _wireAccessFilters();
+        _wireTopicFilters();
+        _renderFilteredArchive();
       })
       .catch(function () {
         renderEmptyState('Unable to load issues right now. Please refresh in a moment.');
@@ -100,6 +143,7 @@
     var prem     = isPremium(post);
     var date     = formatDate(post.published_at);
     var author   = (post.authors || []).join(', ');
+    var summary  = getPostSummary(post);
 
     var tags = (post.content_tags || []).filter(function (t) {
       return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/);
@@ -140,7 +184,7 @@
     var freeChoiceAttrs = !prem
       ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
       : '';
-    var cardCls  = 'card-utility group flex h-52 max-w-5xl mx-auto overflow-hidden slide-up' +
+    var cardCls  = 'card-utility newsletter-featured-card-v2 group flex max-w-5xl mx-auto overflow-hidden slide-up' +
       (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
 
     var wrapOpen = prem
@@ -160,8 +204,8 @@
 
         '<div class="flex-1 bg-white p-5 md:p-7 flex flex-col justify-center min-w-0">' +
           (tagHtml ? '<div class="flex flex-wrap gap-1 mb-3">' + tagHtml + '</div>' : '') +
-          '<h3 class="text-base md:text-lg font-display font-bold text-neutral-900 leading-snug mb-2 ' + (prem ? '' : 'group-hover:text-brand-700') + ' transition-colors">' + e(post.title) + '</h3>' +
-          (post.subtitle ? '<p class="text-xs text-neutral-400 mb-3 font-medium truncate">' + e(post.subtitle) + '</p>' : '') +
+          '<h3 class="newsletter-featured-title-v2 font-display font-bold text-neutral-900 leading-snug mb-2 ' + (prem ? '' : 'group-hover:text-brand-700') + ' transition-colors">' + e(post.title) + '</h3>' +
+          (summary ? '<p class="newsletter-featured-excerpt-v2 mb-3">' + e(summary) + '</p>' : '') +
           (author ? '<div class="flex items-center gap-2 text-xs text-neutral-400 mb-1.5"><i class="fa-regular fa-user text-[10px]"></i><span>' + e(author) + '</span></div>' : '') +
           (date ? '<div class="flex items-center gap-2 text-xs text-neutral-400 mb-4"><i class="fa-regular fa-calendar text-[10px]"></i><span>' + e(date) + '</span></div>' : '') +
           ctaHtml +
@@ -182,6 +226,7 @@
     var count = document.getElementById('archive-count');
     if (!grid) return;
 
+    _latestNonPinnedId = getLatestNonPinnedId(posts);
     grid.innerHTML = posts.map(function (post, index) {
       return buildArchiveCard(post, index);
     }).join('');
@@ -193,6 +238,75 @@
     grid.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
   }
 
+  // ─── Access + topic filters (#archive-access-filters, #archive-topic-select) ───
+  // data-topic values are the display labels ("Airlines", etc), but Beehiiv
+  // always stores/returns a post's content_tags lowercased regardless of the
+  // tag's configured display casing -- confirmed live: a post tagged
+  // "Airlines" comes back with content_tags containing "airlines". So every
+  // content_tags match here is case-insensitive. The two filters (access,
+  // topic) are independent and AND-combined, mirroring js/altitude-portal.js's
+  // free/premium + topic filtering on the private archive.
+
+  var _archiveAllPosts = [];
+  var _archiveAccess = 'all';
+  var _archiveTopic = 'all';
+  var VALID_TOPICS = ['Credit/Debit Cards', 'Airlines', 'News', 'Redemption Availability'];
+
+  function _initialTopicFromQuery() {
+    try {
+      var tag = new URLSearchParams(window.location.search).get('tag');
+      if (!tag) return 'all';
+      var match = VALID_TOPICS.filter(function (t) { return t.toLowerCase() === tag.toLowerCase(); })[0];
+      return match || 'all';
+    } catch (err) { return 'all'; }
+  }
+
+  function _getFilteredArchivePosts() {
+    var posts = _archiveAllPosts;
+    if (_archiveAccess === 'free') {
+      posts = posts.filter(function (p) { return !p.is_premium; });
+    } else if (_archiveAccess === 'premium') {
+      posts = posts.filter(function (p) { return !!p.is_premium; });
+    }
+    if (_archiveTopic !== 'all') {
+      var topicLower = _archiveTopic.toLowerCase();
+      posts = posts.filter(function (p) {
+        return (p.content_tags || []).some(function (t) { return t.toLowerCase() === topicLower; });
+      });
+    }
+    return withPinnedFirst(posts);
+  }
+
+  function _renderFilteredArchive() {
+    renderArchive(_getFilteredArchivePosts());
+    document.querySelectorAll('#archive-access-filters [data-access]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.access === _archiveAccess);
+    });
+    var select = document.getElementById('archive-topic-select');
+    if (select) select.value = _archiveTopic;
+  }
+
+  function _applyAccessFilter(access) {
+    _archiveAccess = access || 'all';
+    _renderFilteredArchive();
+  }
+
+  function _applyTopicFilter(topic) {
+    _archiveTopic = topic || 'all';
+    _renderFilteredArchive();
+  }
+
+  function _wireAccessFilters() {
+    document.querySelectorAll('#archive-access-filters [data-access]').forEach(function (btn) {
+      btn.addEventListener('click', function () { _applyAccessFilter(btn.dataset.access); });
+    });
+  }
+
+  function _wireTopicFilters() {
+    var select = document.getElementById('archive-topic-select');
+    if (select) select.addEventListener('change', function () { _applyTopicFilter(select.value); });
+  }
+
   function renderHomePreview(posts) {
     var grid = document.getElementById('home-newsletter-grid');
     if (!grid) return;
@@ -202,16 +316,108 @@
       return;
     }
 
-    grid.innerHTML = posts.map(function (post, index) {
-      return buildArchiveCard(post, index);
-    }).join('');
+    _latestNonPinnedId = getLatestNonPinnedId(posts);
+    grid.innerHTML = buildHomePreview(posts);
 
     grid.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
   }
 
   function renderHomeEmpty() {
     var grid = document.getElementById('home-newsletter-grid');
-    if (grid) grid.innerHTML = '';
+    if (grid) {
+      grid.innerHTML = '<div class="newsletter-home-v5__empty"><p class="newsletter-home-v5__empty-label">Publication loading</p><p>Browse the <a href="pages/newsletter">full newsletter archive</a> while the latest issues are refreshed.</p></div>';
+    }
+  }
+
+  // Homepage-only editorial composition. The archive keeps buildArchiveCard()
+  // so its filtering and historical browsing remain unchanged; this renderer
+  // only changes the way the same three API records are previewed on index.html.
+  function buildHomePreview(posts) {
+    var featured = posts[0];
+    var latest = posts.slice(1, 3);
+    return buildHomeFeature(featured) +
+      '<div class="newsletter-home-v5__latest" aria-label="Latest newsletter issues">' +
+        latest.map(function (post, index) { return buildHomeLatest(post, index); }).join('') +
+      '</div>';
+  }
+
+  function buildHomeFeature(post) {
+    var prem = isPremium(post);
+    var image = post.thumbnail_url
+      ? '<img src="' + e(post.thumbnail_url) + '" alt="' + e(post.title) + '" loading="lazy">'
+      : '<div class="newsletter-home-v5__image-empty"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i></div>';
+    var href = getPublicPostUrl(post);
+    var localHref = getLocalPostUrl(post);
+    var beehiivHref = post && post.url ? withBeehiivLoginModal(post.url) : localHref;
+    var attrs = !prem
+      ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
+      : '';
+    var wrapper = prem
+      ? '<article class="newsletter-home-v5__feature newsletter-home-v5__feature--locked" tabindex="0" role="button" aria-label="Unlock ' + e(post.title) + '" onclick="window.openAltitudeAccessModal()" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();window.openAltitudeAccessModal();}">'
+      : '<a href="' + e(href) + '"' + attrs + ' class="newsletter-home-v5__feature">';
+    var summary = getPostSummary(post);
+    var type = getPostType(post);
+    var meta = [type, formatDate(post.published_at)].filter(Boolean).join(' · ');
+    var cta = prem ? 'Unlock with Altitude' : 'Read issue';
+
+    return wrapper +
+      '<div class="newsletter-home-v5__feature-media">' + image + '<span class="newsletter-home-v5__start-label"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Start here</span></div>' +
+      '<div class="newsletter-home-v5__feature-copy">' +
+        '<p class="newsletter-home-v5__kicker">Pinned feature</p>' +
+        '<h3>' + e(post.title) + '</h3>' +
+        (summary ? '<p class="newsletter-home-v5__summary">' + e(summary) + '</p>' : '') +
+        (meta ? '<p class="newsletter-home-v5__meta">' + e(meta) + '</p>' : '') +
+        '<span class="newsletter-home-v5__read-link">' + cta + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+      '</div>' +
+    (prem ? '</article>' : '</a>');
+  }
+
+  function buildHomeLatest(post, index) {
+    var prem = isPremium(post);
+    var image = post.thumbnail_url
+      ? '<img src="' + e(post.thumbnail_url) + '" alt="" loading="lazy">'
+      : '<div class="newsletter-home-v5__latest-image-empty"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i></div>';
+    var href = getPublicPostUrl(post);
+    var localHref = getLocalPostUrl(post);
+    var beehiivHref = post && post.url ? withBeehiivLoginModal(post.url) : localHref;
+    var attrs = !prem
+      ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
+      : '';
+    var wrapper = prem
+      ? '<article class="newsletter-home-v5__latest-item newsletter-home-v5__latest-item--locked" tabindex="0" role="button" aria-label="Unlock ' + e(post.title) + '" onclick="window.openAltitudeAccessModal()" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();window.openAltitudeAccessModal();}">'
+      : '<a href="' + e(href) + '"' + attrs + ' class="newsletter-home-v5__latest-item">';
+    var summary = getPostSummary(post);
+    var meta = [getPostType(post), formatDate(post.published_at)].filter(Boolean).join(' · ');
+    var label = index === 0 ? 'Latest issue' : 'Recent issue';
+    var cta = prem ? 'Unlock' : 'Read';
+
+    return wrapper +
+      '<div class="newsletter-home-v5__latest-media">' + image + '</div>' +
+      '<div class="newsletter-home-v5__latest-copy">' +
+        '<p class="newsletter-home-v5__latest-label">' + e(label) + '</p>' +
+        '<h3>' + e(post.title) + '</h3>' +
+        (summary ? '<p class="newsletter-home-v5__latest-summary">' + e(summary) + '</p>' : '') +
+        '<div class="newsletter-home-v5__latest-footer">' +
+          (meta ? '<span class="newsletter-home-v5__meta">' + e(meta) + '</span>' : '') +
+          '<span class="newsletter-home-v5__read-link">' + cta + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+        '</div>' +
+      '</div>' +
+    (prem ? '</article>' : '</a>');
+  }
+
+  function getPostType(post) {
+    return (post.content_tags || []).filter(function (t) {
+      return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/i);
+    })[0] || 'Newsletter';
+  }
+
+  function getPostSummary(post) {
+    var summary = String(post.subtitle || post.excerpt || post.description || '').trim();
+    if (summary) return summary;
+    if (isPinnedPost(post)) {
+      return 'Start with the first Skyfare briefing: how the newsletter helps you spot better routes, cabin opportunities, and smarter ways to use miles.';
+    }
+    return '';
   }
 
   function renderEmptyState(message) {
@@ -278,11 +484,34 @@
       : '<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:text-brand-800 transition-colors">' +
             'Read <i class="fa-solid fa-arrow-right text-[10px]"></i></span>';
 
-    var cardCls = 'group card-utility overflow-hidden slide-up' +
-      (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '');
+    var pinned = isPinnedPost(post);
+    // The card at index 0 (whatever post is currently first -- the pinned
+    // post whenever one survives the active filter, otherwise just the
+    // newest match) gets a wider "lead" layout so the archive isn't a wall
+    // of identical cards. Purely layout/shadow, never color-coded, since
+    // index 0 isn't always the actual pinned post once filters are applied.
+    var isLead = index === 0;
+    // Only the lead card shows an excerpt -- its wider column otherwise
+    // reads as an empty gap next to the title (getPostSummary() falls back
+    // to the pinned post's own onboarding blurb when there's no
+    // subtitle/excerpt/description on the post itself).
+    var leadSummary = isLead ? getPostSummary(post) : '';
 
-    var titleCls = 'text-sm font-display font-bold text-neutral-900 mb-3 transition-colors leading-snug' +
+    var cardCls = 'group card-utility overflow-hidden slide-up' +
+      (prem ? ' border-gold/30 hover:border-gold/60 cursor-pointer' : '') +
+      (pinned ? ' newsletter-pinned-v2' : '') +
+      (isLead ? ' newsletter-archive-lead-v2' : '');
+
+    var titleCls = (isLead ? 'newsletter-archive-lead-v2__title ' : 'text-sm ') +
+      'font-display font-bold text-neutral-900 mb-3 transition-colors leading-snug' +
       (prem ? '' : ' group-hover:text-brand-700');
+
+    var pinnedBadge = pinned
+      ? '<span class="newsletter-pinned-badge-v2"><i class="fa-solid fa-thumbtack text-[9px]"></i> Pinned &middot; Start Here</span>'
+      : '';
+    var latestBadge = (!pinned && post.id && post.id === _latestNonPinnedId)
+      ? '<span class="newsletter-latest-badge-v2"><i class="fa-solid fa-bolt text-[9px]"></i> Latest</span>'
+      : '';
 
     var wrapOpen = prem
       ? '<article class="' + cardCls + '" onclick="window.openAltitudeAccessModal()" style="animation-delay:' + delay + 's;">'
@@ -290,7 +519,7 @@
     var wrapClose = prem ? '</article>' : '</a>';
 
     return wrapOpen +
-      '<div class="relative h-44 bg-brand-950 overflow-hidden">' +
+      '<div class="relative h-44 bg-brand-950 overflow-hidden' + (isLead ? ' newsletter-archive-lead-v2__media' : '') + '">' +
         imgHtml +
         '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
         '<div class="absolute top-3 left-3">' + accessBadge + '</div>' +
@@ -299,10 +528,16 @@
         '</div>' +
         lockIcon +
       '</div>' +
-      '<div class="p-5">' +
+      pinnedBadge + latestBadge +
+      '<div class="p-5' + (isLead ? ' newsletter-archive-lead-v2__body' : '') + '">' +
         (metaLine ? '<p class="text-[10px] text-neutral-400 mb-1.5 font-medium">' + e(metaLine) + '</p>' : '') +
-        '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' +
-        ctaHtml +
+        (isLead
+          ? '<div class="newsletter-archive-lead-v2__center">' +
+              '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' +
+              (leadSummary ? '<p class="newsletter-featured-excerpt-v2">' + e(leadSummary) + '</p>' : '') +
+            '</div>' +
+            '<div class="newsletter-archive-lead-v2__cta">' + ctaHtml + '</div>'
+          : '<h3 class="' + titleCls + '">' + e(post.title) + '</h3>' + ctaHtml) +
       '</div>' +
     wrapClose;
   }
@@ -357,25 +592,29 @@
 
     SkyUI.modal({
       title: 'Choose where to read',
+      variant: 'read-choice',
       html:
-        '<p><strong>Read on Skyfare</strong> opens the free issue here. It is the fastest way to read.</p>' +
-        '<p class="mt-3"><strong>Read on Beehiiv</strong> opens the published newsletter on Beehiiv so you can verify your email and use native <strong>likes and comments</strong>.</p>' +
-        '<ol class="mt-3 list-decimal pl-5 text-sm text-neutral-500 leading-relaxed">' +
-          '<li>Verify your email on Beehiiv if asked.</li>' +
-          '<li>Beehiiv sends a one-time code.</li>' +
-          '<li>Enter the code to verify your email.</li>' +
-          '<li>Then read, <strong>like</strong>, and <strong>comment</strong> on the newsletter.</li>' +
-        '</ol>',
+        '<p><strong>Read on Skyfare</strong> is the fastest way to read this issue — it opens instantly, right here, with nothing else to set up.</p>' +
+        '<div class="sky-modal__beehiiv-note">' +
+          '<p><strong>Prefer Beehiiv?</strong> You can read it there instead, verify your email, and use native likes and comments.</p>' +
+          '<ol class="mt-2 list-decimal pl-5 leading-relaxed">' +
+            '<li>Verify your email on Beehiiv if asked.</li>' +
+            '<li>Beehiiv sends a one-time code.</li>' +
+            '<li>Enter the code to verify your email.</li>' +
+            '<li>Then read, like, and comment on the newsletter.</li>' +
+          '</ol>' +
+        '</div>',
       actions: [
         {
           label: 'Read on Skyfare',
+          style: 'primary-lg',
           onClick: function () {
             if (localUrl) window.location.href = localUrl;
           },
         },
         {
-          label: 'Read on Beehiiv',
-          style: 'primary',
+          label: 'Read on Beehiiv instead',
+          style: 'link',
           onClick: function () {
             window.location.href = beehiivUrl || localUrl;
           },

@@ -99,11 +99,15 @@
       var visibleTags = (post.content_tags || []).filter(function (t) {
         return t !== 'altitude-premium' && !t.match(/^issue-?\d+$/);
       }).slice(0, 4);
+      // Links into pages/newsletter.html's topic filter (js/newsletter-archive.js
+      // reads ?tag= on load) -- href value must match a tag's exact Beehiiv
+      // `display` string, same as the filter buttons' data-topic values.
       tagsEl.innerHTML = visibleTags.map(function (t, i) {
         var cls = i === 0
-          ? 'text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border border-brand-100 px-2.5 py-1 rounded-full'
-          : 'text-[10px] font-bold uppercase tracking-widest text-neutral-500 bg-neutral-100 px-2.5 py-1 rounded-full';
-        return '<span class="' + cls + '">' + e(t) + '</span>';
+          ? 'text-[10px] font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border border-brand-100 px-2.5 py-1 rounded-full hover:bg-brand-100 transition-colors'
+          : 'text-[10px] font-bold uppercase tracking-widest text-neutral-500 bg-neutral-100 px-2.5 py-1 rounded-full hover:bg-neutral-200 transition-colors';
+        var href = (window.location.pathname.includes('/pages/') ? '' : 'pages/') + 'newsletter?tag=' + encodeURIComponent(t) + '#archive';
+        return '<a href="' + e(href) + '" class="' + cls + '">' + e(t) + '</a>';
       }).join('');
     }
 
@@ -182,6 +186,14 @@
     processBeehiivHtml(article);
 
     wrap.classList.remove('hidden');
+
+    // Read/like/comment on Beehiiv
+    var beehiivCta = document.getElementById('nsl-beehiiv-cta');
+    var beehiivLink = document.getElementById('nsl-beehiiv-link');
+    if (beehiivCta && beehiivLink && post.url) {
+      beehiivLink.href = post.url;
+      beehiivCta.classList.remove('hidden');
+    }
 
     // Share buttons
     var shareEl = document.getElementById('nsl-share');

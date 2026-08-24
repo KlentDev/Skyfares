@@ -25,13 +25,14 @@ export async function handleStripeWebhook(request, env, corsHeaders) {
   const body      = await request.text();
   const signature = request.headers.get('Stripe-Signature') || '';
 
-  // Two possible signing secrets: STRIPE_WEBHOOK_SECRET (Altitude/Guide, the
-  // real live Stripe account) and STRIPE_WEBHOOK_SECRET_ASSESSMENT (the
-  // "Klent sandbox" account's own webhook endpoint, we_1U0DUnB9NfKSwBnU...,
-  // used only while the Travel Strategy Call product is being tested there —
-  // see services/stripe.js's handleAssessmentCheckout). Checking both here,
-  // rather than a separate route, keeps this one webhook URL the single
-  // source of truth both Stripe accounts already point at.
+  // Two possible signing secrets: STRIPE_WEBHOOK_SECRET (Altitude/Guide —
+  // Skyfare production Stripe configuration, live mode) and
+  // STRIPE_WEBHOOK_SECRET_ASSESSMENT (the separate "Klent sandbox" account's
+  // own webhook endpoint, we_1U0DUnB9NfKSwBnU..., used only while the Travel
+  // Strategy Call product is being tested there — see services/stripe.js's
+  // handleAssessmentCheckout). Checking both here, rather than a separate
+  // route, keeps this one webhook URL the single source of truth both
+  // Stripe accounts already point at.
   let valid = await verifyStripeSignature(body, signature, env.STRIPE_WEBHOOK_SECRET);
   if (!valid && env.STRIPE_WEBHOOK_SECRET_ASSESSMENT) {
     valid = await verifyStripeSignature(body, signature, env.STRIPE_WEBHOOK_SECRET_ASSESSMENT);

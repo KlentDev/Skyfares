@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cabin Compare — Skyfare Consulting</title>
@@ -171,64 +179,6 @@
           <i class="fa-solid fa-circle-info mt-0.5 flex-shrink-0"></i>
           Fares and mileage figures shown are placeholder for design review — final verified numbers pending sign-off. Skyfare scores and client reviews are real, drawn from customer-submitted ratings — they only appear once a route/airline has actual data. All logos and airline names are for descriptive purposes only and do not imply affiliation or endorsement.
         </p>
-
-      </div>
-    </section>
-
-
-    <!-- ─── THE SKYFARE VERDICT (gated tease) ─────────────────────── -->
-    <!--
-      NOTE FOR DEV: the blur below is a CSS-only visual placeholder for
-      design review. It is NOT real access control — the text still sits in
-      the DOM and is readable via view-source. Before this page goes live,
-      the verdict copy must be served only to verified Altitude members via
-      a Worker route (mirror handleGetPost / isPostPremium in
-      cloudflare/subscribe-worker.js), the same pattern js/altitude.js
-      already uses for gated newsletter content.
-    -->
-    <section class="py-24 bg-white">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-10 slide-up">
-          <h2 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 tracking-tight">The Skyfare verdict</h2>
-          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-100 bg-brand-50 text-brand-600 text-[11px] font-bold uppercase tracking-widest whitespace-nowrap">
-            <i class="fa-solid fa-crown text-[10px]"></i> Altitude Access &middot; Launching Soon
-          </span>
-        </div>
-
-        <div class="card-utility p-8 md:p-10 relative overflow-hidden slide-up">
-          <div class="cc-verdict-copy max-w-2xl" aria-hidden="true">
-            <p class="text-neutral-500 leading-relaxed mb-4">
-              On this route the seat you want depends entirely on whether you value the ground experience or the hard product. The obvious choice is not the right one for most travellers flying overnight, and the fare gap between the top two options rarely justifies the difference on a long-haul sector.
-            </p>
-            <p class="text-neutral-500 leading-relaxed mb-4">
-              Our booking notes cover which departure to pick, which cabin zones to avoid, when availability typically opens for this route, and the arrangement pathway that brings the cost down against the cash fare.
-            </p>
-            <p class="text-neutral-500 leading-relaxed">
-              Members also see the current availability window we are tracking for this route, updated from our monitoring every few days.
-            </p>
-          </div>
-
-          <div class="absolute inset-0 flex flex-col items-center justify-center text-center gap-4 px-6"
-               style="background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.94));">
-            <div class="icon-chip icon-chip-lg">
-              <i class="fa-solid fa-lock"></i>
-            </div>
-            <p class="text-neutral-900 max-w-sm text-sm leading-relaxed">
-              <strong class="font-display font-bold">The full verdict, booking notes and availability windows</strong> are part of Skyfare Altitude.
-            </p>
-            <a href="pre-signup-link" class="btn-pill btn-pill-primary">
-              <i class="fa-solid fa-bell text-[10px]"></i> Join the Waitlist
-            </a>
-            <div class="flex items-center justify-center gap-2.5 text-[10px] text-neutral-400 font-medium">
-              <span>No spam</span>
-              <span aria-hidden="true">&middot;</span>
-              <span>One email at launch</span>
-              <span aria-hidden="true">&middot;</span>
-              <span>Unsubscribe anytime</span>
-            </div>
-          </div>
-        </div>
 
       </div>
     </section>

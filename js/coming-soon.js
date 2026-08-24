@@ -67,7 +67,7 @@
   // Any known dark/photo section wrapper -- picks text colors + overlay tint
   // so the lock overlay/note reads correctly on both light and dark tiles.
   function isOnDarkBg(el) {
-    return !!el.closest('.tile-dark1, .tile-dark2, .card-dark, .page-hero-bg, .cta-band, .cta-band-v2, .hero-stage-v4, .hero-photo-section');
+    return !!el.closest('.tile-dark1, .tile-dark2, .card-dark, .page-hero-bg, .cta-band, .cta-band-v2, .hero-stage-v4, .hero-photo-section, .pricing-concierge-card-v9');
   }
 
   // pages/pre-signup-link.html lives in /pages/ -- link relative to whether

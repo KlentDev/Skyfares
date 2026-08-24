@@ -1,120 +1,53 @@
-// --- TABLE LOGIC ---
+(function () {
+  'use strict';
 
-      // Helper: currency format
-      
+  var list = document.getElementById('deal-list');
+  var search = document.getElementById('deal-search');
+  var cabin = document.getElementById('deal-cabin');
+  var airline = document.getElementById('deal-airline');
+  var reset = document.getElementById('deal-reset');
+  var count = document.getElementById('deal-results-count');
+  var empty = document.getElementById('deal-empty');
+  if (!list || !search || !cabin || !airline || !count || !empty) return;
 
-      // Nominee cost from miles (tiered)
-      
+  var rows = Array.prototype.slice.call(list.querySelectorAll('[data-deal]'));
+  var resetButtons = Array.prototype.slice.call(document.querySelectorAll('[data-reset-deals]'));
 
-      // Indicative dataset
-      const awards = [
-        // SE Asia
-        { to: 'Brunei (BWN)', region: 'SE Asia', saver: 22000, advantage: 33000 },
-        { to: 'Denpasar / Bali (DPS)', region: 'SE Asia', saver: 22000, advantage: 33000 },
-        { to: 'Jakarta (CGK)', region: 'SE Asia', saver: 22000, advantage: 33000 },
-        { to: 'Kuala Lumpur (KUL)', region: 'SE Asia', saver: 22000, advantage: 33000 },
-        { to: 'Bangkok (BKK)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Cebu (CEB)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Da Nang (DAD)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Hanoi (HAN)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Ho Chi Minh (SGN)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Manila (MNL)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Phnom Penh (PNH)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Phuket (HKT)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        { to: 'Yangon (RGN)', region: 'SE Asia', saver: 25000, advantage: 37000 },
-        // NE Asia
-        { to: 'Chengdu (CTU)', region: 'NE Asia', saver: 35500, advantage: 53000 },
-        { to: 'Chongqing (CKG)', region: 'NE Asia', saver: 35500, advantage: 53000 },
-        { to: 'Guangzhou (CAN)', region: 'NE Asia', saver: 35500, advantage: 53000 },
-        { to: 'Hong Kong (HKG)', region: 'NE Asia', saver: 35500, advantage: 53000 },
-        { to: 'Taipei (TPE)', region: 'NE Asia', saver: 35500, advantage: 53000 },
-        { to: 'Beijing (PEK)', region: 'NE Asia', saver: 45000, advantage: 67500 },
-        { to: 'Shanghai (PVG)', region: 'NE Asia', saver: 45000, advantage: 67500 },
-        // South Asia
-        { to: 'Ahmedabad (AMD)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Bengaluru (BLR)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Chennai (MAA)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Cochin (COK)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Colombo (CMB)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Delhi (DEL)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Dhaka (DAC)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Hyderabad (HYD)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Kathmandu (KTM)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Kolkata (CCU)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Male / Maldives (MLE)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        { to: 'Mumbai (BOM)', region: 'South Asia', saver: 45000, advantage: 67500 },
-        // Japan
-        { to: 'Fukuoka (FUK)', region: 'Japan', saver: 54500, advantage: 82000 },
-        { to: 'Osaka (KIX)', region: 'Japan', saver: 54500, advantage: 82000 },
-        { to: 'Tokyo (NRT/HND)', region: 'Japan', saver: 54500, advantage: 82000 },
-        // Oceania
+  function normalize(value) {
+    return (value || '').trim().toLowerCase();
+  }
 
-        { to: 'Perth (PER)', region: 'Oceania', saver: 42500, advantage: 64000 },
-        { to: 'Adelaide (ADL)', region: 'Oceania', saver: 72000, advantage: 108000 },
-        { to: 'Auckland (AKL)', region: 'Oceania', saver: 72000, advantage: 108000 },
-        { to: 'Brisbane (BNE)', region: 'Oceania', saver: 72000, advantage: 108000 },
-        { to: 'Cairns (CNS)', region: 'Oceania', saver: 72000, advantage: 108000 },
-        { to: 'Christchurch (CHC)', region: 'Oceania', saver: 72000, advantage: 108000 },
-        { to: 'Melbourne (MEL)', region: 'Oceania', saver: 72000, advantage: 108000 },
-        { to: 'Sydney (SYD)', region: 'Oceania', saver: 72000, advantage: 108000 },
-        // Africa/Middle East
-        { to: 'Cape Town (CPT)', region: 'Africa/Middle East', saver: 68000, advantage: 102000 },
-        { to: 'Dubai (DXB)', region: 'Africa/Middle East', saver: 68000, advantage: 102000 },
-        { to: 'Istanbul (IST)', region: 'Africa/Middle East', saver: 68000, advantage: 102000 },
-        { to: 'Johannesburg (JNB)', region: 'Africa/Middle East', saver: 68000, advantage: 102000 },
-        // Europe
-        { to: 'Amsterdam (AMS)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Barcelona (BCN)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Brussels (BRU)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Copenhagen (CPH)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Frankfurt (FRA)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'London (LHR)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Manchester (MAN)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Milan (MXP)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Munich (MUC)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Paris (CDG)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Rome (FCO)', region: 'Europe', saver: 108500, advantage: 163000 },
-        { to: 'Zurich (ZRH)', region: 'Europe', saver: 108500, advantage: 163000 },
-        // N. America
-        { to: 'Los Angeles (LAX)', region: 'N. America', saver: 112500, advantage: 169000 },
-        { to: 'San Francisco (SFO)', region: 'N. America', saver: 112500, advantage: 169000 },
-        { to: 'Seattle (SEA)', region: 'N. America', saver: 112500, advantage: 169000 },
-        { to: 'Houston (IAH)', region: 'N. America', saver: 117000, advantage: 176000 },
-        { to: 'New York (JFK)', region: 'N. America', saver: 117000, advantage: 176000 },
-      ];
+  function applyFilters() {
+    var query = normalize(search.value);
+    var selectedCabin = cabin.value;
+    var selectedAirline = airline.value;
+    var visible = 0;
 
-      const body = document.getElementById('awardBody');
-      const filter = document.getElementById('regionFilter');
+    rows.forEach(function (row) {
+      var matchesQuery = !query || normalize(row.getAttribute('data-search')).indexOf(query) !== -1;
+      var matchesCabin = selectedCabin === 'all' || row.getAttribute('data-cabin') === selectedCabin;
+      var matchesAirline = selectedAirline === 'all' || row.getAttribute('data-airline') === selectedAirline;
+      var isVisible = matchesQuery && matchesCabin && matchesAirline;
+      row.hidden = !isVisible;
+      if (isVisible) visible += 1;
+    });
 
-      function render(rows){
-        if (!body) return;
-        body.innerHTML = '';
-        rows.forEach((r, index) => {
-          const tr = document.createElement('tr');
-          tr.className = "hover:bg-brand-50/20 transition-colors border-b border-brand-100/10 last:border-0";
-          tr.innerHTML = `
-            <td class="px-6 py-4 text-sm font-bold text-brand-600 font-mono">${index + 1}</td>
-            <td class="px-6 py-4 text-sm font-medium text-brand-950">Singapore &rarr; ${r.to}</td>
-            <td class="px-6 py-4 text-sm text-neutral-500">${r.region}</td>
-            <td class="px-6 py-4 text-sm font-bold text-brand-600 font-mono">${r.saver.toLocaleString()} mi</td>
-            <td class="px-6 py-4 text-sm text-neutral-600 font-mono">${r.advantage.toLocaleString()} mi</td>
-          `;
-          body.appendChild(tr);
-        });
-      }
-      render(awards);
+    count.textContent = visible + (visible === 1 ? ' historical arrangement' : ' historical arrangements');
+    empty.hidden = visible !== 0;
+  }
 
-      filter?.addEventListener('change', () => {
-        const val = filter.value;
-        render(val==='all' ? awards : awards.filter(a => a.region===val));
-      });
+  function clearFilters() {
+    search.value = '';
+    cabin.value = 'all';
+    airline.value = 'all';
+    applyFilters();
+    search.focus();
+  }
 
-      // Quick Estimator
-      const qIn = document.getElementById('quickMiles');
-      const qBtn = document.getElementById('quickCalc');
-      const qOut = document.getElementById('quickOut');
-      qBtn?.addEventListener('click', () => {
-        const miles = parseInt(qIn.value || '0', 10);
-        if (!miles || miles < 10000) { qOut.textContent = 'Min. 10k'; return; }
-        qOut.textContent = nomineeCost(miles);
-      });
+  search.addEventListener('input', applyFilters);
+  cabin.addEventListener('change', applyFilters);
+  airline.addEventListener('change', applyFilters);
+  reset.addEventListener('click', clearFilters);
+  resetButtons.forEach(function (button) { button.addEventListener('click', clearFilters); });
+  applyFilters();
+})();

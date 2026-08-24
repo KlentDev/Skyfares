@@ -43,22 +43,30 @@
     var valueChip = document.getElementById('pricing-altitude-value-chip');
     if (!tabs.length || !panels.length) return;
 
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        var plan = tab.getAttribute('data-pricing-plan-tab');
+    function activate(tab) {
+      var plan = tab.getAttribute('data-pricing-plan-tab');
+      tabs.forEach(function (candidate) {
+        var isActive = candidate === tab;
+        candidate.classList.toggle('is-active', isActive);
+        candidate.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        candidate.tabIndex = isActive ? 0 : -1;
+      });
+      panels.forEach(function (panel) {
+        panel.hidden = panel.getAttribute('data-pricing-plan-panel') !== plan;
+      });
+      if (valueChip && VALUE_CHIP_TEXT[plan]) valueChip.textContent = VALUE_CHIP_TEXT[plan];
+    }
 
-        tabs.forEach(function (candidate) {
-          var isActive = candidate === tab;
-          candidate.classList.toggle('is-active', isActive);
-          candidate.setAttribute('aria-selected', isActive ? 'true' : 'false');
-          candidate.tabIndex = isActive ? 0 : -1;
-        });
-
-        panels.forEach(function (panel) {
-          panel.hidden = panel.getAttribute('data-pricing-plan-panel') !== plan;
-        });
-
-        if (valueChip && VALUE_CHIP_TEXT[plan]) valueChip.textContent = VALUE_CHIP_TEXT[plan];
+    tabs.forEach(function (tab, index) {
+      tab.tabIndex = tab.classList.contains('is-active') ? 0 : -1;
+      tab.addEventListener('click', function () { activate(tab); });
+      tab.addEventListener('keydown', function (event) {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        var direction = event.key === 'ArrowRight' ? 1 : -1;
+        var next = tabs[(index + direction + tabs.length) % tabs.length];
+        activate(next);
+        next.focus();
       });
     });
   }

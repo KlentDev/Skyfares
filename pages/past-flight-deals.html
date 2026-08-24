@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Flights We've Arranged — Skyfare Consulting</title>
-  <meta name="description" content="Real Business and First Class arrangements by Skyfare Consulting — confirmed routes, real savings, every booking built around our clients." />
+  <title>Past Flight Deals | Skyfare Consulting</title>
+  <meta name="description" content="Explore six historical premium-cabin arrangements that show the kind of route, mileage, and cabin value Skyfare looks for." />
   <link rel="icon" href="../logos/logo.webp" />
 
   <script src="../js/links.js"></script>
@@ -18,237 +18,139 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/tailwind-config.js" defer></script>
+  <script src="../js/past-flight-deals.js" defer></script>
 </head>
 
-<body class="min-h-screen flex flex-col bg-white">
-
+<body class="min-h-screen flex flex-col bg-white past-deals-page">
   <div id="page-loader">
     <img src="../logos/logo.webp" alt="Skyfare Consulting">
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
   <main class="flex-1">
-
-    <!-- =============================================
-         1. HERO
-         ============================================= -->
-    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/our-flights.jpg');">
-
+    <section class="past-deals-hero page-hero-bg relative overflow-hidden">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="max-w-2xl mx-auto text-center slide-up">
+        <div class="past-deals-hero__meta">
+          <span>Skyfare / Past Flight Deals</span>
+          <span>Historical route examples</span>
+        </div>
 
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-            <i class="fa-solid fa-plane-circle-check text-[10px]"></i>
-            Recent Arrangements
-          </div>
-
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
-            Flights We've Arranged.
-          </h1>
-
-          <p class="text-base md:text-lg leading-relaxed max-w-xl mx-auto font-medium text-white/65 mb-8">
-            Real routes, real savings — every arrangement built around the client.
-          </p>
-
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <div class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 bg-white/8 text-white/80 text-xs font-semibold">
-              <i class="fa-solid fa-bolt-lightning text-brand-400 text-[10px]"></i> No Waitlists
-            </div>
-            <div class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 bg-white/8 text-white/80 text-xs font-semibold">
-              <i class="fa-solid fa-shield-halved text-brand-400 text-[10px]"></i> Guaranteed Seats
-            </div>
-            <div class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 bg-white/8 text-white/80 text-xs font-semibold">
-              <i class="fa-solid fa-headset text-brand-400 text-[10px]"></i> Full Concierge
+        <div class="past-deals-hero__layout">
+          <div class="past-deals-hero__copy slide-up">
+            <span class="past-deals-kicker"><i class="fa-solid fa-route" aria-hidden="true"></i> Proof from the route desk</span>
+            <h1>See what a sharper premium route can look like.</h1>
+            <p>These six historical arrangements show the kind of cabin, mileage, and routing decisions Skyfare helps travelers think through.</p>
+            <div class="flex flex-wrap gap-3">
+              <a href="#deal-archive" class="btn-pill btn-pill-primary btn-glow-v2">Browse the arrangements <i class="fa-solid fa-arrow-down text-[10px]" aria-hidden="true"></i></a>
+              <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-ghost"><i class="fa-brands fa-whatsapp text-sm" aria-hidden="true"></i> Start a route review</a>
             </div>
           </div>
 
+          <aside class="past-deals-hero__ledger slide-up" style="animation-delay:.1s;" aria-label="Past deal archive summary">
+            <div class="past-deals-hero__ledger-head">
+              <span>Route desk record</span>
+              <strong>What the examples contain</strong>
+            </div>
+            <div class="past-deals-hero__ledger-grid">
+              <span><b>06</b><small>historical arrangements</small></span>
+              <span><b>02</b><small>premium cabin types</small></span>
+              <span><b>04</b><small>value signals to compare</small></span>
+            </div>
+            <p>Every record is an example from the past. Availability and pricing still need a live route check.</p>
+          </aside>
         </div>
       </div>
     </section>
 
+    <section class="past-deals-featured py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="past-deals-featured__grid">
+          <div class="past-deals-featured__image slide-up">
+            <img src="../images/routes-images/new-york.jpg" alt="New York skyline representing the Singapore to New York route" loading="lazy">
+            <span class="past-deals-image-note"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Historical example</span>
+          </div>
 
-    <!-- =============================================
-         2. ARRANGEMENTS GRID
-         ============================================= -->
-    <section class="py-24 bg-white">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
+          <article class="past-deals-featured__copy slide-up" style="animation-delay:.08s;">
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-star" aria-hidden="true"></i> Featured arrangement</span>
+            <p class="past-deals-route-label">SIN <span aria-hidden="true">→</span> JFK / Singapore to New York</p>
+            <h2>First Class value is usually decided before the search begins.</h2>
+            <p class="past-deals-featured__lead">This Emirates arrangement combined a long-haul First Class cabin with a clear miles and cash picture. It is the kind of record worth studying, even after the seat is gone.</p>
 
-        <div class="flex items-center gap-4 mb-4 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Recent Arrangements</p>
-          <div class="flex-1 h-px bg-neutral-100"></div>
+            <div class="past-deals-value-grid" aria-label="Featured arrangement details">
+              <div><strong>117,000</strong><span>miles used</span></div>
+              <div><strong>S$186</strong><span>cash noted</span></div>
+              <div><strong>~68%</strong><span>stated saving</span></div>
+            </div>
+
+            <div class="past-deals-featured__footer">
+              <span><i class="fa-solid fa-plane" aria-hidden="true"></i> Emirates First Class</span>
+              <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="text-link-v2">Ask about a route like this <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </article>
         </div>
-        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4 tracking-tight slide-up">
-          Six routes. Six confirmed upgrades.
-        </h2>
-        <p class="section-lead max-w-2xl mb-12 slide-up">
-          A snapshot of real Business and First Class seats we've secured — with the savings against standard cash fares.
-        </p>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-          <!-- 1 · SIN → LHR -->
-          <a href="contact" class="card-utility p-6 group slide-up">
-            <div class="flex items-center justify-between mb-6">
-              <span class="text-lg font-display font-bold text-neutral-900 tracking-tight inline-flex items-center gap-1">SIN <img src="../logos/flags/singapore.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"> <span class="text-brand-400 font-normal">→</span> LHR <img src="../logos/flags/united-kingdom.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"></span>
-              <span class="savings-badge-gold"><i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Saved ~52%</span>
-            </div>
-            <p class="text-sm font-semibold text-neutral-900 mb-1">Singapore Airlines Suites</p>
-            <p class="text-xs text-neutral-400 leading-relaxed mb-6">Arranged via direct transfer</p>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:gap-2.5 transition-all">
-              Arrange yours <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </span>
-          </a>
-
-          <!-- 2 · SIN → NRT -->
-          <a href="contact" class="card-utility p-6 group slide-up" style="animation-delay:.05s;">
-            <div class="flex items-center justify-between mb-6">
-              <span class="text-lg font-display font-bold text-neutral-900 tracking-tight inline-flex items-center gap-1">SIN <img src="../logos/flags/singapore.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"> <span class="text-brand-400 font-normal">→</span> NRT <img src="../logos/flags/japan.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"></span>
-              <span class="savings-badge-gold"><i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Saved ~61%</span>
-            </div>
-            <p class="text-sm font-semibold text-neutral-900 mb-1">ANA Business Class</p>
-            <p class="text-xs text-neutral-400 leading-relaxed mb-6">Nominee arrangement, confirmed instantly</p>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:gap-2.5 transition-all">
-              Arrange yours <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </span>
-          </a>
-
-          <!-- 3 · SIN → JFK -->
-          <a href="contact" class="card-utility p-6 group slide-up" style="animation-delay:.1s;">
-            <div class="flex items-center justify-between mb-6">
-              <span class="text-lg font-display font-bold text-neutral-900 tracking-tight inline-flex items-center gap-1">SIN <img src="../logos/flags/singapore.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"> <span class="text-brand-400 font-normal">→</span> JFK <img src="../logos/flags/united-states.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"></span>
-              <span class="savings-badge-gold"><i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Saved ~68%</span>
-            </div>
-            <p class="text-sm font-semibold text-neutral-900 mb-1">Emirates First Class</p>
-            <p class="text-xs text-neutral-400 leading-relaxed mb-6">117k miles + S$186 — confirmed</p>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:gap-2.5 transition-all">
-              Arrange yours <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </span>
-          </a>
-
-          <!-- 4 · SIN → DEL -->
-          <a href="contact" class="card-utility p-6 group slide-up" style="animation-delay:.05s;">
-            <div class="flex items-center justify-between mb-6">
-              <span class="text-lg font-display font-bold text-neutral-900 tracking-tight inline-flex items-center gap-1">SIN <img src="../logos/flags/singapore.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"> <span class="text-brand-400 font-normal">→</span> DEL <img src="../logos/flags/india.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"></span>
-              <span class="savings-badge-gold"><i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Saved ~72%</span>
-            </div>
-            <p class="text-sm font-semibold text-neutral-900 mb-1">Vistara Business Class</p>
-            <p class="text-xs text-neutral-400 leading-relaxed mb-6">45k miles + S$82 via sweet-spot routing</p>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:gap-2.5 transition-all">
-              Arrange yours <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </span>
-          </a>
-
-          <!-- 5 · HKG → LHR -->
-          <a href="contact" class="card-utility p-6 group slide-up" style="animation-delay:.1s;">
-            <div class="flex items-center justify-between mb-6">
-              <span class="text-lg font-display font-bold text-neutral-900 tracking-tight inline-flex items-center gap-1">HKG <img src="../logos/flags/hong-kong.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"> <span class="text-brand-400 font-normal">→</span> LHR <img src="../logos/flags/united-kingdom.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"></span>
-              <span class="savings-badge-gold"><i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Saved ~58%</span>
-            </div>
-            <p class="text-sm font-semibold text-neutral-900 mb-1">Cathay Pacific Business Class</p>
-            <p class="text-xs text-neutral-400 leading-relaxed mb-6">Book the Cook meal, aisle suite seat</p>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:gap-2.5 transition-all">
-              Arrange yours <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </span>
-          </a>
-
-          <!-- 6 · DOH → JFK -->
-          <a href="contact" class="card-utility p-6 group slide-up" style="animation-delay:.15s;">
-            <div class="flex items-center justify-between mb-6">
-              <span class="text-lg font-display font-bold text-neutral-900 tracking-tight inline-flex items-center gap-1">DOH <img src="../logos/flags/qatar.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"> <span class="text-brand-400 font-normal">→</span> JFK <img src="../logos/flags/united-states.png" alt="" class="inline-block w-4 h-4 rounded-full object-cover"></span>
-              <span class="savings-badge-gold"><i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Saved ~65%</span>
-            </div>
-            <p class="text-sm font-semibold text-neutral-900 mb-1">Qatar Airways QSuite</p>
-            <p class="text-xs text-neutral-400 leading-relaxed mb-6">Double bed configuration, fully flat</p>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 group-hover:gap-2.5 transition-all">
-              Arrange yours <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </span>
-          </a>
-
-        </div>
-
-        <div class="text-center mt-12 slide-up">
-          <p class="text-sm text-neutral-400 mb-6">Want to see your route here next?</p>
-          <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp">
-            <i class="fa-brands fa-whatsapp"></i> Start Your Arrangement
-          </a>
-        </div>
-
       </div>
     </section>
 
-
-    <!-- =============================================
-         3. HOW WE DO IT
-         ============================================= -->
-    <section class="py-24 tile-parch">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-
-        <div class="text-center mb-14 slide-up">
-          <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 mb-3">How We Do It</p>
-          <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
-            The Skyfare difference.
-          </h2>
+    <section class="past-deals-lens tile-parch py-24 overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="past-deals-section-heading slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Read the record</span>
+            <h2>Why these examples are useful.</h2>
+          </div>
+          <p>A deal is not only a low number. The route, cabin, cash cost, and booking path all shape whether it works for the trip.</p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-5">
-
-          <div class="card-process p-8 relative overflow-hidden slide-up">
-            <div class="icon-chip icon-chip-lg mb-5">
-              <i class="fa-solid fa-compass"></i>
-            </div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Strategic Search</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">
-              We look beyond direct routes to find confirmed partner inventory others overlook.
-            </p>
-          </div>
-
-          <div class="card-process p-8 relative overflow-hidden slide-up" style="animation-delay:0.1s;">
-            <div class="icon-chip icon-chip-lg mb-5">
-              <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Certified Nominees</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">
-              Our arrangement paths are fully compliant with airline policies for safe, secure ticketing.
-            </p>
-          </div>
-
-          <div class="card-process p-8 relative overflow-hidden slide-up" style="animation-delay:0.2s;">
-            <div class="icon-chip icon-chip-lg mb-5">
-              <i class="fa-solid fa-chart-line"></i>
-            </div>
-            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Real-Time Data</h3>
-            <p class="text-sm text-neutral-500 leading-relaxed">
-              We track availability across major alliances to alert you the moment your seat opens up.
-            </p>
-          </div>
-
+        <div class="past-deals-lens__grid">
+          <article class="past-deals-lens__item slide-up"><span>01</span><div><h3>Route strategy</h3><p>Singapore to Delhi was noted for its sweet-spot routing rather than a simple direct search.</p></div></article>
+          <article class="past-deals-lens__item slide-up" style="animation-delay:.08s;"><span>02</span><div><h3>Miles plus cash</h3><p>The Emirates record kept the 117k miles and S$186 cash context visible together.</p></div></article>
+          <article class="past-deals-lens__item slide-up" style="animation-delay:.16s;"><span>03</span><div><h3>Cabin details</h3><p>Qatar QSuite and Cathay's Book the Cook note show why the actual cabin matters alongside the fare.</p></div></article>
         </div>
-
       </div>
     </section>
 
+    <section id="deal-archive" class="past-deals-archive py-24 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="past-deals-section-heading past-deals-section-heading--archive slide-up">
+          <div>
+            <span class="eyebrow-chip-v2"><i class="fa-solid fa-list" aria-hidden="true"></i> The route ledger</span>
+            <h2>Six arrangements, one useful question.</h2>
+          </div>
+          <p>Which part of the route would you want to understand before committing miles or cash?</p>
+        </div>
 
-    <!-- =============================================
-         4. CTA BAND
-         ============================================= -->
-    <div data-cta-mount style="min-height:420px"
-      data-cta-eyebrow-icon="fa-solid fa-arrow-up"
-      data-cta-eyebrow-text="Your Turn"
-      data-cta-heading="Your route could be next."
-      data-cta-description="Tell us where you're headed — we'll find the confirmed seat and the strategy to match."
-      data-cta-art-image="../images/page-images/bg-3.JPG"
-      data-cta-primary-variant="whatsapp"
-      data-cta-primary-icon="fa-brands fa-whatsapp"
-      data-cta-primary-label="Start Your Arrangement"
-      data-cta-primary-href="https://api.whatsapp.com/send?phone=6581575306"
-      data-cta-primary-target="_blank"
-      data-cta-secondary-variant="outline"
-      data-cta-secondary-label="See Our Services"
-      data-cta-secondary-href="services"
-    ></div>
-    <script src="../js/cta-section.js" defer></script>
+        <div class="past-deals-filter-bar slide-up" role="search" aria-label="Filter past flight arrangements">
+          <label class="past-deals-filter-field past-deals-filter-field--search" for="deal-search"><span>Search the ledger</span><span class="past-deals-input-wrap"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="deal-search" type="search" placeholder="Route, city, airline" autocomplete="off"></span></label>
+          <label class="past-deals-filter-field" for="deal-cabin"><span>Cabin</span><select id="deal-cabin"><option value="all">All cabins</option><option value="Business Class">Business Class</option><option value="First Class">First Class</option></select></label>
+          <label class="past-deals-filter-field" for="deal-airline"><span>Airline</span><select id="deal-airline"><option value="all">All airlines</option><option value="Singapore Airlines">Singapore Airlines</option><option value="ANA">ANA</option><option value="Emirates">Emirates</option><option value="Vistara">Vistara</option><option value="Cathay Pacific">Cathay Pacific</option><option value="Qatar Airways">Qatar Airways</option></select></label>
+          <button type="button" id="deal-reset" class="past-deals-reset">Reset filters</button>
+        </div>
 
+        <div class="past-deals-results-meta"><span id="deal-results-count" role="status" aria-live="polite">6 historical arrangements</span><span>All examples are past and not currently bookable.</span></div>
+
+        <div id="deal-list" class="past-deals-list">
+          <article class="past-deal-row slide-up" data-deal data-route="sin lhr singapore london" data-cabin="First Class" data-airline="Singapore Airlines" data-search="sin lhr singapore london singapore airlines suites first class direct transfer"><div class="past-deal-row__index">01</div><div class="past-deal-row__route"><span>SIN <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> LHR</span><small>Singapore to London</small></div><div class="past-deal-row__details"><strong>Singapore Airlines Suites</strong><small>First Class · Arranged via direct transfer</small></div><div class="past-deal-row__value"><strong>~52%</strong><small>stated saving</small></div></article>
+          <article class="past-deal-row slide-up" data-deal data-route="sin nrt singapore tokyo" data-cabin="Business Class" data-airline="ANA" data-search="sin nrt singapore tokyo ana business class nominee arrangement confirmed instantly"><div class="past-deal-row__index">02</div><div class="past-deal-row__route"><span>SIN <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> NRT</span><small>Singapore to Tokyo</small></div><div class="past-deal-row__details"><strong>ANA Business Class</strong><small>Business Class · Nominee arrangement, confirmed instantly</small></div><div class="past-deal-row__value"><strong>~61%</strong><small>stated saving</small></div></article>
+          <article class="past-deal-row past-deal-row--featured slide-up" data-deal data-route="sin jfk singapore new york" data-cabin="First Class" data-airline="Emirates" data-search="sin jfk singapore new york emirates first class 117k miles s186 confirmed"><div class="past-deal-row__index">03</div><div class="past-deal-row__route"><span>SIN <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> JFK</span><small>Singapore to New York</small></div><div class="past-deal-row__details"><strong>Emirates First Class</strong><small>First Class · 117k miles + S$186, confirmed</small></div><div class="past-deal-row__value"><strong>~68%</strong><small>stated saving</small></div></article>
+          <article class="past-deal-row slide-up" data-deal data-route="sin del singapore delhi" data-cabin="Business Class" data-airline="Vistara" data-search="sin del singapore delhi vistara business class 45k miles s82 sweet spot routing"><div class="past-deal-row__index">04</div><div class="past-deal-row__route"><span>SIN <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> DEL</span><small>Singapore to Delhi</small></div><div class="past-deal-row__details"><strong>Vistara Business Class</strong><small>Business Class · 45k miles + S$82 via sweet-spot routing</small></div><div class="past-deal-row__value"><strong>~72%</strong><small>stated saving</small></div></article>
+          <article class="past-deal-row slide-up" data-deal data-route="hkg lhr hong kong london" data-cabin="Business Class" data-airline="Cathay Pacific" data-search="hkg lhr hong kong london cathay pacific business class book the cook aisle suite seat"><div class="past-deal-row__index">05</div><div class="past-deal-row__route"><span>HKG <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> LHR</span><small>Hong Kong to London</small></div><div class="past-deal-row__details"><strong>Cathay Pacific Business Class</strong><small>Business Class · Book the Cook meal, aisle suite seat</small></div><div class="past-deal-row__value"><strong>~58%</strong><small>stated saving</small></div></article>
+          <article class="past-deal-row slide-up" data-deal data-route="doh jfk doha new york" data-cabin="First Class" data-airline="Qatar Airways" data-search="doh jfk doha new york qatar airways qsuite first class double bed fully flat"><div class="past-deal-row__index">06</div><div class="past-deal-row__route"><span>DOH <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> JFK</span><small>Doha to New York</small></div><div class="past-deal-row__details"><strong>Qatar Airways QSuite</strong><small>First Class · Double bed configuration, fully flat</small></div><div class="past-deal-row__value"><strong>~65%</strong><small>stated saving</small></div></article>
+        </div>
+
+        <div id="deal-empty" class="past-deals-empty" hidden><i class="fa-solid fa-route" aria-hidden="true"></i><strong>No arrangements match those filters.</strong><p>Try a broader route or reset the ledger to see all six historical examples.</p><button type="button" class="btn-pill btn-pill-outline" data-reset-deals>Show all examples</button></div>
+      </div>
+    </section>
+
+    <section class="past-deals-method tile-dark1 py-24 overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="past-deals-method__grid">
+          <div class="slide-up"><span class="eyebrow-chip-v2 eyebrow-chip-v2--dark"><i class="fa-solid fa-compass" aria-hidden="true"></i> What happens next</span><h2>Past seats are proof. Your route is the conversation.</h2><p>When the right opportunity is live, Skyfare looks at the route as a whole instead of chasing a mileage number in isolation.</p><a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-whatsapp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Start a route review</a></div>
+          <ol class="past-deals-method__steps slide-up" style="animation-delay:.1s;"><li><span>01</span><div><strong>Share the route</strong><p>Tell us the destination, dates, and cabin you are considering.</p></div></li><li><span>02</span><div><strong>Check the useful details</strong><p>We look at availability, miles, taxes, and the practical booking path.</p></div></li><li><span>03</span><div><strong>Choose with context</strong><p>You get a clearer next step before moving miles or committing cash.</p></div></li></ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="past-deals-close py-20 bg-white"><div class="container mx-auto px-4 md:px-6"><div class="past-deals-close__inner slide-up"><div><span class="eyebrow-chip-v2"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Keep exploring</span><h2>Want the route intelligence behind the examples?</h2></div><a href="krisflyer" class="btn-pill btn-pill-outline">Explore KrisFlyer options <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div></div></section>
   </main>
-
 </body>
 </html>

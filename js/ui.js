@@ -78,7 +78,7 @@
     var triggerEl = document.activeElement; // restored on close -- see focus trap below
 
     var overlay = document.createElement('div');
-    overlay.className = 'sky-modal';
+    overlay.className = 'sky-modal' + (opts.variant ? ' sky-modal--' + opts.variant : '');
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
 
@@ -87,8 +87,10 @@
     if (actions.length) {
       actionsHtml = '<div class="sky-modal__actions">' +
         actions.map(function (a, i) {
-          var cls = a.style === 'primary' ? 'btn-pill btn-pill-primary'
-                  : a.style === 'danger'  ? 'sky-modal__btn sky-modal__btn--danger'
+          var cls = a.style === 'primary'    ? 'btn-pill btn-pill-primary'
+                  : a.style === 'primary-lg' ? 'btn-pill btn-pill-primary btn-pill-v2--lg btn-glow-v2'
+                  : a.style === 'danger'     ? 'sky-modal__btn sky-modal__btn--danger'
+                  : a.style === 'link'       ? 'sky-modal__btn sky-modal__btn--link'
                   : 'sky-modal__btn';
           return '<button data-sky-action="' + i + '" class="' + cls + '">' +
             escapeHtml(a.label || 'OK') + '</button>';

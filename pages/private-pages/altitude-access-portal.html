@@ -1,11 +1,19 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Altitude Dashboard — Skyfare</title>
+  <title>Altitude Dashboard | Skyfare</title>
   <meta name="robots" content="noindex,nofollow" />
-  <meta name="description" content="Your Altitude member dashboard — membership status, billing actions, and private issue archive." />
+  <meta name="description" content="Your Altitude member overview, membership status, latest premium issues, and private member links." />
   <link rel="icon" href="../../logos/logo.webp" />
 
   <script src="../../js/links.js"></script>
@@ -15,28 +23,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/altitude-editorial.css">
   <script src="../../js/tailwind-config.js" defer></script>
   <script src="../../js/ui.js" defer></script>
   <script src="../../js/private-layout.js" defer></script>
   <script src="../../js/modal-verify-access.js" defer></script>
-  <style>
-    /* Mirrors pages/contact.html's identical .form-label -- a page-local
-       micro-style there too, not promoted to css/style.css, so kept
-       consistent with that precedent rather than introducing a new shared
-       token for a single label style. */
-    .form-label {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #6b7280;
-      margin-bottom: 0.45rem;
-    }
-  </style>
 </head>
 
-<body class="private-body" data-private-page="altitude" data-private-product="Altitude" data-private-subtitle="Member dashboard">
+<body class="private-body altitude-portal-shell" data-private-page="altitude" data-private-product="Altitude" data-private-subtitle="Member overview" data-altitude-section="overview">
+  <!--
+    THESIS: Altitude is a travel intelligence briefing, not a generic member dashboard.
+    OWN-WORLD: Editorial utility UI with Skyfare white surfaces, route notation, compact live signals, restrained blue actions, and gold premium markers only.
+    STORY: Members see what is fresh -- real alert and Escapes rows, not decorative placeholders -- and jump straight into the right workflow via "See more."
+    FIRST VIEWPORT: private header, Altitude nav, editorial briefing intro, membership status, then live Award Alerts / KrisFlyer Escapes previews.
+    FORM: balanced intelligence overview. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+  -->
   <div id="page-loader">
     <img src="../../logos/logo.webp" alt="Skyfare Consulting">
     <div id="loader-dots"><span></span><span></span><span></span></div>
@@ -44,508 +45,181 @@
 
   <div id="private-header-slot"></div>
 
-  <main id="main-content" class="private-main">
-    <div id="alt-member">
-      <section class="private-hero" aria-labelledby="alt-dashboard-title">
-        <div class="private-container">
-          <div class="private-hero__grid">
-            <div class="private-panel private-hero__intro slide-up is-visible">
-              <div>
-                <span class="private-kicker private-kicker--gold">
-                  <i class="fa-solid fa-crown" aria-hidden="true"></i>
-                  Altitude Access
-                </span>
-                <h1 id="alt-dashboard-title">Your premium travel intelligence dashboard.</h1>
-                <p>
-                  Manage your Altitude membership, browse the private issue archive, and keep your routing research in one focused member workspace.
-                </p>
-              </div>
-              <div class="private-hero__meta">
-                <span class="private-stat"><i class="fa-solid fa-circle-check text-brand-500" aria-hidden="true"></i><strong>Active access</strong></span>
-                <span class="private-stat"><i class="fa-solid fa-envelope" aria-hidden="true"></i><span id="alt-member-email">Signed in</span></span>
-                <span class="private-stat"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span id="alt-post-count">Loading issues</span></span>
-              </div>
-            </div>
-
-            <aside id="alt-membership-card" class="private-panel private-summary slide-up is-visible" aria-label="Current membership">
-              <div class="flex items-center justify-between gap-4">
-                <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-crown" aria-hidden="true"></i></div>
-                <span class="private-badge private-badge--gold">Member</span>
-              </div>
-              <div>
-                <p class="private-summary__label">Current membership</p>
-                <p id="alt-membership-plan" class="private-summary__title">Altitude</p>
-              </div>
-              <div>
-                <p id="alt-membership-days" class="private-summary__value">Checking renewal status</p>
-                <p id="alt-membership-renew-note" class="hidden private-summary__note">Auto-renews · Cancel anytime</p>
-              </div>
-              <div class="private-summary__mini-list" aria-label="Membership benefits">
-                <span><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Premium archive access</span>
-                <span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Stripe-verified member status</span>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section class="private-section" aria-labelledby="alt-updates-title">
-        <div class="private-container">
-          <div class="private-panel private-updates slide-up" aria-label="Updates and announcements">
-            <span class="private-kicker"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Updates</span>
-            <h2 id="alt-updates-title" class="private-summary__title mt-3 mb-1">What's new</h2>
-            <!--
-              Manual-edit convention (no CMS backs this panel): copy a
-              .private-updates__item block below, edit the date/title/body,
-              cap the list at ~4 entries, and drop the oldest entry when
-              adding a new one.
-            -->
-            <div class="private-updates__item">
-              <div class="flex items-center gap-2">
-                <span class="private-updates__date">August 2026</span>
-                <span class="private-badge private-badge--gold">New</span>
-              </div>
-              <p class="private-updates__title">Membership dashboard redesign</p>
-              <p class="private-updates__body">Your dashboard now includes a full plans view, FAQ, and in-page support — no more digging through email for account questions.</p>
-            </div>
-            <div class="private-updates__item">
-              <span class="private-updates__date">July 2026</span>
-              <p class="private-updates__title">Flash Alerts widened</p>
-              <p class="private-updates__body">Award-space alerts now cover more routes and cabins across our core airline partners.</p>
-            </div>
-            <div class="private-updates__item">
-              <span class="private-updates__date">June 2026</span>
-              <p class="private-updates__title">Cabin Compare Verdict launched</p>
-              <p class="private-updates__body">Every product in Cabin Compare now carries a first-hand Verdict, written personally after flying the cabin.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="alt-plans-section" class="hidden private-section" aria-labelledby="alt-plans-title">
-        <div class="private-container">
-          <div class="private-section-heading slide-up">
-            <div>
-              <span class="private-kicker private-kicker--gold"><i class="fa-solid fa-credit-card" aria-hidden="true"></i> Membership</span>
-              <h2 id="alt-plans-title">Your plan.</h2>
-              <p>Manage billing, compare Monthly and Annual, or see where your access comes from.</p>
-            </div>
-          </div>
-          <div id="alt-plans-content"></div>
-        </div>
-      </section>
-
-      <section class="private-section" aria-labelledby="alt-archive-title">
-        <div class="private-container">
-          <div class="private-section-heading slide-up">
-            <div>
-              <span class="private-kicker"><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Member archive</span>
-              <h2 id="alt-archive-title">Issue library</h2>
-              <p>Filter the archive by free and premium issues. Premium articles open directly when your member token is active.</p>
-            </div>
-            <div class="private-toolbar" id="alt-filters" aria-label="Archive filters">
-              <button type="button" data-filter="all" class="alt-filter-btn active">All</button>
-              <button type="button" data-filter="free" class="alt-filter-btn">Free</button>
-              <button type="button" data-filter="premium" class="alt-filter-btn">Premium</button>
-            </div>
-          </div>
-
-          <div id="alt-archive-grid" class="private-grid">
-            <div class="private-skeleton">
-              <span class="private-skeleton__dot" aria-hidden="true"></span>
-              <p>Loading your issue archive</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="private-section" aria-labelledby="alt-compare-title">
-        <div class="private-container">
-          <div class="private-section-heading slide-up">
-            <div>
-              <span class="private-kicker"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> Reference</span>
-              <h2 id="alt-compare-title">What your membership includes.</h2>
-              <p>A quick reminder of everything Altitude adds on top of the free tier — and where the extra depth actually shows up.</p>
-            </div>
-          </div>
-
-          <div class="card-utility private-panel overflow-hidden slide-up" role="table" aria-label="Free vs. Altitude Access feature comparison">
-
-            <!-- Column header row (hidden on mobile; row-level inline labels take over) -->
-            <div class="hidden sm:flex items-center justify-between gap-4 px-6 py-5 bg-neutral-50 border-b border-brand-500/10" role="row">
-              <span class="text-xs font-bold uppercase tracking-wide text-neutral-400" role="columnheader">Feature</span>
-              <div class="flex items-center gap-3" role="presentation">
-                <span class="eyebrow-chip-v2 w-28 justify-center" role="columnheader">
-                  <i class="fa-solid fa-unlock" aria-hidden="true"></i> Free
-                </span>
-                <span class="eyebrow-chip-v2 eyebrow-chip-v2--gold w-28 justify-center" role="columnheader">
-                  <i class="fa-solid fa-crown" aria-hidden="true"></i> Altitude
-                </span>
-              </div>
-            </div>
-
-            <!-- Row 1: Flash Alerts (paid-only anchor) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-bolt" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Flash Alerts</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">When award space opens mid-week, members are alerted the moment it happens, not just in the Friday issue.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-minus text-neutral-300" aria-hidden="true"></i>
-                  <span class="sr-only">Not included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 2: Award Alerts (shared/paired) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Award Alerts</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Live award windows before they close, with full dates and booking detail — delivered straight to your inbox.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Free (limited dates shown)</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access (full dates)</span>
-                </div>
-              </div>
-            </div>
-            <p class="text-[11px] text-neutral-400 px-6 -mt-2 pb-1 sm:pl-[4.25rem]">
-              Free: same alerts, only a sample of dates shown — full date lists sit behind the paywall line.
-            </p>
-
-            <!-- Row 3: KrisFlyer Spontaneous Escapes (shared/paired) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-tags" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">KrisFlyer Spontaneous Escapes</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Full monthly breakdown of every drop, no paywall cutoff.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Free (summary only)</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access (full breakdown)</span>
-                </div>
-              </div>
-            </div>
-            <p class="text-[11px] text-neutral-400 px-6 -mt-2 pb-1 sm:pl-[4.25rem]">
-              Free: monthly summary of each drop, with the full breakdown behind the paywall line.
-            </p>
-
-            <!-- Row 4: The Skyfare Verdict on Cabin Compare (paid-only) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-award" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">The Skyfare Verdict on Cabin Compare</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Full access to the Verdict on every product in Cabin Compare, written personally after flying the cabin.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-minus text-neutral-300" aria-hidden="true"></i>
-                  <span class="sr-only">Not included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 5: Routing Strategies (paid-only) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-route" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Routing Strategies</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Itineraries that maximise cabin quality, built on 100+ flights booked for clients across 10 airlines.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-minus text-neutral-300" aria-hidden="true"></i>
-                  <span class="sr-only">Not included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 6: Full Archive (paid-only) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Full Archive</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Every issue, readable on-site, any time.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-minus text-neutral-300" aria-hidden="true"></i>
-                  <span class="sr-only">Not included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 7: Members Only Content (paid-only) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm icon-chip--gold flex-shrink-0 mt-0.5"><i class="fa-solid fa-crown" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Members Only Content</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Exclusive issues that never go to the free list.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-minus text-neutral-300" aria-hidden="true"></i>
-                  <span class="sr-only">Not included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 8: Cabin Reviews (free's strongest hook, also included for Altitude) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-couch" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Cabin Reviews</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">First-hand Business and First Class reviews. Filmed and written up honestly, 50+ flights flown this year.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 9: Weekly Aviation News (also included for Altitude) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-globe" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Weekly Aviation News</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Updates from across the world of aviation.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 10: Transfer Bonuses (also included for Altitude) -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-6 py-5 border-t border-brand-500/[0.08] hover:bg-brand-500/[0.03] transition-colors" role="row">
-              <div class="flex items-start gap-3 flex-1 min-w-0" role="cell">
-                <div class="icon-chip icon-chip-sm flex-shrink-0 mt-0.5"><i class="fa-solid fa-right-left" aria-hidden="true"></i></div>
-                <div>
-                  <p class="text-sm font-semibold text-neutral-900 mb-0.5">Transfer Bonuses</p>
-                  <p class="text-xs text-neutral-400 leading-relaxed">Airline and credit card transfer bonus roundups.</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 pl-[2.75rem] sm:pl-0" role="presentation">
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Free</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Free</span>
-                </div>
-                <div class="flex items-center gap-2 sm:w-28 sm:justify-center" role="cell">
-                  <span class="sm:hidden text-[10px] font-bold uppercase tracking-wide text-neutral-400 w-14">Altitude</span>
-                  <i class="fa-solid fa-check text-brand-500" aria-hidden="true"></i>
-                  <span class="sr-only">Included in Altitude Access</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <p class="text-center text-sm text-neutral-500 mt-6 slide-up">
-            Need something not listed? <a href="#" id="alt-compare-support-link" class="text-brand-600 font-bold hover:underline">Contact support.</a>
-          </p>
-        </div>
-      </section>
-
-      <section class="private-section" aria-labelledby="alt-help-title">
-        <div class="private-container">
-          <div class="private-section-heading slide-up">
-            <div>
-              <span class="private-kicker"><i class="fa-solid fa-life-ring" aria-hidden="true"></i> Help &amp; Support</span>
-              <h2 id="alt-help-title">Need a hand?</h2>
-              <p>Reach our team directly, or check the answers below first.</p>
-            </div>
-          </div>
-
-          <div class="private-panel slide-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-            <div class="flex items-start gap-4">
-              <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-headset" aria-hidden="true"></i></div>
-              <div>
-                <p class="private-summary__title text-[1.05rem]">Contact Support</p>
-                <p class="private-summary__note mt-1">Billing questions, access issues, or anything else — we usually reply within a few hours.</p>
-              </div>
-            </div>
-            <button type="button" id="alt-support-open-btn" class="private-action private-action--primary">
-              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Contact Support
-            </button>
-          </div>
-
-          <div id="alt-faq-section" class="space-y-3 slide-up">
-            <details class="faq-item-light group">
-              <summary class="flex items-center justify-between gap-4 p-5">
-                <span class="text-sm font-semibold text-neutral-900">How do I update my payment method?</span>
-                <span class="faq-indicator"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-              </summary>
-              <div class="accordion-body">
-                <div class="px-5 pb-5 text-sm text-neutral-500 leading-relaxed">
-                  Open <strong>Manage Billing</strong> from the Membership Plans section above — it opens Stripe's secure billing portal, where you can update your card, view invoices, or change your payment method directly.
-                </div>
-              </div>
-            </details>
-            <details class="faq-item-light group">
-              <summary class="flex items-center justify-between gap-4 p-5">
-                <span class="text-sm font-semibold text-neutral-900">Can I cancel anytime?</span>
-                <span class="faq-indicator"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-              </summary>
-              <div class="accordion-body">
-                <div class="px-5 pb-5 text-sm text-neutral-500 leading-relaxed">
-                  Yes — there's no lock-in contract. Cancel from the Manage Billing portal above and you won't be charged again; your access simply continues until the end of your current billing period.
-                </div>
-              </div>
-            </details>
-            <details class="faq-item-light group">
-              <summary class="flex items-center justify-between gap-4 p-5">
-                <span class="text-sm font-semibold text-neutral-900">What happens to my access after I cancel?</span>
-                <span class="faq-indicator"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-              </summary>
-              <div class="accordion-body">
-                <div class="px-5 pb-5 text-sm text-neutral-500 leading-relaxed">
-                  Nothing changes right away. You keep full Altitude access until your current period ends on the date shown in your membership summary above — after that, your account reverts to the free tier.
-                </div>
-              </div>
-            </details>
-            <details class="faq-item-light group">
-              <summary class="flex items-center justify-between gap-4 p-5">
-                <span class="text-sm font-semibold text-neutral-900">I bought the KrisFlyer Guide — why do I have Altitude access?</span>
-                <span class="faq-indicator"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-              </summary>
-              <div class="accordion-body">
-                <div class="px-5 pb-5 text-sm text-neutral-500 leading-relaxed">
-                  The KrisFlyer Guide includes 90 days of complimentary Altitude access as part of the purchase. It's a one-time bonus, not a subscription — see the Access Source panel in Membership Plans above for your exact expiration date.
-                </div>
-              </div>
-            </details>
-            <details class="faq-item-light group">
-              <summary class="flex items-center justify-between gap-4 p-5">
-                <span class="text-sm font-semibold text-neutral-900">I'm having trouble accessing my account.</span>
-                <span class="faq-indicator"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-              </summary>
-              <div class="accordion-body">
-                <div class="px-5 pb-5 text-sm text-neutral-500 leading-relaxed">
-                  Try refreshing this page first — occasionally billing details take a minute to sync after a payment. If the issue continues, contact support above and we'll sort it out.
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
+  <nav class="altitude-subnav" aria-label="Altitude member pages">
+    <div class="private-container altitude-subnav__inner">
+      <a href="altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
+      <a href="altitude-access/award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
+      <a href="altitude-access/krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
+      <a href="altitude-access/newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
     </div>
-  </main>
+  </nav>
 
-  <template id="alt-support-form-template">
-    <form id="alt-support-form" class="alt-support-form" novalidate>
-      <div class="hidden" aria-hidden="true">
-        <input name="bot-field" tabindex="-1" autocomplete="off">
-      </div>
-      <div class="alt-support-form__row">
-        <div>
-          <label class="form-label">Full Name</label>
-          <input type="text" name="name" required placeholder="John Doe" class="form-input">
-          <p class="alt-support-form__error" data-error-for="name">Please enter your name.</p>
+  <main id="main-content" class="private-main altitude-portal-main">
+    <section class="altitude-overview" aria-labelledby="alt-dashboard-title">
+      <div class="private-container">
+        <div class="altitude-briefing-hero">
+          <div class="altitude-briefing-copy slide-up is-visible">
+            <div class="altitude-status-line">
+              <span><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Active access</span>
+              <span id="alt-member-email">Signed in</span>
+            </div>
+            <h1 id="alt-dashboard-title">Altitude intelligence briefing.</h1>
+            <p>
+              A focused member view for award opportunities and editorial KrisFlyer escape analysis. Each area is built for the way that intelligence is actually read.
+            </p>
+            <div class="altitude-overview__actions">
+              <a href="altitude-access/award-alerts.html" class="private-action private-action--primary">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i> Open Alerts
+              </a>
+            </div>
+          </div>
+
+          <aside id="alt-membership-card" class="private-panel private-summary altitude-membership-card slide-up is-visible" aria-label="Current membership">
+            <div class="flex items-center justify-between gap-4">
+              <div class="icon-chip icon-chip-lg icon-chip--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i></div>
+              <span class="private-badge private-badge--gold">Member</span>
+            </div>
+            <div>
+              <p class="private-summary__label">Current membership</p>
+              <p id="alt-membership-plan" class="private-summary__title">Altitude</p>
+            </div>
+            <div class="altitude-membership-dates">
+              <div>
+                <span>Purchased</span>
+                <strong id="alt-membership-purchased"><span class="private-skel-line private-skel-line--inline" style="width:4.5rem;height:0.85em;" aria-label="Checking"></span></strong>
+              </div>
+              <div>
+                <span>Expires</span>
+                <strong id="alt-membership-expires"><span class="private-skel-line private-skel-line--inline" style="width:4.5rem;height:0.85em;" aria-label="Checking"></span></strong>
+              </div>
+            </div>
+            <div class="altitude-membership-remaining">
+              <p class="private-summary__label">Remaining access</p>
+              <p id="alt-membership-days" class="private-summary__value"><span class="private-skel-line private-skel-line--inline" style="width:9rem;height:0.85em;" aria-label="Checking renewal status"></span></p>
+            </div>
+            <div class="altitude-membership-footer">
+              <a href="altitude-access/membership.html" class="private-action private-action--primary w-full justify-center">
+                <i class="fa-solid fa-credit-card" aria-hidden="true"></i> Manage Membership
+              </a>
+              <p id="alt-membership-renew-note" class="hidden private-summary__note altitude-renew-note">Auto-renews. Cancel anytime.</p>
+            </div>
+          </aside>
         </div>
-        <div>
-          <label class="form-label">Email Address</label>
-          <input type="email" name="email" required placeholder="you@example.com" class="form-input">
-          <p class="alt-support-form__error" data-error-for="email">Please enter a valid email.</p>
+      </div>
+    </section>
+
+    <section class="altitude-overview-section" aria-labelledby="alt-intelligence-title">
+      <div class="private-container">
+        <div class="altitude-section-title slide-up">
+          <h2 id="alt-intelligence-title">Latest intelligence surfaces</h2>
+          <p>A live glance at each product, straight from the source.</p>
+        </div>
+        <div class="altitude-intelligence-grid">
+          <article class="altitude-intel-card altitude-intel-card--alerts slide-up">
+            <div class="altitude-intel-card__head">
+              <span class="private-badge private-badge--gold">Live feed</span>
+              <h3>Award Alerts</h3>
+              <p>Fresh opportunities as they're found. Filter by status and open the full booking detail when timing matters.</p>
+            </div>
+            <div class="altitude-intel-preview" data-overview-preview="award-alerts">
+              <div role="status" aria-live="polite" aria-label="Loading latest alerts">
+                <div class="altitude-intel-preview__row">
+                  <div class="altitude-intel-preview__row-top">
+                    <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                    <span class="alt-skeleton__line" style="width:3rem;"></span>
+                  </div>
+                  <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.65rem;"></span>
+                </div>
+                <div class="altitude-intel-preview__row">
+                  <div class="altitude-intel-preview__row-top">
+                    <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                    <span class="alt-skeleton__line" style="width:3rem;"></span>
+                  </div>
+                  <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.65rem;"></span>
+                </div>
+                <div class="altitude-intel-preview__row">
+                  <div class="altitude-intel-preview__row-top">
+                    <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                    <span class="alt-skeleton__line" style="width:3rem;"></span>
+                  </div>
+                  <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.65rem;"></span>
+                </div>
+              </div>
+            </div>
+            <a href="altitude-access/award-alerts.html" class="private-action altitude-intel-card__more">
+              See all alerts <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </article>
+
+          <article class="altitude-intel-card altitude-intel-card--escape slide-up">
+            <div class="altitude-intel-card__head">
+              <span class="private-badge private-badge--gold">Editorial</span>
+              <h3>KrisFlyer Escapes</h3>
+              <p>This month's destination-led briefing with route rows and editorial context.</p>
+            </div>
+            <div class="altitude-intel-preview" data-overview-preview="krisflyer-escapes">
+              <div role="status" aria-live="polite" aria-label="Loading this month's drop">
+                <span class="alt-skeleton__line alt-skeleton__line--short" style="height:0.7rem;margin-bottom:.5rem;"></span>
+                <span class="alt-skeleton__title" style="width:90%;margin-bottom:.6rem;"></span>
+                <div class="altitude-intel-preview__row">
+                  <span class="alt-skeleton__badge"></span>
+                  <span class="alt-skeleton__line alt-skeleton__line--medium"></span>
+                </div>
+              </div>
+            </div>
+            <a href="altitude-access/krisflyer-escapes.html" class="private-action altitude-intel-card__more">
+              Read this month's Escapes <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </article>
         </div>
       </div>
-      <div>
-        <label class="form-label">Subject</label>
-        <input type="text" name="subject" placeholder="e.g. Billing question" class="form-input">
+    </section>
+
+    <section class="altitude-overview-section" aria-labelledby="alt-latest-title">
+      <div class="private-container">
+        <div class="altitude-section-title altitude-section-title--split slide-up">
+          <div>
+            <h2 id="alt-latest-title">Latest member issues</h2>
+            <p>Fresh Altitude posts and premium travel intelligence from the archive.</p>
+          </div>
+          <a href="altitude-access/newsletter.html" class="private-action">
+            View Archive <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div id="alt-latest-grid" class="private-grid altitude-latest-grid" role="status" aria-live="polite" aria-label="Loading latest issues">
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <label class="form-label">Message</label>
-        <textarea name="message" rows="4" required placeholder="Tell us what's going on..." class="form-input"></textarea>
-        <p class="alt-support-form__error" data-error-for="message">Please enter a message.</p>
-      </div>
-      <p class="alt-support-form__status" id="alt-support-form-status"></p>
-    </form>
-  </template>
+    </section>
+  </main>
 
   <div id="private-footer-slot"></div>
 
   <script src="../../js/altitude-portal.js" defer></script>
-  <script src="../../js/altitude-portal-extras.js" defer></script>
+  <script src="../../js/altitude-content-core.js" defer></script>
+  <script src="../../js/altitude-overview-preview.js" defer></script>
 </body>
 </html>

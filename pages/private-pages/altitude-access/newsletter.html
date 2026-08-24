@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX0B0NKJDC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DX0B0NKJDC');
+  </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Altitude Latest Issues | Skyfare</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Read your Altitude premium newsletter archive and member issues." />
+  <link rel="icon" href="../../../logos/logo.webp" />
+
+  <script src="../../../js/links.js"></script>
+  <link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <script src="../../../lib/tailwind/tailwind.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/tailwind-config.js" defer></script>
+  <script src="../../../js/ui.js" defer></script>
+  <script src="../../../js/private-layout.js" defer></script>
+  <script src="../../../js/modal-verify-access.js" defer></script>
+</head>
+
+<body class="private-body altitude-portal-shell" data-private-page="altitude" data-private-product="Altitude" data-private-subtitle="Latest issues" data-altitude-section="newsletter">
+  <div id="page-loader">
+    <img src="../../../logos/logo.webp" alt="Skyfare Consulting">
+    <div id="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="private-header-slot"></div>
+
+  <nav class="altitude-subnav" aria-label="Altitude member pages">
+    <div class="private-container altitude-subnav__inner">
+      <a href="../altitude-access-portal.html" data-altitude-nav="overview"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><span>Overview</span></a>
+      <a href="award-alerts.html" data-altitude-nav="award-alerts"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Award Alerts</span></a>
+      <a href="krisflyer-escapes.html" data-altitude-nav="krisflyer-escapes"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i><span>KF Escapes</span></a>
+      <a href="newsletter.html" data-altitude-nav="newsletter"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Latest Issues</span></a>
+    </div>
+  </nav>
+
+  <main id="main-content" class="private-main altitude-portal-main">
+    <section class="altitude-member-page" aria-labelledby="alt-archive-title">
+      <div class="private-container">
+        <div class="altitude-page-heading altitude-page-heading--split slide-up is-visible">
+          <div>
+            <a href="../altitude-access-portal.html" class="altitude-back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Overview</a>
+            <h1 id="alt-archive-title">Browse the archive.</h1>
+            <p>Find a specific issue by access level or topic. Premium articles open directly with your active member access.</p>
+          </div>
+          <div class="private-toolbar justify-between" aria-label="Archive filters">
+            <div id="alt-filters" class="private-toolbar" aria-label="Filter by access">
+              <button type="button" data-filter="all" class="alt-filter-btn active">All</button>
+              <button type="button" data-filter="free" class="alt-filter-btn">Free</button>
+              <button type="button" data-filter="premium" class="alt-filter-btn alt-filter-btn--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</button>
+            </div>
+            <!-- Topic dropdown, AND-combined with the access filter above
+                 (js/altitude-portal.js's _getFilteredPosts). Values are display
+                 labels, matched case-insensitively -- Beehiiv always lowercases
+                 content_tags regardless of a tag's configured display casing. -->
+            <select id="alt-topic-select" class="alt-filter-select" aria-label="Filter by topic">
+              <option value="all">All Topics</option>
+              <option value="Credit/Debit Cards">Credit/Debit Cards</option>
+              <option value="Airlines">Airlines</option>
+              <option value="News">News</option>
+              <option value="Redemption Availability">Redemption Availability</option>
+            </select>
+          </div>
+        </div>
+
+        <section class="altitude-latest-briefing" aria-labelledby="alt-latest-title">
+          <div class="altitude-section-title altitude-section-title--split">
+            <div>
+              <span class="altitude-section-kicker"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Member briefing</span>
+              <h2 id="alt-latest-title">Start with the latest issues.</h2>
+              <p>The newest award intelligence, cabin notes, and routing ideas in one quick read.</p>
+            </div>
+            <span class="altitude-latest-briefing__note"><i class="fa-solid fa-lock" aria-hidden="true"></i> Member access active</span>
+          </div>
+          <div id="alt-latest-grid" class="private-grid altitude-latest-grid" aria-live="polite" aria-label="Latest newsletter issues">
+            <div class="private-skel-card"><div class="private-skel-card__media"></div><div class="private-skel-card__body"><span class="private-skel-line" style="width:35%;"></span><span class="private-skel-title" style="width:85%;"></span><span class="private-skel-line" style="width:45%;"></span></div></div>
+            <div class="private-skel-card"><div class="private-skel-card__media"></div><div class="private-skel-card__body"><span class="private-skel-line" style="width:35%;"></span><span class="private-skel-title" style="width:85%;"></span><span class="private-skel-line" style="width:45%;"></span></div></div>
+            <div class="private-skel-card"><div class="private-skel-card__media"></div><div class="private-skel-card__body"><span class="private-skel-line" style="width:35%;"></span><span class="private-skel-title" style="width:85%;"></span><span class="private-skel-line" style="width:45%;"></span></div></div>
+          </div>
+        </section>
+
+        <div class="altitude-archive-count private-panel slide-up is-visible">
+          <div class="icon-chip icon-chip-lg"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></div>
+          <div>
+            <p class="private-summary__label">Available issues</p>
+            <p id="alt-post-count" class="private-summary__title"><span class="private-skel-line private-skel-line--inline" style="width:5rem;height:1em;" aria-label="Loading issues"></span></p>
+          </div>
+        </div>
+
+        <div id="alt-archive-grid" class="private-grid" role="status" aria-live="polite" aria-label="Loading your issue archive">
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+          <div class="private-skel-card">
+            <div class="private-skel-card__media"></div>
+            <div class="private-skel-card__body">
+              <span class="private-skel-line" style="width:35%;"></span>
+              <span class="private-skel-title" style="width:85%;"></span>
+              <span class="private-skel-line" style="width:45%;"></span>
+            </div>
+          </div>
+        </div>
+        <div id="alt-archive-pagination" class="altitude-pagination" aria-label="Newsletter archive pagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="private-footer-slot"></div>
+
+  <script src="../../../js/altitude-portal.js" defer></script>
+</body>
+</html>

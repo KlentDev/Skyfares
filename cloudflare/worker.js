@@ -31,6 +31,8 @@
  *                                    (modifies the existing Stripe subscription, no new
  *                                    Checkout Session — see services/stripe.js's handleUpgradeToAnnual)
  *   POST /altitude/waitlist        — join the pre-launch Altitude waitlist
+ *   GET  /altitude/content/*       — authenticated Airtable CMS content for private
+ *                                    Altitude pages; requires Altitude JWT
  *   POST /guide/checkout           — create Stripe Checkout session for the KrisFlyer Guide
  *                                    (one-time purchase; webhook shares /altitude/webhook,
  *                                    branched by session.mode — see handleGuideCheckoutComplete)
@@ -61,10 +63,22 @@
  *                                    default page size 9, paginated via the returned `offset` token)
  *
  * Required secrets (wrangler secret put):
- *   BEEHIIV_API_KEY   STRIPE_SECRET_KEY   STRIPE_WEBHOOK_SECRET
+ *   BEEHIIV_API_KEY
+ *
+ *   -- Skyfare production Stripe configuration (live mode) --
+ *   Main Altitude Access + KrisFlyer Guide Stripe account. Live values are
+ *   set only via `wrangler secret put` from cloudflare/, never committed —
+ *   see services/stripe.js and orchestration/stripeWebhook.js for usage.
+ *   STRIPE_SECRET_KEY        — live secret key, Skyfare's production Stripe account
+ *   STRIPE_WEBHOOK_SECRET    — live signing secret for this account's /altitude/webhook endpoint
  *   STRIPE_PRICE_ID          — Altitude Access, monthly (default plan)
  *   STRIPE_PRICE_ID_ANNUAL   — Altitude Access, annual (POST /altitude/checkout {plan:'annual'})
- *   STRIPE_GUIDE_PRICE_ID   JWT_SECRET
+ *   STRIPE_GUIDE_PRICE_ID
+ *
+ *   JWT_SECRET
+ *
+ *   -- Travel Strategy Call: separate sandbox Stripe account (unrelated to
+ *   the Skyfare production configuration above) --
  *   STRIPE_ASSESSMENT_PRICE_ID  — Travel Strategy Call, one-time $99, under the "Klent sandbox"
  *                              Stripe account (acct_1Tl1nJB9NfKSwBnU) while this product is being tested
  *   STRIPE_ASSESSMENT_SECRET_KEY — secret key for that same sandbox account. Deliberately separate
@@ -84,6 +98,7 @@
  *   PDF_PASSWORD_SECRET     — HMAC key for deterministic guide-PDF password derivation
  *   PDF_LINK_SECRET         — HMAC key for signed /guide/pdf/fetch download links
  *   AIRTABLE_API_KEY   AIRTABLE_TABLE_ASSESSMENT_BOOKINGS
+ *   AIRTABLE_TABLE_ALTITUDE_SUBSCRIBERS — paid Monthly/Annual subscriber mirror
  *
  * KV binding: ALTITUDE_KV
  * R2 binding: GUIDE_PDF_BUCKET (temporary guide-PDF storage for the email flow)
@@ -100,9 +115,10 @@ import {
 import { handleWaitlist, handleMagicRequest, handleSubscribe, triggerSegmentRecalculation } from './services/beehiiv.js';
 import { handleGetPosts, handleGetPost } from './services/newsletter.js';
 import {
-  handleFlightApplication, handleContactInquiry, handlePostTestimonial,
-  handleGetTestimonials, handleGetTestimonialScores,
+  handleFlightApplication, handlePostTestimonial,
+  handleGetTestimonials, handleGetTestimonialScores, handleGetAltitudeContent,
 } from './services/airtable.js';
+import { handleContactInquiry } from './orchestration/contactInquiry.js';
 
 import { handleStripeWebhook } from './orchestration/stripeWebhook.js';
 import { handleCalcomWebhook } from './orchestration/calcomWebhook.js';
@@ -195,6 +211,18 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/altitude/waitlist') {
       return handleWaitlist(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/altitude/content/award-alerts') {
+      return handleGetAltitudeContent(request, env, corsHeaders, 'award-alerts');
+    }
+
+    if (request.method === 'GET' && url.pathname === '/altitude/content/routing-strategies') {
+      return handleGetAltitudeContent(request, env, corsHeaders, 'routing-strategies');
+    }
+
+    if (request.method === 'GET' && url.pathname === '/altitude/content/krisflyer-escapes') {
+      return handleGetAltitudeContent(request, env, corsHeaders, 'krisflyer-escapes');
     }
 
     // ── KrisFlyer Guide routes ──────────────────────────────────────────────

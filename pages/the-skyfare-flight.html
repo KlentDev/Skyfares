@@ -4,8 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Skyfare Flight | Skyfare Consulting</title>
-  <meta name="description"
-    content="What if your next flight was on us? Every three months, Skyfare selects one person for a meaningful flight experience." />
+  <meta name="description" content="The Skyfare Flight is a quarterly initiative where one person is selected for a meaningful flight experience. Tell Skyfare where you would go and why." />
   <link rel="icon" href="../logos/logo.webp" />
 
   <script src="../js/links.js"></script>
@@ -21,455 +20,153 @@
   <script src="../js/tailwind-config.js" defer></script>
 </head>
 
-<body class="min-h-screen flex flex-col bg-white">
-
+<body class="min-h-screen flex flex-col bg-white skyfare-flight-page">
   <div id="page-loader">
     <img src="../logos/logo.webp" alt="Skyfare Consulting">
     <div id="loader-dots"><span></span><span></span><span></span></div>
   </div>
 
   <main class="flex-1">
-
-    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/skyfare-flight.JPG');">
+    <section class="skyfare-flight-hero page-hero-bg relative overflow-hidden" style="--hero-img:url('../images/page-images/skyfare-flight.JPG');">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="grid lg:grid-cols-[1fr_0.82fr] gap-10 lg:gap-16 items-center">
-          <div class="max-w-2xl slide-up">
-            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-              <i class="fa-solid fa-paper-plane text-[10px]" aria-hidden="true"></i>
-              One person. One flight. Every three months.
-            </span>
-
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
-              What if your next flight was on us?
-            </h1>
-            <p class="text-base md:text-lg text-white/70 leading-relaxed mb-8 font-medium max-w-xl">
-              Every three months, Skyfare selects one person for a flight experience because sometimes the best journeys are the ones you never expected.
-            </p>
-
+        <div class="skyfare-flight-hero__meta"><span>Skyfare / The Skyfare Flight</span><span>Flight #01 · Applications open</span></div>
+        <div class="skyfare-flight-hero__layout">
+          <div class="skyfare-flight-hero__copy slide-up">
+            <span class="skyfare-flight-kicker"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> One person. One flight. Every three months.</span>
+            <h1>A meaningful trip starts with a story.</h1>
+            <p>The Skyfare Flight is a quarterly initiative where one person is selected for a flight experience. Tell us where you would go and why the journey matters.</p>
             <div class="flex flex-wrap gap-3">
-              <a href="#apply" class="btn-pill btn-pill-primary btn-glow-v2">
-                Tell Us Your Story
-              </a>
-              <a href="#how-it-works" class="btn-pill btn-pill-ghost">
-                See How It Works
-              </a>
+              <a href="#apply" class="btn-pill btn-pill-primary btn-glow-v2">Tell us your story <i class="fa-solid fa-arrow-down text-[10px]" aria-hidden="true"></i></a>
+              <a href="#how-it-works" class="btn-pill btn-pill-ghost">See how it works <i class="fa-solid fa-arrow-down text-[10px]" aria-hidden="true"></i></a>
             </div>
-
-            <p class="text-[11px] text-white/40 leading-relaxed mt-5 max-w-lg">
-              Submitting a story does not guarantee selection. Skyfare reads entries before each quarterly selection.
-            </p>
+            <p class="skyfare-flight-hero__note">Submitting a story does not guarantee selection. Skyfare reads entries before each quarterly selection.</p>
           </div>
 
-          <aside class="skyfare-ticket-wrap slide-up" style="animation-delay:0.1s;" aria-label="Illustrative Skyfare Flight ticket">
-            <div class="skyfare-ticket-stage">
-              <label class="skyfare-ticket" aria-label="Flip Skyfare Flight ticket">
-                <input class="skyfare-ticket__toggle" type="checkbox" aria-label="Show Skyfare Flight ticket back">
-                <span class="skyfare-ticket__card">
-                  <span class="skyfare-ticket__front">
-                    <span class="skyfare-ticket__small-title">SF001</span>
-                    <span class="skyfare-ticket__main">
-                      <span class="skyfare-ticket__main-body">
-                        <span class="skyfare-ticket__title-block">
-                          <span class="skyfare-ticket__title">Skyfare Flight</span>
-                          <span class="skyfare-ticket__subtitle">Your next flight could be on us.</span>
-                        </span>
-                        <span class="skyfare-ticket__vip">
-                          <span>Open</span>
-                          <span class="skyfare-ticket__number">#SF001</span>
-                          <span>Story on the back</span>
-                        </span>
-                        <span class="skyfare-ticket__info">
-                          <span><strong>Passenger</strong>You?</span>
-                          <span><strong>From</strong>Your story</span>
-                          <span><strong>To</strong>Somewhere meaningful</span>
+          <aside class="skyfare-flight-ticket-panel slide-up" style="animation-delay:.1s;" aria-label="Interactive Skyfare Flight ticket">
+            <p class="skyfare-flight-ticket-panel__hint"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i> Select the ticket to read the prompts</p>
+            <div class="skyfare-ticket-wrap">
+              <div class="skyfare-ticket-stage">
+                <label class="skyfare-ticket" aria-label="Flip Skyfare Flight ticket">
+                  <input class="skyfare-ticket__toggle" type="checkbox" aria-label="Show Skyfare Flight ticket back">
+                  <span class="skyfare-ticket__card">
+                    <span class="skyfare-ticket__front">
+                      <span class="skyfare-ticket__small-title">SF001</span>
+                      <span class="skyfare-ticket__main">
+                        <span class="skyfare-ticket__main-body">
+                          <span class="skyfare-ticket__title-block"><span class="skyfare-ticket__title">Skyfare Flight</span><span class="skyfare-ticket__subtitle">Your next flight could be on us.</span></span>
+                          <span class="skyfare-ticket__vip"><span>Open</span><span class="skyfare-ticket__number">#SF001</span><span>Story on the back</span></span>
+                          <span class="skyfare-ticket__info"><span><strong>Passenger</strong>You?</span><span><strong>From</strong>Your story</span><span><strong>To</strong>Somewhere meaningful</span></span>
                         </span>
                       </span>
+                      <span class="skyfare-ticket__small"><span class="skyfare-ticket__small-body"><span class="skyfare-ticket__small-meta"><span>Ticket <strong>#30112</strong></span><span>Gate <strong>SKY</strong></span><span>Row <strong>01</strong></span><span>Seat <strong>YOU</strong></span></span><span class="skyfare-ticket__barcode" aria-hidden="true"></span></span></span>
                     </span>
-                    <span class="skyfare-ticket__small">
-                      <span class="skyfare-ticket__small-body">
-                        <span class="skyfare-ticket__small-meta">
-                          <span>Ticket <strong>#30112</strong></span>
-                          <span>Gate <strong>SKY</strong></span>
-                          <span>Row <strong>01</strong></span>
-                          <span>Seat <strong>YOU</strong></span>
-                        </span>
-                        <span class="skyfare-ticket__barcode" aria-hidden="true"></span>
-                      </span>
+                    <span class="skyfare-ticket__back">
+                      <span class="skyfare-ticket__main-back"><span class="skyfare-ticket__agenda"><span><strong>01</strong>Tell us where you would go.</span><span><strong>02</strong>Share why the trip matters.</span><span><strong>03</strong>We read the stories quarterly.</span><span><strong>04</strong>One person gets the opportunity to fly.</span></span></span>
+                      <span class="skyfare-ticket__small-back"><span class="skyfare-ticket__number">#SF001</span></span>
                     </span>
                   </span>
-
-                  <span class="skyfare-ticket__back">
-                    <span class="skyfare-ticket__main-back">
-                      <span class="skyfare-ticket__agenda">
-                        <span><strong>01</strong> Tell us where you would go.</span>
-                        <span><strong>02</strong> Share why the trip matters.</span>
-                        <span><strong>03</strong> We read the stories quarterly.</span>
-                        <span><strong>04</strong> One person gets the opportunity to fly.</span>
-                      </span>
-                    </span>
-                    <span class="skyfare-ticket__small-back">
-                      <span class="skyfare-ticket__number">#SF001</span>
-                    </span>
-                  </span>
-                </span>
-              </label>
+                </label>
+              </div>
             </div>
           </aside>
         </div>
       </div>
     </section>
 
-    <section id="how-it-works" class="py-24 bg-white overflow-hidden">
+    <section class="skyfare-flight-status bg-white" aria-label="Current Skyfare Flight status">
+      <div class="container mx-auto px-4 md:px-6"><div class="skyfare-flight-status__grid"><div><span>Campaign</span><strong>Skyfare Flight #01</strong></div><div><span>Applications</span><strong class="is-open">Open</strong></div><div><span>Selection rhythm</span><strong>Every three months</strong></div></div></div>
+    </section>
+
+    <section id="how-it-works" class="skyfare-flight-how tile-parch py-24 overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
-        <div class="section-split-v5 section-split-v5--light slide-up">
-          <div>
-            <span class="eyebrow-chip-v2 mb-5"><i class="fa-solid fa-ticket"></i>How It Works</span>
-            <h2 class="text-3xl md:text-5xl font-display font-bold text-neutral-900 tracking-tight">
-              One person. One flight. Every three months.
-            </h2>
-          </div>
-          <p class="section-split-v5__copy">
-            Skyfare Flight is simple: tell us the journey that would mean something, we read the stories, and one person gets the opportunity to go.
-          </p>
-        </div>
-
-        <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.04s;">
-            <div class="process-topline-v5">
-              <span class="process-index-v5">01</span>
-              <span class="icon-chip"><i class="fa-solid fa-calendar-days"></i></span>
-            </div>
-            <p class="process-label-v5">Applications</p>
-            <h3>Applications open</h3>
-            <p>Entries stay open for the current quarterly Skyfare Flight.</p>
-            <span class="process-note-v5">Open now</span>
-          </article>
-          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.08s;">
-            <div class="process-topline-v5">
-              <span class="process-index-v5">02</span>
-              <span class="icon-chip"><i class="fa-solid fa-feather-pointed"></i></span>
-            </div>
-            <p class="process-label-v5">Story review</p>
-            <h3>Stories are read</h3>
-            <p>The story matters more than polished writing.</p>
-            <span class="process-note-v5">Human review</span>
-          </article>
-          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.12s;">
-            <div class="process-topline-v5">
-              <span class="process-index-v5">03</span>
-              <span class="icon-chip"><i class="fa-solid fa-ticket"></i></span>
-            </div>
-            <p class="process-label-v5">Selection</p>
-            <h3>One person is selected</h3>
-            <p>One meaningful flight is chosen every three months.</p>
-            <span class="process-note-v5">Quarterly</span>
-          </article>
-          <article class="process-card-v5 slide-up reveal-pop" style="animation-delay:0.16s;">
-            <div class="process-topline-v5">
-              <span class="process-index-v5">04</span>
-              <span class="icon-chip"><i class="fa-solid fa-plane-departure"></i></span>
-            </div>
-            <p class="process-label-v5">Flight</p>
-            <h3>They go somewhere</h3>
-            <p>Skyfare helps arrange the flight experience.</p>
-            <span class="process-note-v5">Boarding soon</span>
-          </article>
-        </div>
+        <div class="skyfare-flight-section-heading slide-up"><div><span class="eyebrow-chip-v2"><i class="fa-solid fa-ticket" aria-hidden="true"></i> How it works</span><h2>From story to boarding pass.</h2></div><p>The process is simple. Share the journey that would mean something, and Skyfare reads every entry before choosing one person to fly.</p></div>
+        <ol class="skyfare-flight-timeline">
+          <li class="slide-up"><span class="skyfare-flight-timeline__index">01</span><div><span>Application</span><h3>Tell us where you would go.</h3><p>Share the destination, the reason, and the part of the journey you would remember.</p></div><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></li>
+          <li class="slide-up" style="animation-delay:.06s;"><span class="skyfare-flight-timeline__index">02</span><div><span>Story review</span><h3>Your story is read by a person.</h3><p>The story matters more than polished writing. Honest and specific is enough.</p></div><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></li>
+          <li class="slide-up" style="animation-delay:.12s;"><span class="skyfare-flight-timeline__index">03</span><div><span>Selection</span><h3>One person is selected.</h3><p>One meaningful flight is chosen every three months from the current entries.</p></div><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></li>
+          <li class="slide-up" style="animation-delay:.18s;"><span class="skyfare-flight-timeline__index">04</span><div><span>Flight</span><h3>Someone gets to go.</h3><p>Skyfare helps arrange the flight experience for the selected traveler.</p></div><i class="fa-solid fa-plane-departure" aria-hidden="true"></i></li>
+        </ol>
       </div>
     </section>
 
-    <!-- Why We Do This section commented out for now.
-    <section class="py-24 bg-white overflow-hidden">
+    <section class="skyfare-flight-prompts bg-white py-24 overflow-hidden">
       <div class="container mx-auto px-4 md:px-6">
-        <div class="grid lg:grid-cols-[0.92fr_1.08fr] gap-8 lg:gap-14 items-center">
-          <div class="rounded-[28px] overflow-hidden aspect-[4/5] lg:aspect-[5/6] slide-up">
-            <img src="../images/page-images/our-flights.jpg" alt="Premium cabin seat photographed by Skyfare" class="w-full h-full object-cover">
-          </div>
-          <div class="slide-up" style="animation-delay:0.08s;">
-            <span class="eyebrow-chip-v2 mb-5"><i class="fa-solid fa-heart"></i>Why We Do This</span>
-            <h2 class="text-3xl md:text-5xl font-display font-bold text-neutral-900 tracking-tight mb-6">
-              Travel has given us a lot. We want to give something back.
-            </h2>
-            <div class="space-y-4 text-neutral-600 leading-relaxed max-w-2xl">
-              <p>
-                Over the years, Skyfare has been built around the idea that travel can change how someone sees the world. Some trips are practical. Some are memorable. A few stay with you for life.
-              </p>
-              <p>
-                Skyfare Flight is our small way of giving someone else the opportunity to experience a journey they might not otherwise get to take.
-              </p>
-            </div>
-            <div class="mt-8 flex items-center gap-4">
-              <div class="h-px flex-1 max-w-28 bg-neutral-200"></div>
-              <p class="text-sm font-display font-bold text-neutral-900">Skyfare Consulting</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    -->
-
-    <section id="apply" class="py-24 bg-neutral-50 overflow-hidden">
-      <div class="container mx-auto px-4 md:px-6 max-w-5xl">
-        <div class="rounded-[18px] overflow-hidden border border-neutral-100 grid md:grid-cols-[1fr_1.4fr] slide-up">
-          <div class="contact-panel-bg p-10 lg:p-12 flex flex-col">
-            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-400 mb-3">Your Story Matters</p>
-            <h2 class="text-2xl md:text-3xl font-display font-bold text-white mb-3 tracking-tight leading-snug">
-              If you could take one flight right now, where would you go?
-            </h2>
-            <p class="text-sm text-white/55 leading-relaxed mb-10">
-              Tell us your story. It does not have to be perfect. We simply want to know where you would go, who you would take, or why this journey would mean something.
-            </p>
-
-            <div class="flex-1">
-              <div class="contact-channel-link">
-                <div class="icon-chip icon-chip-dark flex-shrink-0">
-                  <i class="fa-solid fa-ticket"></i>
-                </div>
-                <div>
-                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Current campaign</p>
-                  <p class="text-sm font-semibold text-white">Skyfare Flight #01</p>
-                </div>
-              </div>
-
-              <div class="contact-channel-link">
-                <div class="icon-chip icon-chip-dark flex-shrink-0">
-                  <i class="fa-solid fa-circle-check"></i>
-                </div>
-                <div>
-                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Applications</p>
-                  <p class="text-sm font-semibold text-brand-300">Open</p>
-                </div>
-              </div>
-
-              <div class="contact-channel-link">
-                <div class="icon-chip icon-chip-dark flex-shrink-0">
-                  <i class="fa-solid fa-calendar-days"></i>
-                </div>
-                <div>
-                  <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-0.5">Selection</p>
-                  <p class="text-sm font-semibold text-white">Quarterly</p>
-                </div>
-              </div>
-            </div>
-
-            <blockquote class="mt-10 border-l-2 border-white/15 pl-4">
-              <p class="text-xs text-white/35 leading-relaxed italic">
-                "Some trips stay with you. This is our way of helping someone take one."
-              </p>
-              <p class="text-[10px] text-white/25 mt-2 font-semibold uppercase tracking-widest">Skyfare Flight</p>
-            </blockquote>
-          </div>
-
-          <div class="bg-white p-10 lg:p-12">
-            <div class="flex items-center gap-4 mb-8">
-              <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500 flex-shrink-0">Tell Us Your Story</p>
-              <div class="flex-1 h-px bg-neutral-100"></div>
-            </div>
-
-            <form id="flight-form" class="space-y-5">
-              <div class="hidden" aria-hidden="true">
-                <input name="bot-field" tabindex="-1" autocomplete="off">
-              </div>
-
-              <div class="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label for="full-name" class="form-label">Full name</label>
-                  <input
-                    id="full-name"
-                    name="full-name"
-                    type="text"
-                    required
-                    autocomplete="name"
-                    placeholder="Your full name"
-                    class="form-input"
-                  >
-                </div>
-
-                <div>
-                  <label for="email" class="form-label">Email address</label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autocomplete="email"
-                    placeholder="your@email.com"
-                    class="form-input"
-                  >
-                </div>
-              </div>
-
-              <div>
-                <label for="from" class="form-label">Where are you from?</label>
-                <input
-                  id="from"
-                  name="from"
-                  type="text"
-                  required
-                  placeholder="City, country"
-                  class="form-input"
-                >
-              </div>
-
-              <div>
-                <label for="destination" class="form-label">Where would you go, and why?</label>
-                <textarea
-                  id="destination"
-                  name="destination"
-                  rows="4"
-                  required
-                  placeholder="The place, the reason, and what this trip would mean."
-                  class="form-input"
-                ></textarea>
-              </div>
-
-              <div>
-                <label for="about" class="form-label">A little about you</label>
-                <textarea
-                  id="about"
-                  name="about"
-                  rows="4"
-                  required
-                  maxlength="300"
-                  placeholder="A few honest sentences is plenty."
-                  class="form-input"
-                  oninput="document.getElementById('char-count').textContent = this.value.length"
-                ></textarea>
-                <p class="text-xs text-neutral-400 mt-1.5 text-right"><span id="char-count">0</span>&thinsp;/&thinsp;300</p>
-              </div>
-
-              <div class="pt-1">
-                <button type="submit" class="btn-pill btn-pill-primary w-full justify-center text-sm py-3.5">
-                  Submit Your Story
-                </button>
-              </div>
-
-              <p class="text-xs text-neutral-400 leading-relaxed text-center">
-                Submission does not guarantee selection. We may contact you by email if more details are needed.
-              </p>
-            </form>
-
-            <div id="flight-form-success" class="hidden text-center py-14 slide-up">
-              <div class="w-14 h-14 rounded-full bg-brand-50 flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-paper-plane text-brand-500 text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-display font-bold text-neutral-900 mb-2">Story received.</h3>
-              <p class="text-sm text-neutral-500 leading-relaxed max-w-xs mx-auto">
-                Thank you. We read every entry before the quarterly Skyfare Flight selection.
-              </p>
-            </div>
-          </div>
-        </div>
+        <div class="skyfare-flight-prompts__grid"><div class="slide-up"><span class="eyebrow-chip-v2"><i class="fa-solid fa-pen" aria-hidden="true"></i> Write the part that matters</span><h2>You do not need a perfect story.</h2><p>A few honest details help us understand the journey you would choose and why it would stay with you.</p></div><div class="skyfare-flight-prompt-list slide-up" style="animation-delay:.08s;"><article><span>01</span><div><strong>Where would you go?</strong><p>Name the place, route, or destination you keep thinking about.</p></div></article><article><span>02</span><div><strong>Why this trip?</strong><p>Tell us who you would take, what you would do, or what the journey would mean.</p></div></article><article><span>03</span><div><strong>What should we know about you?</strong><p>A few sentences are enough. Write as yourself, not like an application form.</p></div></article></div></div>
       </div>
     </section>
 
-    <section class="py-24 bg-white overflow-hidden">
-      <div class="container mx-auto px-4 md:px-6">
-        <div class="section-split-v5 section-split-v5--light slide-up">
-          <div>
-            <span class="eyebrow-chip-v2"><i class="fa-solid fa-images"></i>The People We've Flown</span>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-tight">
-              The first story is still waiting.
-            </h2>
-          </div>
-          <p class="section-split-v5__copy">
-            Once the first Skyfare Flight is selected, this becomes a record of the people, places, and stories behind each journey.
-          </p>
-        </div>
-
-        <div class="max-w-3xl mx-auto slide-up">
-          <div class="card-utility card-elevate-v2 p-8 md:p-10">
-            <div class="grid md:grid-cols-[auto_1fr] gap-6 items-center">
-              <div class="w-20 h-20 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-500">
-                <i class="fa-solid fa-ticket text-3xl" aria-hidden="true"></i>
-              </div>
-              <div>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-brand-500 mb-2">Skyfare Flight #01</p>
-                <h3 class="text-2xl font-display font-bold text-neutral-900 mb-2">Our first traveler has not boarded yet.</h3>
-                <p class="text-sm text-neutral-500 leading-relaxed">
-                  The first Skyfare Flight is still waiting for its first story. Could it be yours?
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <section id="apply" class="skyfare-flight-application tile-dark1 py-24 overflow-hidden">
+      <div class="container mx-auto px-4 md:px-6"><div class="skyfare-flight-application__grid slide-up">
+        <div class="skyfare-flight-application__intro"><span class="eyebrow-chip-v2 eyebrow-chip-v2--dark"><i class="fa-solid fa-feather-pointed" aria-hidden="true"></i> Tell us your story</span><h2>If you could take one flight right now, where would you go?</h2><p>Tell us the destination, the reason, and what this trip would mean. It does not have to be perfect.</p><div class="skyfare-flight-application__facts"><div><span>Current campaign</span><strong>Skyfare Flight #01</strong></div><div><span>Applications</span><strong class="is-open">Open</strong></div><div><span>Selection</span><strong>Quarterly</strong></div></div><blockquote><p>Some trips stay with you. This is our way of helping someone take one.</p><cite>Skyfare Flight</cite></blockquote></div>
+        <div class="skyfare-flight-form-panel"><div class="skyfare-flight-form-heading"><span>Submission form</span><strong>Start with the journey.</strong></div><form id="flight-form" class="space-y-5"><div class="hidden" aria-hidden="true"><input name="bot-field" tabindex="-1" autocomplete="off"></div><div class="grid sm:grid-cols-2 gap-4"><div><label for="full-name" class="form-label">Full name</label><input id="full-name" name="full-name" type="text" required autocomplete="name" placeholder="Your full name" class="form-input"></div><div><label for="email" class="form-label">Email address</label><input id="email" name="email" type="email" required autocomplete="email" placeholder="your@email.com" class="form-input"></div></div><div><label for="from" class="form-label">Where are you from?</label><input id="from" name="from" type="text" required placeholder="City, country" class="form-input"></div><div><label for="destination" class="form-label">Where would you go, and why?</label><textarea id="destination" name="destination" rows="4" required placeholder="The place, the reason, and what this trip would mean." class="form-input"></textarea></div><div><label for="about" class="form-label">A little about you</label><textarea id="about" name="about" rows="4" maxlength="300" required placeholder="A few honest sentences is plenty." class="form-input" oninput="document.getElementById('char-count').textContent = this.value.length"></textarea><p class="text-xs text-neutral-400 mt-1.5 text-right"><span id="char-count">0</span>&thinsp;/&thinsp;300</p></div><div class="pt-1"><button type="submit" class="btn-pill btn-pill-primary w-full justify-center text-sm py-3.5">Submit your story</button></div><p id="flight-form-error" class="skyfare-flight-form-error" role="alert" hidden></p><p class="text-xs text-neutral-400 leading-relaxed text-center">Submission does not guarantee selection. We may contact you by email if more details are needed.</p></form><div id="flight-form-success" class="hidden text-center py-14" role="status" aria-live="polite"><div class="skyfare-flight-success-icon"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></div><h3>Story received.</h3><p>Thank you. We read every entry before the quarterly Skyfare Flight selection.</p></div></div>
+      </div></div>
     </section>
 
-    <div data-cta-mount style="min-height:420px"
-      data-cta-eyebrow-icon="fa-solid fa-paper-plane"
-      data-cta-eyebrow-text="Your Turn"
-      data-cta-heading="Somewhere out there is a flight with your name on it."
-      data-cta-description="You just have to tell us where you'd go."
-      data-cta-art-image="../images/page-images/bg-3.JPG"
-      data-cta-primary-variant="primary"
-      data-cta-primary-icon="fa-solid fa-paper-plane"
-      data-cta-primary-label="Tell Us Your Story"
-      data-cta-primary-href="#apply"
-      data-cta-secondary-variant="whatsapp"
-      data-cta-secondary-icon="fa-brands fa-whatsapp"
-      data-cta-secondary-label="WhatsApp"
-      data-cta-secondary-href="https://api.whatsapp.com/send?phone=6581575306"
-      data-cta-secondary-target="_blank"
-    ></div>
-    <script src="../js/cta-section.js" defer></script>
+    <section class="skyfare-flight-log bg-white py-24 overflow-hidden"><div class="container mx-auto px-4 md:px-6"><div class="skyfare-flight-section-heading slide-up"><div><span class="eyebrow-chip-v2"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Flight log</span><h2>The first chapter is still waiting.</h2></div><p>Once the first Skyfare Flight is selected, this becomes a record of the people, places, and stories behind each journey.</p></div><div class="skyfare-flight-log__empty slide-up"><span class="skyfare-flight-log__mark"><i class="fa-solid fa-ticket" aria-hidden="true"></i></span><div><span>Skyfare Flight #01</span><h3>Our first traveler has not boarded yet.</h3><p>The first Skyfare Flight is still waiting for its first story. Could it be yours?</p></div><span class="skyfare-flight-log__status">Awaiting its first story</span></div></div></section>
 
+    <section class="skyfare-flight-close tile-parch py-20"><div class="container mx-auto px-4 md:px-6"><div class="skyfare-flight-close__inner slide-up"><div><span class="eyebrow-chip-v2"><i class="fa-solid fa-route" aria-hidden="true"></i> Keep exploring</span><h2>Want to see the kind of routes Skyfare finds?</h2></div><a href="past-flight-deals" class="btn-pill btn-pill-outline">See past flight deals <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div></div></section>
   </main>
 
   <script>
   (function () {
     var form = document.getElementById('flight-form');
     var success = document.getElementById('flight-form-success');
-    if (!form || !success) return;
+    var error = document.getElementById('flight-form-error');
+    if (!form || !success || !error) return;
+
+    function prefersReducedMotion() {
+      return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
 
     function loadConfetti(cb) {
+      if (prefersReducedMotion()) return;
       if (typeof confetti === 'function') { cb(); return; }
-      var s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js';
-      s.onload = cb;
-      document.head.appendChild(s);
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js';
+      script.onload = cb;
+      document.head.appendChild(script);
     }
 
     function fireConfetti() {
       loadConfetti(function () {
         if (typeof confetti !== 'function') return;
         confetti({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.4 }, colors: ['#003d7a', '#0066cc', '#38a1ff', '#C9A227', '#ffffff'], zIndex: 9999 });
-        setTimeout(function () { confetti({ particleCount: 45, spread: 50, origin: { x: 0.25, y: 0.5 }, colors: ['#0066cc', '#7ac0ff', '#ffffff'], zIndex: 9999 }); }, 180);
-        setTimeout(function () { confetti({ particleCount: 45, spread: 50, origin: { x: 0.75, y: 0.5 }, colors: ['#C9A227', '#38a1ff', '#003d7a'], zIndex: 9999 }); }, 340);
       });
     }
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var btn = form.querySelector('button[type="submit"]');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
+    function setError(message) {
+      error.textContent = message;
+      error.hidden = false;
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      error.hidden = true;
+      var button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
+      button.textContent = 'Sending your story';
 
       var payload = {};
-      new FormData(form).forEach(function(v, k) { payload[k] = v; });
+      new FormData(form).forEach(function (value, key) { payload[key] = value; });
 
-      fetch('https://skyfares-altitude.klent-5fa.workers.dev/airtable/flight-application', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (!data.success) throw new Error(data.error || 'unknown');
-        fireConfetti();
-        form.classList.add('hidden');
-        success.classList.remove('hidden');
-        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      })
-      .catch(function() {
-        btn.disabled = false;
-        btn.textContent = 'Submit Your Story';
-        alert('Something went wrong. Please try again.');
-      });
+      fetch('https://skyfares-altitude.klent-5fa.workers.dev/airtable/flight-application', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+        .then(function (response) { if (!response.ok) throw new Error('request failed'); return response.json(); })
+        .then(function (data) {
+          if (!data.success) throw new Error(data.error || 'request failed');
+          fireConfetti();
+          form.classList.add('hidden');
+          success.classList.remove('hidden');
+          success.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'center' });
+        })
+        .catch(function () {
+          button.disabled = false;
+          button.removeAttribute('aria-busy');
+          button.textContent = 'Submit your story';
+          setError('Your story could not be sent. Please check your connection and try again.');
+        });
     });
   })();
   </script>
-
 </body>
 </html>

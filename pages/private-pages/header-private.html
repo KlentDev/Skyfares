@@ -27,9 +27,44 @@
       <button type="button" data-private-manage class="private-icon-btn" aria-label="Manage membership">
         <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
       </button>
-      <button type="button" data-private-signout class="private-icon-btn" aria-label="Sign out">
-        <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
-      </button>
+      <div class="private-account-menu" data-private-account-menu>
+        <button type="button" class="private-icon-btn private-account-trigger" data-private-account-trigger aria-label="Account menu" aria-haspopup="menu" aria-expanded="false">
+          <i class="fa-solid fa-user-gear" aria-hidden="true"></i>
+        </button>
+        <div class="private-account-dropdown" data-private-account-dropdown role="menu" aria-label="Account menu">
+          <a href="altitude-access/membership.html" data-private-menu-membership data-private-menu-altitude-only role="menuitem">
+            <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+            <span>Membership</span>
+          </a>
+          <a href="altitude-access/beehiiv-manual.html" data-private-menu-manual data-private-menu-altitude-only role="menuitem">
+            <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+            <span>Beehiiv Manual</span>
+          </a>
+          <a href="altitude-access/support.html" data-private-menu-support data-private-menu-altitude-only role="menuitem">
+            <i class="fa-solid fa-headset" aria-hidden="true"></i>
+            <span>Support</span>
+          </a>
+          <button type="button" data-private-signout role="menuitem">
+            <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+            <span>Sign out</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
+
+<div class="private-signout-modal" data-private-signout-modal hidden>
+  <div class="private-signout-modal__backdrop" data-private-signout-cancel></div>
+  <section class="private-signout-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="private-signout-title">
+    <div class="private-signout-modal__icon">
+      <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+    </div>
+    <h2 id="private-signout-title">Sign out?</h2>
+    <p>Are you sure you want to sign out of your private access session?</p>
+    <div class="private-signout-modal__actions">
+      <button type="button" class="private-action" data-private-signout-cancel>No</button>
+      <button type="button" class="private-action private-action--primary" data-private-signout-confirm>Yes, sign out</button>
+    </div>
+  </section>
+</div>

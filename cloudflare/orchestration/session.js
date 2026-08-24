@@ -323,6 +323,31 @@ export async function handleVerify(request, env, corsHeaders) {
   return respond({ valid: true, email: payload.sub, member, guide: guideActive }, 200, corsHeaders);
 }
 
+export async function verifyAltitudeRequest(request, env) {
+  const token = getBearer(request);
+  if (!token) {
+    return { ok: false, status: 401, data: entitlementDenied('altitude', '', 'not_authenticated') };
+  }
+
+  const payload = await verifyJwt(token, env.JWT_SECRET);
+  if (!payload || !payload.sub) {
+    return { ok: false, status: 401, data: entitlementDenied('altitude', '', 'session_expired') };
+  }
+
+  let member = null;
+  const raw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${payload.sub}`).catch(() => null);
+  if (raw) {
+    try { member = JSON.parse(raw); } catch {}
+  }
+
+  const decision = await verifyAltitudeEntitlement(payload.sub, member, env);
+  if (targetValid('altitude', decision)) {
+    return { ok: true, status: 200, email: payload.sub, member, data: decision };
+  }
+
+  return { ok: false, status: 403, data: decision };
+}
+
 function targetValid(target, decision) {
   if (target === 'guide') return !!decision.granted;
   return decision.altitude_valid != null ? !!decision.altitude_valid : !!decision.granted;
@@ -554,28 +579,31 @@ function daysRemaining(iso) {
 
 export async function handleMagicVerify(request, env, corsHeaders) {
   const rlKey = `${KV_PREFIX.RL_MAGIC_VERIFY}${request.headers.get('CF-Connecting-IP') || 'unknown'}`;
-  const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
-  if (rlCount >= 10) {
-    return respond({ error: 'rate_limited' }, 429, corsHeaders);
+  async function rateLimitedFailure(data, status) {
+    const rlCount = parseInt((await env.ALTITUDE_KV.get(rlKey)) || '0', 10);
+    if (rlCount >= 10) {
+      return respond({ error: 'rate_limited' }, 429, corsHeaders);
+    }
+    await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 600 });
+    return respond(data, status, corsHeaders);
   }
-  await env.ALTITUDE_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 600 });
 
   let token;
   try {
     const body = await request.json();
     token = (body.token || '').trim();
-  } catch { return respond({ error: 'Invalid request.' }, 400, corsHeaders); }
+  } catch { return rateLimitedFailure({ error: 'Invalid request.' }, 400); }
 
-  if (!token) return respond({ error: 'Missing token.' }, 400, corsHeaders);
+  if (!token) return rateLimitedFailure({ error: 'Missing token.' }, 400);
 
   const raw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MAGIC}${token}`);
-  if (!raw) return respond({ error: 'This link has expired or has already been used.' }, 404, corsHeaders);
+  if (!raw) return rateLimitedFailure({ error: 'This link has expired or has already been used.' }, 404);
 
   let record;
-  try { record = JSON.parse(raw); } catch { return respond({ error: 'Invalid token.' }, 400, corsHeaders); }
+  try { record = JSON.parse(raw); } catch { return rateLimitedFailure({ error: 'Invalid token.' }, 400); }
 
   if (Date.now() > record.exp) {
-    return respond({ error: 'This link has expired. Please request a new one.' }, 410, corsHeaders);
+    return rateLimitedFailure({ error: 'This link has expired. Please request a new one.' }, 410);
   }
 
   // Guide claim is additive — existing sub/typ/iat/exp fields are unchanged,
@@ -590,5 +618,10 @@ export async function handleMagicVerify(request, env, corsHeaders) {
     env.JWT_SECRET
   );
 
+  // Do not delete the magic token after a successful verification. Mail
+  // clients, security scanners, and preview browsers can execute the portal
+  // page before the member's real click; burning the token on first use makes
+  // those normal email behaviors look like an expired link. The KV TTL and
+  // record.exp above still limit the bearer link to one hour.
   return respond({ token: jwt, email: record.email }, 200, corsHeaders);
 }
