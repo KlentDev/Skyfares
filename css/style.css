@@ -5174,8 +5174,40 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   box-shadow: var(--shadow-v2-lg);
 }
 
+/* #altitude-popup is `fixed inset-0 flex items-center justify-center` (see
+   components/free-newsletter-modal.html) -- on mobile browsers with a
+   collapsing address bar, a `fixed` element's height resolves against the
+   larger *layout* viewport rather than the shorter *visible* one, so
+   flex-centering the card inside it lands the card noticeably below true
+   center (can even push its bottom off-screen). Pinning an explicit height
+   in dvh units ties centering to the real visible viewport instead. 100vh
+   stays first as the fallback for browsers without dvh support. */
+#altitude-popup {
+  height: 100vh;
+  height: 100dvh;
+}
+
 .newsletter-modal-v2-carousel {
   background: #0a1628;
+}
+
+/* Below md (the point where the layout stops being a 50/50 split and the
+   image rail shrinks to a fixed h-52), the per-slide caption -- date,
+   title, subtitle, pinned/latest badge -- collides with text already baked
+   into the newsletter thumbnail itself (see js/newsletter-modal.js's
+   caption builder), producing an unreadable double-text mess. Below that
+   width only the "Read more" CTA carries over; the rest of the caption is
+   duplicate information the user gets on the linked newsletter page anyway. */
+@media (max-width: 767px) {
+  .newsletter-modal-v2-carousel .altitude-popup-caption__meta {
+    display: none;
+  }
+  .newsletter-modal-v2-carousel .altitude-popup-caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
 }
 
 /* Pill buttons read oversized at this card's scale (submit CTA + the

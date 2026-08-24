@@ -116,16 +116,16 @@
           slide.appendChild(gradient);
 
           var caption = document.createElement('div');
-          caption.className = 'absolute inset-x-0 bottom-0 z-10 p-5 text-left';
+          caption.className = 'altitude-popup-caption absolute inset-x-0 bottom-0 z-10 p-5 text-left';
 
           if (pinned) {
             var pinnedBadge = document.createElement('span');
-            pinnedBadge.className = 'newsletter-pinned-badge-v2';
+            pinnedBadge.className = 'newsletter-pinned-badge-v2 altitude-popup-caption__meta';
             pinnedBadge.innerHTML = '<i class="fa-solid fa-thumbtack text-[9px]"></i> Pinned &middot; Start Here';
             slide.appendChild(pinnedBadge);
           } else if (isLatest) {
             var latestBadge = document.createElement('span');
-            latestBadge.className = 'newsletter-latest-badge-v2';
+            latestBadge.className = 'newsletter-latest-badge-v2 altitude-popup-caption__meta';
             latestBadge.innerHTML = '<i class="fa-solid fa-bolt text-[9px]"></i> Latest';
             slide.appendChild(latestBadge);
           }
@@ -133,19 +133,19 @@
           var dateText = formatDate(post.published_at);
           if (dateText) {
             var dateEl = document.createElement('p');
-            dateEl.className = 'text-[10px] font-bold uppercase tracking-wider text-white/60 mb-1.5';
+            dateEl.className = 'altitude-popup-caption__meta text-[10px] font-bold uppercase tracking-wider text-white/60 mb-1.5';
             dateEl.textContent = dateText;
             caption.appendChild(dateEl);
           }
 
           var titleEl = document.createElement('h4');
-          titleEl.className = 'text-white font-display font-bold text-xl leading-snug line-clamp-2' + (post.subtitle ? ' mb-1.5' : ' mb-3');
+          titleEl.className = 'altitude-popup-caption__meta text-white font-display font-bold text-xl leading-snug line-clamp-2' + (post.subtitle ? ' mb-1.5' : ' mb-3');
           titleEl.textContent = post.title || '';
           caption.appendChild(titleEl);
 
           if (post.subtitle) {
             var subEl = document.createElement('p');
-            subEl.className = 'text-white/70 text-xs mb-3 truncate';
+            subEl.className = 'altitude-popup-caption__meta text-white/70 text-xs mb-3 truncate';
             subEl.textContent = post.subtitle;
             caption.appendChild(subEl);
           }
@@ -154,7 +154,7 @@
           readMore.href = post.slug
             ? PAGE_PREFIX + 'newsletter-detail?slug=' + encodeURIComponent(post.slug)
             : PAGE_PREFIX + 'newsletter';
-          readMore.className = 'btn-pill btn-pill-ghost uppercase tracking-wider';
+          readMore.className = 'altitude-popup-caption__cta btn-pill btn-pill-ghost uppercase tracking-wider';
           readMore.textContent = 'Read more';
           caption.appendChild(readMore);
 
