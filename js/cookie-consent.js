@@ -34,8 +34,19 @@
     document.head.appendChild(s);
   }
 
+  function applyGtagConsent(cats) {
+    if (typeof gtag !== 'function') return;
+    gtag('consent', 'update', {
+      'analytics_storage': cats.analytics ? 'granted' : 'denied',
+      'ad_storage': cats.marketing ? 'granted' : 'denied',
+      'ad_user_data': cats.marketing ? 'granted' : 'denied',
+      'ad_personalization': cats.marketing ? 'granted' : 'denied'
+    });
+  }
+
   function applyConsent(cats) {
     if (cats.marketing) loadMarketing();
+    applyGtagConsent(cats);
   }
 
   // ─── Toggle CSS (needed for ::before pseudo-element) ─────────────────────────
@@ -111,7 +122,9 @@
     });
 
     document.getElementById('cc-reject').addEventListener('click', function () {
-      saveConsent({ necessary: true, functional: false, analytics: false, marketing: false });
+      var cats = { necessary: true, functional: false, analytics: false, marketing: false };
+      saveConsent(cats);
+      applyConsent(cats);
       hideBanner();
     });
 
@@ -192,7 +205,7 @@
 
       catRow('', 'Strictly Necessary', 'Session management, security, and core site functionality. Always enabled.', true, true) +
       catRow('cc-p-functional', 'Functional', 'Saved preferences and enhanced website features.', cats.functional, false) +
-      catRow('cc-p-analytics',  'Analytics',  'Helps us understand how visitors use the site. No analytics currently active.', cats.analytics, false) +
+      catRow('cc-p-analytics',  'Analytics',  'Helps us understand how visitors use the site via Google Analytics.', cats.analytics, false) +
       catRow('cc-p-marketing',  'Marketing',  'Personalised advertising via Facebook Pixel and future ad integrations.', cats.marketing, false) +
 
       '<button id="cc-save" style="display:block;width:100%;margin-top:1.25rem;padding:.875rem 1.5rem;' +

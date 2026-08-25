@@ -6,6 +6,12 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'analytics_storage': 'denied',
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
     gtag('js', new Date());
     gtag('config', 'G-DX0B0NKJDC');
   </script>
@@ -15,16 +21,19 @@
   <meta name="robots" content="noindex,nofollow" />
   <meta name="description" content="Altitude monthly KrisFlyer Spontaneous Escapes breakdown with destination rows, cabin verdicts, and booking notes." />
   <link rel="icon" href="../../../logos/logo.webp" />
+  <link rel="manifest" href="../../../manifest.json" />
+  <meta name="theme-color" content="#0066cc" />
+  <link rel="apple-touch-icon" href="../../../images/icons/apple-touch-icon.png" />
+  <script src="../../../js/sw-register.js" defer></script>
 
   <script src="../../../js/links.js"></script>
   <link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
-  <script src="../../../lib/tailwind/tailwind.min.js"></script>
+  <link rel="stylesheet" href="../../../css/tailwind.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../../css/style.css">
   <link rel="stylesheet" href="../../../css/altitude-editorial.css">
-  <script src="../../../js/tailwind-config.js" defer></script>
   <script src="../../../js/ui.js" defer></script>
   <script src="../../../js/private-layout.js" defer></script>
   <script src="../../../js/modal-verify-access.js" defer></script>

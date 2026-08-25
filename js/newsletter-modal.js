@@ -76,102 +76,114 @@
     if (emailInput) setTimeout(function () { emailInput.focus(); }, 80);
   }
 
-  // Left-rail carousel -- pulls the latest 5 issues from the same Worker
-  // endpoint js/newsletter-archive.js uses. Each slide carries its own
-  // date/title/description/"Read more" caption (linking to that post's own
-  // page), since that copy differs per post -- not one shared CTA over the
-  // whole carousel. Leaves the static banner.png slide already in the
-  // markup untouched if the fetch fails or returns fewer than 2 thumbnails.
+  // Left-rail carousel -- the pinned issue first, then the rest of the
+  // latest 5 issues, from the same Worker endpoint js/newsletter-archive.js
+  // uses. Each slide carries its own date/title/description/"Read more"
+  // caption (linking to that post's own page), since that copy differs per
+  // post -- not one shared CTA over the whole carousel. No static/generic
+  // image is ever shown -- only real issues. Retries once on a transient
+  // failure (network hiccup, Worker cold start); the track just stays empty
+  // for that brief window rather than showing a placeholder.
   function initCarousel(popup) {
-    var track       = popup.querySelector('#altitude-popup-carousel-track');
-    var fallbackCta = popup.querySelector('#altitude-popup-carousel-fallback-cta');
-    if (fallbackCta) fallbackCta.href = PAGE_PREFIX + 'newsletter';
+    var track = popup.querySelector('#altitude-popup-carousel-track');
     if (!track || typeof fetch === 'undefined') return;
 
-    fetch(WORKER_URL + '/newsletter/posts')
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        var posts = (data && data.posts) || [];
-        var withThumbs = posts.filter(function (p) { return p && p.thumbnail_url; });
-        var slides = withPinnedFirst(withThumbs, 5);
-        if (slides.length < 2) return;
-
-        var latestNonPinnedId = getLatestNonPinnedId(slides);
-
-        track.innerHTML = '';
-        slides.forEach(function (post) {
-          var pinned = isPinnedPost(post);
-          var isLatest = !pinned && post.id && post.id === latestNonPinnedId;
-          var slide = document.createElement('div');
-          slide.className = 'relative w-full h-full flex-shrink-0' + (pinned ? ' newsletter-pinned-slide-v2' : '');
-
-          var img = document.createElement('img');
-          img.src = post.thumbnail_url;
-          img.alt = '';
-          img.className = 'w-full h-full object-contain';
-          slide.appendChild(img);
-
-          var gradient = document.createElement('div');
-          gradient.className = 'absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none';
-          slide.appendChild(gradient);
-
-          var caption = document.createElement('div');
-          caption.className = 'altitude-popup-caption absolute inset-x-0 bottom-0 z-10 p-5 text-left';
-
-          if (pinned) {
-            var pinnedBadge = document.createElement('span');
-            pinnedBadge.className = 'newsletter-pinned-badge-v2 altitude-popup-caption__meta';
-            pinnedBadge.innerHTML = '<i class="fa-solid fa-thumbtack text-[9px]"></i> Pinned &middot; Start Here';
-            slide.appendChild(pinnedBadge);
-          } else if (isLatest) {
-            var latestBadge = document.createElement('span');
-            latestBadge.className = 'newsletter-latest-badge-v2 altitude-popup-caption__meta';
-            latestBadge.innerHTML = '<i class="fa-solid fa-bolt text-[9px]"></i> Latest';
-            slide.appendChild(latestBadge);
+    function attemptLoad(isRetry) {
+      fetch(WORKER_URL + '/newsletter/posts')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var posts = (data && data.posts) || [];
+          var withThumbs = posts.filter(function (p) { return p && p.thumbnail_url; });
+          var slides = withPinnedFirst(withThumbs, 5);
+          if (slides.length < 1) {
+            if (!isRetry) setTimeout(function () { attemptLoad(true); }, 1500);
+            return;
           }
-
-          var dateText = formatDate(post.published_at);
-          if (dateText) {
-            var dateEl = document.createElement('p');
-            dateEl.className = 'altitude-popup-caption__meta text-[10px] font-bold uppercase tracking-wider text-white/60 mb-1.5';
-            dateEl.textContent = dateText;
-            caption.appendChild(dateEl);
-          }
-
-          var titleEl = document.createElement('h4');
-          titleEl.className = 'altitude-popup-caption__meta text-white font-display font-bold text-xl leading-snug line-clamp-2' + (post.subtitle ? ' mb-1.5' : ' mb-3');
-          titleEl.textContent = post.title || '';
-          caption.appendChild(titleEl);
-
-          if (post.subtitle) {
-            var subEl = document.createElement('p');
-            subEl.className = 'altitude-popup-caption__meta text-white/70 text-xs mb-3 truncate';
-            subEl.textContent = post.subtitle;
-            caption.appendChild(subEl);
-          }
-
-          var readMore = document.createElement('a');
-          readMore.href = post.slug
-            ? PAGE_PREFIX + 'newsletter-detail?slug=' + encodeURIComponent(post.slug)
-            : PAGE_PREFIX + 'newsletter';
-          readMore.className = 'altitude-popup-caption__cta btn-pill btn-pill-ghost uppercase tracking-wider';
-          readMore.textContent = 'Read more';
-          caption.appendChild(readMore);
-
-          slide.appendChild(caption);
-          track.appendChild(slide);
+          renderSlides(slides);
+        })
+        .catch(function () {
+          if (!isRetry) setTimeout(function () { attemptLoad(true); }, 1500);
         });
+    }
 
-        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduceMotion) track.style.transitionDuration = '0s';
+    function renderSlides(slides) {
+      var latestNonPinnedId = getLatestNonPinnedId(slides);
 
-        var index = 0;
-        setInterval(function () {
-          index = (index + 1) % slides.length;
-          track.style.transform = 'translateX(-' + (index * 100) + '%)';
-        }, 3000);
-      })
-      .catch(function () {});
+      track.innerHTML = '';
+      slides.forEach(function (post) {
+        var pinned = isPinnedPost(post);
+        var isLatest = !pinned && post.id && post.id === latestNonPinnedId;
+        var slide = document.createElement('div');
+        slide.className = 'relative w-full h-full flex-shrink-0' + (pinned ? ' newsletter-pinned-slide-v2' : '');
+
+        var img = document.createElement('img');
+        img.src = post.thumbnail_url;
+        img.alt = '';
+        img.className = 'w-full h-full object-contain';
+        slide.appendChild(img);
+
+        var gradient = document.createElement('div');
+        gradient.className = 'absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none';
+        slide.appendChild(gradient);
+
+        var caption = document.createElement('div');
+        caption.className = 'altitude-popup-caption absolute inset-x-0 bottom-0 z-10 p-5 text-left';
+
+        if (pinned) {
+          var pinnedBadge = document.createElement('span');
+          pinnedBadge.className = 'newsletter-pinned-badge-v2 altitude-popup-caption__meta';
+          pinnedBadge.innerHTML = '<i class="fa-solid fa-thumbtack text-[9px]"></i> Pinned &middot; Start Here';
+          slide.appendChild(pinnedBadge);
+        } else if (isLatest) {
+          var latestBadge = document.createElement('span');
+          latestBadge.className = 'newsletter-latest-badge-v2 altitude-popup-caption__meta';
+          latestBadge.innerHTML = '<i class="fa-solid fa-bolt text-[9px]"></i> Latest';
+          slide.appendChild(latestBadge);
+        }
+
+        var dateText = formatDate(post.published_at);
+        if (dateText) {
+          var dateEl = document.createElement('p');
+          dateEl.className = 'altitude-popup-caption__meta text-[10px] font-bold uppercase tracking-wider text-white/60 mb-1.5';
+          dateEl.textContent = dateText;
+          caption.appendChild(dateEl);
+        }
+
+        var titleEl = document.createElement('h4');
+        titleEl.className = 'altitude-popup-caption__meta text-white font-display font-bold text-xl leading-snug line-clamp-2' + (post.subtitle ? ' mb-1.5' : ' mb-3');
+        titleEl.textContent = post.title || '';
+        caption.appendChild(titleEl);
+
+        if (post.subtitle) {
+          var subEl = document.createElement('p');
+          subEl.className = 'altitude-popup-caption__meta text-white/70 text-xs mb-3 truncate';
+          subEl.textContent = post.subtitle;
+          caption.appendChild(subEl);
+        }
+
+        var readMore = document.createElement('a');
+        readMore.href = post.slug
+          ? PAGE_PREFIX + 'newsletter-detail?slug=' + encodeURIComponent(post.slug)
+          : PAGE_PREFIX + 'newsletter';
+        readMore.className = 'altitude-popup-caption__cta btn-pill btn-pill-ghost uppercase tracking-wider';
+        readMore.textContent = 'Read more';
+        caption.appendChild(readMore);
+
+        slide.appendChild(caption);
+        track.appendChild(slide);
+      });
+
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) track.style.transitionDuration = '0s';
+
+      var index = 0;
+      setInterval(function () {
+        index = (index + 1) % slides.length;
+        track.style.transform = 'translateX(-' + (index * 100) + '%)';
+      }, 3000);
+    }
+
+    attemptLoad(false);
   }
 
   function closePopup() {

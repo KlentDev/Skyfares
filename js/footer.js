@@ -8,6 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const FB = (L.facebook || {}).url || 'https://www.facebook.com/profile.php?id=61581879043292';
   const TK = ((L.tiktok || {}).consulting || {}).url || 'https://www.tiktok.com/@skyfareconsulting';
 
+  // iOS has no native "install app" affordance (unlike Chrome/Edge/Android),
+  // so this is the one on-site hint pointing iOS Safari visitors to the
+  // manual Share -> Add to Home Screen gesture. Plain text, no dismiss state.
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isStandalone = window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches;
+  const iosInstallHint = (isIOS && !isStandalone) ? `
+          <p class="text-[11px] text-brand-100/30 mt-3">
+            <i class="fa-solid fa-arrow-up-from-bracket text-[10px]"></i>
+            On iPhone or iPad? Add Skyfare to your Home Screen — tap Share, then "Add to Home Screen."
+          </p>` : '';
+
   const footerHTML = `
     <!-- FOOTER -->
     <footer class="bg-deepblue-950 pt-20 pb-10 mt-auto">
@@ -79,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="pt-8 border-t border-white/5 flex flex-col items-center justify-center text-center">
           <p class="text-[11px] text-brand-100/30 uppercase tracking-widest">
             © <span id="year"></span> Skyfare Consulting. All rights reserved.
-          </p>
+          </p>${iosInstallHint}
         </div>
       </div>
     </footer>

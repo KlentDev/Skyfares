@@ -9,24 +9,17 @@
       <!-- Even 50/50 split between the image rail and the form column. -->
       <div class="md:grid md:grid-cols-2 md:h-[32rem]">
 
-        <!-- Left rail -- rotating newsletter thumbnails (latest 5 issues, fetched
-             by js/newsletter-modal.js), each slide carrying its own
-             date/title/description/"Read more" caption over the image, since
-             that copy differs per post. Falls back to the static slide below
-             (generic "Read our Newsletter" -> the newsletter page, no
-             date/title of its own) until the fetch resolves, and stays on it
-             if the fetch fails. object-contain (not cover) so a thumbnail is
-             never cropped -- the dark background letterboxes it instead. -->
+        <!-- Left rail -- pinned issue first, then the rest of the latest 5
+             issues (fetched by js/newsletter-modal.js), each slide carrying
+             its own date/title/description/"Read more" caption over the
+             thumbnail, since that copy differs per post. No static/generic
+             image is ever shown here -- only real issues. initCarousel
+             retries once on failure; the track just stays empty (dark
+             background, no placeholder) for that brief window. object-contain
+             (not cover) so a thumbnail is never cropped -- the dark
+             background letterboxes it instead. -->
         <div class="newsletter-modal-v2-carousel relative w-full h-52 md:h-full overflow-hidden">
-          <div id="altitude-popup-carousel-track" class="flex h-full transition-transform duration-500 ease-out">
-            <div class="relative w-full h-full flex-shrink-0">
-              <img src="images/banner.png" alt="Skyfare Altitude" class="w-full h-full object-contain">
-              <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none"></div>
-              <a id="altitude-popup-carousel-fallback-cta" href="pages/newsletter" class="btn-pill btn-pill-ghost absolute bottom-4 left-1/2 -translate-x-1/2 z-10 uppercase tracking-wider">
-                Read our Newsletter
-              </a>
-            </div>
-          </div>
+          <div id="altitude-popup-carousel-track" class="flex h-full transition-transform duration-500 ease-out"></div>
         </div>
 
         <!-- Vertically centered in the row's fixed height above -- was
