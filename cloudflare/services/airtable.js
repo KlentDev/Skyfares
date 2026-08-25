@@ -37,6 +37,63 @@ export async function writeToAirtable(tableId, fields, env) {
   return res.json();
 }
 
+// ── Altitude Subscribers mirror ───────────────────────────────────────────────
+// Per docs/superpowers/specs/2026-08-24-altitude-airtable-subscriber-sync-design.md.
+// Upserts by Email since a member's row needs updating across their whole
+// lifecycle (renewal, plan change, cancellation), not just created once at
+// signup. Never throws -- callers already wrap every non-critical side effect
+// in .catch(() => {}), and a failed sync here should never block the Stripe
+// webhook's 200 response. On failure, best-effort a second, minimal write
+// of just the error so it's visible in Airtable without needing worker logs.
+export async function upsertAltitudeSubscriber(email, fields, env) {
+  if (!env.AIRTABLE_TABLE_ALTITUDE_SUBSCRIBERS || !env.AIRTABLE_API_KEY || !env.AIRTABLE_BASE_ID) return;
+
+  const table = env.AIRTABLE_TABLE_ALTITUDE_SUBSCRIBERS;
+  const now = new Date().toISOString();
+  const body = { ...fields, 'Last Synced At': now };
+  let existingId = null;
+
+  try {
+    const params = new URLSearchParams({
+      filterByFormula: `{Email}="${email.replace(/"/g, '\\"')}"`,
+      maxRecords: '1',
+    });
+    params.append('fields[]', 'Email');
+
+    const findRes = await fetch(airtableTableUrl(env, table, params), { headers: airtableHeaders(env) });
+    if (!findRes.ok) throw new Error(`Airtable lookup ${findRes.status}: ${redactAirtableError(await findRes.text())}`);
+    const found = await findRes.json();
+    existingId = found.records?.[0]?.id || null;
+
+    if (existingId) {
+      const res = await fetch(`${airtableTableUrl(env, table)}/${existingId}`, {
+        method: 'PATCH',
+        headers: airtableHeaders(env),
+        body: JSON.stringify({ fields: body }),
+      });
+      if (!res.ok) throw new Error(`Airtable ${res.status}: ${redactAirtableError(await res.text())}`);
+    } else {
+      await writeToAirtable(table, body, env);
+    }
+  } catch (err) {
+    console.error(`[altitude-subscribers-sync] failed for ${email}: ${String(err.message || err).slice(0, 200)}`);
+    // Best-effort visibility write. If we know which existing row this was
+    // for, flag the error on that same row rather than risk a duplicate --
+    // only create a new error-only row when we never resolved an existing
+    // id at all (e.g. the lookup itself failed).
+    const errorFields = { 'Last Synced At': now, 'Last Sync Error': String(err.message || err).slice(0, 500) };
+    if (existingId) {
+      await fetch(`${airtableTableUrl(env, table)}/${existingId}`, {
+        method: 'PATCH',
+        headers: airtableHeaders(env),
+        body: JSON.stringify({ fields: errorFields }),
+      }).catch(() => {});
+    } else {
+      await writeToAirtable(table, { 'Email': email, ...errorFields }, env).catch(() => {});
+    }
+  }
+}
+
 export async function handleFlightApplication(request, env, corsHeaders) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   const rlKey = `${KV_PREFIX.RL_AIRTABLE_FLIGHT}${ip}`;

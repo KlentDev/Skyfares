@@ -52,6 +52,8 @@ function emptyBeehiivEntitlements() {
     subscription_tier: '',
     premium_tier_ids: [],
     premium_tier_names: [],
+    acquisition_source: '',
+    subscribed_on: '',
     tags: [],
     guide: false,
     altitude_tier: false,
@@ -204,6 +206,11 @@ export function beehiivSyncMetadata(entitlements, { tagged = null, tierSynced = 
     beehiiv_tier_ids: entitlements.premium_tier_ids || [],
     beehiiv_tier_names: entitlements.premium_tier_names || [],
     beehiiv_tags: entitlements.tags || [],
+    // Passed through for the Airtable Altitude Subscribers mirror's
+    // Channel/Source/Medium and Subscriber Since fields.
+    beehiiv_acquisition_source: entitlements.acquisition_source || '',
+    beehiiv_subscribed_on: entitlements.subscribed_on || '',
+    beehiiv_active: !!entitlements.subscriber_active,
     beehiiv_synced_at: now,
     beehiiv_tier_verified_at: tierVerified ? now : '',
     beehiiv_sync_error: error,
@@ -356,6 +363,13 @@ export async function getBeehiivEntitlements(email, env) {
     subscription_tier: sub.subscription_tier || '',
     premium_tier_ids: tierIds,
     premium_tier_names: tierNames,
+    // Read-only extras for the Airtable Altitude Subscribers mirror (see
+    // services/airtable.js's upsertAltitudeSubscriber) -- no new Beehiiv API
+    // call, just surfacing two more fields off the same subscription object
+    // already fetched above. acquisition_source is Beehiiv's own combined
+    // "channel: source / medium" string (e.g. "api: website / organic").
+    acquisition_source: sub.acquisition_source || '',
+    subscribed_on: sub.subscribed_on || sub.created_at || '',
     tags,
     guide: subscriberActive && tags.includes(GUIDE_TAG_NAME),
     altitude_tier: altitudeTier,
