@@ -38,7 +38,7 @@
   <script src="../js/checkout-flow-info.js" defer></script>
 </head>
 
-<body class="min-h-screen flex flex-col bg-white">
+<body class="min-h-screen flex flex-col bg-white surface-altitude" data-page-surface="altitude" data-site-prefix="../">
 
   <div id="page-loader">
     <img src="../logos/logo.webp" alt="Skyfare Consulting">
@@ -47,10 +47,10 @@
 
   <main class="flex-1">
 
-    <section id="alt-public-hero" class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/altitude.jpg');">
+    <section id="alt-public-hero" class="altitude-hero-v2 page-hero-bg relative overflow-hidden" style="--hero-img:url('../images/page-images/altitude.jpg');">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 items-center">
-          <div class="max-w-2xl slide-up">
+        <div class="altitude-hero-v2__grid">
+          <div class="altitude-hero-v2__copy slide-up">
             <div id="alt-cancelled-note" class="hidden mb-6">
               <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold/40 bg-gold/10 text-gold-light text-xs font-semibold">
                 <i class="fa-solid fa-circle-info text-[10px]"></i>
@@ -58,45 +58,26 @@
               </div>
             </div>
 
-            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-              <i class="fa-solid fa-crown text-[10px]" aria-hidden="true"></i>
-              Altitude Access
-            </span>
-
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
-              Travel Smarter. Know More. Go Further.
-            </h1>
-            <p class="text-base md:text-lg text-white/70 leading-relaxed mb-8 font-medium max-w-xl">
-              A paid travel intelligence membership with premium route analysis, miles strategy, redemption opportunities, and members-only updates beyond the free newsletter.
+            <h1>Skyfare Altitude access for every kind of reader.</h1>
+            <p class="altitude-hero-v2__lead">
+              Start with the free newsletter, or unlock paid route analysis, miles strategy, redemption opportunities, and members-only updates.
             </p>
-
-            <div class="flex flex-wrap items-end gap-6 mb-8">
-              <div>
-                <p class="text-white font-display font-bold leading-none text-4xl">$4.99</p>
-                <p class="text-white/45 text-xs font-bold uppercase tracking-widest mt-2">per month</p>
-              </div>
-              <div class="h-12 w-px bg-white/15 hidden sm:block"></div>
-              <div>
-                <p class="text-white font-display font-bold leading-none text-4xl">$39.99</p>
-                <p class="text-white/45 text-xs font-bold uppercase tracking-widest mt-2">per year</p>
-              </div>
-            </div>
 
             <form id="alt-checkout-form" class="hidden" aria-hidden="true">
               <button id="alt-checkout-btn" type="submit">Monthly checkout</button>
             </form>
 
-            <div class="flex flex-col sm:flex-row gap-3 max-w-xl">
+            <div class="altitude-hero-v2__actions">
+              <a href="../pages/newsletter" data-newsletter-modal-trigger class="btn-pill btn-pill-ghost justify-center">
+                <i class="fa-solid fa-envelope-open-text text-[10px]" aria-hidden="true"></i> Signup for Free
+              </a>
               <button type="button" data-altitude-pricing-open class="btn-pill btn-pill-primary justify-center">
                 <i class="fa-solid fa-crown text-[10px]" aria-hidden="true"></i> Get Altitude Access
               </button>
-              <button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="btn-pill btn-pill-ghost justify-center">
-                <i class="fa-solid fa-key text-[10px]" aria-hidden="true"></i> Already a member
-              </button>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2.5 mt-4 text-[10px] text-white/40 font-medium">
-              <span>Cancel anytime</span>
+            <div class="altitude-hero-v2__note">
+              <span>Free stays free</span>
               <span aria-hidden="true">&middot;</span>
               <span class="inline-flex items-center gap-1">
                 Secure Stripe checkout
@@ -105,29 +86,44 @@
                 </button>
               </span>
               <span aria-hidden="true">&middot;</span>
-              <button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="hover:text-white transition-colors">Already a member?</button>
+              <span>Cancel paid access anytime</span>
             </div>
           </div>
 
-          <div class="card-dark p-6 md:p-8 slide-up" style="animation-delay:0.08s;" data-altitude-preview-card>
-            <div class="mb-7">
-              <div class="flex flex-wrap items-center gap-2 mb-2">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-gold-light">Premium Preview</p>
-                <span class="pill-tag"><i class="fa-solid fa-lock text-[10px]" aria-hidden="true"></i> Altitude</span>
+          <div class="altitude-hero-v2__desk slide-up" style="animation-delay:.1s;" data-altitude-preview-card aria-label="Latest Altitude member issue">
+            <div class="altitude-hero-v2__preview">
+              <div class="altitude-hero-v2__preview-head">
+                <p data-altitude-preview-date>Premium issue</p>
+                <span><i class="fa-solid fa-lock text-[10px]" aria-hidden="true"></i> Altitude</span>
               </div>
-              <h2 class="text-2xl font-display font-bold text-white tracking-tight" data-altitude-preview-title>Coming soon</h2>
-            </div>
-            <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5 mb-5">
-              <p class="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-3" data-altitude-preview-date>Premium issue</p>
-              <div class="space-y-2 blur-[3px] select-none" data-altitude-preview-blur>
-                <p class="text-sm text-white/75 leading-relaxed">Premium route notes, booking context, and member-only analysis will appear here.</p>
-                <p class="text-sm text-white/45 leading-relaxed">Subscribe to read the full issue and archive.</p>
+              <h2 data-altitude-preview-title>Coming soon</h2>
+              <div class="altitude-hero-v2__locked" data-altitude-preview-blur>
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <p>Premium route notes, booking context, and member-only analysis will appear here.</p>
+                <p>Subscribe to read the full issue and archive.</p>
               </div>
             </div>
-            <button type="button" data-altitude-pricing-open class="btn-pill btn-pill-gold justify-center w-full mt-7">
-              <i class="fa-solid fa-lock text-[10px]" aria-hidden="true"></i> Continue reading with Altitude
+            <button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="altitude-hero-v2__member">
+              <i class="fa-solid fa-key text-[10px]" aria-hidden="true"></i> Read as an Altitude Member
             </button>
           </div>
+        </div>
+        <div class="altitude-hero-v2__plans slide-up" style="animation-delay:.16s;" aria-label="Altitude pricing options">
+          <span>
+            <small>Free</small>
+            <strong>$0</strong>
+            <em>Public newsletter</em>
+          </span>
+          <span>
+            <small>Monthly</small>
+            <strong>$4.99</strong>
+            <em>Cancel anytime</em>
+          </span>
+          <span>
+            <small>Annual</small>
+            <strong>$39.99</strong>
+            <em>Save 33%</em>
+          </span>
         </div>
       </div>
     </section>
@@ -288,7 +284,7 @@
             <p class="text-sm text-neutral-500 leading-relaxed mb-6">A lightweight way to follow Skyfare's public travel notes before upgrading.</p>
             <p class="mb-1"><span class="font-display font-bold text-neutral-900 tabular-nums" style="font-size:var(--font-stat-v2-size);">$0</span> <span class="text-sm text-neutral-400">/month</span></p>
             <p class="text-xs text-neutral-400 font-semibold mb-6">No paid access required</p>
-            <a href="../pages/newsletter" class="btn-pill btn-pill-ghost w-full justify-center mb-6">Read Free Newsletter</a>
+            <a href="../pages/newsletter" data-newsletter-modal-trigger class="btn-pill btn-pill-ghost w-full justify-center mb-6">Subscribe Free</a>
             <div class="border-t border-neutral-100 pt-6 mt-auto">
               <p class="text-xs font-bold uppercase tracking-wide text-neutral-400 mb-3">What You Get</p>
               <ul class="space-y-2.5 text-sm text-neutral-600">
@@ -408,13 +404,15 @@
       data-cta-primary-href="#"
       data-cta-secondary-variant="outline"
       data-cta-secondary-icon="fa-solid fa-key"
-      data-cta-secondary-label="Already a Member?"
+      data-cta-secondary-label="Read as an Altitude Member"
       data-cta-secondary-href="#"
     ></div>
     <script src="../js/cta-section.js" defer></script>
 
   </main>
 
+  <script src="../js/newsletter.js" defer></script>
+  <script src="../js/newsletter-modal.js" defer></script>
   <script src="../js/altitude.js" defer></script>
 
   <script>

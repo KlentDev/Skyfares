@@ -14972,3 +14972,287 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   color: #9ca3af;
   line-height: 1.5;
 }
+
+/* Altitude access page hero refresh, scoped to pages/altitude.html.
+   Mirrors the compact KrisFlyer interior hero scale while presenting
+   Free, Monthly, and Annual as equal access choices. */
+.surface-altitude {
+  --altitude-navy: #1a2437;
+  --altitude-ink: #172033;
+  --altitude-blue: #0066cc;
+  --altitude-gold: #c9a227;
+  --altitude-line: rgba(255, 255, 255, .16);
+}
+
+.surface-altitude a,
+.surface-altitude button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.surface-altitude a:focus-visible,
+.surface-altitude button:focus-visible {
+  outline: 3px solid rgba(0, 102, 204, .38);
+  outline-offset: 3px;
+}
+
+.altitude-hero-v2 {
+  min-height: 39rem;
+  color: #fff;
+  background-color: var(--altitude-navy);
+  background-image:
+    linear-gradient(90deg, rgba(12, 22, 40, .98) 0%, rgba(15, 30, 55, .88) 45%, rgba(15, 30, 55, .38) 100%),
+    var(--hero-img);
+  background-position: center;
+  background-size: cover;
+}
+
+.altitude-hero-v2__grid {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(20rem, .85fr);
+  align-items: center;
+  gap: clamp(2.4rem, 6vw, 5.5rem);
+  padding: 0 0 2.5rem;
+}
+
+.altitude-hero-v2__copy {
+  max-width: 54rem;
+}
+
+.altitude-hero-v2 h1 {
+  max-width: 32rem;
+  margin: 0;
+  color: #fff;
+  font: 600 clamp(1.85rem, 1.5rem + 1.6vw, 2.75rem)/1.1 'Lexend', sans-serif;
+  letter-spacing: -.035em;
+}
+
+.altitude-hero-v2__lead {
+  max-width: 43rem;
+  margin: 1.5rem 0 2rem;
+  color: rgba(255, 255, 255, .72);
+  font: 400 1.08rem/1.65 'Manrope', sans-serif;
+}
+
+.altitude-hero-v2__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.altitude-hero-v2__note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .55rem;
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, .48);
+  font: 600 .68rem/1.4 'Manrope', sans-serif;
+}
+
+.altitude-hero-v2__desk {
+  display: grid;
+  align-self: center;
+  border-top: 1px solid var(--altitude-line);
+  border-bottom: 1px solid var(--altitude-line);
+  background: rgba(9, 19, 36, .38);
+  box-shadow: 0 24px 42px rgba(4, 12, 24, .2);
+}
+
+.altitude-hero-v2__plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--altitude-line);
+  border-bottom: 1px solid var(--altitude-line);
+  background: rgba(9, 19, 36, .3);
+}
+
+.altitude-hero-v2__plans span {
+  display: grid;
+  gap: .45rem;
+  min-height: 8rem;
+  padding: 1.25rem 1.1rem;
+  align-content: center;
+  border-right: 1px solid rgba(255, 255, 255, .14);
+}
+
+.altitude-hero-v2__plans span:last-child {
+  border-right: 0;
+}
+
+.altitude-hero-v2__plans small,
+.altitude-hero-v2__plans em {
+  color: rgba(255, 255, 255, .58);
+  font: 600 .68rem/1.35 'Manrope', sans-serif;
+}
+
+.altitude-hero-v2__plans small {
+  color: #d6b94e;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.altitude-hero-v2__plans strong {
+  color: #fff;
+  font: 600 clamp(1.45rem, 1.1rem + 1vw, 2rem)/1 'Lexend', sans-serif;
+  letter-spacing: -.04em;
+}
+
+.altitude-hero-v2__plans em {
+  font-style: normal;
+}
+
+.altitude-hero-v2__preview {
+  display: block;
+  padding: 1.4rem 1.5rem;
+}
+
+.altitude-hero-v2__preview p {
+  margin: 0;
+}
+
+.altitude-hero-v2__preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .9rem;
+  margin-bottom: .75rem;
+}
+
+.altitude-hero-v2__preview-head p {
+  color: rgba(255, 255, 255, .42);
+  font: 700 .63rem/1.2 'Manrope', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.altitude-hero-v2__preview-head span {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  flex: 0 0 auto;
+  padding: .45rem .75rem;
+  border: 1px solid rgba(201, 162, 39, .28);
+  border-radius: 999px;
+  background: rgba(201, 162, 39, .12);
+  color: #d6b94e;
+  font: 700 .64rem/1 'Manrope', sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.altitude-hero-v2__preview h2 {
+  margin: 0;
+  color: #fff;
+  font: 600 clamp(1.3rem, 1.05rem + .9vw, 1.85rem)/1.22 'Lexend', sans-serif;
+  letter-spacing: -.025em;
+}
+
+.altitude-hero-v2__locked {
+  position: relative;
+  display: block;
+  margin-top: 1rem;
+  padding: 1rem 1rem 1rem 3rem;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .04);
+}
+
+.altitude-hero-v2__locked > i {
+  position: absolute;
+  left: 1rem;
+  top: 1.12rem;
+  z-index: 2;
+  display: grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(201, 162, 39, .14);
+  color: #d6b94e;
+  font-size: .68rem;
+}
+
+.altitude-hero-v2__locked p {
+  color: rgba(255, 255, 255, .62);
+  font: 400 .82rem/1.55 'Manrope', sans-serif;
+  filter: blur(2.5px);
+  user-select: none;
+}
+
+.altitude-hero-v2__locked p + p {
+  margin-top: .45rem;
+  color: rgba(255, 255, 255, .4);
+}
+
+.altitude-hero-v2__member {
+  display: inline-flex;
+  min-height: 3.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  border-top: 1px solid rgba(255, 255, 255, .14);
+  color: #d6b94e;
+  font: 700 .78rem/1.2 'Manrope', sans-serif;
+  transition: background .25s ease, color .25s ease;
+}
+
+.altitude-hero-v2__member:hover,
+.altitude-hero-v2__member:focus-visible {
+  background: rgba(201, 162, 39, .12);
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .altitude-hero-v2 {
+    min-height: auto;
+  }
+
+  .altitude-hero-v2__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .altitude-hero-v2__desk {
+    max-width: 45rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .altitude-hero-v2 h1 {
+    max-width: 22ch;
+  }
+
+  .altitude-hero-v2__lead {
+    font-size: .95rem;
+  }
+
+  .altitude-hero-v2__actions {
+    flex-direction: column;
+  }
+
+  .altitude-hero-v2__plans,
+  .altitude-hero-v2__preview {
+    grid-template-columns: 1fr;
+  }
+
+  .altitude-hero-v2__plans span {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .14);
+  }
+
+  .altitude-hero-v2__plans span:last-child {
+    border-bottom: 0;
+  }
+
+  .altitude-hero-v2__preview-head {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .altitude-hero-v2__member {
+    transition-duration: .01ms;
+  }
+}
