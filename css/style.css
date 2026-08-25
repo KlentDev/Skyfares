@@ -187,7 +187,9 @@ details .accordion-body > div {
 
 /* WhatsApp FAB pulse ring */
 .whatsapp-fab {
-  position: relative;
+  position: fixed;
+  right: max(1rem, calc(2rem + env(safe-area-inset-right)));
+  bottom: max(1rem, calc(2rem + env(safe-area-inset-bottom)));
 }
 
 .whatsapp-fab::before {

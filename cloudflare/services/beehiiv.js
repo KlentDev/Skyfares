@@ -58,6 +58,7 @@ function emptyBeehiivEntitlements() {
     altitude_monthly: false,
     altitude_annual: false,
     guide_bundle: false,
+    dev_mode: false,
   };
 }
 
@@ -293,6 +294,17 @@ export async function resolveBeehiivAltitudeAccess(email, env, { member = null, 
     return { granted: false, reason: 'beehiiv_unavailable', entitlements: null, sync: null };
   }
 
+  // Manual dev-mode override -- see the `dev_mode` field on
+  // getBeehiivEntitlements() above for what gates this and why it's safe to
+  // check unconditionally first: the tag is never applied by any code path,
+  // only by a human in the Beehiiv dashboard. Grants lifetime access (no
+  // monthly/annual expiry, no Stripe/billing record) for as long as the tag
+  // stays on the subscriber.
+  if (entitlements.found && entitlements.dev_mode) {
+    console.warn(`[dev-mode] granting Altitude access via dev-mode tag for ${email} -- no Stripe/billing record backs this`);
+    return { granted: true, reason: 'dev_mode_tag', entitlements, sync: null };
+  }
+
   if (entitlements.found && entitlements.subscriber_active && entitlements.altitude_tier) {
     return { granted: true, reason: 'altitude_tier', entitlements, sync: null };
   }
@@ -356,6 +368,15 @@ export async function getBeehiivEntitlements(email, env) {
     guide_bundle: subscriberActive && (
       tags.includes(GUIDE_BUNDLE_TAG_NAME) || tags.includes(GUIDE_BUNDLE_TAG_ID.toLowerCase())
     ),
+    // Manual-only escape hatch for internal/dev testing -- this tag is never
+    // applied by any code path in this codebase (Stripe webhook, Beehiiv
+    // sync, cron reconciliation, or otherwise), only by a human directly in
+    // the Beehiiv dashboard. See resolveBeehiivAltitudeAccess() below for
+    // where this grants lifetime Altitude access with no Stripe/billing
+    // record behind it. The "Dev Mode Only" Beehiiv segment
+    // (seg_ff319f60-8a60-4e21-8dc5-a32c1b084c3b) always shows who currently
+    // holds this tag.
+    dev_mode: subscriberActive && tags.includes('dev-mode'),
   };
 }
 
