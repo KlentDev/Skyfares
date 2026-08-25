@@ -8,12 +8,65 @@ import {
   enrollInAutomation, sendGuideMagicLink, tagTravelStrategyCallBuyer,
   sendAssessmentBookingEmail,
 } from '../services/beehiiv.js';
+import { upsertAltitudeSubscriber } from '../services/airtable.js';
 import { grantGuideAltitudeBundle, activateDeferredGuideBundle } from './guideBundle.js';
 import { buildAssessmentBookingUrl } from '../utils/signedLink.js';
 import {
   KV_PREFIX, UPGRADED_ANNUAL_AUTOMATION_ID, GUIDE_CONFIRMATION_AUTOMATION_ID,
   RENEWED_MONTHLY_AUTOMATION_ID, RENEWED_ANNUAL_AUTOMATION_ID,
 } from '../config/constants.js';
+
+// ── Altitude Subscribers Airtable mirror ──────────────────────────────────────
+// Per docs/superpowers/specs/2026-08-24-altitude-airtable-subscriber-sync-design.md.
+// Builds the Airtable field mapping from a KV member record (post-Beehiiv-sync,
+// i.e. record already has the beehiiv_* fields merged in by the caller) plus
+// whatever Stripe-only extras that specific webhook handler has on hand.
+// Only handles plan 'monthly'/'annual' -- guide_bundle records aren't part of
+// this table (see the design doc's field mapping table).
+const SUBSCRIPTION_STATUS_MAP = {
+  active: 'Active', trialing: 'Trialing', past_due: 'Past Due',
+  canceled: 'Cancelled', cancelled: 'Cancelled', unpaid: 'Unpaid',
+  incomplete: 'Incomplete', incomplete_expired: 'Incomplete Expired', paused: 'Paused',
+};
+
+function buildAltitudeAirtableFields(record, { fullName = '', paymentId = '' } = {}) {
+  if (record.plan !== 'monthly' && record.plan !== 'annual') return null;
+
+  const status = SUBSCRIPTION_STATUS_MAP[record.status] || 'Other';
+  // Beehiiv's own combined attribution string, e.g. "api: website / organic"
+  // -- see services/beehiiv.js's getBeehiivEntitlements(). Split defensively;
+  // an unexpected shape just leaves these blank rather than throwing.
+  const acq = String(record.beehiiv_acquisition_source || '');
+  const acqMatch = acq.match(/^([^:]*):\s*([^/]*)\/\s*(.*)$/);
+
+  const fields = {
+    'Email': record.email,
+    'Subscription Tier': record.plan === 'annual' ? 'Altitude Annual' : 'Altitude Monthly',
+    'Subscription Status': status,
+    'User Status': status,
+    'Stripe Customer ID': record.stripe_customer_id || '',
+    'Stripe Subscription ID': record.stripe_subscription_id || '',
+    'Stripe Checkout Session ID': record.stripe_session_id || '',
+    'Beehiiv Subscriber ID': record.beehiiv_subscription_id || '',
+    'Beehiiv Subscription Status': record.beehiiv_active ? 'active' : 'inactive',
+    'Beehiiv Found': !!record.beehiiv_subscription_id,
+  };
+  if (record.stripe_customer_id) fields['Stripe Customer Link'] = `https://dashboard.stripe.com/customers/${record.stripe_customer_id}`;
+  if (record.stripe_subscription_id) fields['Stripe Subscription Link'] = `https://dashboard.stripe.com/subscriptions/${record.stripe_subscription_id}`;
+  if (fullName) fields['Full Name'] = fullName;
+  if (paymentId) fields['Stripe Transaction / Payment ID'] = paymentId;
+  if (acqMatch) {
+    fields['Channel'] = acqMatch[1].trim();
+    fields['Source'] = acqMatch[2].trim();
+    fields['Medium'] = acqMatch[3].trim();
+  }
+  if (record.beehiiv_subscribed_on) fields['Subscriber Since'] = record.beehiiv_subscribed_on;
+  if (record.joined_at) fields['Subscription Start Date'] = record.joined_at;
+  if (record.current_period_end) fields['Current Period End'] = record.current_period_end;
+  if (record.cancelled_at) fields['Cancelled At'] = record.cancelled_at;
+
+  return fields;
+}
 
 // ── Altitude: Stripe Webhook ──────────────────────────────────────────────────
 
@@ -139,10 +192,14 @@ async function handleCheckoutComplete(session, env) {
   }));
 
   const raw2 = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
+  let rec2 = null;
   if (raw2) {
-    const rec2 = { ...JSON.parse(raw2), ...sync };
+    rec2 = { ...JSON.parse(raw2), ...sync };
     await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(rec2));
   }
+
+  const airtableFields = buildAltitudeAirtableFields(rec2 || record, { fullName: full.customer_details?.name || '' });
+  if (airtableFields) await upsertAltitudeSubscriber(email, airtableFields, env).catch(() => {});
 
   if (sync.beehiiv_tagged) {
     // A former Guide-bundle recipient buying a real plan for the first time
@@ -289,12 +346,17 @@ async function handleSubscriptionDeleted(sub, env) {
   await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(record));
 
   const sync = await syncBeehiivAltitudeAccess(email, env, { plan, active: false }).catch(() => null);
+  let finalRecord = record;
   if (sync) {
     const raw2 = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${email}`);
     if (raw2) {
-      await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify({ ...JSON.parse(raw2), ...sync }));
+      finalRecord = { ...JSON.parse(raw2), ...sync };
+      await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(finalRecord));
     }
   }
+
+  const airtableFields = buildAltitudeAirtableFields(finalRecord);
+  if (airtableFields) await upsertAltitudeSubscriber(email, airtableFields, env).catch(() => {});
 
   // If this member bought the KrisFlyer Guide while still on a real paid
   // plan, their 90-day bundle was deferred (see grantGuideAltitudeBundle) —
@@ -358,6 +420,9 @@ async function handleSubscriptionUpdated(sub, env) {
   }
 
   await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(record));
+
+  const airtableFields = buildAltitudeAirtableFields(record);
+  if (airtableFields) await upsertAltitudeSubscriber(email, airtableFields, env).catch(() => {});
 }
 
 // Fires on every successful invoice payment, including the very first one at
@@ -385,9 +450,14 @@ async function handleInvoicePaymentSucceeded(invoice, env) {
     stripeCustomerId: member.stripe_customer_id || '',
     active: true,
   }).catch(() => null);
+  let finalMember = member;
   if (sync) {
-    await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify({ ...member, ...sync }));
+    finalMember = { ...member, ...sync };
+    await env.ALTITUDE_KV.put(`${KV_PREFIX.MEMBER}${email}`, JSON.stringify(finalMember));
   }
+
+  const airtableFields = buildAltitudeAirtableFields(finalMember, { paymentId: invoice.id || '' });
+  if (airtableFields) await upsertAltitudeSubscriber(email, airtableFields, env).catch(() => {});
 
   const automationId = member.plan === 'annual' ? RENEWED_ANNUAL_AUTOMATION_ID
     : member.plan === 'monthly' ? RENEWED_MONTHLY_AUTOMATION_ID
