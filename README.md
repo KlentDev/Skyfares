@@ -4,8 +4,8 @@ Skyfare is a premium travel consultancy that books business and first-class flig
 
 ## Stack
 
-- **Static frontend** — plain HTML/CSS/JS, no build step or bundler. Pages live in [`pages/`](pages/), shared logic in [`js/`](js/), styling in [`css/style.css`](css/style.css).
-- **Tailwind CSS** — loaded via the Tailwind CDN script ([`lib/tailwind/`](lib/tailwind/)), no PostCSS/build pipeline.
+- **Static frontend** — plain HTML/CSS/JS, no build step or bundler for anything except Tailwind (see below). Pages live in [`pages/`](pages/), shared logic in [`js/`](js/), styling in [`css/style.css`](css/style.css).
+- **Tailwind CSS** — precompiled via the Tailwind CLI (`tailwind.config.js`, source in [`css/tailwind-input.css`](css/tailwind-input.css)), not the runtime CDN script — the runtime "Play CDN" compiler was a major page-load bottleneck (see `docs/superpowers/specs/2026-08-25-tailwind-precompile-design.md`). The compiled `css/tailwind.css` is generated fresh by CI on every deploy ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)) and is not committed. For local preview: `npm install` once, then `npm run watch:css`.
 - **Font Awesome** — bundled locally under [`lib/font-awesome/`](lib/font-awesome/).
 - **Cloudflare Workers** — [`cloudflare/subscribe-worker.js`](cloudflare/subscribe-worker.js) is the API backend: Altitude Access membership (checkout, activation, magic-link login), newsletter routes, Airtable form submissions, and scheduled cron jobs (segment recalculation, renewal reminders). Configured in [`cloudflare/wrangler.toml`](cloudflare/wrangler.toml) and deployed independently via `wrangler deploy` (not tied to the GitHub Actions workflow below).
 - **Cloudflare Workers (reports bot)** — [`cloudflare-reports/`](cloudflare-reports/) is a separate, read-only Worker that posts automated daily/weekly/monthly business summaries to a private Slack channel while the V2 admin dashboard is being built. Fully decoupled from `subscribe-worker.js` — see [`cloudflare-reports/README.md`](cloudflare-reports/README.md) for setup and architecture.

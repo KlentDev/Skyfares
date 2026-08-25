@@ -7,3 +7,7 @@
 
 # dependencies
 node_modules
+
+# Tailwind build output -- generated fresh by CI on every deploy
+# (see .github/workflows/deploy.yml), never committed.
+css/tailwind.css

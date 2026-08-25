@@ -6,6 +6,12 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'analytics_storage': 'denied',
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
     gtag('js', new Date());
     gtag('config', 'G-DX0B0NKJDC');
   </script>
@@ -14,9 +20,13 @@
   <title>The KrisFlyer Guide — Coming Soon — Skyfare Consulting</title>
   <meta name="description" content="The KrisFlyer Guide is still being written. Check back soon for the launch." />
   <link rel="icon" href="../logos/logo.webp" />
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#0066cc" />
+  <link rel="apple-touch-icon" href="../images/icons/apple-touch-icon.png" />
+  <script src="../js/sw-register.js" defer></script>
   <script src="../js/links.js"></script>
   <link rel="stylesheet" href="../lib/font-awesome/css/all.min.css">
-  <script src="../lib/tailwind/tailwind.min.js"></script>
+  <link rel="stylesheet" href="../css/tailwind.css">
   <script src="../js/header.js" defer></script>
   <script src="../js/footer.js" defer></script>
   <script src="../js/coming-soon.js" defer></script>
@@ -25,7 +35,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/tailwind-config.js" defer></script>
   <!-- Original page-specific scripts + gated-table styling — kept inline
        (not deleted), commented out. Restore alongside the commented <main>
        below when the guide is ready to launch for real.
