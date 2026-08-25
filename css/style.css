@@ -10899,6 +10899,14 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   padding: 1.25rem;
 }
 
+/* Belt-and-suspenders against any JS state bug that leaves both the empty
+   prompt and the selected-route content visible together: whenever the
+   content block is actually showing, force the empty prompt off regardless
+   of its own hidden/JS state. */
+.mileage-route-card-empty:has(~ .mileage-route-card-content:not([hidden])) {
+  display: none !important;
+}
+
 .mileage-route-card-empty-icon {
   display: grid;
   width: 2rem;
