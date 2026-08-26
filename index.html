@@ -53,7 +53,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <script src="js/mileage-route-data.js"></script>
+  <script src="js/mileage-route-data.js" defer></script>
   <script src="js/route-modal.js" defer></script>
   <script src="js/index-pricing.js" defer></script>
   <script src="js/checkout-flow-info.js" defer></script>
@@ -264,7 +264,7 @@
           <button type="button" class="mileage-browse-trigger" id="mileage-route-browser-open" aria-haspopup="dialog" aria-controls="mileage-route-browser-dialog">
             <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
             <span>Browse all routes</span>
-            <small id="mileage-browse-count">67 destinations</small>
+            <small id="mileage-browse-count">Loading destinations...</small>
           </button>
         </div>
 
@@ -329,10 +329,12 @@
                   <div><span>Saver</span><strong id="mileage-route-card-saver"></strong><small>miles</small></div>
                   <div><span>Advantage</span><strong id="mileage-route-card-advantage"></strong><small>miles</small></div>
                 </div>
+                <p id="mileage-route-card-return" class="mileage-route-card-disclaimer" hidden></p>
                 <a id="mileage-route-card-wa" href="#" target="_blank" rel="noopener noreferrer" class="mileage-route-card-cta">
                   <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Enquire via WhatsApp
                 </a>
                 <p class="mileage-route-card-disclaimer">Mileage is indicative. Award space, taxes, and fees vary.</p>
+                <p id="mileage-route-card-notes" class="mileage-route-card-disclaimer" hidden></p>
               </div>
             </div>
           </aside>
@@ -375,18 +377,19 @@
               <span>Region</span>
               <select id="mileage-route-region" aria-label="Filter routes by region">
                 <option value="all">All regions</option>
-                <option value="SE Asia">SE Asia</option>
-                <option value="NE Asia">NE Asia</option>
-                <option value="South Asia">South Asia</option>
-                <option value="Japan/Korea">Japan/Korea</option>
-                <option value="Oceania">Oceania</option>
-                <option value="Africa/Middle East">Africa / Middle East</option>
-                <option value="Europe">Europe</option>
-                <option value="N. America">N. America</option>
+              </select>
+            </label>
+            <label class="mileage-explorer-field mileage-explorer-field--region">
+              <span>Miles</span>
+              <select id="mileage-route-miles" aria-label="Filter routes by miles required">
+                <option value="all">Any amount</option>
+                <option value="under50">Under 50,000</option>
+                <option value="50to100">50,000–100,000</option>
+                <option value="over100">Over 100,000</option>
               </select>
             </label>
           </div>
-          <div class="mileage-browser-results-header"><span id="mileage-browser-results-count">67 destinations</span><span>Business Class saver</span></div>
+          <div class="mileage-browser-results-header"><span id="mileage-browser-results-count">Loading destinations...</span><span>Business Class saver</span></div>
           <div id="mileage-route-list" class="mileage-route-list" role="list"></div>
         </div>
       </dialog>
@@ -647,12 +650,6 @@
           </div>
         </div>
 
-      </div>
-
-      <div id="home-testimonials-status" class="home-testimonials-status-v7 hidden" role="status">
-        <i class="fa-regular fa-message" aria-hidden="true"></i>
-        <div><strong>Client stories are temporarily unavailable.</strong><p>You can still browse the full testimonials page or continue exploring routes.</p></div>
-        <a href="pages/testimonials">View testimonials</a>
       </div>
 
     </div>
@@ -925,31 +922,42 @@
 
   <script>
   /* ── Hero Route Search ─────────────────────────────────────────── */
-  (function () {
-    var AWARDS = (window.SKYFARE_MILEAGE_ROUTES || { routes: [] }).routes;
+  // Wrapped in DOMContentLoaded, not an immediately-invoked function, on
+  // purpose: this inline script has no `defer`, so without this it runs the
+  // instant the parser reaches it -- which is BEFORE js/mileage-route-data.js
+  // (loaded with `defer`) has executed at all, since deferred scripts always
+  // wait for the whole document to finish parsing first. window.
+  // SkyfareMileageRoutesData wouldn't exist yet and this would silently never
+  // wire up. DOMContentLoaded is guaranteed to fire after every deferred
+  // script has already run, so the object is always there by then.
+  document.addEventListener('DOMContentLoaded', function () {
+    var AWARDS = [];
+    if (window.SkyfareMileageRoutesData) {
+      window.SkyfareMileageRoutesData.onReady(function (source) { AWARDS = source.routes; });
+    }
 
     var ROUTE_FLAGS = {
       BWN:'cambodia.png', DPS:'indonesia.png', CGK:'indonesia.png', KUL:'malaysia.png', BKK:'thailand.png', CEB:'philippines.png', DAD:'vietnam.png',
       HAN:'vietnam.png', SGN:'vietnam.png', MNL:'philippines.png', PNH:'cambodia.png', HKT:'thailand.png', RGN:'myanmar.png',
-      CTU:'china.png', CKG:'china.png', CAN:'china.png', HKG:'hong-kong.png', TPE:'taiwan.png', PEK:'china.png', PVG:'china.png',
+      CTU:'china.png', CKG:'china.png', CAN:'china.png', HKG:'hong-kong.png', SZX:'china.png', TPE:'taiwan.png', PEK:'china.png', PVG:'china.png', PKX:'china.png', XMN:'china.png',
       AMD:'india.png', BLR:'india.png', MAA:'india.png', COK:'india.png', CMB:'sri-lanka.png', DEL:'india.png', DAC:'bangladesh.png',
       HYD:'india.png', KTM:'nepal.png', CCU:'india.png', MLE:'maldives.png', BOM:'india.png',
-      PUS:'south-korea.png', FUK:'japan.png', KIX:'japan.png', ICN:'south-korea.png', 'NRT/HND':'japan.png',
+      PUS:'south-korea.png', FUK:'japan.png', KIX:'japan.png', ICN:'south-korea.png', NRT:'japan.png', HND:'japan.png', NGO:'japan.png',
       DRW:'australia.png', PER:'australia.png', ADL:'australia.png', AKL:'new-zealand.png', BNE:'australia.png', CNS:'australia.png', CHC:'new-zealand.png',
       MEL:'australia.png', SYD:'australia.png',
       CPT:'south-africa.png', DXB:'united-arab-emirates.png', IST:'turkey.png', JNB:'south-africa.png',
-      AMS:'netherlands.png', BCN:'spain.png', BRU:'belgium.png', CPH:'denmark.png', FRA:'germany.png', LHR:'united-kingdom.png', MAN:'united-kingdom.png',
+      AMS:'netherlands.png', BCN:'spain.png', BRU:'belgium.png', CPH:'denmark.png', FRA:'germany.png', LHR:'united-kingdom.png', LGW:'united-kingdom.png', MAN:'united-kingdom.png',
       MXP:'italy.png', MUC:'germany.png', CDG:'france.png', FCO:'italy.png', ZRH:'switzerland.png',
-      LAX:'united-states.png', SFO:'united-states.png', SEA:'united-states.png', IAH:'united-states.png', JFK:'united-states.png'
+      LAX:'united-states.png', SFO:'united-states.png', SEA:'united-states.png', IAH:'united-states.png', JFK:'united-states.png', EWR:'united-states.png',
+      PEN:'malaysia.png', SUB:'indonesia.png', SAI:'cambodia.png'
     };
 
     function flagImg(file, cls) {
       return file ? '<img src="logos/flags/' + file + '" alt="" class="' + (cls || 'inline-block w-4 h-4 rounded-full object-cover align-[-3px] mx-0.5') + '">' : '';
     }
 
-    function flagFor(to) {
-      var m = /\(([^)]+)\)/.exec(to);
-      return flagImg(m && ROUTE_FLAGS[m[1]]);
+    function flagFor(code) {
+      return flagImg(ROUTE_FLAGS[code]);
     }
 
     var SIN_FLAG = flagImg('singapore.png');
@@ -977,7 +985,7 @@
           li.className = 'flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-brand-50 transition-colors group';
           li.innerHTML =
             '<span class="text-sm font-semibold text-neutral-900 group-hover:text-brand-700 transition-colors">' +
-              'SIN ' + SIN_FLAG + ' → ' + flagFor(r.to) + ' ' + r.to +
+              'SIN ' + SIN_FLAG + ' → ' + flagFor(r.code) + ' ' + r.to +
             '</span>' +
             '<span class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 ml-3 flex-shrink-0">' + r.region + '</span>';
           li.addEventListener('mousedown', function (e) {
@@ -1019,7 +1027,7 @@
       var q = this.value.trim().toLowerCase();
       if (!q) { setDropdownOpen(false); return; }
       showDropdown(AWARDS.filter(function (r) {
-        return (r.to + ' ' + r.region).toLowerCase().indexOf(q) !== -1;
+        return (r.to + ' ' + r.region + ' ' + r.code).toLowerCase().indexOf(q) !== -1;
       }));
     });
 
@@ -1027,7 +1035,7 @@
       var q = this.value.trim().toLowerCase();
       if (q) {
         showDropdown(AWARDS.filter(function (r) {
-          return (r.to + ' ' + r.region).toLowerCase().indexOf(q) !== -1;
+          return (r.to + ' ' + r.region + ' ' + r.code).toLowerCase().indexOf(q) !== -1;
         }));
       }
     });
@@ -1044,7 +1052,7 @@
       var wrap = document.getElementById('hero-search-wrap');
       if (wrap && !wrap.contains(e.target)) setDropdownOpen(false);
     });
-  })();
+  });
   </script>
 
   <script src="js/marquee.js" defer></script>

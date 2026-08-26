@@ -383,6 +383,168 @@ export async function handleGetTestimonialScores(request, env, corsHeaders) {
   );
 }
 
+// Public KrisFlyer route/mileage chart — Popular Routes (homepage) and the
+// KrisFlyer page's Mileage Route Explorer + Route board both read this. No
+// Approved/Status gate (every row in the table is real, published pricing),
+// and no Altitude entitlement check — this is public marketing content.
+export async function handleGetSkyfareRoutes(request, env, corsHeaders) {
+  if (!env.AIRTABLE_TABLE_SKYFARE_ROUTES) {
+    return respond({ error: 'airtable_table_not_configured' }, 503, corsHeaders);
+  }
+
+  const params = new URLSearchParams({ pageSize: '100' });
+  [
+    'Destination', 'IATA Code', 'Country', 'Region', 'KrisFlyer Zone',
+    'Business Saver (One-Way, Miles)', 'Business Advantage (One-Way, Miles)',
+    'Business Saver (Return, Miles)', 'Business Advantage (Return, Miles)',
+    'Notes',
+  ].forEach(f => params.append('fields[]', f));
+  params.append('sort[0][field]', 'Region');
+  params.append('sort[1][field]', 'Business Saver (One-Way, Miles)');
+  params.append('sort[1][direction]', 'asc');
+
+  let res;
+  try {
+    res = await fetch(airtableTableUrl(env, env.AIRTABLE_TABLE_SKYFARE_ROUTES, params), { headers: airtableHeaders(env) });
+  } catch {
+    return respond({ error: 'Gateway error' }, 502, corsHeaders);
+  }
+
+  if (!res.ok) return respond({ error: 'Airtable API error' }, res.status, corsHeaders);
+
+  const raw = await res.json();
+  const routes = (raw.records || []).map(rec => ({
+    id: rec.id,
+    destination: rec.fields['Destination'] || '',
+    iataCode: rec.fields['IATA Code'] || '',
+    country: rec.fields['Country'] || '',
+    region: rec.fields['Region'] || '',
+    krisFlyerZone: rec.fields['KrisFlyer Zone'] || '',
+    saverOneWay: rec.fields['Business Saver (One-Way, Miles)'] || null,
+    advantageOneWay: rec.fields['Business Advantage (One-Way, Miles)'] || null,
+    saverReturn: rec.fields['Business Saver (Return, Miles)'] || null,
+    advantageReturn: rec.fields['Business Advantage (Return, Miles)'] || null,
+    notes: rec.fields['Notes'] || '',
+  }));
+
+  return respond(
+    { routes },
+    200,
+    { ...corsHeaders, 'Cache-Control': 'public, max-age=300' }
+  );
+}
+
+// Cabin Compare — route x airline comparison data, joined server-side from
+// three linked tables (Cabin Compare Routes, Seat Products, Cabin Compare
+// Options) into the shape js/cabin-compare.js's render() already expects.
+// Public, unauthenticated -- marketing content, not gated Altitude content.
+// Every option row is returned regardless of its Verified checkbox: Verified
+// is an internal "confirmed by Sahej" marker for the team to work through in
+// Airtable, not a display filter (the frontend shows the same placeholder
+// disclaimer it already did with the old hardcoded data).
+export async function handleGetCabinCompare(request, env, corsHeaders) {
+  if (!env.AIRTABLE_TABLE_CABIN_COMPARE_ROUTES || !env.AIRTABLE_TABLE_SEAT_PRODUCTS || !env.AIRTABLE_TABLE_CABIN_COMPARE_OPTIONS) {
+    return respond({ error: 'airtable_table_not_configured' }, 503, corsHeaders);
+  }
+
+  function fetchTable(tableId, fields) {
+    const params = new URLSearchParams({ pageSize: '100' });
+    fields.forEach(f => params.append('fields[]', f));
+    return fetch(airtableTableUrl(env, tableId, params), { headers: airtableHeaders(env) });
+  }
+
+  let routesRes, seatsRes, optionsRes;
+  try {
+    [routesRes, seatsRes, optionsRes] = await Promise.all([
+      fetchTable(env.AIRTABLE_TABLE_CABIN_COMPARE_ROUTES, ['Destination', 'IATA Code', 'Region', 'Flight Time', 'Distance (km)']),
+      fetchTable(env.AIRTABLE_TABLE_SEAT_PRODUCTS, ['Seat Description', 'Width', 'Bed Length', 'Aisle Access (All Seats)', 'WiFi']),
+      fetchTable(env.AIRTABLE_TABLE_CABIN_COMPARE_OPTIONS, [
+        'Route', 'Airline', 'Flight Numbers', 'Aircraft', 'Seat Product',
+        'Cash Low (SGD)', 'Cash High (SGD)', 'Cash Note', 'Miles Amount', 'Miles Program',
+        'Skyfare Pick', 'Editorial Tags', 'Verified', 'SQ Saver Miles (One-Way, via Skyfare Routes)',
+      ]),
+    ]);
+  } catch {
+    return respond({ error: 'Gateway error' }, 502, corsHeaders);
+  }
+
+  if (!routesRes.ok || !seatsRes.ok || !optionsRes.ok) {
+    return respond({ error: 'Airtable API error' }, 502, corsHeaders);
+  }
+
+  const [routesRaw, seatsRaw, optionsRaw] = await Promise.all([routesRes.json(), seatsRes.json(), optionsRes.json()]);
+
+  const seatById = {};
+  (seatsRaw.records || []).forEach(rec => {
+    seatById[rec.id] = {
+      seat: rec.fields['Seat Description'] || '',
+      width: rec.fields['Width'] || '',
+      bed: rec.fields['Bed Length'] || '',
+      aisle: !!rec.fields['Aisle Access (All Seats)'],
+      wifi: rec.fields['WiFi'] || '',
+    };
+  });
+
+  const routeById = {};
+  (routesRaw.records || []).forEach(rec => {
+    const destination = rec.fields['Destination'] || '';
+    // Strip a trailing "(...)" qualifier -- e.g. "London (LHR)" -> "London"
+    // -- the IATA code the render already uses for the code badge comes from
+    // the dedicated IATA Code field below, not this parsed name.
+    const name = destination.replace(/\s*\([^)]*\)\s*$/, '').trim() || destination;
+    const flightTime = rec.fields['Flight Time'] || '';
+    const distance = rec.fields['Distance (km)'];
+    routeById[rec.id] = {
+      code: rec.fields['IATA Code'] || '',
+      name,
+      region: rec.fields['Region'] || '',
+      meta: distance ? `${flightTime} · ${Number(distance).toLocaleString()} km` : flightTime,
+    };
+  });
+
+  const routes = {};
+  (optionsRaw.records || []).forEach(rec => {
+    const routeRecId = (rec.fields['Route'] || [])[0];
+    const routeInfo = routeRecId && routeById[routeRecId];
+    if (!routeInfo || !routeInfo.code) return;
+
+    const seatRecId = (rec.fields['Seat Product'] || [])[0];
+    const seatInfo = (seatRecId && seatById[seatRecId]) || {};
+
+    const sqLookup = rec.fields['SQ Saver Miles (One-Way, via Skyfare Routes)'];
+    const milesAmount = rec.fields['Miles Amount'] ?? (Array.isArray(sqLookup) && sqLookup.length ? sqLookup[0] : null);
+
+    if (!routes[routeInfo.code]) {
+      routes[routeInfo.code] = { name: routeInfo.name, region: routeInfo.region, meta: routeInfo.meta, airlines: [] };
+    }
+
+    routes[routeInfo.code].airlines.push({
+      name: rec.fields['Airline'] || '',
+      sub: rec.fields['Flight Numbers'] || '',
+      aircraft: rec.fields['Aircraft'] || '',
+      seat: seatInfo.seat || '',
+      width: seatInfo.width || '',
+      bed: seatInfo.bed || '',
+      aisle: !!seatInfo.aisle,
+      wifi: seatInfo.wifi || '',
+      cashLow: rec.fields['Cash Low (SGD)'] ?? null,
+      cashHigh: rec.fields['Cash High (SGD)'] ?? null,
+      cashNote: rec.fields['Cash Note'] || '',
+      milesAmount: milesAmount ?? null,
+      milesProgram: rec.fields['Miles Program'] || '',
+      pick: !!rec.fields['Skyfare Pick'],
+      tags: rec.fields['Editorial Tags'] || [],
+      verified: !!rec.fields['Verified'],
+    });
+  });
+
+  return respond(
+    { routes },
+    200,
+    { ...corsHeaders, 'Cache-Control': 'public, max-age=300' }
+  );
+}
+
 // ── Altitude member CMS content ───────────────────────────────────────────────
 // Private read endpoints for the first Airtable-backed Altitude pages. These
 // reuse the same Altitude entitlement decision as /altitude/verify before any

@@ -650,6 +650,15 @@ details .accordion-body > div {
   white-space: nowrap;
 }
 .btn-pill:active { transform: scale(0.95); }
+/* .btn-pill's own `display: inline-flex` has the same specificity as
+   Tailwind's `.hidden { display: none }` utility, and style.css loads after
+   tailwind.css -- so `class="hidden btn-pill ..."` silently never actually
+   hides the element (this is exactly how pages/testimonials.html's Load More
+   button stayed visible/clickable after all results were already loaded,
+   causing a re-fetch of page 1 to get appended as duplicates). This override
+   restores `.hidden` priority for any pill button, without touching
+   Tailwind's generic utility or .btn-pill's normal display behavior. */
+.btn-pill.hidden { display: none; }
 
 .btn-pill-primary {
   background: #0066cc;
@@ -14206,7 +14215,9 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 .kris-board-input input,.kris-board-controls-v2 select { width: 100%; min-height: 2.8rem; border: 1px solid rgba(23, 32, 51, .14); border-radius: 999px; background: #fff; color: var(--route-ink); font: 600 .8rem/1.3 'Manrope', sans-serif; }
 .kris-board-input input { padding: 0 1rem 0 2.65rem; }
 .kris-board-controls-v2 select { padding: 0 1rem; }
-.kris-award-table-v2 th { padding: 1rem 1.25rem; background: #f8f9fb; color: #768298; font: 700 .62rem/1.2 'Manrope', sans-serif; letter-spacing: .09em; text-transform: uppercase; }
+.kris-award-table-v2 th { padding: 1rem 1.25rem; background: #f8f9fb; color: #768298; font: 700 .62rem/1.2 'Manrope', sans-serif; letter-spacing: .09em; text-transform: uppercase; text-align: left; }
+.kris-award-table-v2 th:nth-child(2) { text-align: center; }
+.kris-award-table-v2 th:nth-child(3), .kris-award-table-v2 th:nth-child(4) { text-align: right; }
 .kris-award-table-v2 td { padding: 1.1rem 1.25rem; border-top: 1px solid rgba(23, 32, 51, .08); color: #506078; font: 600 .78rem/1.4 'Manrope', sans-serif; }
 .kris-award-table-v2 td:first-child { color: var(--route-ink); font-weight: 700; }
 .kris-award-table-v2 td:nth-child(3),.kris-award-table-v2 td:nth-child(4) { color: var(--route-ink); font-variant-numeric: tabular-nums; text-align: right; }
