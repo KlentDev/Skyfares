@@ -263,6 +263,14 @@
     return '<span class="' + cls + '">' + e(label) + '</span>';
   }
 
+  // Full-view trigger for a media-hero image -- pairs with the shared
+  // click-to-enlarge lightbox wired below (same .altitude-lightbox
+  // markup/CSS as the Beehiiv manual page's per-step screenshots).
+  function expandButton(src, alt) {
+    if (!src) return '';
+    return '<button type="button" class="alt-media-hero__expand" data-alt-lightbox data-img="' + e(src) + '" data-alt="' + e(alt || '') + '" aria-label="View full image"><i class="fa-solid fa-expand" aria-hidden="true"></i></button>';
+  }
+
   function formatScore(value) {
     var n = Number(value);
     return Number.isFinite(n) ? n.toFixed(1).replace(/\.0$/, '') : '';
@@ -313,11 +321,74 @@
     return div.innerHTML;
   }
 
+  // Shared click-to-enlarge lightbox for media-hero images across every
+  // renderer (award alerts, KrisFlyer Escapes). One overlay instance,
+  // built lazily on first use, reused for every [data-alt-lightbox]
+  // trigger regardless of which renderer re-painted the DOM around it --
+  // the delegated listener is registered once here so it survives every
+  // innerHTML rebuild. Mirrors js/altitude-manual.js's page-local lightbox.
+  var lightbox = null;
+
+  function buildLightbox() {
+    var overlay = document.createElement('div');
+    overlay.className = 'altitude-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.innerHTML =
+      '<div class="altitude-lightbox__backdrop"></div>' +
+      '<figure class="altitude-lightbox__card">' +
+        '<button type="button" class="altitude-lightbox__close" aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>' +
+        '<img class="altitude-lightbox__img" alt="" />' +
+        '<figcaption class="altitude-lightbox__caption"></figcaption>' +
+      '</figure>';
+    document.body.appendChild(overlay);
+
+    lightbox = {
+      overlay: overlay,
+      img: overlay.querySelector('.altitude-lightbox__img'),
+      caption: overlay.querySelector('.altitude-lightbox__caption'),
+      close: overlay.querySelector('.altitude-lightbox__close'),
+      lastTrigger: null,
+    };
+
+    overlay.querySelector('.altitude-lightbox__backdrop').addEventListener('click', closeLightbox);
+    lightbox.close.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (evt) {
+      if (evt.key === 'Escape' && overlay.classList.contains('altitude-lightbox--in')) closeLightbox();
+    });
+  }
+
+  function openLightbox(trigger) {
+    if (!lightbox) buildLightbox();
+    lightbox.lastTrigger = trigger;
+    var src = trigger.getAttribute('data-img');
+    var alt = trigger.getAttribute('data-alt') || '';
+    lightbox.img.src = src;
+    lightbox.img.alt = alt;
+    lightbox.caption.textContent = alt;
+    document.body.style.overflow = 'hidden';
+    lightbox.overlay.classList.add('altitude-lightbox--in');
+    requestAnimationFrame(function () { lightbox.close.focus(); });
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.overlay.classList.remove('altitude-lightbox--in');
+    document.body.style.overflow = '';
+    if (lightbox.lastTrigger && typeof lightbox.lastTrigger.focus === 'function') lightbox.lastTrigger.focus();
+  }
+
+  document.addEventListener('click', function (evt) {
+    var trigger = evt.target.closest && evt.target.closest('[data-alt-lightbox]');
+    if (trigger) openLightbox(trigger);
+  });
+
   app.utils = {
     e: e,
     metric: metric,
     note: note,
     badge: badge,
+    expandButton: expandButton,
     cabinTone: cabinTone,
     cabinLabel: cabinLabel,
     flagFor: flagFor,

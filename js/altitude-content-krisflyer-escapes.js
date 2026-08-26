@@ -68,8 +68,9 @@
             (item.thumbnail
               ? '<div class="alt-media-hero__media"><img src="' + u.e(item.thumbnail) + '" alt="" loading="eager"></div>'
               : '<div class="alt-media-hero__media alt-media-hero__media--placeholder"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i></div>') +
+            (item.discount ? '<div class="alt-media-hero__badge">' + u.badge(item.discount, 'gold') + '</div>' : '') +
+            u.expandButton(item.thumbnail, item.title || 'KrisFlyer Escapes') +
             '<div class="alt-media-hero__content">' +
-              (item.discount ? '<div class="alt-escape-masthead__kicker">' + u.badge(item.discount, 'gold') + '</div>' : '') +
               '<h2 class="alt-title alt-escape-masthead__title">' + u.e((item.dropMonth ? item.dropMonth + ' ' : '') + 'KrisFlyer Escapes') + '</h2>' +
               (item.title ? '<p class="alt-card-title alt-escape-masthead__subtitle">' + u.e(item.title) + '</p>' : '') +
             '</div>' +
