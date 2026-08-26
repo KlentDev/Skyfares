@@ -117,6 +117,7 @@ import { handleGetPosts, handleGetPost } from './services/newsletter.js';
 import {
   handleFlightApplication, handlePostTestimonial,
   handleGetTestimonials, handleGetTestimonialScores, handleGetAltitudeContent,
+  handleGetSkyfareRoutes, handleGetCabinCompare,
 } from './services/airtable.js';
 import { handleContactInquiry } from './orchestration/contactInquiry.js';
 
@@ -293,6 +294,14 @@ export default {
 
     if (request.method === 'GET' && url.pathname === '/airtable/testimonial-scores') {
       return handleGetTestimonialScores(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/airtable/skyfare-routes') {
+      return handleGetSkyfareRoutes(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/airtable/cabin-compare') {
+      return handleGetCabinCompare(request, env, corsHeaders);
     }
 
     // ── Subscribe ──────────────────────────────────────────────────────────

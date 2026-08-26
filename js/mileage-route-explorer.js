@@ -6,8 +6,10 @@
   'use strict';
 
   var root = document.querySelector('[data-mileage-explorer]');
-  var source = window.SKYFARE_MILEAGE_ROUTES;
-  if (!root || !source || !source.routes.length) return;
+  if (!root || !window.SkyfareMileageRoutesData) return;
+
+  window.SkyfareMileageRoutesData.onReady(function (source) {
+  if (!source.routes.length) return;
 
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var VIEWBOX_WIDTH = 1000;
@@ -27,6 +29,7 @@
   var routeList = root.querySelector('#mileage-route-list');
   var routeSearch = root.querySelector('#mileage-route-search');
   var regionFilter = root.querySelector('#mileage-route-region');
+  var milesFilter = root.querySelector('#mileage-route-miles');
   var routeCount = root.querySelector('#mileage-route-count');
   var routeRange = root.querySelector('#mileage-route-range');
   var browseCount = root.querySelector('#mileage-browse-count');
@@ -47,6 +50,18 @@
     selectedRouteId: null,
     pendingMapRouteId: null
   });
+
+  // Region options come from the live data, not a hardcoded list -- Airtable's
+  // region taxonomy is the source of truth, so a stale local list can't make
+  // a region permanently unreachable via this filter.
+  if (regionFilter) {
+    source.regions.forEach(function (region) {
+      var option = document.createElement('option');
+      option.value = region;
+      option.textContent = region;
+      regionFilter.appendChild(option);
+    });
+  }
 
   function createSvgElement(tag, attributes) {
     var element = document.createElementNS(SVG_NS, tag);
@@ -204,13 +219,22 @@
     return hoverId || selectedId;
   }
 
+  function matchesMilesBand(saver, band) {
+    if (band === 'under50') return saver < 50000;
+    if (band === '50to100') return saver >= 50000 && saver <= 100000;
+    if (band === 'over100') return saver > 100000;
+    return true;
+  }
+
   function visibleRoutes() {
     var query = (routeSearch.value || '').trim().toLowerCase();
     var region = regionFilter.value || 'all';
+    var milesBand = milesFilter ? (milesFilter.value || 'all') : 'all';
     return routes.filter(function (route) {
       var matchesRegion = region === 'all' || route.region === region;
       var matchesQuery = !query || (route.to + ' ' + route.region + ' ' + route.code).toLowerCase().indexOf(query) !== -1;
-      return matchesRegion && matchesQuery;
+      var matchesMiles = matchesMilesBand(route.saver, milesBand);
+      return matchesRegion && matchesQuery && matchesMiles;
     });
   }
 
@@ -382,6 +406,10 @@
     nodesLayer.appendChild(originGroup);
 
     routes.forEach(function (route) {
+      // Routes missing local map coordinates still appear in the table/browse
+      // list/hero search -- they just don't get a pin until coordinates are
+      // added (see js/mileage-route-data.js's console.warn on load).
+      if (route.latitude == null || route.longitude == null) return;
       var point = project(route.latitude, route.longitude);
       var path = createSvgElement('path', {
         id: 'mileage-route-arc-' + route.id,
@@ -426,7 +454,7 @@
       button.className = 'mileage-route-list-item';
       button.setAttribute('data-route-id', route.id);
       button.setAttribute('aria-controls', 'mileage-route-details-card');
-      button.innerHTML = '<span><strong>' + route.city + '</strong><small>' + route.code + ', ' + route.region + '</small></span><b>' + formatCompactMiles(route.saver) + '</b>';
+      button.innerHTML = '<span><strong>' + route.city + '</strong><small>' + route.code + ', ' + route.region + (route.country ? ', ' + route.country : '') + '</small></span><b>' + formatCompactMiles(route.saver) + '</b>';
       button.addEventListener('click', function () { selectRoute(route, button, true, true); });
       routeList.appendChild(button);
     });
@@ -502,9 +530,10 @@
     pill.setAttribute('aria-label', 'Explore Singapore to ' + route.city + ', from ' + formatMiles(route.saver));
     pill.addEventListener('click', function () {
       if (!mapInitialized) initialize();
-      if (routeSearch.value || regionFilter.value !== 'all') {
+      if (routeSearch.value || regionFilter.value !== 'all' || (milesFilter && milesFilter.value !== 'all')) {
         routeSearch.value = '';
         regionFilter.value = 'all';
+        if (milesFilter) milesFilter.value = 'all';
         updateFilters();
       }
       selectRoute(route, pill, true, true);
@@ -539,6 +568,7 @@
 
   routeSearch.addEventListener('input', updateFilters);
   regionFilter.addEventListener('change', updateFilters);
+  if (milesFilter) milesFilter.addEventListener('change', updateFilters);
   var resizeTimer = null;
   window.addEventListener('resize', function () {
     if (!selectedId) return;
@@ -572,9 +602,10 @@
       var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       root.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
       if (!mapInitialized) initialize();
-      if (routeSearch.value || regionFilter.value !== 'all') {
+      if (routeSearch.value || regionFilter.value !== 'all' || (milesFilter && milesFilter.value !== 'all')) {
         routeSearch.value = '';
         regionFilter.value = 'all';
+        if (milesFilter) milesFilter.value = 'all';
         updateFilters();
       }
       routeState.pendingMapRouteId = null;
@@ -587,4 +618,5 @@
     },
     clearSelection: clearSelection
   };
+  });
 }());
