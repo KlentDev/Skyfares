@@ -264,12 +264,13 @@
         (item.thumbnail
           ? '<div class="alt-media-hero__media"><img src="' + u.e(item.thumbnail) + '" alt="" loading="lazy"></div>'
           : '<div class="alt-media-hero__media alt-media-hero__media--placeholder"><i class="fa-solid fa-plane" aria-hidden="true"></i></div>') +
+        '<div class="alt-media-hero__badge">' + statusBadge(item) + '</div>' +
+        u.expandButton(item.thumbnail, item.title) +
         '<div class="alt-media-hero__content">' +
-          statusBadge(item) +
           '<h2 class="alt-heading">' + u.e(item.title) + '</h2>' +
-          (item.shortDescription ? '<p class="alt-body">' + u.e(item.shortDescription) + '</p>' : '') +
         '</div>' +
       '</div>' +
+      (item.shortDescription ? '<p class="alt-body alt-alert-overview">' + u.e(item.shortDescription) + '</p>' : '') +
       (metaLine ? '<p class="alt-meta" style="margin-bottom:1rem">' + u.e(metaLine) + '</p>' : '') +
       '<div class="alt-route alt-alert-route">' +
         '<span>' + u.flagFor(item.origin) + u.e(item.origin || 'Origin') + '</span>' +

@@ -416,7 +416,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20, 32, 51, 0) 30%, rgba(20, 32, 51, 0.93) 100%);
+  background: linear-gradient(180deg, rgba(20, 32, 51, 0) 28%, rgba(20, 32, 51, 0.96) 100%);
 }
 
 .alt-media-hero__content {
@@ -424,6 +424,67 @@
   z-index: 1;
   width: 100%;
   padding: 2rem 2.25rem;
+}
+
+/* Badge pinned to the top-start corner of the media hero, independent of
+   the bottom-aligned title/content block. Given an opaque chip background
+   of its own (rather than the light, low-alpha .alt-badge default) so it
+   stays legible over arbitrary photography, not just the scrim. */
+.alt-media-hero__badge {
+  position: absolute;
+  top: 1rem;
+  inset-inline-start: 1rem;
+  z-index: 2;
+}
+
+.alt-media-hero__badge .alt-badge {
+  background: rgba(20, 32, 51, 0.82);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--alt-on-dark);
+}
+
+.alt-media-hero__badge .alt-badge--gold {
+  background: #c9a227;
+  border-color: #c9a227;
+  color: #241c05;
+}
+
+.alt-media-hero__badge .alt-badge--urgent {
+  background: #b23a3a;
+  border-color: #b23a3a;
+  color: #fff;
+}
+
+/* Full-view trigger, top-end corner -- opens the same image in the shared
+   click-to-enlarge lightbox used on the Beehiiv manual page
+   (js/altitude-content-core.js wires [data-alt-lightbox]). */
+.alt-media-hero__expand {
+  position: absolute;
+  top: 1rem;
+  inset-inline-end: 1rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 999px;
+  background: rgba(20, 32, 51, 0.72);
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: zoom-in;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.alt-media-hero__expand:hover,
+.alt-media-hero__expand:focus-visible {
+  background: rgba(20, 32, 51, 0.9);
+  transform: scale(1.06);
+}
+
+.alt-media-hero__expand:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .alt-media-hero__content .alt-title,
@@ -877,12 +938,12 @@
   margin-top: 1rem;
 }
 
-/* Detail-panel content that now lives below the media hero image (see
-   .alt-media-hero above) -- title/description moved onto the image
-   itself, so everything here is normal light-surface body content. */
-.alt-media-hero__content .private-badge,
-.alt-media-hero__content .alt-badge {
-  margin-bottom: 0.6rem;
+/* Detail-panel content that lives below the media hero image (see
+   .alt-media-hero above) -- title stays on the image, the badge moved to
+   .alt-media-hero__badge (top-start overlay), and the description now
+   renders as normal light-surface body copy directly under the hero. */
+.alt-alert-overview {
+  margin: 1.5rem 0;
 }
 
 .alt-alert-route {
@@ -1000,10 +1061,6 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-}
-
-.alt-escape-masthead__kicker {
-  margin-bottom: 0.75rem;
 }
 
 .alt-escape-masthead__title {
