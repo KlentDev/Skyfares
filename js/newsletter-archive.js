@@ -115,13 +115,14 @@
         if (!data || !data.posts || !data.posts.length) {
           renderEmptyState('No issues are published yet.');
           renderHomeEmpty();
+          revealNewsletterHero();
           return;
         }
         // Cache post list in sessionStorage so the detail page can use it for related posts
         try { sessionStorage.setItem('skyfare_posts', JSON.stringify(data)); } catch (_) {}
         renderFeatured(data.posts[0]);
         renderHomePreview(withPinnedFirst(data.posts, 3));
-        renderHeroCarousel(data.posts.slice(0, 3)); // literal newest 3 -- not withPinnedFirst
+        renderNewsletterHero(data.posts[0]);
 
         _archiveAllPosts = data.posts;
         _archiveTopic = _initialTopicFromQuery();
@@ -132,6 +133,7 @@
       .catch(function () {
         renderEmptyState('Unable to load issues right now. Please refresh in a moment.');
         renderHomeEmpty();
+        revealNewsletterHero();
       });
   }
 
@@ -218,109 +220,6 @@
 
     var dateEl = document.querySelector('[data-section="latest-issue"] [data-issue-date]');
     if (dateEl && date) dateEl.textContent = date;
-  }
-
-  // ─── Hero carousel (pages/newsletter.html only) ─────────────────────────────
-  // Full-bleed rotating hero built from the 3 literal-newest issues (not
-  // withPinnedFirst() -- "latest" here means actually latest, same intent as
-  // renderFeatured() above). No-ops on every other page via the same
-  // getElementById guard renderFeatured() already uses, so this is safe to
-  // ship in the shared file.
-
-  function buildHeroSlide(post, isActive) {
-    var prem    = isPremium(post);
-    var type    = getPostType(post);
-    var summary = getPostSummary(post);
-    var date    = formatDate(post.published_at);
-    var author  = (post.authors || []).join(', ');
-
-    var href        = getPublicPostUrl(post);
-    var localHref    = getLocalPostUrl(post);
-    var beehiivHref  = post && post.url ? withBeehiivLoginModal(post.url) : localHref;
-    var freeChoiceAttrs = !prem
-      ? ' data-free-newsletter-choice="true" data-local-url="' + e(localHref) + '" data-beehiiv-url="' + e(beehiivHref) + '"'
-      : '';
-    var bgStyle = post.thumbnail_url
-      ? ' style="--hero-img:url(\'' + e(post.thumbnail_url) + '\');"'
-      : '';
-
-    var content =
-      '<div class="newsletter-hero-v3__slide-content container mx-auto px-4 md:px-6">' +
-        '<div class="newsletter-hero-v3__tags-row">' +
-          '<span class="newsletter-hero-v3__brand"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Skyfare Altitude &middot; Free</span>' +
-          '<span class="newsletter-hero-v3__chip">' + e(type) + '</span>' +
-        '</div>' +
-        '<h1>' + e(post.title) + '</h1>' +
-        (summary ? '<p class="newsletter-hero-v3__slide-desc">' + e(summary) + '</p>' : '') +
-        '<div class="newsletter-hero-v3__slide-meta">' +
-          '<div class="newsletter-hero-v3__meta-left">' +
-            (author ? '<span>' + e(author) + '</span>' : '') +
-            (date ? '<span>' + e(date) + '</span>' : '') +
-            (prem
-              ? '<span class="newsletter-hero-v3__badge-premium"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</span>'
-              : '<span>Free</span>') +
-          '</div>' +
-          '<span class="newsletter-hero-v3__read">' + (prem ? 'Unlock with Altitude' : 'Read issue') +
-            ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
-        '</div>' +
-      '</div>';
-
-    var cls = 'newsletter-hero-v3__slide' + (isActive ? ' is-active' : '');
-
-    return prem
-      ? '<div class="' + cls + '"' + bgStyle + ' onclick="window.openAltitudeAccessModal()" role="button" tabindex="0" aria-label="Unlock ' + e(post.title) + '">' + content + '</div>'
-      : '<a href="' + e(href) + '"' + freeChoiceAttrs + ' class="' + cls + '"' + bgStyle + '>' + content + '</a>';
-  }
-
-  function renderHeroCarousel(posts) {
-    var track = document.getElementById('newsletter-hero-track');
-    var dotsEl = document.getElementById('newsletter-hero-dots');
-    if (!track) return;
-    if (!posts || !posts.length) return; // keep the static skeleton slide already in the markup
-
-    track.innerHTML = posts.map(function (post, i) { return buildHeroSlide(post, i === 0); }).join('');
-
-    if (dotsEl) {
-      dotsEl.innerHTML = posts.length > 1
-        ? posts.map(function (post, i) {
-            return '<button type="button" class="' + (i === 0 ? 'is-active' : '') + '"' +
-              ' role="tab" aria-selected="' + (i === 0 ? 'true' : 'false') + '"' +
-              ' aria-label="Show issue ' + (i + 1) + ' of ' + posts.length + '"></button>';
-          }).join('')
-        : '';
-    }
-
-    if (posts.length < 2) return; // nothing to rotate/no dots to wire
-
-    var slides = Array.prototype.slice.call(track.querySelectorAll('.newsletter-hero-v3__slide'));
-    var dots   = dotsEl ? Array.prototype.slice.call(dotsEl.querySelectorAll('button')) : [];
-    var index  = 0;
-    var timer  = null;
-    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function activate(next) {
-      index = next;
-      slides.forEach(function (s, i) { s.classList.toggle('is-active', i === index); });
-      dots.forEach(function (d, i) {
-        d.classList.toggle('is-active', i === index);
-        d.setAttribute('aria-selected', i === index ? 'true' : 'false');
-      });
-    }
-
-    function startTimer() {
-      if (reduceMotion) return; // slides/dots still render+work manually, just no auto-advance
-      timer = setInterval(function () { activate((index + 1) % slides.length); }, 3000);
-    }
-
-    dots.forEach(function (dot, i) {
-      dot.addEventListener('click', function () {
-        if (timer) clearInterval(timer);
-        activate(i);
-        startTimer(); // restart the 2s clock from a manual pick, not resume mid-cycle
-      });
-    });
-
-    startTimer();
   }
 
   // ─── Archive grid ──────────────────────────────────────────────────────────
@@ -424,6 +323,72 @@
     grid.innerHTML = buildHomePreview(posts);
 
     grid.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  function renderNewsletterHero(post) {
+    var hero = document.getElementById('newsletter-hero');
+    if (!hero || !post) return;
+
+    if (post.thumbnail_url) {
+      try {
+        var imageUrl = new URL(post.thumbnail_url, window.location.href);
+        if (imageUrl.protocol === 'http:' || imageUrl.protocol === 'https:') {
+          hero.style.setProperty('--hero-img', 'url("' + imageUrl.href.replace(/"/g, '\\"') + '")');
+        }
+      } catch (_) {}
+    }
+
+    hero.classList.remove('newsletter-hero-v5--loading');
+
+    var title = hero.querySelector('[data-newsletter-hero-title]');
+    if (title) title.textContent = post.title || 'Fresh travel intelligence from Skyfare Altitude.';
+
+    var summary = hero.querySelector('[data-newsletter-hero-summary]');
+    if (summary) {
+      summary.textContent = getPostSummary(post) || 'Weekly award-space alerts, cabin reviews, and routing strategy delivered in a clear, useful brief.';
+    }
+
+    var premium = isPremium(post);
+    var access = hero.querySelector('[data-newsletter-hero-access]');
+    if (access) access.textContent = premium ? 'Premium' : 'Free';
+
+    var accessBadge = hero.querySelector('[data-newsletter-hero-access-badge]');
+    if (accessBadge) {
+      accessBadge.classList.toggle('newsletter-hero-v5__access-badge--premium', premium);
+      accessBadge.classList.toggle('newsletter-hero-v5__access-badge--free', !premium);
+      var accessIcon = accessBadge.querySelector('i');
+      if (accessIcon) {
+        accessIcon.className = premium ? 'fa-solid fa-crown' : 'fa-solid fa-unlock';
+      }
+    }
+
+    var readLink = hero.querySelector('[data-newsletter-hero-read]');
+    if (readLink) {
+      var localHref = getLocalPostUrl(post);
+      var beehiivHref = post && post.url ? withBeehiivLoginModal(post.url) : localHref;
+      readLink.href = getPublicPostUrl(post);
+      readLink.removeAttribute('data-free-newsletter-choice');
+      readLink.removeAttribute('data-local-url');
+      readLink.removeAttribute('data-beehiiv-url');
+      readLink.onclick = null;
+
+      if (premium) {
+        readLink.href = post && post.url ? post.url : '#subscribe-free';
+        readLink.onclick = function (event) {
+          event.preventDefault();
+          window.openAltitudeAccessModal && window.openAltitudeAccessModal();
+        };
+      } else {
+        readLink.setAttribute('data-free-newsletter-choice', 'true');
+        readLink.setAttribute('data-local-url', localHref);
+        readLink.setAttribute('data-beehiiv-url', beehiivHref);
+      }
+    }
+  }
+
+  function revealNewsletterHero() {
+    var hero = document.getElementById('newsletter-hero');
+    if (hero) hero.classList.remove('newsletter-hero-v5--loading');
   }
 
   function renderHomeEmpty() {

@@ -258,10 +258,10 @@
     if (e.key === 'Escape') closePopup();
   });
 
-  document.querySelectorAll('[data-newsletter-modal-trigger]').forEach(function (trigger) {
-    trigger.addEventListener('click', function (e) {
-      e.preventDefault();
-      window.openNewsletterModal();
-    });
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest && e.target.closest('[data-newsletter-modal-trigger]');
+    if (!trigger) return;
+    e.preventDefault();
+    window.openNewsletterModal();
   });
 })();
