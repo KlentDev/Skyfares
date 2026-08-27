@@ -64,23 +64,33 @@
             <h1 id="alt-archive-title">Browse the archive.</h1>
             <p>Find a specific issue by access level or topic. Premium articles open directly with your active member access.</p>
           </div>
-          <div class="private-toolbar justify-between" aria-label="Archive filters">
-            <div id="alt-filters" class="private-toolbar" aria-label="Filter by access">
-              <button type="button" data-filter="all" class="alt-filter-btn active">All</button>
-              <button type="button" data-filter="free" class="alt-filter-btn">Free</button>
-              <button type="button" data-filter="premium" class="alt-filter-btn alt-filter-btn--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</button>
+          <div class="alt-archive-toolbar-col">
+            <div class="private-toolbar justify-between" aria-label="Archive filters">
+              <div id="alt-filters" class="private-toolbar" aria-label="Filter by access">
+                <button type="button" data-filter="all" class="alt-filter-btn active">All</button>
+                <button type="button" data-filter="free" class="alt-filter-btn">Free</button>
+                <button type="button" data-filter="premium" class="alt-filter-btn alt-filter-btn--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</button>
+              </div>
+              <!-- Topic dropdown, AND-combined with the access filter above
+                   (js/altitude-portal.js's _getFilteredPosts). Values are display
+                   labels, matched case-insensitively -- Beehiiv always lowercases
+                   content_tags regardless of a tag's configured display casing. -->
+              <select id="alt-topic-select" class="alt-filter-select" aria-label="Filter by topic">
+                <option value="all">All Topics</option>
+                <option value="Credit/Debit Cards">Credit/Debit Cards</option>
+                <option value="Airlines">Airlines</option>
+                <option value="News">News</option>
+                <option value="Redemption Availability">Redemption Availability</option>
+              </select>
             </div>
-            <!-- Topic dropdown, AND-combined with the access filter above
-                 (js/altitude-portal.js's _getFilteredPosts). Values are display
-                 labels, matched case-insensitively -- Beehiiv always lowercases
-                 content_tags regardless of a tag's configured display casing. -->
-            <select id="alt-topic-select" class="alt-filter-select" aria-label="Filter by topic">
-              <option value="all">All Topics</option>
-              <option value="Credit/Debit Cards">Credit/Debit Cards</option>
-              <option value="Airlines">Airlines</option>
-              <option value="News">News</option>
-              <option value="Redemption Availability">Redemption Availability</option>
-            </select>
+            <!-- Search box: matches title, summary, and topic tags
+                 (case-insensitive substring), AND-combined with the access/topic
+                 filters above in js/altitude-portal.js's _getFilteredPosts(). -->
+            <div class="alt-archive-search-wrap">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" id="alt-archive-search" class="alt-archive-search" placeholder="Search issues by title, topic, or summary" aria-label="Search issues" autocomplete="off">
+              <button type="button" id="alt-archive-search-clear" class="alt-archive-search-clear" aria-label="Clear search" hidden><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
           </div>
         </div>
 

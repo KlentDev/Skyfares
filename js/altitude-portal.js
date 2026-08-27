@@ -467,9 +467,16 @@
   // a post's content_tags lowercased regardless of the tag's display casing
   // -- confirmed live, so matching is case-insensitive.
   var _altArchiveTopic = 'all';
+  var _altArchiveSearch = '';
 
   function _applyTopicFilter(topic) {
     _altArchiveTopic = topic || 'all';
+    _altArchivePage = 1;
+    _renderArchivePage();
+  }
+
+  function _applySearchFilter(value) {
+    _altArchiveSearch = (value || '').trim();
     _altArchivePage = 1;
     _renderArchivePage();
   }
@@ -480,6 +487,35 @@
       select.dataset.filterWired = 'true';
       select.addEventListener('change', function () { _applyTopicFilter(select.value); });
     }
+
+    var input = document.getElementById('alt-archive-search');
+    var clearBtn = document.getElementById('alt-archive-search-clear');
+    if (input && input.dataset.filterWired !== 'true') {
+      input.dataset.filterWired = 'true';
+      var debounceTimer = null;
+      input.addEventListener('input', function () {
+        if (clearBtn) clearBtn.hidden = !input.value;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () { _applySearchFilter(input.value); }, 150);
+      });
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+          input.value = '';
+          clearBtn.hidden = true;
+          _applySearchFilter('');
+          input.focus();
+        });
+      }
+    }
+  }
+
+  function _postMatchesSearch(post, needle) {
+    if (!needle) return true;
+    var haystack = [post.title, post.subtitle, post.excerpt, post.description]
+      .concat(post.content_tags || [])
+      .join(' ')
+      .toLowerCase();
+    return haystack.indexOf(needle) !== -1;
   }
 
   function _getFilteredPosts() {
@@ -494,6 +530,10 @@
       posts = posts.filter(function (p) {
         return (p.content_tags || []).some(function (t) { return t.toLowerCase() === topicLower; });
       });
+    }
+    if (_altArchiveSearch) {
+      var needle = _altArchiveSearch.toLowerCase();
+      posts = posts.filter(function (p) { return _postMatchesSearch(p, needle); });
     }
     return posts;
   }
@@ -516,9 +556,15 @@
     }
 
     if (!visiblePosts.length) {
-      var label = _altArchiveFilter === 'free' ? 'free ' : _altArchiveFilter === 'premium' ? 'premium ' : '';
-      if (_altArchiveTopic !== 'all') label += _altArchiveTopic + ' ';
-      grid.innerHTML = '<div class="private-empty"><i class="fa-solid fa-inbox" aria-hidden="true"></i><p>No ' + label + 'issues published yet.</p></div>';
+      var message;
+      if (_altArchiveSearch) {
+        message = 'No issues match "' + e(_altArchiveSearch) + '".';
+      } else {
+        var label = _altArchiveFilter === 'free' ? 'free ' : _altArchiveFilter === 'premium' ? 'premium ' : '';
+        if (_altArchiveTopic !== 'all') label += _altArchiveTopic + ' ';
+        message = 'No ' + label + 'issues published yet.';
+      }
+      grid.innerHTML = '<div class="private-empty"><i class="fa-solid fa-inbox" aria-hidden="true"></i><p>' + message + '</p></div>';
     } else {
       grid.innerHTML = visiblePosts.map(_renderCard).join('');
     }

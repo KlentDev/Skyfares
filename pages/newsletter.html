@@ -145,7 +145,7 @@
              since Beehiiv lowercases content_tags regardless of a tag's
              configured display casing -- confirmed live). Both AND-combine in
              js/newsletter-archive.js's _getFilteredArchivePosts(). -->
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-8 max-w-5xl mx-auto slide-up">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 max-w-5xl mx-auto slide-up">
           <div id="archive-access-filters" class="filter-segment" role="group" aria-label="Filter by access">
             <button type="button" data-access="all" class="filter-pill active">All</button>
             <button type="button" data-access="free" class="filter-pill">Free</button>
@@ -158,6 +158,17 @@
             <option value="News">News</option>
             <option value="Redemption Availability">Redemption Availability</option>
           </select>
+        </div>
+
+        <!-- Search box: matches title, summary, and topic tags (case-insensitive
+             substring), AND-combined with the access/topic filters above in
+             js/newsletter-archive.js's _getFilteredArchivePosts(). -->
+        <div class="mb-8 max-w-5xl mx-auto slide-up">
+          <div class="archive-search-wrap">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" id="archive-search" class="archive-search" placeholder="Search issues by title, topic, or summary" aria-label="Search issues" autocomplete="off">
+            <button type="button" id="archive-search-clear" class="archive-search-clear" aria-label="Clear search" hidden><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          </div>
         </div>
 
         <div id="archive-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
