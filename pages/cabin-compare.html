@@ -77,7 +77,7 @@
   </style>
 </head>
 
-<body class="min-h-screen flex flex-col bg-white">
+<body class="min-h-screen flex flex-col bg-white cabin-compare-page">
 
   <div id="page-loader">
     <img src="../logos/logo.webp" alt="Skyfare Consulting">
@@ -87,32 +87,46 @@
   <main class="flex-1">
 
     <!-- ─── HERO ─────────────────────────────────────────────────── -->
-    <section class="page-hero-bg relative pb-24 overflow-hidden" style="--hero-img:url('../images/page-images/first-class.jpg');">
+    <section class="cabin-compare-hero page-hero-bg relative overflow-hidden" style="--hero-img:url('../images/page-images/first-class.jpg');">
       <div class="container mx-auto px-4 md:px-6 relative z-10">
-        <div class="max-w-2xl mx-auto text-center slide-up">
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
-            <i class="fa-solid fa-scale-balanced text-[10px]"></i>
-            Cabin Compare &middot; Route Intelligence
+
+        <div class="cabin-compare-hero__layout">
+          <div class="cabin-compare-hero__copy slide-up">
+            <span class="cabin-compare-kicker"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> Cabin Compare &middot; Route Intelligence</span>
+            <h1>Which Business Class is worth your money?</h1>
+            <p>Pick a route and we line up the airlines seat by seat, fare by fare — so you know exactly what you're paying for before you book.</p>
+            <div class="flex flex-wrap gap-3">
+              <a href="#cc-compare-section" class="btn-pill btn-pill-primary btn-glow-v2">Compare a route <i class="fa-solid fa-arrow-down text-[10px]" aria-hidden="true"></i></a>
+              <a href="https://api.whatsapp.com/send?phone=6581575306" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-ghost"><i class="fa-brands fa-whatsapp text-sm" aria-hidden="true"></i> Ask Skyfare directly</a>
+            </div>
           </div>
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-5 text-white">
-            Which Business Class<br>is worth your money?
-          </h1>
-          <p class="text-base md:text-lg text-white/65 leading-relaxed mb-8 font-medium max-w-xl mx-auto">
-            Pick a route and we line up the airlines seat by seat, fare by fare — so you know exactly what you're paying for before you book.
-          </p>
-          <div class="flex flex-wrap items-center justify-center gap-3 text-[11px] text-white/50">
-            <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-scale-balanced text-brand-400 text-[10px]"></i> Impartial Comparison
-            </span>
-            <span class="w-px h-3 bg-white/15"></span>
-            <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-plane text-brand-400 text-[10px]"></i> Live Route Data
-            </span>
-            <span class="w-px h-3 bg-white/15"></span>
-            <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-crown text-brand-400 text-[10px]"></i> Skyfare Verdict
-            </span>
+
+          <aside class="cabin-compare-hero__ledger slide-up" style="animation-delay:.1s;" aria-label="Cabin Compare tool summary">
+            <div class="cabin-compare-hero__ledger-head">
+              <span>Comparison desk record</span>
+              <strong>What the tool covers</strong>
+            </div>
+            <div class="cabin-compare-hero__ledger-grid">
+              <span><b>29</b><small>airlines compared</small></span>
+              <span><b>03</b><small>airlines per route</small></span>
+              <span><b>07</b><small>world regions covered</small></span>
+            </div>
+            <p>Every fare, seat spec, and mileage figure comes from live Airtable data — not adjusted for any single airline.</p>
+          </aside>
+        </div>
+
+        <div class="cabin-compare-hero-rail slide-up" style="animation-delay:.16s;" aria-label="What Cabin Compare covers">
+          <div class="cabin-compare-hero-rail__intro">
+            <small>Inside the tool</small>
+            <strong>Which comparison details matter most?</strong>
           </div>
+          <div class="cabin-compare-hero-rail__tags" aria-label="Cabin Compare topics">
+            <span><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>Impartial Comparison</span>
+            <span><i class="fa-solid fa-plane" aria-hidden="true"></i>Live Route Data</span>
+            <span><i class="fa-solid fa-wifi" aria-hidden="true"></i>Seat &amp; Wi-Fi Specs</span>
+            <span><i class="fa-solid fa-crown" aria-hidden="true"></i>Skyfare Verdict</span>
+          </div>
+          <p>Read each comparison as a route note: seat product, Wi-Fi, cash fare, and miles cost — plus Skyfare's take on which is actually worth it.</p>
         </div>
       </div>
     </section>

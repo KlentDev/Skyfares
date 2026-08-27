@@ -128,6 +128,7 @@
         _archiveTopic = _initialTopicFromQuery();
         _wireAccessFilters();
         _wireTopicFilters();
+        _wireSearchFilter();
         _renderFilteredArchive();
       })
       .catch(function () {
@@ -229,10 +230,15 @@
     var count = document.getElementById('archive-count');
     if (!grid) return;
 
-    _latestNonPinnedId = getLatestNonPinnedId(posts);
-    grid.innerHTML = posts.map(function (post, index) {
-      return buildArchiveCard(post, index);
-    }).join('');
+    if (!posts.length) {
+      var label = _archiveSearch ? 'No issues match "' + _archiveSearch + '".' : 'No issues match these filters.';
+      grid.innerHTML = '<div class="col-span-full text-center py-10 text-sm text-neutral-400 slide-up is-visible">' + e(label) + '</div>';
+    } else {
+      _latestNonPinnedId = getLatestNonPinnedId(posts);
+      grid.innerHTML = posts.map(function (post, index) {
+        return buildArchiveCard(post, index);
+      }).join('');
+    }
 
     if (count) {
       count.textContent = posts.length + (posts.length === 1 ? ' issue' : ' issues');
@@ -241,18 +247,20 @@
     grid.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
   }
 
-  // ─── Access + topic filters (#archive-access-filters, #archive-topic-select) ───
+  // ─── Access + topic + search filters (#archive-access-filters,
+  // #archive-topic-select, #archive-search) ───────────────────────────────
   // data-topic values are the display labels ("Airlines", etc), but Beehiiv
   // always stores/returns a post's content_tags lowercased regardless of the
   // tag's configured display casing -- confirmed live: a post tagged
   // "Airlines" comes back with content_tags containing "airlines". So every
-  // content_tags match here is case-insensitive. The two filters (access,
-  // topic) are independent and AND-combined, mirroring js/altitude-portal.js's
-  // free/premium + topic filtering on the private archive.
+  // content_tags match here is case-insensitive. The three filters (access,
+  // topic, search) are independent and AND-combined, mirroring
+  // js/altitude-portal.js's filtering on the private archive.
 
   var _archiveAllPosts = [];
   var _archiveAccess = 'all';
   var _archiveTopic = 'all';
+  var _archiveSearch = '';
   var VALID_TOPICS = ['Credit/Debit Cards', 'Airlines', 'News', 'Redemption Availability'];
 
   function _initialTopicFromQuery() {
@@ -262,6 +270,15 @@
       var match = VALID_TOPICS.filter(function (t) { return t.toLowerCase() === tag.toLowerCase(); })[0];
       return match || 'all';
     } catch (err) { return 'all'; }
+  }
+
+  function _postMatchesSearch(post, needle) {
+    if (!needle) return true;
+    var haystack = [post.title, post.subtitle, post.excerpt, post.description]
+      .concat(post.content_tags || [])
+      .join(' ')
+      .toLowerCase();
+    return haystack.indexOf(needle) !== -1;
   }
 
   function _getFilteredArchivePosts() {
@@ -276,6 +293,10 @@
       posts = posts.filter(function (p) {
         return (p.content_tags || []).some(function (t) { return t.toLowerCase() === topicLower; });
       });
+    }
+    if (_archiveSearch) {
+      var needle = _archiveSearch.toLowerCase();
+      posts = posts.filter(function (p) { return _postMatchesSearch(p, needle); });
     }
     return withPinnedFirst(posts);
   }
@@ -299,6 +320,11 @@
     _renderFilteredArchive();
   }
 
+  function _applySearchFilter(value) {
+    _archiveSearch = (value || '').trim();
+    _renderFilteredArchive();
+  }
+
   function _wireAccessFilters() {
     document.querySelectorAll('#archive-access-filters [data-access]').forEach(function (btn) {
       btn.addEventListener('click', function () { _applyAccessFilter(btn.dataset.access); });
@@ -308,6 +334,28 @@
   function _wireTopicFilters() {
     var select = document.getElementById('archive-topic-select');
     if (select) select.addEventListener('change', function () { _applyTopicFilter(select.value); });
+  }
+
+  function _wireSearchFilter() {
+    var input = document.getElementById('archive-search');
+    var clearBtn = document.getElementById('archive-search-clear');
+    if (!input) return;
+
+    var debounceTimer = null;
+    input.addEventListener('input', function () {
+      if (clearBtn) clearBtn.hidden = !input.value;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function () { _applySearchFilter(input.value); }, 150);
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function () {
+        input.value = '';
+        clearBtn.hidden = true;
+        _applySearchFilter('');
+        input.focus();
+      });
+    }
   }
 
   function renderHomePreview(posts) {
