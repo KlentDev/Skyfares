@@ -24,9 +24,6 @@
         <span id="private-member-product">Member Portal</span>
         <small id="private-member-email">Signed in</small>
       </div>
-      <button type="button" data-push-bell class="private-icon-btn" aria-label="Enable notifications" hidden>
-        <i class="fa-regular fa-bell" aria-hidden="true"></i>
-      </button>
       <button type="button" data-private-manage class="private-icon-btn" aria-label="Manage membership">
         <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
       </button>
@@ -35,6 +32,13 @@
           <i class="fa-solid fa-user-gear" aria-hidden="true"></i>
         </button>
         <div class="private-account-dropdown" data-private-account-dropdown role="menu" aria-label="Account menu">
+          <div class="private-menu-row" data-private-menu-altitude-only data-push-toggle-row hidden role="menuitem">
+            <span class="private-menu-row__label"><i class="fa-regular fa-bell" aria-hidden="true"></i> Notifications</span>
+            <label class="push-toggle">
+              <input type="checkbox" class="push-toggle__input" data-push-toggle aria-label="Enable notifications">
+              <span class="push-toggle__track"><span class="push-toggle__thumb"></span></span>
+            </label>
+          </div>
           <a href="altitude-access/membership.html" data-private-menu-membership data-private-menu-altitude-only role="menuitem">
             <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
             <span>Membership</span>

@@ -2,11 +2,12 @@
  * Skyfare Web Push — subscribe/unsubscribe client, exposing window.SkyfarePush.
  *
  * No path here ever calls Notification.requestPermission() on its own — it
- * only ever runs from a real user action: the header bell (wireHeaderBell,
- * wired by js/private-layout.js once the header partial loads), the global
- * toast's own toggle (maybeShowGlobalToast, self-triggered but the
- * subscribe call itself only fires when the member flips the toggle), or
- * the Membership page's full preferences panel (wirePrefsPanels). Reads the
+ * only ever runs from a real user action: the Notifications row in the
+ * account dropdown (wireNotificationToggle, wired by js/private-layout.js
+ * once the header partial loads), the global toast's own toggle
+ * (maybeShowGlobalToast shows the toast itself, but the subscribe call only
+ * fires when the member flips its toggle), or the Membership page's full
+ * preferences panel (wirePrefsPanels). Reads the
  * Altitude JWT straight out of localStorage, same key js/altitude.js and
  * js/altitude-portal.js already use, so a signed-in member's subscription is
  * tagged 'altitude' server-side (see cloudflare/orchestration/pushHandlers.js)
@@ -136,50 +137,46 @@
   }
 
   /**
-   * Wires a single header bell button (see pages/private-pages/header-private.html)
-   * into a toggle: click subscribes to every topic when off, unsubscribes
-   * entirely when on. Called explicitly by js/private-layout.js's
-   * enhanceHeader() once the header partial has actually been injected --
-   * this button doesn't exist in the DOM at DOMContentLoaded time (the
-   * header is fetched async), so it can't rely on the same auto-wiring the
-   * page-level banners/prefs panel use.
+   * Wires the Notifications row's toggle in the account dropdown (see
+   * pages/private-pages/header-private.html) -- on: subscribes to every
+   * topic; off: unsubscribes entirely. Toggling reflects the real
+   * subscription state on open and shows a success/error toast after every
+   * change. Called explicitly by js/private-layout.js's enhanceHeader()
+   * once the header partial has actually been injected -- this input
+   * doesn't exist in the DOM at DOMContentLoaded time (the header is
+   * fetched async), so it can't rely on the same auto-wiring the
+   * page-level prefs panel uses.
+   * @param {HTMLInputElement} input
    */
-  function wireHeaderBell(btn) {
-    if (!btn || btn.dataset.pushBellWired === 'true') return;
-    btn.dataset.pushBellWired = 'true';
+  function wireNotificationToggle(input) {
+    if (!input || input.dataset.pushToggleWired === 'true') return;
+    input.dataset.pushToggleWired = 'true';
+    var row = input.closest('[data-push-toggle-row]');
 
     function refresh() {
-      if (!isSupported()) { btn.hidden = true; return; }
+      if (!isSupported()) { if (row) row.hidden = true; return; }
       getStatus().then(function (status) {
-        if (status === 'unsupported') { btn.hidden = true; return; }
-        btn.hidden = false;
-        var subscribed = status === 'subscribed';
-        btn.classList.toggle('private-icon-btn--active', subscribed);
-        btn.setAttribute('aria-label', subscribed ? 'Notifications on — click to turn off' : 'Enable notifications');
-        var icon = btn.querySelector('i');
-        if (icon) icon.className = subscribed ? 'fa-solid fa-bell' : 'fa-regular fa-bell';
+        if (status === 'unsupported') { if (row) row.hidden = true; return; }
+        if (row) row.hidden = false;
+        input.checked = status === 'subscribed';
+        input.disabled = false;
       });
     }
 
-    btn.addEventListener('click', function () {
-      btn.disabled = true;
-      getStatus().then(function (status) {
-        if (status === 'subscribed') {
-          return unsubscribe().then(function () {
-            if (window.SkyUI) SkyUI.toast('Notifications turned off.', { type: 'success' });
-          });
-        }
-        return subscribe(ALL_TOPICS).then(function () {
-          if (window.SkyUI) SkyUI.toast('Notifications enabled.', { type: 'success' });
-        }).catch(function (err) {
-          var msg = err && err.message === 'permission-denied'
-            ? 'Notifications are blocked for this site. Enable them in your browser settings first.'
-            : 'Could not update notifications. Please try again.';
-          if (window.SkyUI) SkyUI.toast(msg, { type: 'error' });
-        });
+    input.addEventListener('change', function () {
+      var enabling = input.checked;
+      input.disabled = true;
+      var action = enabling ? subscribe(ALL_TOPICS) : unsubscribe();
+      action.then(function () {
+        if (window.SkyUI) SkyUI.toast(enabling ? 'Notifications enabled.' : 'Notifications turned off.', { type: 'success' });
+      }).catch(function (err) {
+        input.checked = !enabling; // revert -- the change didn't actually take
+        var msg = err && err.message === 'permission-denied'
+          ? 'Notifications are blocked for this site. Enable them in your browser settings first.'
+          : 'Could not update notifications. Please try again.';
+        if (window.SkyUI) SkyUI.toast(msg, { type: 'error' });
       }).then(function () {
-        btn.disabled = false;
-        refresh();
+        input.disabled = false;
       });
     });
 
@@ -191,7 +188,7 @@
     getStatus: getStatus,
     subscribe: subscribe,
     unsubscribe: unsubscribe,
-    wireHeaderBell: wireHeaderBell,
+    wireNotificationToggle: wireNotificationToggle,
   };
 
   // ─── Declarative UI wiring ────────────────────────────────────────────────

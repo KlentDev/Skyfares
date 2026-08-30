@@ -16496,6 +16496,39 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   cursor: not-allowed;
 }
 
+/* Notifications row inside the account dropdown
+   (pages/private-pages/header-private.html) -- same row rhythm as the
+   dropdown's a/button items (44px, 0.8rem padding, 0.83rem/800 label) but
+   not itself a link/button, since only the toggle inside it is
+   interactive. Starts with the `hidden` attribute in markup (removed by
+   js/push-subscribe.js once it confirms push is actually supported) --
+   the [hidden] override below is required because .private-menu-row's own
+   `display: flex` would otherwise beat the UA stylesheet's [hidden] rule,
+   same reasoning as the existing .private-signout-modal[hidden] rule. */
+.private-menu-row {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 0.8rem;
+  border-radius: 10px;
+}
+
+.private-menu-row[hidden] {
+  display: none;
+}
+
+.private-menu-row__label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--private-muted);
+  font-size: 0.83rem;
+  font-weight: 800;
+}
+
 @media (max-width: 640px) {
   .push-toast { min-width: 0; max-width: calc(100vw - 2rem); }
 }
@@ -16564,15 +16597,6 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   width: 1.05rem;
   height: 1.05rem;
   accent-color: var(--private-blue);
-}
-
-/* Header bell toggle (pages/private-pages/header-private.html) --
-   .private-icon-btn's base styling already covers shape/hover; this just
-   marks the "notifications on" state. */
-.private-icon-btn--active {
-  border-color: rgba(0, 102, 204, 0.28);
-  background: rgba(0, 102, 204, 0.08);
-  color: var(--private-blue);
 }
 
 @media (max-width: 560px) {
