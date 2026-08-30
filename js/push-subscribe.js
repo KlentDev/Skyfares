@@ -224,7 +224,7 @@
     el.setAttribute('role', 'status');
     el.innerHTML =
       '<i class="fa-solid fa-bell push-toast__icon" aria-hidden="true"></i>' +
-      '<span class="push-toast__msg">Get notified the moment a new Award Alert or KrisFlyer Escape lands.</span>' +
+      '<span class="push-toast__msg">Turn on notifications to stay on top of your Altitude membership.</span>' +
       '<label class="push-toggle">' +
         '<input type="checkbox" class="push-toggle__input" aria-label="Enable notifications">' +
         '<span class="push-toggle__track"><span class="push-toggle__thumb"></span></span>' +
