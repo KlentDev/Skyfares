@@ -109,14 +109,14 @@
     if (productEl) productEl.textContent = product || 'Member Portal';
     if (subtitleEl) subtitleEl.textContent = subtitle || 'Private access';
 
-    // Notification bell — Altitude only (award_alert/krisflyer_escape/
-    // premium_newsletter are Altitude-gated; a Guide-only member has no
-    // eligible content yet). See js/push-subscribe.js's wireHeaderBell.
-    // Starts hidden in header-private.html; wireHeaderBell reveals it once
-    // it confirms the browser actually supports Push.
-    var pushBellBtn = document.querySelector('[data-push-bell]');
-    if (pushBellBtn && page === 'altitude' && window.SkyfarePush) {
-      window.SkyfarePush.wireHeaderBell(pushBellBtn);
+    // Notifications toggle (account dropdown) — the row itself is already
+    // gated to Altitude-only via [data-private-menu-altitude-only] (handled
+    // below in setupAccountMenu, same mechanism as Membership/Support/etc.);
+    // this only needs to wire the toggle's actual behavior. See
+    // js/push-subscribe.js's wireNotificationToggle.
+    var pushToggleInput = document.querySelector('[data-push-toggle]');
+    if (pushToggleInput && window.SkyfarePush) {
+      window.SkyfarePush.wireNotificationToggle(pushToggleInput);
     }
 
     document.querySelectorAll('[data-private-nav]').forEach(function (link) {
@@ -411,6 +411,7 @@
             '<div class="private-account-menu" data-private-account-menu>' +
               '<button type="button" class="private-icon-btn private-account-trigger" data-private-account-trigger aria-label="Account menu" aria-haspopup="menu" aria-expanded="false"><i class="fa-solid fa-user-gear"></i></button>' +
               '<div class="private-account-dropdown" data-private-account-dropdown role="menu" aria-label="Account menu">' +
+                '<div class="private-menu-row" data-private-menu-altitude-only data-push-toggle-row hidden role="menuitem"><span class="private-menu-row__label"><i class="fa-regular fa-bell"></i> Notifications</span><label class="push-toggle"><input type="checkbox" class="push-toggle__input" data-push-toggle aria-label="Enable notifications"><span class="push-toggle__track"><span class="push-toggle__thumb"></span></span></label></div>' +
                 '<a href="' + getAltitudeAccessPrefix() + 'membership.html" data-private-menu-membership data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-credit-card"></i><span>Membership</span></a>' +
                 '<a href="' + getAltitudeAccessPrefix() + 'beehiiv-manual.html" data-private-menu-manual data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-book-open-reader"></i><span>Beehiiv Manual</span></a>' +
                 '<a href="' + getAltitudeAccessPrefix() + 'support.html" data-private-menu-support data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-headset"></i><span>Support</span></a>' +
