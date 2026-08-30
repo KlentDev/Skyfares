@@ -66,6 +66,18 @@
     });
   }
 
+  /**
+   * Fired after subscribe()/unsubscribe() actually succeeds, so every
+   * push-toggle UI on the page (header dropdown, global toast, Membership
+   * prefs panel) can re-sync itself without a reload -- see each one's own
+   * listener below. Deliberately carries no UI instructions, just the new
+   * state; each listener re-derives its own display via its existing
+   * refresh() rather than being told what to render.
+   */
+  function dispatchPushStatusChanged(subscribed) {
+    window.dispatchEvent(new CustomEvent('skyfare:push-status-changed', { detail: { subscribed: subscribed } }));
+  }
+
   function postSubscription(subscription, topics) {
     var json = subscription.toJSON();
     var token = getToken();
@@ -119,6 +131,10 @@
           if (!res.ok) throw new Error((res.data && res.data.error) || 'subscribe-failed');
           return res.data;
         });
+      })
+      .then(function (data) {
+        dispatchPushStatusChanged(true);
+        return data;
       });
   }
 
@@ -133,6 +149,9 @@
           body: JSON.stringify({ endpoint: endpoint }),
         }).catch(function () {});
       }).then(function () { return { ok: true }; });
+    }).then(function (result) {
+      dispatchPushStatusChanged(false);
+      return result;
     });
   }
 
@@ -179,6 +198,10 @@
         input.disabled = false;
       });
     });
+
+    // Re-syncs if the toast or the Membership prefs panel changes the
+    // subscription elsewhere -- see dispatchPushStatusChanged.
+    window.addEventListener('skyfare:push-status-changed', refresh);
 
     refresh();
   }
@@ -355,6 +378,10 @@
           }).then(function () { disableBtn.disabled = false; });
         });
       }
+
+      // Re-syncs if the toast or the header dropdown toggle changes the
+      // subscription elsewhere -- see dispatchPushStatusChanged.
+      window.addEventListener('skyfare:push-status-changed', refresh);
 
       refresh();
     });
