@@ -143,3 +143,38 @@ self.addEventListener('fetch', (event) => {
 
   // Everything else (page photography, etc.) -- default browser HTTP cache.
 });
+
+// ── Web Push ─────────────────────────────────────────────────────────────
+// See js/push-subscribe.js for subscription/permission handling -- nothing
+// here ever requests permission, it only reacts to pushes for a
+// subscription that was already created by an explicit user action.
+
+self.addEventListener('push', (event) => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch (err) {}
+
+  const title = data.title || 'Skyfare Consulting';
+  const options = {
+    body: data.body || '',
+    icon: '/images/icons/icon-192.png',
+    badge: '/images/icons/icon-192.png',
+    data: { url: data.url || '/', type: data.type || 'general' },
+    tag: data.type || undefined,
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if (client.url === targetUrl && 'focus' in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+    })
+  );
+});

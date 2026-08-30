@@ -69,6 +69,20 @@ binding = "AUDIT_DB"
 database_name = "skyfares-guide-audit"
 database_id = "9ba791c3-5397-447e-9263-b635fcdbe9fd"
 
+# ── Web Push: subscription storage ────────────────────────────────────────────
+# New for this feature (2026-08-30) — see cloudflare/orchestration/pushHandlers.js.
+# A separate database from AUDIT_DB above on purpose: push_subscriptions is
+# actively queried/updated app state (every subscribe, unsubscribe, and send
+# touches it), not a write-mostly audit trail — a different concern from
+# guide_pdf_audit_log, so it gets its own binding rather than a second table
+# bolted onto AUDIT_DB.
+# Provision with: wrangler d1 create skyfares-push
+# then fill in database_id below, and apply migrations/0002_push_subscriptions.sql
+[[d1_databases]]
+binding = "PUSH_DB"
+database_name = "skyfares-push"
+database_id = "5931bec1-f13a-4f3b-8e33-a4f0b84d94b3"
+
 # Imports templates/*.html as a raw text module (see services/guidePdf.js's
 # `import templateHtml from '../templates/pdf-kf-guide-template.html'`).
 [[rules]]

@@ -197,7 +197,30 @@ export const KV_PREFIX = {
   // Modeled on GUIDE_MAGIC_SENT's same check-before-work/write-on-success/TTL
   // pattern above.
   GUIDE_PDF_EMAIL_SENT: 'guide-pdf-email-sent:',
+
+  // ── Web Push (see orchestration/pushHandlers.js) ──────────────────────────
+  RL_PUSH_SUBSCRIBE: 'push-subscribe-rl:',
+  RL_PUSH_UNSUBSCRIBE: 'push-unsubscribe-rl:',
+  RL_PUSH_SEND: 'push-send-rl:',
+  // "Was a push notification already sent for this dedupeKey (typically an
+  // Airtable record ID)" marker -- same check-before-work/write-on-success/TTL
+  // shape as GUIDE_MAGIC_SENT/WELCOME_SENT above, but a much longer TTL since
+  // the whole point is guaranteeing a Draft->Published content record can
+  // never fire more than one notification, no matter how long after
+  // publishing an automation retry or manual re-run might happen.
+  PUSH_SENT: 'push-sent:',
 };
+
+// ── Web Push notification types ───────────────────────────────────────────
+// Every push payload's `type` (and every subscription's opted-in `topics`)
+// must be one of these -- see orchestration/pushHandlers.js.
+export const PUSH_TOPICS = [
+  'award_alert',
+  'krisflyer_escape',
+  'premium_newsletter',
+  'skyfare_announcement',
+  'service_update',
+];
 
 // ── KrisFlyer Guide: secure PDF delivery ──────────────────────────────────────
 // See cloudflare/services/guidePdf.js. GUIDE_ID identifies the product for

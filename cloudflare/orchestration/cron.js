@@ -146,3 +146,43 @@ export async function reconcileBeehiivAccess(env) {
     }
   }
 }
+
+// ── Push subscription audience reconciliation (called by daily cron) ─────────
+// A push_subscriptions row's `audience` is set to 'altitude' once, at
+// subscribe time (see orchestration/pushHandlers.js's handlePushSubscribe) —
+// it is never re-checked on every send, since that would mean an extra KV
+// read per subscriber on every broadcast. Instead this sweep runs once a
+// day, alongside reconcileBeehiivAccess above, and closes the gap the same
+// way that function does: re-check each 'altitude' subscription's member
+// entitlement (same member:<email> KV lookup + active-status check
+// reconcileBeehiivAccess already uses inline) and remove the row once
+// membership has lapsed, so a former member's device stops receiving
+// Altitude-only content (Award Alerts, KrisFlyer Escapes, premium
+// newsletter) the day after their access actually ends.
+export async function reconcilePushSubscriptionAudience(env) {
+  if (!env.PUSH_DB) return; // feature not yet provisioned in this environment
+
+  const { results } = await env.PUSH_DB.prepare(
+    "SELECT id, email FROM push_subscriptions WHERE audience = 'altitude' AND email IS NOT NULL"
+  ).all().catch(() => ({ results: [] }));
+
+  const staleIds = [];
+  for (const row of (results || [])) {
+    const raw = await env.ALTITUDE_KV.get(`${KV_PREFIX.MEMBER}${row.email}`).catch(() => null);
+    let member = null;
+    if (raw) { try { member = JSON.parse(raw); } catch {} }
+
+    const active = !!member && ['active', 'trialing', 'past_due'].includes(member.status) && (
+      !member.current_period_end || new Date(member.current_period_end).getTime() > Date.now()
+    );
+
+    if (!active) staleIds.push(row.id);
+  }
+
+  if (staleIds.length) {
+    const placeholders = staleIds.map(() => '?').join(',');
+    await env.PUSH_DB.prepare(`DELETE FROM push_subscriptions WHERE id IN (${placeholders})`)
+      .bind(...staleIds).run().catch(() => {});
+    console.log(`[push-audience-cron] removed ${staleIds.length} lapsed-member push subscription(s)`);
+  }
+}

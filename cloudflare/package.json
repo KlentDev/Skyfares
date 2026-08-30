@@ -9,6 +9,7 @@
   "dependencies": {
     "@cloudflare/puppeteer": "^1.2.0",
     "@pdfsmaller/pdf-encrypt": "^1.2.0",
+    "@pushforge/builder": "^2.0.5",
     "marked": "^18.0.7",
     "pdf-lib": "^1.17.1"
   },

@@ -61,6 +61,14 @@
  *   GET  /airtable/testimonials    — approved testimonials. ?scope=featured&limit=N (homepage, default 3,
  *                                    no pagination) or default/?scope=all&limit=N&offset=... (archive,
  *                                    default page size 9, paginated via the returned `offset` token)
+ *   GET  /api/push/public-key      — VAPID public key (safe to expose; the private key never leaves env)
+ *   POST /api/push/subscribe       — register a PushSubscription; audience is server-derived from an
+ *                                    optional Altitude JWT (see orchestration/pushHandlers.js), never
+ *                                    trusted from the client
+ *   POST /api/push/unsubscribe     — remove a PushSubscription by endpoint
+ *   POST /api/push/send            — trusted-caller-only (PUSH_ADMIN_TOKEN) broadcast to matching
+ *                                    audience/topics; supports a `dedupeKey` for exactly-once sends
+ *                                    (see orchestration/pushHandlers.js)
  *
  * Required secrets (wrangler secret put):
  *   BEEHIIV_API_KEY
@@ -100,9 +108,16 @@
  *   AIRTABLE_API_KEY   AIRTABLE_TABLE_ASSESSMENT_BOOKINGS
  *   AIRTABLE_TABLE_ALTITUDE_SUBSCRIBERS — paid Monthly/Annual subscriber mirror
  *
+ *   -- Web Push (see cloudflare/services/webPush.js, orchestration/pushHandlers.js) --
+ *   VAPID_PUBLIC_KEY    — safe to expose to the frontend (served via GET /api/push/public-key)
+ *   VAPID_PRIVATE_KEY   — JSON-stringified JWK ({kty,crv,x,y,d}) — `npx @pushforge/builder vapid` output
+ *   VAPID_SUBJECT        — e.g. mailto:hello@skyfareconsulting.com
+ *   PUSH_ADMIN_TOKEN     — bearer token required by POST /api/push/send; never exposed to the frontend
+ *
  * KV binding: ALTITUDE_KV
  * R2 binding: GUIDE_PDF_BUCKET (temporary guide-PDF storage for the email flow)
  * D1 binding: AUDIT_DB (guide_pdf_audit_log — see migrations/0001_guide_pdf_audit_log.sql)
+ * D1 binding: PUSH_DB (push_subscriptions — see migrations/0002_push_subscriptions.sql)
  * Browser Rendering binding: BROWSER (Puppeteer, guide PDF generation)
  */
 import { ALLOWED_ORIGINS } from './config/constants.js';
@@ -127,7 +142,8 @@ import { handleAssessmentBookingRedirect } from './orchestration/assessmentBooki
 import { handleActivate, handleVerify, handleMagicVerify } from './orchestration/session.js';
 import { handleGuidePdfDownload, handleGuidePdfEmail, handleGuidePdfFetch } from './orchestration/guidePdfHandlers.js';
 import { handleGetGuideChapters } from './orchestration/guideChaptersHandler.js';
-import { runRenewalReminders, expireGuideBundles, reconcileBeehiivAccess } from './orchestration/cron.js';
+import { runRenewalReminders, expireGuideBundles, reconcileBeehiivAccess, reconcilePushSubscriptionAudience } from './orchestration/cron.js';
+import { handlePushPublicKey, handlePushSubscribe, handlePushUnsubscribe, handlePushSend } from './orchestration/pushHandlers.js';
 
 export default {
   // Single daily cron: 0 1 * * * (01:00 UTC / 09:00 SGT) -- recalculation +
@@ -145,6 +161,7 @@ export default {
       runRenewalReminders(env),
       expireGuideBundles(env),
       reconcileBeehiivAccess(env),
+      reconcilePushSubscriptionAudience(env),
     ]));
   },
 
@@ -302,6 +319,24 @@ export default {
 
     if (request.method === 'GET' && url.pathname === '/airtable/cabin-compare') {
       return handleGetCabinCompare(request, env, corsHeaders);
+    }
+
+    // ── Push Notification routes ────────────────────────────────────────────
+
+    if (request.method === 'GET' && url.pathname === '/api/push/public-key') {
+      return handlePushPublicKey(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/push/subscribe') {
+      return handlePushSubscribe(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/push/unsubscribe') {
+      return handlePushUnsubscribe(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/push/send') {
+      return handlePushSend(request, env, corsHeaders);
     }
 
     // ── Subscribe ──────────────────────────────────────────────────────────

@@ -96,6 +96,28 @@
           <div id="alt-plans-content"></div>
         </section>
 
+        <section class="private-panel push-prefs-panel slide-up is-visible" data-push-prefs aria-labelledby="push-prefs-title">
+          <div class="push-prefs-panel__heading">
+            <div class="icon-chip icon-chip-sm"><i class="fa-solid fa-bell" aria-hidden="true"></i></div>
+            <div>
+              <h2 id="push-prefs-title">Notification preferences</h2>
+              <p>Browser push notifications for this device, on top of email. Choose what you want to hear about the moment it happens.</p>
+            </div>
+          </div>
+          <p class="push-prefs-panel__status" data-push-status>Checking notification support…</p>
+          <div class="push-prefs-panel__topics">
+            <label class="push-prefs-topic"><input type="checkbox" data-push-topic-checkbox value="award_alert"> Award Alerts</label>
+            <label class="push-prefs-topic"><input type="checkbox" data-push-topic-checkbox value="krisflyer_escape"> KrisFlyer Escapes</label>
+            <label class="push-prefs-topic"><input type="checkbox" data-push-topic-checkbox value="premium_newsletter"> Premium newsletter issues</label>
+            <label class="push-prefs-topic"><input type="checkbox" data-push-topic-checkbox value="skyfare_announcement"> Skyfare announcements</label>
+            <label class="push-prefs-topic"><input type="checkbox" data-push-topic-checkbox value="service_update"> Service updates</label>
+          </div>
+          <div class="private-actions">
+            <button type="button" class="private-action private-action--primary" data-push-save>Save preferences</button>
+            <button type="button" class="private-action" data-push-disable hidden>Turn off notifications</button>
+          </div>
+        </section>
+
         <section class="private-panel altitude-membership-compare slide-up is-visible" aria-labelledby="alt-membership-compare-title">
           <div class="altitude-membership-compare__heading">
             <div>
@@ -206,5 +228,6 @@
 
   <script src="../../../js/altitude-portal.js" defer></script>
   <script src="../../../js/altitude-portal-extras.js" defer></script>
+  <script src="../../../js/push-subscribe.js" defer></script>
 </body>
 </html>
