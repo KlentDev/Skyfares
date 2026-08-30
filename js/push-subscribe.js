@@ -1,9 +1,12 @@
 /**
  * Skyfare Web Push — subscribe/unsubscribe client, exposing window.SkyfarePush.
  *
- * No path here ever calls Notification.requestPermission() on its own —
- * subscribe() only runs from a real click handler in the pages that use it
- * (award-alerts.html, krisflyer-escapes.html, membership.html). Reads the
+ * No path here ever calls Notification.requestPermission() on its own — it
+ * only ever runs from a real user action: the header bell (wireHeaderBell,
+ * wired by js/private-layout.js once the header partial loads), the global
+ * toast's own toggle (maybeShowGlobalToast, self-triggered but the
+ * subscribe call itself only fires when the member flips the toggle), or
+ * the Membership page's full preferences panel (wirePrefsPanels). Reads the
  * Altitude JWT straight out of localStorage, same key js/altitude.js and
  * js/altitude-portal.js already use, so a signed-in member's subscription is
  * tagged 'altitude' server-side (see cloudflare/orchestration/pushHandlers.js)
@@ -193,61 +196,104 @@
 
   // ─── Declarative UI wiring ────────────────────────────────────────────────
   // Pages opt in by including this script plus the right markup -- no
-  // per-page inline script needed. Two shapes:
-  //   [data-push-banner][data-push-topics="topic_a,topic_b"] -- a dismissible
-  //     single-CTA banner (award-alerts.html, krisflyer-escapes.html), hidden
-  //     by default in markup and only shown once JS confirms it's worth
-  //     showing (supported, not already subscribed, not previously dismissed).
+  // per-page inline script needed.
   //   [data-push-prefs] containing [data-push-topic-checkbox] checkboxes,
   //     [data-push-save], and an optional [data-push-disable] -- the full
   //     preferences panel (membership.html).
+  // The global toast below isn't markup-driven -- it's built and appended by
+  // JS itself, since it needs to appear on any Altitude page, not just one
+  // with a specific placeholder element.
 
-  function bannerDismissKey(topics) {
-    return 'push_banner_dismissed:' + topics.join(',');
+  var TOAST_SESSION_KEY = 'push_toast_shown';
+  var TOAST_AUTO_DISMISS_MS = 8000;
+
+  function getToastWrap() {
+    var wrap = document.getElementById('sky-toast-wrap');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.id = 'sky-toast-wrap';
+      wrap.className = 'sky-toast-wrap';
+      wrap.setAttribute('aria-live', 'polite');
+      document.body.appendChild(wrap);
+    }
+    return wrap;
   }
 
-  function wireBanners() {
-    var banners = document.querySelectorAll('[data-push-banner]');
-    if (!banners.length) return;
+  function showGlobalToast() {
+    var wrap = getToastWrap();
+
+    var el = document.createElement('div');
+    el.className = 'push-toast';
+    el.setAttribute('role', 'status');
+    el.innerHTML =
+      '<i class="fa-solid fa-bell push-toast__icon" aria-hidden="true"></i>' +
+      '<span class="push-toast__msg">Get notified the moment a new Award Alert or KrisFlyer Escape lands.</span>' +
+      '<label class="push-toggle">' +
+        '<input type="checkbox" class="push-toggle__input" aria-label="Enable notifications">' +
+        '<span class="push-toggle__track"><span class="push-toggle__thumb"></span></span>' +
+      '</label>' +
+      '<button type="button" class="push-toast__close" aria-label="Dismiss"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>';
+
+    wrap.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add('push-toast--in'); });
+
+    var timer;
+    function dismiss() {
+      if (timer) clearTimeout(timer);
+      el.classList.remove('push-toast--in');
+      el.classList.add('push-toast--out');
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 260);
+    }
+    function resetTimer() {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(dismiss, TOAST_AUTO_DISMISS_MS);
+    }
+
+    el.querySelector('.push-toast__close').addEventListener('click', dismiss);
+
+    var toggle = el.querySelector('.push-toggle__input');
+    var msgEl = el.querySelector('.push-toast__msg');
+    toggle.addEventListener('change', function () {
+      if (!toggle.checked) return; // this toast has no "turn off" path -- it only ever offers to enable
+      toggle.disabled = true;
+      if (timer) clearTimeout(timer);
+      subscribe(ALL_TOPICS).then(function () {
+        msgEl.textContent = 'Notifications enabled.';
+        setTimeout(dismiss, 1500);
+      }).catch(function (err) {
+        toggle.checked = false;
+        toggle.disabled = false;
+        var msg = err && err.message === 'permission-denied'
+          ? 'Notifications are blocked for this site. Enable them in your browser settings first.'
+          : 'Could not enable notifications. Please try again.';
+        if (window.SkyUI) SkyUI.toast(msg, { type: 'error' });
+        resetTimer();
+      });
+    });
+
+    resetTimer();
+    return el;
+  }
+
+  /**
+   * Shows the global toast at most once per browser session, and only when
+   * there's actually something to offer: an Altitude private page, push
+   * genuinely supported, and the member not already subscribed. Session-
+   * scoped (sessionStorage, not localStorage) on purpose -- reappears in a
+   * fresh tab/session if still not subscribed, rather than nagging on every
+   * page navigation within one visit or going quiet forever after one dismiss.
+   */
+  function maybeShowGlobalToast() {
+    if (document.body.getAttribute('data-private-page') !== 'altitude') return;
+
+    var alreadyShown = false;
+    try { alreadyShown = sessionStorage.getItem(TOAST_SESSION_KEY) === '1'; } catch (_) {}
+    if (alreadyShown) return;
 
     getStatus().then(function (status) {
-      banners.forEach(function (banner) {
-        var topics = (banner.getAttribute('data-push-topics') || '').split(',').filter(Boolean);
-        var dismissed = false;
-        try { dismissed = localStorage.getItem(bannerDismissKey(topics)) === '1'; } catch (_) {}
-
-        if (status !== 'not-subscribed' || dismissed) return; // stays hidden
-        banner.hidden = false;
-
-        var enableBtn = banner.querySelector('[data-push-enable]');
-        var dismissBtn = banner.querySelector('[data-push-dismiss]');
-
-        if (enableBtn) {
-          var originalLabel = enableBtn.textContent;
-          enableBtn.addEventListener('click', function () {
-            enableBtn.disabled = true;
-            enableBtn.textContent = 'Enabling…';
-            subscribe(topics).then(function () {
-              if (window.SkyUI) SkyUI.toast('Notifications enabled.', { type: 'success' });
-              banner.hidden = true;
-            }).catch(function (err) {
-              enableBtn.disabled = false;
-              enableBtn.textContent = originalLabel;
-              var msg = err && err.message === 'permission-denied'
-                ? 'Notifications are blocked for this site. Enable them in your browser settings to turn this on.'
-                : 'Could not enable notifications. Please try again.';
-              if (window.SkyUI) SkyUI.toast(msg, { type: 'error' });
-            });
-          });
-        }
-
-        if (dismissBtn) {
-          dismissBtn.addEventListener('click', function () {
-            banner.hidden = true;
-            try { localStorage.setItem(bannerDismissKey(topics), '1'); } catch (_) {}
-          });
-        }
-      });
+      if (status !== 'not-subscribed') return;
+      try { sessionStorage.setItem(TOAST_SESSION_KEY, '1'); } catch (_) {}
+      setTimeout(showGlobalToast, 1200);
     });
   }
 
@@ -318,7 +364,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    wireBanners();
+    maybeShowGlobalToast();
     wirePrefsPanels();
   });
 })();
