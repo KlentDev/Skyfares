@@ -16367,65 +16367,145 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   }
 }
 
-/* ── Web Push: notify banner + preferences panel + header bell ──────────
+/* ── Web Push: global toast + toggle + preferences panel + header bell ───
    See js/push-subscribe.js. Deliberately in style.css (loaded on every
    page) rather than css/altitude-editorial.css, which only loads on 3 of
    the 7 Altitude private pages -- this UI needs to render consistently
-   everywhere it appears (membership.html, newsletter.html, support.html,
-   beehiiv-manual.html included). All three pieces start hidden/absent of
-   interaction in markup and are only revealed/enabled by that script once
-   it has checked support + subscription status. */
+   everywhere it appears. The toast is appended into the same
+   #sky-toast-wrap container js/ui.js's SkyUI.toast() already uses (fixed
+   top-right, stacks above other real toasts) but is its own component --
+   SkyUI.toast() is text-only and has no room for an interactive control. */
 
-.push-notify-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.9rem;
-  margin-bottom: 1.25rem;
-  padding: 1.1rem 1.25rem;
-}
-
-.push-notify-banner__copy {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.push-notify-banner__copy p {
-  margin: 0;
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: var(--private-muted);
-}
-
-.push-notify-banner__copy p strong {
-  color: var(--private-ink);
-  font-weight: 700;
-}
-
-.push-notify-banner__actions {
+.push-toast {
+  pointer-events: all;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  flex: 0 0 auto;
+  gap: 0.75rem;
+  min-width: 320px;
+  max-width: 420px;
+  padding: 0.85rem 1rem;
+  background: #ffffff;
+  border: 1px solid var(--private-line);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(20, 32, 51, 0.14), 0 2px 8px rgba(20, 32, 51, 0.08);
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 320ms var(--private-ease), transform 320ms var(--private-ease);
 }
 
-.push-notify-banner__dismiss {
+.push-toast--in { opacity: 1; transform: translateX(0); }
+.push-toast--out { opacity: 0; transform: translateX(24px); }
+
+.push-toast__icon {
+  flex-shrink: 0;
+  width: 2.1rem;
+  height: 2.1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border: none;
   border-radius: 9999px;
+  background: rgba(0, 102, 204, 0.1);
+  color: var(--private-blue);
+  font-size: 0.85rem;
+}
+
+.push-toast__msg {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--private-ink);
+}
+
+.push-toast__close {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: none;
   background: transparent;
   color: var(--private-muted);
   cursor: pointer;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: background-color 180ms var(--private-ease), color 180ms var(--private-ease);
 }
 
-.push-notify-banner__dismiss:hover,
-.push-notify-banner__dismiss:focus-visible {
+.push-toast__close:hover,
+.push-toast__close:focus-visible {
   background: rgba(20, 32, 51, 0.06);
   color: var(--private-ink);
+}
+
+/* Toggle switch -- new component, used by the toast above and reusable
+   anywhere else a binary on/off reads better than a button. */
+.push-toggle {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.push-toggle__input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.push-toggle__track {
+  display: block;
+  position: relative;
+  width: 2.5rem;
+  height: 1.4rem;
+  border-radius: 9999px;
+  background: rgba(20, 32, 51, 0.16);
+  transition: background-color 200ms var(--private-ease);
+}
+
+.push-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(20, 32, 51, 0.35);
+  transition: transform 200ms var(--private-ease);
+}
+
+.push-toggle__input:checked + .push-toggle__track {
+  background: var(--private-blue);
+}
+
+.push-toggle__input:checked + .push-toggle__track .push-toggle__thumb {
+  transform: translateX(1.1rem);
+}
+
+.push-toggle__input:focus-visible + .push-toggle__track {
+  outline: 2px solid var(--private-blue);
+  outline-offset: 2px;
+}
+
+.push-toggle__input:disabled + .push-toggle__track {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .push-toast { min-width: 0; max-width: calc(100vw - 2rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .push-toast,
+  .push-toggle__track,
+  .push-toggle__thumb {
+    transition: none !important;
+  }
 }
 
 .push-prefs-panel {
