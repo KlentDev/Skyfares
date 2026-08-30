@@ -6,7 +6,7 @@
 // what forces returning visitors to pick up the new copy. Stale-while-
 // revalidate below also self-heals static assets within one extra visit
 // even if this bump is forgotten.
-const CACHE_VERSION = 'skyfare-v1';
+const CACHE_VERSION = 'skyfare-v2';
 const STATIC_CACHE = CACHE_VERSION + '-static';
 const PAGES_CACHE = CACHE_VERSION + '-pages';
 const FONTS_CACHE = CACHE_VERSION + '-fonts';
@@ -21,13 +21,12 @@ const PRECACHE_URLS = [
   '/manifest.json',
   '/css/style.css',
   '/css/altitude-editorial.css',
+  '/css/tailwind.css',
   '/js/links.js',
   '/js/header.js',
   '/js/footer.js',
   '/js/cookie-consent.js',
   '/js/error-handler.js',
-  '/js/tailwind-config.js',
-  '/lib/tailwind/tailwind.min.js',
   '/lib/font-awesome/css/all.min.css',
   '/lib/font-awesome/webfonts/fa-brands-400.woff2',
   '/lib/font-awesome/webfonts/fa-regular-400.woff2',

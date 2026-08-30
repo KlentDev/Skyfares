@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8" /><title>SW load test</title></head>
+<body>
+<script>
+  window.__loadFired = false;
+  window.__registerResult = 'not yet';
+  window.addEventListener('load', function () {
+    window.__loadFired = true;
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(
+        function (reg) { window.__registerResult = 'OK: ' + reg.scope; },
+        function (err) { window.__registerResult = 'ERR: ' + err.name + ': ' + err.message; }
+      );
+    } else {
+      window.__registerResult = 'no serviceWorker in navigator';
+    }
+  });
+</script>
+</body>
+</html>
