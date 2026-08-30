@@ -109,6 +109,16 @@
     if (productEl) productEl.textContent = product || 'Member Portal';
     if (subtitleEl) subtitleEl.textContent = subtitle || 'Private access';
 
+    // Notification bell — Altitude only (award_alert/krisflyer_escape/
+    // premium_newsletter are Altitude-gated; a Guide-only member has no
+    // eligible content yet). See js/push-subscribe.js's wireHeaderBell.
+    // Starts hidden in header-private.html; wireHeaderBell reveals it once
+    // it confirms the browser actually supports Push.
+    var pushBellBtn = document.querySelector('[data-push-bell]');
+    if (pushBellBtn && page === 'altitude' && window.SkyfarePush) {
+      window.SkyfarePush.wireHeaderBell(pushBellBtn);
+    }
+
     document.querySelectorAll('[data-private-nav]').forEach(function (link) {
       var target = link.getAttribute('data-private-nav');
       var isActive = target === page;

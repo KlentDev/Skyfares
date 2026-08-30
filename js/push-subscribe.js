@@ -16,6 +16,7 @@
 
   var WORKER = 'https://skyfares-altitude.klent-5fa.workers.dev';
   var JWT_KEY = 'altitude_jwt';
+  var ALL_TOPICS = ['award_alert', 'krisflyer_escape', 'premium_newsletter', 'skyfare_announcement', 'service_update'];
 
   var _publicKeyPromise = null;
 
@@ -95,10 +96,18 @@
       })
       .then(function (publicKey) {
         return navigator.serviceWorker.ready.then(function (reg) {
-          return reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(publicKey),
-          });
+          // A subscription created earlier with a different
+          // applicationServerKey (an earlier test, a VAPID key rotation)
+          // makes pushManager.subscribe() below throw InvalidStateError --
+          // clear it first so this call is always safe to retry.
+          return reg.pushManager.getSubscription()
+            .then(function (existing) { return existing ? existing.unsubscribe() : null; })
+            .then(function () {
+              return reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(publicKey),
+              });
+            });
         });
       })
       .then(function (subscription) {
@@ -123,11 +132,63 @@
     });
   }
 
+  /**
+   * Wires a single header bell button (see pages/private-pages/header-private.html)
+   * into a toggle: click subscribes to every topic when off, unsubscribes
+   * entirely when on. Called explicitly by js/private-layout.js's
+   * enhanceHeader() once the header partial has actually been injected --
+   * this button doesn't exist in the DOM at DOMContentLoaded time (the
+   * header is fetched async), so it can't rely on the same auto-wiring the
+   * page-level banners/prefs panel use.
+   */
+  function wireHeaderBell(btn) {
+    if (!btn || btn.dataset.pushBellWired === 'true') return;
+    btn.dataset.pushBellWired = 'true';
+
+    function refresh() {
+      if (!isSupported()) { btn.hidden = true; return; }
+      getStatus().then(function (status) {
+        if (status === 'unsupported') { btn.hidden = true; return; }
+        btn.hidden = false;
+        var subscribed = status === 'subscribed';
+        btn.classList.toggle('private-icon-btn--active', subscribed);
+        btn.setAttribute('aria-label', subscribed ? 'Notifications on — click to turn off' : 'Enable notifications');
+        var icon = btn.querySelector('i');
+        if (icon) icon.className = subscribed ? 'fa-solid fa-bell' : 'fa-regular fa-bell';
+      });
+    }
+
+    btn.addEventListener('click', function () {
+      btn.disabled = true;
+      getStatus().then(function (status) {
+        if (status === 'subscribed') {
+          return unsubscribe().then(function () {
+            if (window.SkyUI) SkyUI.toast('Notifications turned off.', { type: 'success' });
+          });
+        }
+        return subscribe(ALL_TOPICS).then(function () {
+          if (window.SkyUI) SkyUI.toast('Notifications enabled.', { type: 'success' });
+        }).catch(function (err) {
+          var msg = err && err.message === 'permission-denied'
+            ? 'Notifications are blocked for this site. Enable them in your browser settings first.'
+            : 'Could not update notifications. Please try again.';
+          if (window.SkyUI) SkyUI.toast(msg, { type: 'error' });
+        });
+      }).then(function () {
+        btn.disabled = false;
+        refresh();
+      });
+    });
+
+    refresh();
+  }
+
   window.SkyfarePush = {
     isSupported: isSupported,
     getStatus: getStatus,
     subscribe: subscribe,
     unsubscribe: unsubscribe,
+    wireHeaderBell: wireHeaderBell,
   };
 
   // ─── Declarative UI wiring ────────────────────────────────────────────────
