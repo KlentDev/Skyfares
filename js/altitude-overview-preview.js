@@ -73,8 +73,15 @@
 
   function renderAlerts(root, records) {
     var u = utils();
+    // Sorts by Airtable's own record-creation timestamp, not Found At/
+    // Publish Date -- both are hand-typed free text in this table (e.g.
+    // "Week of 14 August 2026 (live app pulls)", "2026-08-26 4:36 PM SGT")
+    // and never parse as real dates, so this had no actual "latest" signal
+    // to sort by. Same fix as js/altitude-content-award-alerts.js -- this
+    // file has its own independent copy of the sort since it renders a
+    // separate compact preview, not the full list.
     var top = records.slice().sort(function (a, b) {
-      return u.dateValue(b.foundAt || b.publishDate) - u.dateValue(a.foundAt || a.publishDate);
+      return u.dateValue(b.createdTime) - u.dateValue(a.createdTime);
     }).slice(0, 3);
 
     root.innerHTML = top.map(function (item) {
@@ -102,6 +109,9 @@
     var pick = picks[0];
 
     root.innerHTML =
+      (featured.thumbnail
+        ? '<div class="altitude-intel-preview__media"><img src="' + u.e(featured.thumbnail) + '" alt="" loading="lazy"></div>'
+        : '') +
       (featured.dropMonth ? '<p class="alt-label">' + u.e(featured.dropMonth) + '</p>' : '') +
       (featured.title ? '<p class="alt-card-title altitude-intel-preview__title">' + u.e(featured.title) + '</p>' : '') +
       (pick
