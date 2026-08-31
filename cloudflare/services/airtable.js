@@ -645,6 +645,15 @@ function normalizeBaseContent(rec) {
   const featuredValue = f['Featured'];
   return {
     id: rec.id,
+    // Airtable's own record-creation timestamp -- always present on every
+    // record from the API regardless of which `fields[]` were requested,
+    // and always a real parseable ISO date, unlike Publish Date/Found At/
+    // Last Updated below (all singleLineText in this table, hand-typed by
+    // the team as free-form notes like "Week of 14 August 2026 (live app
+    // pulls)" or "2026-08-26 4:36 PM SGT" -- neither parses as a date, so
+    // this is the only reliable "when was this actually added" signal for
+    // sorting/grouping newest-first. See js/altitude-content-award-alerts.js.
+    createdTime: rec.createdTime || '',
     title: text(f['Title']),
     slug: text(f['Slug']),
     status: text(f['Status']),

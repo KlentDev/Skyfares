@@ -79,6 +79,18 @@
       placeholder.style.display = 'none';
     }
 
+    // position: fixed ignores document flow entirely, so the sidebar has no
+    // built-in awareness of the footer (.private-footer, injected async by
+    // js/private-layout.js) that follows this grid in the DOM -- the
+    // grid-bottom check below alone only tracks the grid's own height, not
+    // how close the footer has scrolled up into the space the fixed
+    // sidebar would occupy. Without this, the sidebar visually overlaps the
+    // footer for a stretch near the bottom of the page.
+    function footerTop() {
+      var footer = document.querySelector('.private-footer');
+      return footer ? footer.getBoundingClientRect().top : Infinity;
+    }
+
     function update() {
       if (!isDesktop()) { unfix(); return; }
       if (!feed.classList.contains('alt-alert-feed--fixed')) {
@@ -86,7 +98,9 @@
       }
 
       var gridRect = grid.getBoundingClientRect();
-      var shouldFix = gridRect.top < OFFSET && gridRect.bottom > OFFSET + 200;
+      var fixedHeight = Math.min(feed.offsetHeight, window.innerHeight - OFFSET * 2);
+      var wouldOverlapFooter = footerTop() < OFFSET + fixedHeight;
+      var shouldFix = gridRect.top < OFFSET && gridRect.bottom > OFFSET + 200 && !wouldOverlapFooter;
 
       if (shouldFix) {
         feed.classList.add('alt-alert-feed--fixed');
@@ -176,8 +190,15 @@
       return matchesQuery && matchesStatus;
     });
 
+    // Sorts by Airtable's own record-creation timestamp, not Found At/
+    // Publish Date -- both are hand-typed free text in this table (e.g.
+    // "Week of 14 August 2026 (live app pulls)", "2026-08-26 4:36 PM SGT")
+    // and never parse as real dates, so u.dateValue() silently returned 0
+    // for every record and newest-first ordering had no actual signal to
+    // sort by. createdTime always parses. See normalizeBaseContent in
+    // cloudflare/services/airtable.js.
     filtered.sort(function (a, b) {
-      return u.dateValue(b.foundAt || b.publishDate) - u.dateValue(a.foundAt || a.publishDate);
+      return u.dateValue(b.createdTime) - u.dateValue(a.createdTime);
     });
 
     state.filtered = filtered;
@@ -211,7 +232,10 @@
     var groups = [];
     var lastLabel = null;
     items.forEach(function (item, index) {
-      var label = dateGroupLabel(item.foundAt || item.publishDate);
+      // Grouped on the same basis as the sort above (createdTime) so a
+      // card's section (This week/Earlier this month/Older) always agrees
+      // with its position in the list.
+      var label = dateGroupLabel(item.createdTime);
       if (label !== lastLabel) {
         groups.push({ label: label, items: [] });
         lastLabel = label;
