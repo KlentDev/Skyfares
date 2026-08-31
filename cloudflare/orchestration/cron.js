@@ -1,6 +1,9 @@
-// orchestration/cron.js — the two daily cron jobs, both of which paginate
-// every member: KV record and call into services/beehiiv.js per member.
+// orchestration/cron.js — the daily cron jobs (which paginate every member:
+// KV record and call into services/beehiiv.js per member) plus the more
+// frequent content-publish poll below.
 import { enrollInAutomation, syncBeehiivAltitudeAccess } from '../services/beehiiv.js';
+import { fetchPublishedAltitudeContent } from '../services/airtable.js';
+import { sendPushBroadcast } from './pushHandlers.js';
 import {
   KV_PREFIX, RENEWAL_7D_AUTOMATION_ID, RENEWAL_3D_AUTOMATION_ID, RENEWAL_1D_AUTOMATION_ID,
 } from '../config/constants.js';
@@ -184,5 +187,50 @@ export async function reconcilePushSubscriptionAudience(env) {
     await env.PUSH_DB.prepare(`DELETE FROM push_subscriptions WHERE id IN (${placeholders})`)
       .bind(...staleIds).run().catch(() => {});
     console.log(`[push-audience-cron] removed ${staleIds.length} lapsed-member push subscription(s)`);
+  }
+}
+
+// ── Altitude content publish notifications (called by the 10-minute cron) ──
+// Fires a push the first time each Award Alerts / KrisFlyer Escapes record is
+// seen Status="Published" -- a state check ("is this Published and not yet
+// notified"), not a literal Draft->Published edit-history diff, so a record
+// created directly as Published also notifies on the poll that first sees
+// it. sendPushBroadcast's own dedupeKey guard (keyed on content type +
+// Airtable record ID) is what actually prevents a re-poll of an
+// already-notified record from sending twice -- this function does no
+// tracking of its own beyond "loop over currently-Published records".
+const CONTENT_PUBLISH_TYPES = [
+  { contentType: 'award-alerts', pushType: 'award_alert', url: '/pages/private-pages/altitude-access/award-alerts.html' },
+  { contentType: 'krisflyer-escapes', pushType: 'krisflyer_escape', url: '/pages/private-pages/altitude-access/krisflyer-escapes.html' },
+];
+
+export async function notifyPublishedAltitudeContent(env) {
+  for (const { contentType, pushType, url } of CONTENT_PUBLISH_TYPES) {
+    let records;
+    try {
+      records = await fetchPublishedAltitudeContent(env, contentType);
+    } catch (err) {
+      console.error(`[content-publish-cron] ${contentType} fetch failed:`, err.message);
+      continue;
+    }
+
+    for (const record of records) {
+      const result = await sendPushBroadcast(env, {
+        title: String(record.title || '').slice(0, 100),
+        body: String(record.shortDescription || '').slice(0, 300),
+        url,
+        type: pushType,
+        dedupeKey: `${contentType}:${record.id}`,
+        audience: 'altitude',
+        topics: [],
+      }).catch((err) => {
+        console.error(`[content-publish-cron] send failed for ${contentType}:${record.id}:`, err.message);
+        return null;
+      });
+
+      if (result && !result.skipped && result.sent) {
+        console.log(`[content-publish-cron] notified ${result.sent} subscriber(s) for ${contentType}:${record.id}`);
+      }
+    }
   }
 }

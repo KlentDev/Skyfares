@@ -134,9 +134,56 @@ export async function handlePushUnsubscribe(request, env, corsHeaders) {
   return respond({ ok: true }, 200, corsHeaders);
 }
 
+// ── Broadcast core (shared by the HTTP endpoint and the content-publish cron
+// poll — see orchestration/cron.js's notifyPublishedAltitudeContent) ─────────
+// Fire condition: Draft -> Published, exactly once — the dedupeKey guard
+// below is what makes any caller safe to invoke repeatedly for the same
+// record/publication without ever double-delivering.
+
+export async function sendPushBroadcast(env, { title, body, url, type, dedupeKey, audience, topics }) {
+  const dedupeStoreKey = dedupeKey ? `${KV_PREFIX.PUSH_SENT}${dedupeKey}` : null;
+  if (dedupeStoreKey && await env.ALTITUDE_KV.get(dedupeStoreKey)) {
+    return { sent: 0, failed: 0, removed: 0, skipped: true, reason: 'duplicate' };
+  }
+
+  const resolvedAudience = resolveAudience(type, audience === 'public' || audience === 'altitude' ? audience : null);
+  const recipients = await findRecipients(env, { audience: resolvedAudience, topics: topics || [] });
+
+  const payload = { title, body, url, type };
+  let sent = 0;
+  let failed = 0;
+  const goneIds = [];
+  for (const sub of recipients) {
+    const result = await sendPushNotification(sub, payload, env).catch(() => ({ ok: false, gone: false }));
+    if (result.ok) {
+      sent++;
+    } else {
+      failed++;
+      if (result.gone) goneIds.push(sub.id);
+    }
+  }
+
+  if (goneIds.length) {
+    const placeholders = goneIds.map(() => '?').join(',');
+    await env.PUSH_DB.prepare(`DELETE FROM push_subscriptions WHERE id IN (${placeholders})`)
+      .bind(...goneIds).run().catch(() => {});
+  }
+
+  // Written only after every send in this call has completed — the
+  // check-before-work/write-on-success/TTL idiom already used for
+  // GUIDE_MAGIC_SENT/WELCOME_SENT elsewhere in this codebase.
+  if (dedupeStoreKey) {
+    await env.ALTITUDE_KV.put(dedupeStoreKey, '1', { expirationTtl: 90 * 24 * 3600 });
+  }
+
+  return { sent, failed, removed: goneIds.length };
+}
+
 // ── POST /api/push/send ─────────────────────────────────────────────────────
-// Trusted-caller only (PUSH_ADMIN_TOKEN) — see the plan's "Fire condition:
-// Draft -> Published, exactly once" section for the dedupeKey guard below.
+// Trusted-caller only (PUSH_ADMIN_TOKEN) — a thin HTTP wrapper around
+// sendPushBroadcast above. The internal caller (the content-publish cron
+// poll) calls sendPushBroadcast directly instead, skipping this token check
+// entirely since it never leaves the Worker.
 
 export async function handlePushSend(request, env, corsHeaders) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
@@ -169,43 +216,6 @@ export async function handlePushSend(request, env, corsHeaders) {
   if (!PUSH_TOPICS.includes(type)) return respond({ error: 'invalid_type' }, 400, corsHeaders);
   if (!isValidRelativeUrl(url)) return respond({ error: 'invalid_url' }, 400, corsHeaders);
 
-  // Draft -> Published, exactly once: if this record already fired, this is
-  // a safe no-op — never a second delivery, no matter how many times an
-  // Airtable automation retries or is re-run manually.
-  const dedupeStoreKey = dedupeKey ? `${KV_PREFIX.PUSH_SENT}${dedupeKey}` : null;
-  if (dedupeStoreKey && await env.ALTITUDE_KV.get(dedupeStoreKey)) {
-    return respond({ sent: 0, failed: 0, removed: 0, skipped: true, reason: 'duplicate' }, 200, corsHeaders);
-  }
-
-  const audience = resolveAudience(type, requestedAudience);
-  const recipients = await findRecipients(env, { audience, topics });
-
-  const payload = { title, body: text, url, type };
-  let sent = 0;
-  let failed = 0;
-  const goneIds = [];
-  for (const sub of recipients) {
-    const result = await sendPushNotification(sub, payload, env).catch(() => ({ ok: false, gone: false }));
-    if (result.ok) {
-      sent++;
-    } else {
-      failed++;
-      if (result.gone) goneIds.push(sub.id);
-    }
-  }
-
-  if (goneIds.length) {
-    const placeholders = goneIds.map(() => '?').join(',');
-    await env.PUSH_DB.prepare(`DELETE FROM push_subscriptions WHERE id IN (${placeholders})`)
-      .bind(...goneIds).run().catch(() => {});
-  }
-
-  // Written only after every send in this call has completed — the
-  // check-before-work/write-on-success/TTL idiom already used for
-  // GUIDE_MAGIC_SENT/WELCOME_SENT elsewhere in this codebase.
-  if (dedupeStoreKey) {
-    await env.ALTITUDE_KV.put(dedupeStoreKey, '1', { expirationTtl: 90 * 24 * 3600 });
-  }
-
-  return respond({ sent, failed, removed: goneIds.length }, 200, corsHeaders);
+  const result = await sendPushBroadcast(env, { title, body: text, url, type, dedupeKey, audience: requestedAudience, topics });
+  return respond(result, 200, corsHeaders);
 }

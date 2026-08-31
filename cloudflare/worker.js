@@ -142,27 +142,44 @@ import { handleAssessmentBookingRedirect } from './orchestration/assessmentBooki
 import { handleActivate, handleVerify, handleMagicVerify } from './orchestration/session.js';
 import { handleGuidePdfDownload, handleGuidePdfEmail, handleGuidePdfFetch } from './orchestration/guidePdfHandlers.js';
 import { handleGetGuideChapters } from './orchestration/guideChaptersHandler.js';
-import { runRenewalReminders, expireGuideBundles, reconcileBeehiivAccess, reconcilePushSubscriptionAudience } from './orchestration/cron.js';
+import { runRenewalReminders, expireGuideBundles, reconcileBeehiivAccess, reconcilePushSubscriptionAudience, notifyPublishedAltitudeContent } from './orchestration/cron.js';
 import { handlePushPublicKey, handlePushSubscribe, handlePushUnsubscribe, handlePushSend } from './orchestration/pushHandlers.js';
 
 export default {
-  // Single daily cron: 0 1 * * * (01:00 UTC / 09:00 SGT) -- recalculation +
-  // renewal reminders. The old every-minute-then-every-5-minutes cron was
-  // dropped entirely on 2026-08-04: every event that actually changes a
-  // segment (signup, tagging) already triggers its own real-time
-  // recalculation inline (see services/beehiiv.js's call sites), so a
-  // separate frequent sweep was pure redundant Beehiiv API traffic. This
-  // daily run is now the only periodic one, and passes `{ all: true }` so it
-  // also covers SEG_GUIDE/SEG_MONTHLY/SEG_ANNUAL, which no longer get
-  // real-time recalculation (see triggerSegmentRecalculation's own comment).
+  // Two cron schedules (see wrangler.toml's [triggers] crons), dispatched by
+  // event.cron below:
+  //   0 1 * * *     -- daily, 01:00 UTC / 09:00 SGT: recalculation + renewal
+  //                    reminders. The old every-minute-then-every-5-minutes
+  //                    cron was dropped entirely on 2026-08-04: every event
+  //                    that actually changes a segment (signup, tagging)
+  //                    already triggers its own real-time recalculation
+  //                    inline (see services/beehiiv.js's call sites), so a
+  //                    separate frequent sweep was pure redundant Beehiiv API
+  //                    traffic. This daily run passes `{ all: true }` so it
+  //                    also covers SEG_GUIDE/SEG_MONTHLY/SEG_ANNUAL, which no
+  //                    longer get real-time recalculation (see
+  //                    triggerSegmentRecalculation's own comment).
+  //   */10 * * * *  -- every 10 min: Altitude content publish notifications
+  //                    (see orchestration/cron.js's
+  //                    notifyPublishedAltitudeContent) -- kept on its own
+  //                    frequent schedule rather than the daily one so a
+  //                    newly-Published Award Alert/KrisFlyer Escape reaches
+  //                    subscribed members promptly, not once a day.
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(Promise.all([
-      triggerSegmentRecalculation(env, { all: true }),
-      runRenewalReminders(env),
-      expireGuideBundles(env),
-      reconcileBeehiivAccess(env),
-      reconcilePushSubscriptionAudience(env),
-    ]));
+    const jobs = [];
+    if (event.cron === '0 1 * * *') {
+      jobs.push(
+        triggerSegmentRecalculation(env, { all: true }),
+        runRenewalReminders(env),
+        expireGuideBundles(env),
+        reconcileBeehiivAccess(env),
+        reconcilePushSubscriptionAudience(env),
+      );
+    }
+    if (event.cron === '*/10 * * * *') {
+      jobs.push(notifyPublishedAltitudeContent(env));
+    }
+    ctx.waitUntil(Promise.all(jobs));
   },
 
   async fetch(request, env) {
