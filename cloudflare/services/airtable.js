@@ -580,17 +580,20 @@ const ALTITUDE_CONTENT_TYPES = {
   },
 };
 
-export async function handleGetAltitudeContent(request, env, corsHeaders, type) {
+// Shared by the HTTP read endpoint below and the content-publish cron poll
+// (orchestration/cron.js's notifyPublishedAltitudeContent) — both need the
+// exact same "currently Published records for this content type" fetch, so
+// there's one implementation of the Airtable query instead of two. Throws
+// on misconfiguration/gateway/API errors; callers decide how to surface that
+// (an HTTP response here, a skipped poll iteration there).
+export async function fetchPublishedAltitudeContent(env, type) {
   const config = ALTITUDE_CONTENT_TYPES[type];
-  if (!config) return respond({ error: 'not_found' }, 404, corsHeaders);
-
-  const access = await verifyAltitudeRequest(request, env);
-  if (!access.ok) return respond(access.data, access.status, corsHeaders);
+  if (!config) throw new Error('unknown_content_type');
 
   const table = env[config.envKey];
-  if (!table) return respond({ error: 'airtable_table_not_configured', type }, 503, corsHeaders);
+  if (!table) throw new Error('airtable_table_not_configured');
   if (!env.AIRTABLE_API_KEY || !env.AIRTABLE_BASE_ID) {
-    return respond({ error: 'airtable_not_configured' }, 503, corsHeaders);
+    throw new Error('airtable_not_configured');
   }
 
   const params = new URLSearchParams({ filterByFormula: '{Status}="Published"', pageSize: '50' });
@@ -600,22 +603,35 @@ export async function handleGetAltitudeContent(request, env, corsHeaders, type) 
   params.append('sort[1][field]', 'Publish Date');
   params.append('sort[1][direction]', 'desc');
 
-  let res;
-  try {
-    res = await fetch(airtableTableUrl(env, table, params), { headers: airtableHeaders(env) });
-  } catch {
-    return respond({ error: 'Gateway error' }, 502, corsHeaders);
-  }
-
+  const res = await fetch(airtableTableUrl(env, table, params), { headers: airtableHeaders(env) });
   if (!res.ok) {
     console.error(`Altitude content Airtable error (${type}):`, redactAirtableError(await res.text()));
-    return respond({ error: 'Airtable API error' }, res.status, corsHeaders);
+    const err = new Error('airtable_api_error');
+    err.status = res.status;
+    throw err;
   }
 
   const raw = await res.json();
-  const records = (raw.records || [])
+  return (raw.records || [])
     .map(rec => config.normalize(rec))
     .filter(item => item && item.title);
+}
+
+export async function handleGetAltitudeContent(request, env, corsHeaders, type) {
+  if (!ALTITUDE_CONTENT_TYPES[type]) return respond({ error: 'not_found' }, 404, corsHeaders);
+
+  const access = await verifyAltitudeRequest(request, env);
+  if (!access.ok) return respond(access.data, access.status, corsHeaders);
+
+  let records;
+  try {
+    records = await fetchPublishedAltitudeContent(env, type);
+  } catch (err) {
+    if (err.message === 'airtable_table_not_configured') return respond({ error: 'airtable_table_not_configured', type }, 503, corsHeaders);
+    if (err.message === 'airtable_not_configured') return respond({ error: 'airtable_not_configured' }, 503, corsHeaders);
+    if (err.message === 'airtable_api_error') return respond({ error: 'Airtable API error' }, err.status || 502, corsHeaders);
+    return respond({ error: 'Gateway error' }, 502, corsHeaders);
+  }
 
   return respond(
     { type, records },
