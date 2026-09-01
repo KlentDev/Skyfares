@@ -54,6 +54,14 @@
             '<button type="button" class="alt-filter-chip" data-alert-status="new">New</button>' +
             '<button type="button" class="alt-filter-chip" data-alert-status="past">Past</button>' +
           '</div>' +
+          '<label class="alt-status-select">' +
+            '<i class="fa-solid fa-filter" aria-hidden="true"></i>' +
+            '<select data-alert-status-select aria-label="Filter by status">' +
+              '<option value="all">All alerts</option>' +
+              '<option value="new">New</option>' +
+              '<option value="past">Past</option>' +
+            '</select>' +
+          '</label>' +
         '</div>' +
         '<div class="alt-alerts-grid">' +
           '<aside class="alt-alert-feed" aria-label="Published award alerts">' +
@@ -152,17 +160,27 @@
       });
     }
 
+    // Shared by the desktop chip row and the mobile filter <select> (see
+    // .alt-status-select) -- both set the same state.status and both need
+    // the other control's UI kept in sync, so a resize between the two
+    // breakpoints never shows a stale selection.
+    function applyStatus(root, status) {
+      state.status = status || 'all';
+      state.activeIndex = 0;
+      state.visibleCount = PAGE_SIZE;
+      root.querySelectorAll('[data-alert-status]').forEach(function (button) {
+        button.classList.toggle('active', button.getAttribute('data-alert-status') === state.status);
+      });
+      var statusSelect = root.querySelector('[data-alert-status-select]');
+      if (statusSelect) statusSelect.value = state.status;
+      updateAlertList(root);
+      setMobileView(root, 'list');
+    }
+
     root.addEventListener('click', function (event) {
       var statusBtn = event.target.closest && event.target.closest('[data-alert-status]');
       if (statusBtn && root.contains(statusBtn)) {
-        state.status = statusBtn.getAttribute('data-alert-status') || 'all';
-        state.activeIndex = 0;
-        state.visibleCount = PAGE_SIZE;
-        root.querySelectorAll('[data-alert-status]').forEach(function (button) {
-          button.classList.toggle('active', button === statusBtn);
-        });
-        updateAlertList(root);
-        setMobileView(root, 'list');
+        applyStatus(root, statusBtn.getAttribute('data-alert-status'));
         return;
       }
 
@@ -199,6 +217,12 @@
     });
 
     root.addEventListener('change', function (event) {
+      var statusSelect = event.target.closest && event.target.closest('[data-alert-status-select]');
+      if (statusSelect && root.contains(statusSelect)) {
+        applyStatus(root, statusSelect.value);
+        return;
+      }
+
       var select = event.target.closest && event.target.closest('[data-alert-select]');
       if (!select || !root.contains(select)) return;
       var index = parseInt(select.value, 10);

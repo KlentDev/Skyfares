@@ -7115,6 +7115,20 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   gap: 1.25rem;
 }
 
+.private-footer__brand-block {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.private-footer__logo {
+  width: 2.15rem;
+  height: 2.15rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .private-footer__brand {
   color: var(--private-ink);
 }
