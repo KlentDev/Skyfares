@@ -385,12 +385,15 @@
   align-items: flex-end;
 }
 
-/* Award Alerts' detail toolbar (back-to-list + alert switcher) now sits
-   above the media hero instead of the hero being the card's first child,
-   so it no longer bleeds to the card's top edge -- only the sides still
-   do (margin-top stays 0, left/right stay negative). */
+/* Award Alerts' detail toolbar (the alert switcher) now sits above the
+   media hero instead of the hero being the card's first child. Bleeding
+   only some edges (top inset below the toolbar, sides still flush to the
+   card) reads as a rendering glitch rather than a deliberate crop, so
+   this variant drops the bleed entirely: fully inset like the toolbar
+   above it, evenly rounded on all four corners. */
 .alt-alert-detail__toolbar + .alt-media-hero {
-  margin-top: 0;
+  margin: 0 0 2rem;
+  border-radius: var(--private-radius);
 }
 
 @media (max-width: 640px) {
@@ -400,7 +403,7 @@
   }
 
   .alt-alert-detail__toolbar + .alt-media-hero {
-    margin-top: 0;
+    margin: 0 0 1.5rem;
   }
 }
 
@@ -726,6 +729,74 @@
   color: #ffffff;
   background: var(--private-blue);
   box-shadow: var(--alt-shadow-card);
+}
+
+/* Mobile/tablet swap for the status filter -- the "All / New / Past"
+   pill row (.alt-filter-chips) doesn't fit next to the search field
+   below the width .alt-filter-bar itself already adapts at (see the
+   max-width:860px block above), so it wraps onto its own row and pushes
+   the results list down. Below that same width, hide the chip row and
+   show this compact, icon-only filter button instead: the visible chip
+   (circle + icon) is plain decoration, and a real <select> is
+   opacity:0'd on top of it to capture the tap and drive the native
+   picker. Only the *closed* control is invisible this way -- the open
+   native option list is a separate OS-rendered surface unaffected by
+   the underlying element's opacity, so it still shows real, fully
+   visible labels. (An earlier version used `color: transparent` on the
+   select instead, which does *not* stay scoped to the closed state --
+   that color inherits into the open option list's text too and made
+   every option render blank.) */
+.alt-status-select {
+  display: none;
+  position: relative;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--private-line);
+  border-radius: 9999px;
+  background: var(--private-surface-soft);
+  transition: border-color 0.15s var(--private-ease);
+}
+
+.alt-status-select i {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--private-subtle);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.alt-status-select select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.alt-status-select:hover,
+.alt-status-select:focus-within {
+  border-color: var(--private-line-strong);
+}
+
+.alt-status-select:focus-within i {
+  color: var(--private-blue);
+}
+
+@media (max-width: 860px) {
+  .alt-filter-chips {
+    display: none;
+  }
+
+  .alt-status-select {
+    display: inline-block;
+  }
 }
 
 .alt-date-group__label {

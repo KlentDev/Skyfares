@@ -320,6 +320,8 @@
     document.querySelectorAll('.private-footer a[href="../contact"]').forEach(function (link) { link.setAttribute('href', publicPrefix + 'contact'); });
     document.querySelectorAll('.private-footer a[href="../privacy"]').forEach(function (link) { link.setAttribute('href', publicPrefix + 'privacy'); });
     document.querySelectorAll('.private-footer a[href="../terms"]').forEach(function (link) { link.setAttribute('href', publicPrefix + 'terms'); });
+    var footerLogo = document.querySelector('.private-footer__logo');
+    if (footerLogo) footerLogo.setAttribute('src', getSiteRootPrefix() + 'logos/logo.webp');
   }
 
   function applyState() {
@@ -425,7 +427,15 @@
 
   function fallbackFooter() {
     var publicPrefix = getPublicPagePrefix();
-    return '<footer class="private-footer"><div class="private-container private-footer__inner"><p>&copy; <span id="private-footer-year"></span> Skyfare Consulting</p><nav aria-label="Private footer"><a href="' + publicPrefix + 'contact">Contact</a><a href="' + publicPrefix + 'privacy">Privacy</a><a href="' + publicPrefix + 'terms">Terms</a></nav></div></footer>';
+    var sitePrefix = getSiteRootPrefix();
+    return '<footer class="private-footer"><div class="private-container private-footer__inner">' +
+      '<div class="private-footer__brand-block">' +
+        '<img class="private-footer__logo" src="' + sitePrefix + 'logos/logo.webp" alt="Skyfare Consulting">' +
+        '<div><p class="private-footer__brand">Skyfare Consulting</p><p class="private-footer__note">Private member access for paid products and subscriber resources.</p></div>' +
+      '</div>' +
+      '<nav aria-label="Private footer"><a href="' + publicPrefix + 'contact">Contact</a><a href="' + publicPrefix + 'privacy">Privacy</a><a href="' + publicPrefix + 'terms">Terms</a></nav>' +
+      '<p class="private-footer__legal">&copy; <span id="private-footer-year"></span> Skyfare Consulting</p>' +
+    '</div></footer>';
   }
 
   function isNestedAltitudePage() {
