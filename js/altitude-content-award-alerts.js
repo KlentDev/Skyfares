@@ -7,6 +7,30 @@
   var u = app.utils;
   var PAGE_SIZE = 10;
 
+  // Shared with wireStickyFeed's fixed-position logic and the mobile
+  // browse<->focus toggle below -- both need to agree on exactly the same
+  // width as the CSS grid's own `@media (max-width: 900px)` collapse
+  // (altitude-editorial.css) that switches list+detail from side-by-side
+  // to stacked. 901px is the correct complement of that 900px max-width,
+  // not an off-by-one: at 900px the grid is already stacked, so "desktop"
+  // starts one pixel later, at 901px.
+  function isDesktop() {
+    return window.matchMedia('(min-width: 901px)').matches;
+  }
+
+  // Browse <-> focus for the stacked mobile/tablet layout: shows one pane
+  // at a time instead of making the user scroll past the list to reach a
+  // freshly-selected detail. No-ops on desktop, where both panes are
+  // always visible side by side (see the max-width:900px CSS block).
+  function setMobileView(root, view) {
+    var grid = root.querySelector('.alt-alerts-grid');
+    if (!grid) return;
+    grid.classList.toggle('alt-alerts-grid--detail-active', view === 'detail');
+    if (view === 'detail' && !isDesktop()) {
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   app.renderers['award-alerts'] = function (root, records) {
     app.state.alerts = {
       records: records,
@@ -69,10 +93,6 @@
     feed.parentNode.insertBefore(placeholder, feed);
     var naturalWidth = 0;
 
-    function isDesktop() {
-      return window.matchMedia('(min-width: 901px)').matches;
-    }
-
     function unfix() {
       feed.classList.remove('alt-alert-feed--fixed');
       feed.style.width = '';
@@ -128,6 +148,7 @@
         state.activeIndex = 0;
         state.visibleCount = PAGE_SIZE;
         updateAlertList(root);
+        setMobileView(root, 'list');
       });
     }
 
@@ -141,6 +162,7 @@
           button.classList.toggle('active', button === statusBtn);
         });
         updateAlertList(root);
+        setMobileView(root, 'list');
         return;
       }
 
@@ -158,6 +180,7 @@
         if (!visible[index]) return;
         state.activeIndex = index;
         updateAlertList(root);
+        setMobileView(root, 'detail');
         return;
       }
 
@@ -173,6 +196,17 @@
           panel.hidden = panel.getAttribute('data-calendar-panel') !== tier;
         });
       }
+    });
+
+    root.addEventListener('change', function (event) {
+      var select = event.target.closest && event.target.closest('[data-alert-select]');
+      if (!select || !root.contains(select)) return;
+      var index = parseInt(select.value, 10);
+      var visible = state.filtered.slice(0, state.visibleCount);
+      if (!visible[index]) return;
+      state.activeIndex = index;
+      updateAlertList(root);
+      setMobileView(root, 'detail');
     });
   }
 
@@ -225,7 +259,7 @@
           : '');
     }
 
-    renderAwardDetail(detail, visible[state.activeIndex]);
+    renderAwardDetail(detail, visible[state.activeIndex], visible, state.activeIndex);
   }
 
   function renderGroupedList(items, activeIndex) {
@@ -266,7 +300,28 @@
     }).join('');
   }
 
-  function renderAwardDetail(detail, item) {
+  // Alert switcher for the detail panel -- lets the reader jump straight
+  // to a different alert (mobile's only way back out of the focused
+  // detail view once a card's been tapped, and a quick jump on desktop
+  // too). Reuses the exact indexing scheme card clicks already use (an
+  // index into the same paginated `visible` array, read back by the
+  // delegated change handler in wireAwardControls).
+  function renderAlertToolbar(visible, activeIndex) {
+    if (!Array.isArray(visible) || !visible.length) return '';
+    var options = visible.map(function (item, index) {
+      var label = routeLabel(item) + ' · ' + (u.formatDate(item.foundAt || item.publishDate) || alertStatusLabel(item));
+      return '<option value="' + index + '"' + (index === activeIndex ? ' selected' : '') + '>' + u.e(label) + '</option>';
+    }).join('');
+
+    return '<div class="alt-alert-detail__toolbar">' +
+      '<label class="alt-select-field">' +
+        '<span class="sr-only">Switch to a different award alert</span>' +
+        '<select data-alert-select>' + options + '</select>' +
+      '</label>' +
+    '</div>';
+  }
+
+  function renderAwardDetail(detail, item, visible, activeIndex) {
     if (!detail || !item) return;
     var cabinMetric = item.cabinClass
       ? '<div class="alt-metric"><span class="alt-metric__label">Cabin</span><strong class="alt-metric__value">' + u.cabinLabel(item.cabinClass) + '</strong></div>'
@@ -284,6 +339,7 @@
     var metaLine = [item.airline, item.program].filter(Boolean).join(' · ');
 
     detail.innerHTML =
+      renderAlertToolbar(visible, activeIndex) +
       '<div class="alt-media-hero">' +
         (item.thumbnail
           ? '<div class="alt-media-hero__media"><img src="' + u.e(item.thumbnail) + '" alt="" loading="lazy"></div>'

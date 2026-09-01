@@ -385,10 +385,22 @@
   align-items: flex-end;
 }
 
+/* Award Alerts' detail toolbar (back-to-list + alert switcher) now sits
+   above the media hero instead of the hero being the card's first child,
+   so it no longer bleeds to the card's top edge -- only the sides still
+   do (margin-top stays 0, left/right stay negative). */
+.alt-alert-detail__toolbar + .alt-media-hero {
+  margin-top: 0;
+}
+
 @media (max-width: 640px) {
   .alt-media-hero {
     margin: -1.75rem -1.75rem 1.5rem;
     min-height: 220px;
+  }
+
+  .alt-alert-detail__toolbar + .alt-media-hero {
+    margin-top: 0;
   }
 }
 
@@ -859,11 +871,57 @@
   .alt-alerts-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Browse <-> focus: below the point the grid stacks list-above-detail,
+     showing both at once just means scrolling past unrelated content to
+     read a selection. Show one pane at a time instead -- default to the
+     list, and js/altitude-content-award-alerts.js flips this class on
+     when a card (or the alert <select>) is chosen, back off when
+     [data-alert-back] is pressed. Desktop is untouched: both panes stay
+     visible there since there's room and the sticky list makes cross-
+     referencing them cheap. */
+  .alt-alert-detail {
+    display: none;
+  }
+
+  .alt-alerts-grid--detail-active .alt-alert-detail {
+    display: block;
+  }
+
+  .alt-alerts-grid--detail-active .alt-alert-feed {
+    display: none;
+  }
 }
 
 .alt-alert-feed__head {
   padding-bottom: 1rem;
   margin-bottom: 0.25rem;
+}
+
+/* Detail-panel toolbar: just the alert <select> switcher, visible at
+   every width -- on mobile/tablet (where the grid stacks list-above-
+   detail, see the max-width:900px block above) it's the way out of a
+   focused detail view back to a different alert; on desktop it's a
+   quick jump that saves a trip back to the sticky list. */
+.alt-alert-detail__toolbar {
+  display: flex;
+  margin-bottom: 1.25rem;
+}
+
+.alt-alert-detail__toolbar .alt-select-field {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.alt-alert-detail__toolbar .alt-select-field select {
+  height: 2.35rem;
+  font-size: 0.82rem;
+}
+
+.alt-alert-detail__toolbar .alt-select-field select {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Keep the opportunity list in view while the (often much taller) detail

@@ -165,7 +165,6 @@
     });
 
     if (manageBtn) {
-      manageBtn.classList.toggle('is-hidden', page !== 'altitude');
       manageBtn.addEventListener('click', function () {
         if (window.handleManageMembership) window.handleManageMembership();
       });
@@ -402,17 +401,17 @@
             '<span><strong>Skyfare</strong><small>Private access</small></span>' +
           '</a>' +
           '<nav class="private-nav" aria-label="Member navigation">' +
-            '<a href="' + privatePrefix + 'altitude-access-portal.html" data-private-nav="altitude"><i class="fa-solid fa-crown"></i><span>Altitude</span></a>' +
-            '<a href="' + privatePrefix + 'kf-guide-access-portal.html" data-private-nav="guide"><i class="fa-solid fa-book-open"></i><span>Guide</span></a>' +
+            '<a href="' + privatePrefix + 'altitude-access-portal.html" data-private-nav="altitude" aria-label="Altitude"><i class="fa-solid fa-crown"></i><span>Altitude</span></a>' +
+            '<a href="' + privatePrefix + 'kf-guide-access-portal.html" data-private-nav="guide" aria-label="Guide"><i class="fa-solid fa-book-open"></i><span>Guide</span></a>' +
           '</nav>' +
           '<div class="private-account">' +
-            '<span id="private-member-email">Member</span>' +
-            '<button type="button" data-private-manage class="private-icon-btn"><i class="fa-solid fa-credit-card"></i></button>' +
             '<div class="private-account-menu" data-private-account-menu>' +
               '<button type="button" class="private-icon-btn private-account-trigger" data-private-account-trigger aria-label="Account menu" aria-haspopup="menu" aria-expanded="false"><i class="fa-solid fa-user-gear"></i></button>' +
               '<div class="private-account-dropdown" data-private-account-dropdown role="menu" aria-label="Account menu">' +
+                '<div class="private-account-dropdown__identity"><span id="private-member-product">Member Portal</span><small id="private-member-email">Signed in</small></div>' +
                 '<div class="private-menu-row" data-private-menu-altitude-only data-push-toggle-row hidden role="menuitem"><span class="private-menu-row__label"><i class="fa-regular fa-bell"></i> Notifications</span><label class="push-toggle"><input type="checkbox" class="push-toggle__input" data-push-toggle aria-label="Enable notifications"><span class="push-toggle__track"><span class="push-toggle__thumb"></span></span></label></div>' +
-                '<a href="' + getAltitudeAccessPrefix() + 'membership.html" data-private-menu-membership data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-credit-card"></i><span>Membership</span></a>' +
+                '<button type="button" data-private-manage data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-credit-card"></i><span>Manage billing</span></button>' +
+                '<a href="' + getAltitudeAccessPrefix() + 'membership.html" data-private-menu-membership data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-crown"></i><span>Membership</span></a>' +
                 '<a href="' + getAltitudeAccessPrefix() + 'beehiiv-manual.html" data-private-menu-manual data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-book-open-reader"></i><span>Beehiiv Manual</span></a>' +
                 '<a href="' + getAltitudeAccessPrefix() + 'support.html" data-private-menu-support data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-headset"></i><span>Support</span></a>' +
                 '<button type="button" data-private-signout role="menuitem"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign out</span></button>' +
