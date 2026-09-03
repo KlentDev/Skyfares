@@ -1,6 +1,18 @@
 (function () {
   var WORKER_URL     = 'https://skyfares-altitude.klent-5fa.workers.dev';
 
+  // Set in init() from the presence of a stored Altitude JWT -- read by
+  // buildPaywallBreakHtml() so a logged-in member never sees an upsell for
+  // something they've already paid for. Real gap this covers: a post
+  // tagged both altitude-free and altitude-premium is classified fully
+  // "free" by the Worker's isPostPremium() (free wins), so the Worker
+  // always returns the free/truncated email HTML for it regardless of
+  // membership -- meaning a member can still hit the mid-article paywall
+  // break table here even though they already have full access. This flag
+  // only changes the CTA copy client-side; it doesn't and can't unlock
+  // more content than the Worker actually sent.
+  var isLikelyMember = false;
+
   // DISABLED (temporarily) -- Altitude Premium isn't purchasable yet (confirmed
   // by Sahej, 2026-07-03). PREMIUM_WA_URL is kept commented, not deleted, so the
   // WhatsApp upgrade path can be restored below once Premium launches.
@@ -45,6 +57,7 @@
     var altToken = null;
     try { altToken = localStorage.getItem('altitude_jwt'); } catch (_) {}
     var fetchHeaders = altToken ? { 'Authorization': 'Bearer ' + altToken } : {};
+    isLikelyMember = !!altToken;
 
     fetch(WORKER_URL + '/newsletter/post?slug=' + encodeURIComponent(slug), { headers: fetchHeaders })
       .then(function (r) {
@@ -344,6 +357,68 @@
     });
   }
 
+  // ─── Paywall break teaser ─────────────────────────────────────────────────
+  // On-brand replacement for Beehiiv's mid-article paywall node (see the
+  // interception in extractEmailBody()'s walk() below). Deliberately mirrors
+  // js/coming-soon.js's lock-card look (icon-chip-lg lock icon, pill badge,
+  // heading, description, CTA, soft light-gradient background) rather than
+  // inventing a new visual language -- this is the site's one existing
+  // "you can't access this yet" pattern, just re-themed gold since this is
+  // a genuine Altitude/premium signal (coming-soon.js's badge is
+  // deliberately blue -- gold is reserved for premium per DESIGN.md).
+  // Replaces ONLY the paywall table itself; everything the reader already
+  // scrolled past (the real free-preview paragraphs) stays untouched above
+  // it -- see the tBodies-based match in walk() below, which is what this
+  // depends on to avoid swallowing the whole article.
+  // "Already a member? Sign in" reuses the site's one shared magic-link
+  // modal (js/magic-modal.js); the "how does this work" link reuses the
+  // checkout/portal-access explainer built for the pricing sections
+  // (js/checkout-flow-info.js) instead of inventing new copy here.
+
+  function buildPaywallBreakHtml() {
+    // A logged-in member (isLikelyMember, see its declaration above) has
+    // already paid -- showing "Get Altitude Access" here would be a
+    // confusing upsell for something they own. Point them at the real
+    // reason they're seeing a truncated page instead: this particular post
+    // is tagged free-and-premium, so the Worker sends the free/truncated
+    // HTML regardless of membership. Their actual full copy already went
+    // out by email.
+    if (isLikelyMember) {
+      return (
+        '<div class="nsl-paywall-break">' +
+          '<div class="icon-chip icon-chip-lg nsl-paywall-break__icon mx-auto mb-3"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i></div>' +
+          '<span class="nsl-paywall-break__badge mb-3">Altitude Member</span>' +
+          '<h3 class="font-display font-bold text-lg mb-1.5 px-4 text-neutral-900">The rest of this issue is in your inbox.</h3>' +
+          '<p class="text-sm leading-relaxed max-w-sm mx-auto px-4 text-neutral-600">' +
+            "You're an Altitude member, so the full edition -- including everything past this point -- was already sent to your email. Keep an eye on your inbox and notifications each week for the complete issue and its continuation." +
+          '</p>' +
+        '</div>'
+      );
+    }
+
+    return (
+      '<div class="nsl-paywall-break">' +
+        '<div class="icon-chip icon-chip-lg nsl-paywall-break__icon mx-auto mb-3"><i class="fa-solid fa-lock" aria-hidden="true"></i></div>' +
+        '<span class="nsl-paywall-break__badge mb-3">Altitude Exclusive</span>' +
+        '<h3 class="font-display font-bold text-lg mb-1.5 px-4 text-neutral-900">The rest of this playbook is for Altitude members.</h3>' +
+        '<p class="text-sm leading-relaxed max-w-sm mx-auto px-4 mb-5 text-neutral-600">' +
+          "You've read the free preview. Members get every remaining strategy in this issue, the full premium archive, and priority WhatsApp support." +
+        '</p>' +
+        '<div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-3">' +
+          '<a href="altitude" class="btn-pill btn-pill-gold">' +
+            '<i class="fa-solid fa-crown text-[10px]"></i> Get Altitude Access' +
+          '</a>' +
+          '<button type="button" onclick="window.openLoginModal && window.openLoginModal();" class="text-sm font-semibold text-neutral-500 hover:text-neutral-700 transition-colors">' +
+            'Already a member? Sign in' +
+          '</button>' +
+        '</div>' +
+        '<button type="button" onclick="window.openCheckoutFlowInfo && window.openCheckoutFlowInfo();" class="text-xs text-neutral-400 hover:text-brand-600 underline underline-offset-2 transition-colors">' +
+          'How does checkout &amp; access work?' +
+        '</button>' +
+      '</div>'
+    );
+  }
+
   // ─── Email HTML extraction ────────────────────────────────────────────────
   // The Beehiiv API returns full email HTML (DOCTYPE, head, email tables).
   // This function extracts the article content from the email body,
@@ -423,6 +498,32 @@
               ' style="max-width:100%;width:100%;height:auto;display:block;margin:0 auto;border-radius:8px;">' +
             '</figure>'
           );
+          return;
+        }
+
+        // ── Paywall break (Beehiiv's own mid-article "subscribe to keep
+        // reading" node) ──────────────────────────────────────────────────
+        // Beehiiv renders this as an email-table block carrying the marker
+        // class .email-paywall-break-body on its OWN <tbody> -- a small
+        // logo, a heading/description pulled from the post's paywall
+        // config, and a black "Click to verify" button that links off-site
+        // to Beehiiv's own /upgrade page. Left alone, the generic
+        // table/div/a handling below would recurse into it and (a) lose the
+        // button entirely, since bare <a> isn't a handled tag, and (b)
+        // blend the leftover logo/heading/paragraph into the article flow
+        // with no visual separation.
+        //
+        // Must check node.tBodies (own direct tbody children only) rather
+        // than node.querySelector('.email-paywall-break-body') -- Beehiiv
+        // nests this table many levels inside the single big wrapper table
+        // that also holds every real paragraph/heading in the post, exactly
+        // like the "own rows" comment below already warns about for the
+        // data-table check. A subtree querySelector matches that outer
+        // wrapper first and replaces the ENTIRE article with this block
+        // instead of just the paywall table.
+        var ownTbody = node.tBodies && node.tBodies[0];
+        if (tag === 'table' && ownTbody && ownTbody.classList.contains('email-paywall-break-body')) {
+          parts.push(buildPaywallBreakHtml());
           return;
         }
 
