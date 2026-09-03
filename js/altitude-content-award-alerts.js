@@ -41,6 +41,17 @@
       visibleCount: PAGE_SIZE,
     };
 
+    // Per-member unread tracking (js/altitude-read-tracker.js) -- silently
+    // seeds "seen" on this browser's first-ever visit (no dot flood on
+    // rollout), then caches this page's real unread count for the subnav
+    // dot. Cards render their own dot below via renderGroupedList's use of
+    // window.AltitudeReadTracker.isUnread.
+    if (window.AltitudeReadTracker) {
+      var allIds = records.map(function (r) { return r.id; });
+      window.AltitudeReadTracker.seedIfFirstVisit('award-alerts', allIds);
+      window.AltitudeReadTracker.refreshCount('award-alerts', allIds);
+    }
+
     root.innerHTML =
       '<section class="alt-alerts-workspace" aria-label="Award alert opportunity feed">' +
         '<div class="alt-filter-bar">' +
@@ -197,6 +208,10 @@
         var visible = state.filtered.slice(0, state.visibleCount);
         if (!visible[index]) return;
         state.activeIndex = index;
+        if (window.AltitudeReadTracker) {
+          window.AltitudeReadTracker.markRead('award-alerts', visible[index].id);
+          window.AltitudeReadTracker.refreshCount('award-alerts', state.records.map(function (r) { return r.id; }));
+        }
         updateAlertList(root);
         setMobileView(root, 'detail');
         return;
@@ -229,6 +244,10 @@
       var visible = state.filtered.slice(0, state.visibleCount);
       if (!visible[index]) return;
       state.activeIndex = index;
+      if (window.AltitudeReadTracker) {
+        window.AltitudeReadTracker.markRead('award-alerts', visible[index].id);
+        window.AltitudeReadTracker.refreshCount('award-alerts', state.records.map(function (r) { return r.id; }));
+      }
       updateAlertList(root);
       setMobileView(root, 'detail');
     });
@@ -306,12 +325,13 @@
         '<div class="alt-date-group__label">' + u.e(group.label) + '</div>' +
         group.items.map(function (entry) {
           var active = entry.index === activeIndex;
-          return '<button type="button" class="alt-opportunity-card' + (active ? ' active' : '') + '" data-altitude-alert-index="' + entry.index + '" aria-pressed="' + (active ? 'true' : 'false') + '">' +
+          var unread = window.AltitudeReadTracker && window.AltitudeReadTracker.isUnread('award-alerts', entry.item.id);
+          return '<button type="button" class="alt-opportunity-card' + (active ? ' active' : '') + '" data-altitude-alert-index="' + entry.index + '" data-altitude-alert-id="' + u.e(entry.item.id) + '" aria-pressed="' + (active ? 'true' : 'false') + '">' +
             '<div class="alt-opportunity-card__top">' +
               statusBadge(entry.item) +
               '<span class="alt-date">' + u.e(u.formatDate(entry.item.foundAt || entry.item.publishDate)) + '</span>' +
             '</div>' +
-            '<strong class="alt-route">' + routeLabelHtml(entry.item) + '</strong>' +
+            '<strong class="alt-route">' + (unread ? '<span class="alt-unread-dot" aria-label="Unread"></span>' : '') + routeLabelHtml(entry.item) + '</strong>' +
             '<span class="alt-meta">' +
               u.cabinLabel(entry.item.cabinClass) +
               (entry.item.cabinClass && entry.item.milesRequired ? ' · ' : '') +

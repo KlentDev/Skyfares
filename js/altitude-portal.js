@@ -288,6 +288,24 @@
     return end.toISOString();
   }
 
+  // Subscription urgency badge -- reuses the existing .private-badge pill
+  // system (css/style.css, already loaded on every private page, unlike
+  // css/altitude-editorial.css which only reaches 3 of the 7 -- this needs
+  // to render on both the Overview and Membership pages). New tone
+  // modifiers --urgent/--warn-orange/--warn-yellow sit alongside the
+  // existing --gold/--muted/--teaser ones. Only the single lowest-matching
+  // threshold ever renders -- never stacked.
+  function _urgencyBadgeHtml(days, plan) {
+    if (days == null || days > 7) return null;
+    var isBundle = plan === 'guide_bundle';
+    var tone = days <= 1 ? 'urgent' : (days <= 5 ? 'warn-orange' : 'warn-yellow');
+    var when = days <= 0 ? 'today' : (days === 1 ? 'tomorrow' : 'in ' + days + ' days');
+    var text = isBundle
+      ? 'Free access ends ' + when + ' — upgrade to keep it'
+      : 'Renews ' + when;
+    return '<span class="private-badge private-badge--' + tone + '">' + e(text) + '</span>';
+  }
+
   function _populateMembershipCard(member) {
     var planEl = document.getElementById('alt-membership-plan');
     var daysEl = document.getElementById('alt-membership-days');
@@ -305,10 +323,11 @@
     if (purchasedEl) purchasedEl.textContent = purchaseDate || 'Not available';
     if (expiresEl) expiresEl.textContent = compactRenewDate || 'Not available';
 
-    if (days == null) {
+    var urgencyBadge = _urgencyBadgeHtml(days, member.plan);
+    if (urgencyBadge) {
+      daysEl.innerHTML = urgencyBadge;
+    } else if (days == null) {
       daysEl.textContent = 'Renewal date unavailable';
-    } else if (days === 0) {
-      daysEl.textContent = 'Renews today';
     } else {
       daysEl.textContent = days + ' day' + (days === 1 ? '' : 's') + ' remaining';
     }
@@ -400,6 +419,14 @@
 
   function renderArchiveGrid(posts) {
     _altAllPosts = posts;
+    // Per-member unread tracking (js/altitude-read-tracker.js), scoped to
+    // premium issues only -- matches the feature's own "premium newsletter"
+    // framing rather than every free post too.
+    if (window.AltitudeReadTracker) {
+      var premiumIds = posts.filter(function (p) { return p.is_premium; }).map(function (p) { return p.id; });
+      window.AltitudeReadTracker.seedIfFirstVisit('newsletter', premiumIds);
+      window.AltitudeReadTracker.refreshCount('newsletter', premiumIds);
+    }
     renderLatestGrid(posts);
     _applyFilter('all');
   }
@@ -416,6 +443,7 @@
 
     grid.innerHTML = latest.map(_renderCard).join('');
     _wireBeehiivHandoffForGrid(grid);
+    _wireUnreadTrackingForGrid(grid);
   }
 
   function _renderCard(post, i) {
@@ -438,8 +466,9 @@
       ? '<span class="private-badge private-badge--gold"><i class="fa-solid fa-crown" aria-hidden="true"></i> Altitude</span>'
       : '';
     var summary = String(post.subtitle || post.excerpt || post.description || '').trim();
+    var unread = prem && window.AltitudeReadTracker && window.AltitudeReadTracker.isUnread('newsletter', post.id);
 
-    return '<article class="private-resource-card reveal-stagger" style="animation-delay:' + delay + '">' +
+    return '<article class="private-resource-card reveal-stagger' + (unread ? ' has-unread' : '') + '" style="animation-delay:' + delay + '" data-post-id="' + e(post.id) + '">' +
       '<a href="' + e(href) + '"' + handoffAttrs + ' class="private-resource-card__media" aria-label="Read ' + e(post.title) + '">' +
           imgHtml +
           '<div class="private-resource-card__badge-row">' +
@@ -450,7 +479,7 @@
       '</a>' +
       '<div class="private-resource-card__body">' +
         '<p class="private-resource-card__meta">' + e(date || type) + '</p>' +
-        '<h3>' + e(post.title) + '</h3>' +
+        '<h3>' + (unread ? '<span class="alt-unread-dot" aria-label="Unread"></span>' : '') + e(post.title) + '</h3>' +
         (summary ? '<p class="private-resource-card__summary">' + e(summary) + '</p>' : '') +
         '<a href="' + e(href) + '"' + handoffAttrs + ' class="private-resource-card__link">Read issue <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
       '</div>' +
@@ -627,6 +656,30 @@
   function _wireBeehiivHandoff() {
     var grid = document.getElementById('alt-archive-grid');
     _wireBeehiivHandoffForGrid(grid);
+    _wireUnreadTrackingForGrid(grid);
+  }
+
+  // Delegated so it survives every grid.innerHTML rewrite (filter/page
+  // changes) -- same "wire once, guard with a dataset flag" idiom as
+  // _wireBeehiivHandoffForGrid just above. Any click on a card (handoff
+  // modal or plain navigation) marks that post read and refreshes the
+  // subnav dot; the click itself is never intercepted/prevented here.
+  function _wireUnreadTrackingForGrid(grid) {
+    if (!grid || grid.dataset.unreadTrackingWired === 'true') return;
+    grid.dataset.unreadTrackingWired = 'true';
+    grid.addEventListener('click', function (event) {
+      if (!window.AltitudeReadTracker) return;
+      var card = event.target.closest && event.target.closest('.private-resource-card[data-post-id]');
+      if (!card || !grid.contains(card)) return;
+      var id = card.getAttribute('data-post-id');
+      if (!id) return;
+      window.AltitudeReadTracker.markRead('newsletter', id);
+      var premiumIds = _altAllPosts.filter(function (p) { return p.is_premium; }).map(function (p) { return p.id; });
+      window.AltitudeReadTracker.refreshCount('newsletter', premiumIds);
+      card.classList.remove('has-unread');
+      var dot = card.querySelector('.alt-unread-dot');
+      if (dot) dot.remove();
+    });
   }
 
   function _wireBeehiivHandoffForGrid(grid) {
