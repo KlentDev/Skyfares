@@ -39,7 +39,7 @@
     // right back and loop forever. Show the error instead of retrying.
     var token = getToken();
     if (!params.get('loginError') && (token || magic)) {
-      var dest = 'private-pages/kf-guide-access-portal.html';
+      var dest = 'private-pages/kf-guide-access-portal';
       if (magic) dest += '?magic=' + encodeURIComponent(magic);
       window.location.replace(dest);
       return;

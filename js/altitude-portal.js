@@ -27,7 +27,7 @@
   // anonymous visitor (unlike the old hybrid altitude.html, there's no public
   // shell here anymore), so bounce straight back to the marketing page.
   function redirectToPublic(reason) {
-    window.location.replace(getPublicPagePrefix() + 'altitude.html' + (reason ? '?loginError=' + encodeURIComponent(reason) : ''));
+    window.location.replace(getPublicPagePrefix() + 'altitude' + (reason ? '?loginError=' + encodeURIComponent(reason) : ''));
   }
 
   // ─── Auth ──────────────────────────────────────────────────────────────────
@@ -168,7 +168,7 @@
               '<p>The portal could not reach Skyfare access right now. Your saved login was not removed. Refresh this page once your connection or local server is stable.</p>' +
               '<div class="private-actions">' +
                 '<button type="button" class="private-action private-action--primary" data-alt-network-retry><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Try again</button>' +
-                '<a href="' + getPublicPagePrefix() + 'altitude.html" class="private-action"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Altitude</a>' +
+                '<a href="' + getPublicPagePrefix() + 'altitude" class="private-action"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Altitude</a>' +
               '</div>' +
             '</div>' +
           '</div>' +
@@ -191,7 +191,7 @@
     _altMemberEmail = email || '';
     var emailEl = document.getElementById('alt-member-email');
     if (emailEl) emailEl.textContent = email;
-    window.__altSignOut = function () { clearToken(); window.location.href = getPublicPagePrefix() + 'altitude.html'; };
+    window.__altSignOut = function () { clearToken(); window.location.href = getPublicPagePrefix() + 'altitude'; };
     document.querySelectorAll('.slide-up').forEach(function (el) { el.classList.add('is-visible'); });
     _wireFilters();
     _wireTopicFilters();
