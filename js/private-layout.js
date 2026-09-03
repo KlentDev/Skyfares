@@ -104,7 +104,7 @@
     var signoutConfirm = document.querySelector('[data-private-signout-confirm]');
     var signoutCancelBtns = document.querySelectorAll('[data-private-signout-cancel]');
 
-    if (brandLink) brandLink.setAttribute('href', sitePrefix + 'index.html');
+    if (brandLink) brandLink.setAttribute('href', '/');
     if (brandImg) brandImg.setAttribute('src', sitePrefix + 'logos/logo.webp');
     if (productEl) productEl.textContent = product || 'Member Portal';
     if (subtitleEl) subtitleEl.textContent = subtitle || 'Private access';
@@ -122,8 +122,8 @@
     document.querySelectorAll('[data-private-nav]').forEach(function (link) {
       var target = link.getAttribute('data-private-nav');
       var isActive = target === page;
-      if (target === 'altitude') link.setAttribute('href', privatePrefix + 'altitude-access-portal.html');
-      if (target === 'guide') link.setAttribute('href', privatePrefix + 'kf-guide-access-portal.html');
+      if (target === 'altitude') link.setAttribute('href', privatePrefix + 'altitude-access-portal');
+      if (target === 'guide') link.setAttribute('href', privatePrefix + 'kf-guide-access-portal');
       link.classList.toggle('is-active', isActive);
       if (isActive) link.setAttribute('aria-current', 'page');
       if (!isActive && (target === 'altitude' || target === 'guide')) {
@@ -205,9 +205,9 @@
     var membershipLink = document.querySelector('[data-private-menu-membership]');
     var manualLink = document.querySelector('[data-private-menu-manual]');
     var supportLink = document.querySelector('[data-private-menu-support]');
-    if (membershipLink) membershipLink.setAttribute('href', altitudeAccessPrefix + 'membership.html');
-    if (manualLink) manualLink.setAttribute('href', altitudeAccessPrefix + 'beehiiv-manual.html');
-    if (supportLink) supportLink.setAttribute('href', altitudeAccessPrefix + 'support.html');
+    if (membershipLink) membershipLink.setAttribute('href', altitudeAccessPrefix + 'membership');
+    if (manualLink) manualLink.setAttribute('href', altitudeAccessPrefix + 'beehiiv-manual');
+    if (supportLink) supportLink.setAttribute('href', altitudeAccessPrefix + 'support');
 
     if (!accountMenu || !accountTrigger) return;
 
@@ -310,7 +310,7 @@
     if (page === 'guide' && window.__kfSignOut) return window.__kfSignOut();
     if (window.__altSignOut) return window.__altSignOut();
     try { localStorage.removeItem('altitude_jwt'); } catch (_) {}
-    window.location.href = getPublicPagePrefix() + (page === 'guide' ? 'krisflyer-guide.html' : 'altitude.html');
+    window.location.href = getPublicPagePrefix() + (page === 'guide' ? 'krisflyer-guide' : 'altitude');
   }
 
   function enhanceFooter() {
@@ -398,13 +398,13 @@
     return '' +
       '<header class="private-header">' +
         '<div class="private-header__inner">' +
-          '<a class="private-brand" href="' + sitePrefix + 'index.html" aria-label="Skyfare home">' +
+          '<a class="private-brand" href="/" aria-label="Skyfare home">' +
             '<img src="' + sitePrefix + 'logos/logo.webp" alt="Skyfare Consulting">' +
             '<span><strong>Skyfare</strong><small>Private access</small></span>' +
           '</a>' +
           '<nav class="private-nav" aria-label="Member navigation">' +
-            '<a href="' + privatePrefix + 'altitude-access-portal.html" data-private-nav="altitude" aria-label="Altitude"><i class="fa-solid fa-crown"></i><span>Altitude</span></a>' +
-            '<a href="' + privatePrefix + 'kf-guide-access-portal.html" data-private-nav="guide" aria-label="Guide"><i class="fa-solid fa-book-open"></i><span>Guide</span></a>' +
+            '<a href="' + privatePrefix + 'altitude-access-portal" data-private-nav="altitude" aria-label="Altitude"><i class="fa-solid fa-crown"></i><span>Altitude</span></a>' +
+            '<a href="' + privatePrefix + 'kf-guide-access-portal" data-private-nav="guide" aria-label="Guide"><i class="fa-solid fa-book-open"></i><span>Guide</span></a>' +
           '</nav>' +
           '<div class="private-account">' +
             '<div class="private-account-menu" data-private-account-menu>' +
@@ -413,9 +413,9 @@
                 '<div class="private-account-dropdown__identity"><span id="private-member-product">Member Portal</span><small id="private-member-email">Signed in</small></div>' +
                 '<div class="private-menu-row" data-private-menu-altitude-only data-push-toggle-row hidden role="menuitem"><span class="private-menu-row__label"><i class="fa-regular fa-bell"></i> Notifications</span><label class="push-toggle"><input type="checkbox" class="push-toggle__input" data-push-toggle aria-label="Enable notifications"><span class="push-toggle__track"><span class="push-toggle__thumb"></span></span></label></div>' +
                 '<button type="button" data-private-manage data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-credit-card"></i><span>Manage billing</span></button>' +
-                '<a href="' + getAltitudeAccessPrefix() + 'membership.html" data-private-menu-membership data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-crown"></i><span>Membership</span></a>' +
-                '<a href="' + getAltitudeAccessPrefix() + 'beehiiv-manual.html" data-private-menu-manual data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-book-open-reader"></i><span>Beehiiv Manual</span></a>' +
-                '<a href="' + getAltitudeAccessPrefix() + 'support.html" data-private-menu-support data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-headset"></i><span>Support</span></a>' +
+                '<a href="' + getAltitudeAccessPrefix() + 'membership" data-private-menu-membership data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-crown"></i><span>Membership</span></a>' +
+                '<a href="' + getAltitudeAccessPrefix() + 'beehiiv-manual" data-private-menu-manual data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-book-open-reader"></i><span>Beehiiv Manual</span></a>' +
+                '<a href="' + getAltitudeAccessPrefix() + 'support" data-private-menu-support data-private-menu-altitude-only role="menuitem"><i class="fa-solid fa-headset"></i><span>Support</span></a>' +
                 '<button type="button" data-private-signout role="menuitem"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign out</span></button>' +
               '</div>' +
             '</div>' +

@@ -39,7 +39,7 @@
     // was still present and immediately sent straight back). Show the error
     // instead of retrying.
     if (!params.get('loginError') && (magic || (token && token !== deniedToken))) {
-      var dest = 'private-pages/altitude-access-portal.html';
+      var dest = 'private-pages/altitude-access-portal';
       if (magic) dest += '?magic=' + encodeURIComponent(magic);
       window.location.replace(dest);
       return;

@@ -76,7 +76,7 @@
       '<div class="private-resource-card__body">' +
         '<p class="private-resource-card__meta">Guide chapter</p>' +
         '<h3>' + e(chapter.title) + '</h3>' +
-        '<a class="private-resource-card__link" href="kf-guide-reader.html?chapter=' + i + '">Read chapter <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+        '<a class="private-resource-card__link" href="kf-guide-reader?chapter=' + i + '">Read chapter <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
       '</div>' +
     '</article>';
   }

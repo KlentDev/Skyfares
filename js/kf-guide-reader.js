@@ -66,7 +66,7 @@
       var chapterPart = chapter.number > 0 ? 'Chapter ' + chapter.number : 'Introduction';
       var titlePart = chapter.number > 0 ? chapter.title : '';
       var icon = chapter.number > 0 ? 'fa-bookmark' : 'fa-circle-info';
-      return '<a href="kf-guide-reader.html?chapter=' + i + '" data-toc-index="' + i + '"><i class="fa-solid ' + icon + '" aria-hidden="true"></i><span><strong>' + e(chapterPart) + '</strong>' + (titlePart ? '<em>' + e(titlePart) + '</em>' : '') + '</span></a>';
+      return '<a href="kf-guide-reader?chapter=' + i + '" data-toc-index="' + i + '"><i class="fa-solid ' + icon + '" aria-hidden="true"></i><span><strong>' + e(chapterPart) + '</strong>' + (titlePart ? '<em>' + e(titlePart) + '</em>' : '') + '</span></a>';
     }).join('');
   }
 
@@ -164,7 +164,7 @@
     _updateScrollProgress();
 
     if (opts && opts.pushState) {
-      history.pushState(null, '', 'kf-guide-reader.html?chapter=' + index);
+      history.pushState(null, '', 'kf-guide-reader?chapter=' + index);
     }
   }
 
