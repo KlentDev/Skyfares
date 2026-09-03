@@ -91,9 +91,10 @@
         <div id="nsl-hero-img" class="hidden relative w-full h-56 md:h-72 rounded-2xl overflow-hidden bg-brand-950 shadow-sm">
           <img id="nsl-thumb" src="" alt="" class="w-full h-full object-cover">
           <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.35) 0%,transparent 50%);"></div>
-          <!-- Free / Premium badge -->
-          <div class="absolute top-4 left-4">
+          <!-- Free / Premium badge, plus Teaser when the post has a mid-article paywall break -->
+          <div class="absolute top-4 left-4 flex items-center gap-1.5">
             <span id="nsl-issue-badge" class="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-600/90 backdrop-blur-sm px-3 py-1.5 rounded-full"></span>
+            <span id="nsl-teaser-badge" class="hidden text-[10px] font-bold uppercase tracking-widest text-neutral-800 bg-neutral-200 px-3 py-1.5 rounded-full"><i class="fa-solid fa-eye" aria-hidden="true"></i> Teaser</span>
           </div>
         </div>
       </div>

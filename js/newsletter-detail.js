@@ -106,6 +106,12 @@
       }
     }
 
+    // Teaser is a free-reader-only signal -- a member already has full
+    // access, so it never shows for them even if the post has a paywall
+    // break (matches buildPaywallBreakHtml()'s isLikelyMember handling below).
+    var teaserBadge = document.getElementById('nsl-teaser-badge');
+    if (teaserBadge) teaserBadge.classList.toggle('hidden', !post.has_paywall_break || isLikelyMember);
+
     // Content tags
     var tagsEl = document.getElementById('nsl-tags');
     if (tagsEl) {
@@ -376,25 +382,13 @@
   // (js/checkout-flow-info.js) instead of inventing new copy here.
 
   function buildPaywallBreakHtml() {
-    // A logged-in member (isLikelyMember, see its declaration above) has
-    // already paid -- showing "Get Altitude Access" here would be a
-    // confusing upsell for something they own. Point them at the real
-    // reason they're seeing a truncated page instead: this particular post
-    // is tagged free-and-premium, so the Worker sends the free/truncated
-    // HTML regardless of membership. Their actual full copy already went
-    // out by email.
-    if (isLikelyMember) {
-      return (
-        '<div class="nsl-paywall-break">' +
-          '<div class="icon-chip icon-chip-lg nsl-paywall-break__icon mx-auto mb-3"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i></div>' +
-          '<span class="nsl-paywall-break__badge mb-3">Altitude Member</span>' +
-          '<h3 class="font-display font-bold text-lg mb-1.5 px-4 text-neutral-900">The rest of this issue is in your inbox.</h3>' +
-          '<p class="text-sm leading-relaxed max-w-sm mx-auto px-4 text-neutral-600">' +
-            "You're an Altitude member, so the full edition -- including everything past this point -- was already sent to your email. Keep an eye on your inbox and notifications each week for the complete issue and its continuation." +
-          '</p>' +
-        '</div>'
-      );
-    }
+    // The paywall break is a free-reader-only concept -- an Altitude member
+    // already has full access, so there's nothing to gate and nothing to
+    // explain. Render nothing at all for members rather than any kind of
+    // "check your email" notice; the article just ends where Beehiiv's own
+    // free content ends, same as it would for any other free post with no
+    // paywall break at all.
+    if (isLikelyMember) return '';
 
     return (
       '<div class="nsl-paywall-break">' +

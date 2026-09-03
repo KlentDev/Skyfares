@@ -445,6 +445,7 @@
           '<div class="private-resource-card__badge-row">' +
             (issueNum ? '<span class="private-badge">Issue ' + e(issueNum) + '</span>' : '') +
             (badge || '<span class="private-badge private-badge--muted">' + e(type) + '</span>') +
+            (post.has_paywall_break ? '<span class="private-badge private-badge--teaser"><i class="fa-solid fa-eye" aria-hidden="true"></i> Teaser</span>' : '') +
           '</div>' +
       '</a>' +
       '<div class="private-resource-card__body">' +

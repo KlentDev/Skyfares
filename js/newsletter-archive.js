@@ -410,6 +410,9 @@
       }
     }
 
+    var teaserBadge = hero.querySelector('[data-newsletter-hero-teaser-badge]');
+    if (teaserBadge) teaserBadge.classList.toggle('hidden', !post.has_paywall_break);
+
     var readLink = hero.querySelector('[data-newsletter-hero-read]');
     if (readLink) {
       var localHref = getLocalPostUrl(post);
@@ -480,7 +483,9 @@
     return wrapper +
       '<div class="newsletter-home-v5__feature-media">' + image + '<span class="newsletter-home-v5__start-label"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Start here</span></div>' +
       '<div class="newsletter-home-v5__feature-copy">' +
-        '<p class="newsletter-home-v5__kicker">Pinned feature</p>' +
+        '<p class="newsletter-home-v5__kicker">Pinned feature' +
+          (post.has_paywall_break ? '<span class="newsletter-home-v5__teaser-badge"><i class="fa-solid fa-eye" aria-hidden="true"></i> Teaser</span>' : '') +
+        '</p>' +
         '<h3>' + e(post.title) + '</h3>' +
         (summary ? '<p class="newsletter-home-v5__summary">' + e(summary) + '</p>' : '') +
         (meta ? '<p class="newsletter-home-v5__meta">' + e(meta) + '</p>' : '') +
@@ -511,7 +516,9 @@
     return wrapper +
       '<div class="newsletter-home-v5__latest-media">' + image + '</div>' +
       '<div class="newsletter-home-v5__latest-copy">' +
-        '<p class="newsletter-home-v5__latest-label">' + e(label) + '</p>' +
+        '<p class="newsletter-home-v5__latest-label">' + e(label) +
+          (post.has_paywall_break ? '<span class="newsletter-home-v5__teaser-badge"><i class="fa-solid fa-eye" aria-hidden="true"></i> Teaser</span>' : '') +
+        '</p>' +
         '<h3>' + e(post.title) + '</h3>' +
         (summary ? '<p class="newsletter-home-v5__latest-summary">' + e(summary) + '</p>' : '') +
         '<div class="newsletter-home-v5__latest-footer">' +
@@ -643,7 +650,10 @@
         imgHtml +
         '<div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,24,41,.45) 0%,transparent 60%);"></div>' +
         '<div class="absolute top-3 left-3">' + accessBadge + '</div>' +
-        '<div class="absolute bottom-3 right-3">' +
+        '<div class="absolute bottom-3 right-3 flex items-center gap-1.5">' +
+          (post.has_paywall_break
+            ? '<span class="text-[10px] font-bold uppercase tracking-widest text-neutral-800 bg-neutral-200 px-2 py-0.5 rounded-full"><i class="fa-solid fa-eye text-[8px]"></i> Teaser</span>'
+            : '') +
           '<span class="text-[10px] font-semibold text-white/80 bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">' + e(type) + '</span>' +
         '</div>' +
         lockIcon +

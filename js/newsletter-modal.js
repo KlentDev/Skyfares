@@ -141,6 +141,13 @@
           slide.appendChild(latestBadge);
         }
 
+        if (post.has_paywall_break) {
+          var teaserBadge = document.createElement('span');
+          teaserBadge.className = 'newsletter-teaser-badge-v2 altitude-popup-caption__meta';
+          teaserBadge.innerHTML = '<i class="fa-solid fa-eye text-[9px]"></i> Teaser';
+          slide.appendChild(teaserBadge);
+        }
+
         var dateText = formatDate(post.published_at);
         if (dateText) {
           var dateEl = document.createElement('p');
