@@ -15,14 +15,33 @@
   app.renderers['krisflyer-escapes'] = function (root, records) {
     var initialIndex = Math.max(0, records.findIndex(function (item) { return item.featured; }));
 
+    // Per-member unread tracking (js/altitude-read-tracker.js) -- same
+    // seed-on-first-visit + cached-count pattern as Award Alerts. Unlike
+    // that list view, there's no per-item dot here (a native <select>
+    // can't carry rich per-option markup) -- the subnav dot is the only
+    // signal, and the currently-shown issue counts as read the moment it
+    // actually renders, since there's no separate click step for it.
+    var allIds = records.map(function (r) { return r.id; });
+    if (window.AltitudeReadTracker) {
+      window.AltitudeReadTracker.seedIfFirstVisit('krisflyer-escapes', allIds);
+    }
+
     root.innerHTML = '<div data-escape-issue></div>';
     var issueRoot = root.querySelector('[data-escape-issue]');
     renderIssue(issueRoot, records[initialIndex] || records[0]);
+    markIssueRead(records[initialIndex] || records[0], allIds);
 
     renderMonthControl(records, initialIndex, function (index) {
       renderIssue(issueRoot, records[index]);
+      markIssueRead(records[index], allIds);
     });
   };
+
+  function markIssueRead(item, allIds) {
+    if (!window.AltitudeReadTracker || !item) return;
+    window.AltitudeReadTracker.markRead('krisflyer-escapes', item.id);
+    window.AltitudeReadTracker.refreshCount('krisflyer-escapes', allIds);
+  }
 
   // Renders into the page-heading slot (outside `root`, in the static
   // HTML shell) rather than the content root, so it sits right-aligned

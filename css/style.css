@@ -6180,6 +6180,57 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   background: rgba(229, 231, 235, 0.92);
 }
 
+/* Subscription urgency badge tones (js/altitude-portal.js's
+   _urgencyBadgeHtml) -- 7d yellow, 5d orange, 1d/today red. Deliberately
+   distinct from --gold (that's a loyalty/premium signal, not an urgency
+   one) even though the hues sit close on the color wheel. */
+.private-badge--warn-yellow {
+  color: #8a6d1f;
+  background: rgba(217, 168, 22, 0.18);
+}
+
+.private-badge--warn-orange {
+  color: #9a4b12;
+  background: rgba(234, 88, 12, 0.16);
+}
+
+.private-badge--urgent {
+  color: #b23a3a;
+  background: rgba(200, 60, 60, 0.14);
+}
+
+/* Per-member unread indicator (js/altitude-read-tracker.js) -- Award
+   Alerts cards, KrisFlyer Escapes (subnav only), premium newsletter
+   cards. Deliberately its own small dot, not reused from .alt-badge--dot
+   (that's a dot *inside* a text badge, a different visual object). Same
+   red as .private-badge--urgent above for one consistent "needs your
+   attention" color across both features. */
+.alt-unread-dot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #b23a3a;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.altitude-subnav a.has-unread {
+  position: relative;
+}
+
+.altitude-subnav a.has-unread::after {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  right: 0.55rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: #b23a3a;
+  box-shadow: 0 0 0 1.5px rgba(244, 247, 251, 0.9);
+}
+
 .private-resource-card__body {
   flex: 1;
   display: flex;
