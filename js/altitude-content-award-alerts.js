@@ -5,7 +5,7 @@
 (function () {
   var app = window.AltitudeContent = window.AltitudeContent || {};
   var u = app.utils;
-  var PAGE_SIZE = 10;
+  var PAGE_SIZE = 6;
 
   // Shared with wireStickyFeed's fixed-position logic and the mobile
   // browse<->focus toggle below -- both need to agree on exactly the same
@@ -38,7 +38,7 @@
       activeIndex: 0,
       query: '',
       status: 'all',
-      visibleCount: PAGE_SIZE,
+      page: 1,
     };
 
     // Per-member unread tracking (js/altitude-read-tracker.js) -- silently
@@ -78,6 +78,7 @@
           '<aside class="alt-alert-feed" aria-label="Published award alerts">' +
             '<div class="alt-alert-feed__head"><span class="alt-meta" data-alert-count></span></div>' +
             '<div data-alert-list></div>' +
+            '<nav class="altitude-pagination" data-alert-pagination aria-label="Award alert pages"></nav>' +
           '</aside>' +
           '<section class="alt-alert-detail alt-card" data-alert-detail aria-live="polite"></section>' +
         '</div>' +
@@ -165,7 +166,7 @@
       search.addEventListener('input', function () {
         state.query = search.value.trim().toLowerCase();
         state.activeIndex = 0;
-        state.visibleCount = PAGE_SIZE;
+        state.page = 1;
         updateAlertList(root);
         setMobileView(root, 'list');
       });
@@ -178,7 +179,7 @@
     function applyStatus(root, status) {
       state.status = status || 'all';
       state.activeIndex = 0;
-      state.visibleCount = PAGE_SIZE;
+      state.page = 1;
       root.querySelectorAll('[data-alert-status]').forEach(function (button) {
         button.classList.toggle('active', button.getAttribute('data-alert-status') === state.status);
       });
@@ -195,17 +196,24 @@
         return;
       }
 
-      var loadMoreBtn = event.target.closest && event.target.closest('[data-alert-load-more]');
-      if (loadMoreBtn && root.contains(loadMoreBtn)) {
-        state.visibleCount += PAGE_SIZE;
+      var pageBtn = event.target.closest && event.target.closest('[data-alert-page]');
+      if (pageBtn && root.contains(pageBtn) && !pageBtn.disabled) {
+        var totalPages = Math.max(1, Math.ceil(state.filtered.length / PAGE_SIZE));
+        var action = pageBtn.getAttribute('data-alert-page');
+        if (action === 'prev') state.page = Math.max(1, state.page - 1);
+        else if (action === 'next') state.page = Math.min(totalPages, state.page + 1);
+        else state.page = Math.max(1, Math.min(totalPages, parseInt(action, 10) || 1));
+        state.activeIndex = 0;
         updateAlertList(root);
+        var list = root.querySelector('[data-alert-list]');
+        if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
 
       var alertBtn = event.target.closest && event.target.closest('[data-altitude-alert-index]');
       if (alertBtn && root.contains(alertBtn)) {
         var index = parseInt(alertBtn.getAttribute('data-altitude-alert-index'), 10);
-        var visible = state.filtered.slice(0, state.visibleCount);
+        var visible = getVisiblePage(state);
         if (!visible[index]) return;
         state.activeIndex = index;
         if (window.AltitudeReadTracker) {
@@ -241,7 +249,7 @@
       var select = event.target.closest && event.target.closest('[data-alert-select]');
       if (!select || !root.contains(select)) return;
       var index = parseInt(select.value, 10);
-      var visible = state.filtered.slice(0, state.visibleCount);
+      var visible = getVisiblePage(state);
       if (!visible[index]) return;
       state.activeIndex = index;
       if (window.AltitudeReadTracker) {
@@ -279,30 +287,50 @@
     });
 
     state.filtered = filtered;
-    if (state.activeIndex >= Math.min(filtered.length, state.visibleCount)) state.activeIndex = 0;
+    var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (state.page > totalPages) state.page = totalPages;
 
     var list = root.querySelector('[data-alert-list]');
     var count = root.querySelector('[data-alert-count]');
     var detail = root.querySelector('[data-alert-detail]');
+    var pagination = root.querySelector('[data-alert-pagination]');
 
     if (count) count.textContent = filtered.length + (filtered.length === 1 ? ' published alert' : ' published alerts');
 
     if (!filtered.length) {
       if (list) list.innerHTML = '<div class="alt-empty"><span class="alt-empty__icon"><i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i></span><p class="alt-empty__copy">No alerts match these filters right now. Try widening your search.</p></div>';
       if (detail) detail.innerHTML = '<div class="alt-empty"><span class="alt-empty__icon"><i class="fa-solid fa-compass" aria-hidden="true"></i></span><p class="alt-empty__copy">Select a different filter to view alert details.</p></div>';
+      if (pagination) pagination.innerHTML = '';
       return;
     }
 
-    var visible = filtered.slice(0, state.visibleCount);
+    if (state.activeIndex >= PAGE_SIZE) state.activeIndex = 0;
+    var visible = getVisiblePage(state);
+    if (state.activeIndex >= visible.length) state.activeIndex = 0;
 
-    if (list) {
-      list.innerHTML = renderGroupedList(visible, state.activeIndex) +
-        (filtered.length > visible.length
-          ? '<button type="button" class="alt-load-more private-action" data-alert-load-more>Load more alerts</button>'
-          : '');
-    }
+    if (list) list.innerHTML = renderGroupedList(visible, state.activeIndex);
+    if (pagination) pagination.innerHTML = renderPagination(state.page, totalPages);
 
     renderAwardDetail(detail, visible[state.activeIndex], visible, state.activeIndex);
+  }
+
+  function getVisiblePage(state) {
+    var start = (state.page - 1) * PAGE_SIZE;
+    return state.filtered.slice(start, start + PAGE_SIZE);
+  }
+
+  // Same markup/class contract as js/altitude-portal.js's newsletter
+  // archive pagination (.altitude-pagination, css/style.css) -- reused as-
+  // is rather than a second pagination component.
+  function renderPagination(page, totalPages) {
+    if (totalPages <= 1) return '';
+    var buttons = '';
+    for (var i = 1; i <= totalPages; i++) {
+      buttons += '<button type="button" data-alert-page="' + i + '" class="' + (i === page ? 'active' : '') + '" aria-label="Go to page ' + i + '">' + i + '</button>';
+    }
+    return '<button type="button" data-alert-page="prev"' + (page === 1 ? ' disabled' : '') + ' aria-label="Previous page"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>' +
+      '<div class="altitude-pagination__pages">' + buttons + '</div>' +
+      '<button type="button" data-alert-page="next"' + (page === totalPages ? ' disabled' : '') + ' aria-label="Next page"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>';
   }
 
   function renderGroupedList(items, activeIndex) {
