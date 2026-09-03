@@ -2776,6 +2776,25 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   letter-spacing: .12em;
   text-transform: uppercase;
 }
+
+/* Static (not absolutely positioned, unlike .newsletter-teaser-badge-v2)
+   inline pill next to the "Pinned feature"/"Latest issue" kicker -- these
+   v5 homepage cards show tags as plain uppercase text, not pills, and the
+   feature card's top-left corner is already the "Start here" label's spot,
+   so this rides alongside the kicker text instead of overlaying the image. */
+.newsletter-home-v5__teaser-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  margin-left: .5rem;
+  padding: .15rem .5rem;
+  border-radius: var(--radius-v2-pill);
+  background: #e5e7eb;
+  color: #374151;
+  font-size: .62rem;
+  letter-spacing: .08em;
+}
+
 .newsletter-home-v5__start-label {
   position: absolute;
   top: 1rem;
@@ -3227,6 +3246,30 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   box-shadow: 0 6px 14px rgba(22, 163, 74, 0.35);
+}
+
+/* Top-left, opposite the Pinned/Latest badges (both top-right) -- shown
+   whenever post.has_paywall_break is true, independent of pinned/latest
+   status, so it never collides with them. Gray/neutral, matching the same
+   "Teaser" badge used on newsletter cards and the archive hero
+   (css "newsletter-hero-v5__teaser-badge" above). */
+.newsletter-teaser-badge-v2 {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-v2-pill);
+  background: #e5e7eb;
+  color: #374151;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* Small "how this works" info icon next to a pricing heading -- opens
@@ -6127,6 +6170,14 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
 .private-badge--muted {
   color: #ffffff;
   background: rgba(20, 32, 51, 0.64);
+}
+
+/* Same gray/dark-text "Teaser" convention as the public site's newsletter
+   badges (css "newsletter-teaser-badge-v2" / "newsletter-hero-v5__teaser-badge"
+   above) -- shown only when post.has_paywall_break is true. */
+.private-badge--teaser {
+  color: #374151;
+  background: rgba(229, 231, 235, 0.92);
 }
 
 .private-resource-card__body {
@@ -15556,8 +15607,19 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   margin-bottom: .75rem;
 }
 
+/* Free + Teaser badges sit together at the left; the Latest-issue badge
+   (a sibling of this group, not inside it) is pushed to the far right by
+   .preview-head's own space-between -- see pages/newsletter.html. */
+.newsletter-hero-v5__preview-head-left {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
 .newsletter-hero-v5__latest-badge,
-.newsletter-hero-v5__access-badge {
+.newsletter-hero-v5__access-badge,
+.newsletter-hero-v5__teaser-badge {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
@@ -15573,6 +15635,16 @@ textarea.form-input { border-radius: 1.125rem; resize: vertical; }
   background: #16a34a;
   color: #fff;
   box-shadow: 0 6px 14px rgba(22, 163, 74, .28);
+}
+
+/* Shown alongside the Free badge (never Premium -- see mapPost() in
+   cloudflare/services/newsletter.js) when a post's free content contains a
+   mid-article paywall break: a real preview that continues into
+   members-only content. Gray/neutral rather than brand-colored, since it's
+   a content-shape signal, not an access-tier one. */
+.newsletter-hero-v5__teaser-badge {
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .newsletter-hero-v5__access-badge--free {

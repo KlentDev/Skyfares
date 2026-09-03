@@ -181,6 +181,19 @@
     var badgeIcon  = prem ? 'fa-crown' : 'fa-unlock';
     var badgeText  = prem ? 'Premium' : 'Free';
 
+    // Gray/dark-text, matching the "Teaser" badge convention used everywhere
+    // else the site flags a post whose free content ends at a mid-article
+    // paywall break (post.has_paywall_break, computed server-side in
+    // cloudflare/services/newsletter.js).
+    var teaserBadge = post.has_paywall_break
+      ? '<span style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;' +
+               'padding:3px 10px;border-radius:999px;' +
+               'background:#e5e7eb;color:#374151;' +
+               'font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;">' +
+          '<i class="fa-solid fa-eye" style="font-size:9px;"></i>&nbsp;Teaser' +
+        '</span>'
+      : '';
+
     // ─── "Already a member?" note — premium only ──────────────────────────
     var memberNote = prem
       ? '<span style="color:rgba(15,23,42,.4);font-size:11px;white-space:nowrap;flex-shrink:0;">' +
@@ -208,6 +221,8 @@
                'font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;">' +
           '<i class="fa-solid ' + badgeIcon + '" style="font-size:9px;"></i>&nbsp;' + badgeText +
         '</span>' +
+
+        teaserBadge +
 
         '<p style="flex:1;min-width:0;margin:0;font-size:13px;line-height:1.4;' +
               'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +

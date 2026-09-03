@@ -87,6 +87,32 @@ function isPostLive(p) {
   return true;
 }
 
+// A post can be tagged "free" overall (isPostPremium() → false, altitude-free
+// wins) while still carrying Beehiiv's own mid-article "paywall break" node
+// partway through its free content — the free reader gets a real preview,
+// then a members-only continuation. Detected from the SAME free content
+// string already being fetched to compute is_premium, so this costs zero
+// extra Beehiiv API calls.
+//
+// The marker differs per rendering (confirmed live, 2026-09-03, against
+// this account's actual `free_web_content`/`free_email_content` output —
+// do not "simplify" this back down without re-checking real data):
+//   - free_web_content (used by handleGetPosts/mapPost below): the block is
+//     plain inline-styled <div>/<h2>/<a> with NO class or id at all. Its
+//     only reliable fingerprints are Beehiiv's own asset path for the
+//     paywall logo (/uploads/paywall/image/...) and the CTA link's fixed
+//     target (…beehiiv.com/upgrade).
+//   - free_email_content (used by handleGetPost, single-post detail):
+//     Beehiiv wraps the same block in <tbody class="email-paywall-break-body">.
+//   - editor_html (not fetched by this Worker, kept here in case a future
+//     caller starts using it): uses class="node-paywallBreak".
+function hasPaywallBreak(html) {
+  if (!html) return false;
+  return /\/uploads\/paywall\//i.test(html)
+    || /beehiiv\.com\/upgrade["']/i.test(html)
+    || /node-paywallBreak|email-paywall-break-body/i.test(html);
+}
+
 // Shared by handleGetPosts's list mapping and its pinned-post fallback fetch
 // below, so both ever produce exactly the same post shape.
 async function mapPost(p, env) {
@@ -94,9 +120,10 @@ async function mapPost(p, env) {
   const contentTags = (p.content_tags || [])
     .map(t => (typeof t === 'string' ? t : t.display || t.slug || ''))
     .filter(Boolean);
+  const freeWebHtml = p.content && p.content.free && p.content.free.web;
   const computed = isPostPremium(
     p.audience,
-    p.content && p.content.free    && p.content.free.web,
+    freeWebHtml,
     p.content && p.content.premium && p.content.premium.web,
     contentTags
   );
@@ -114,6 +141,7 @@ async function mapPost(p, env) {
     content_tags:  contentTags,
     authors: normalizeAuthors(p.authors),
     is_premium: override !== null ? override : computed,
+    has_paywall_break: hasPaywallBreak(freeWebHtml),
   };
 }
 
@@ -270,6 +298,7 @@ export async function handleGetPost(slug, request, env, corsHeaders) {
     // Members always get full content; non-members get preview for premium posts
     content_html:  (!premium || isMember) ? cleaned : null,
     preview_html:  premium && !isMember   ? extractPreview(previewSource) : null,
+    has_paywall_break: hasPaywallBreak(freeHtml),
   };
 
   return respond({ post }, 200, { ...corsHeaders, 'Cache-Control': 'no-store' });
