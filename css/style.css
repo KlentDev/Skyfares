@@ -1662,6 +1662,54 @@ button[class*="bg-emerald-"]:active {
   margin-bottom: 0;
 }
 
+/* Inline paywall-break teaser -- js/newsletter-detail.js's extractEmailBody()
+   detects Beehiiv's own mid-article "paywall break" node (an email-styled
+   table with a black Verdana button pointing off-site to Beehiiv's own
+   /upgrade page) and swaps it for this block instead. Deliberately reuses
+   the .cs-overlay--light background feel and .icon-chip-lg badge shape from
+   the site's existing "coming soon" lock system (css "COMING SOON SYSTEM"
+   block, js/coming-soon.js) rather than a new visual language, re-themed
+   gold since this is a genuine Altitude/premium signal (that system's own
+   badge is deliberately blue -- gold stays reserved for premium). */
+.nsl-article .nsl-paywall-break {
+  position: relative;
+  margin: 2.5rem 0;
+  padding: 2.75rem 1.5rem;
+  border-radius: 18px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.99) 45%);
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  box-shadow: var(--shadow-v2-sm);
+}
+
+/* `.nsl-article a` above (brand-blue, underlined) would otherwise beat the
+   CTA pill's own white text/no-underline -- this selector's extra
+   specificity wins instead. */
+.nsl-article .nsl-paywall-break a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nsl-paywall-break__icon {
+  background: #fdf3d0;
+  color: #C9A227;
+}
+
+.nsl-paywall-break__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7a5c00;
+  background: #fdf3d0;
+}
+
 /* ── Skyfare UI Components (toast / modal) ────────────────────────────────────
    Shared global components exposed via window.SkyUI (js/ui.js).
    ─────────────────────────────────────────────────────────────────────────── */

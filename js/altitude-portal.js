@@ -650,48 +650,59 @@
       return;
     }
 
+    // Same "read-choice" variant/layout as the public flow's
+    // openFreeNewsletterChoiceModal (js/newsletter-archive.js) -- Read on
+    // Skyfare as the full-width primary action, Beehiiv de-emphasized as a
+    // link beneath a divider. This used to be a separate, older two-button
+    // layout that predated that redesign; kept in sync here rather than
+    // duplicating a third variant. The premium-only additions below (member
+    // email box, premium-aware copy) have no public equivalent -- the
+    // public flow only ever handles free articles.
     var emailLine = _altMemberEmail
-      ? '<div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-left">' +
+      ? '<div class="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-left">' +
           '<p class="text-[10px] font-bold uppercase tracking-widest text-amber-700">Use this email</p>' +
           '<p class="mt-1 text-sm font-bold text-neutral-900 break-all">' + e(_altMemberEmail) + '</p>' +
         '</div>'
       : '';
 
-    var actions = [{
-      label: 'Read on Beehiiv',
-      style: 'link',
-      onClick: function () {
-        window.location.href = beehiivUrl;
-      },
-    }, {
-      label: 'Read on Skyfare',
-      style: 'primary',
-      onClick: function () {
-        if (localUrl) window.location.href = localUrl;
-      },
-    }];
-
     var skyfareCopy = isPremium
-      ? '<p><strong>Read on Skyfare</strong> opens the premium issue here. It is the fastest way to read.</p>'
-      : '<p><strong>Read on Skyfare</strong> opens the free issue here. It is the fastest way to read.</p>';
-    var note = isPremium
-      ? '<p class="mt-3 text-xs text-neutral-400">Beehiiv manages its own login session, so it may ask for this email again even after you are signed into the Skyfare portal.</p>'
-      : '<p class="mt-3 text-xs text-neutral-400">Beehiiv may ask you to verify your email before likes and comments are available.</p>';
+      ? '<p><strong>Read on Skyfare</strong> is the fastest way to read this premium issue — it opens instantly, right here, using your Altitude membership.</p>'
+      : '<p><strong>Read on Skyfare</strong> is the fastest way to read this issue — it opens instantly, right here, with nothing else to set up.</p>';
+    var beehiivIntro = isPremium
+      ? '<p><strong>Prefer Beehiiv?</strong> You can read it there instead. Beehiiv manages its own login session, so it may ask for this email again even though you are signed into the Skyfare portal.</p>'
+      : '<p><strong>Prefer Beehiiv?</strong> You can read it there instead, verify your email, and use native likes and comments.</p>';
 
     SkyUI.modal({
       title: 'Choose where to read',
+      variant: 'read-choice',
       html:
         skyfareCopy +
-        '<p class="mt-3"><strong>Read on Beehiiv</strong> opens the published newsletter on Beehiiv so you can use native <strong>likes and comments</strong>.</p>' +
-        '<ol class="mt-3 list-decimal pl-5 text-sm text-neutral-500 leading-relaxed">' +
-          '<li>Verify your email on Beehiiv if asked.</li>' +
-          '<li>Beehiiv sends a one-time code.</li>' +
-          '<li>Enter the code to verify your email.</li>' +
-          '<li>Then read, <strong>like</strong>, and <strong>comment</strong> on the newsletter.</li>' +
-        '</ol>' +
-        (isPremium ? emailLine : '') +
-        note,
-      actions: actions,
+        '<div class="sky-modal__beehiiv-note">' +
+          beehiivIntro +
+          '<ol class="mt-2 list-decimal pl-5 leading-relaxed">' +
+            '<li>Verify your email on Beehiiv if asked.</li>' +
+            '<li>Beehiiv sends a one-time code.</li>' +
+            '<li>Enter the code to verify your email.</li>' +
+            '<li>Then read, like, and comment on the newsletter.</li>' +
+          '</ol>' +
+          (isPremium ? emailLine : '') +
+        '</div>',
+      actions: [
+        {
+          label: 'Read on Skyfare',
+          style: 'primary-lg',
+          onClick: function () {
+            if (localUrl) window.location.href = localUrl;
+          },
+        },
+        {
+          label: 'Read on Beehiiv instead',
+          style: 'link',
+          onClick: function () {
+            window.location.href = beehiivUrl || localUrl;
+          },
+        },
+      ],
     });
   }
 
